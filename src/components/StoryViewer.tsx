@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Story } from '@/services/storyService';
 
 interface Props {
@@ -11,11 +11,18 @@ interface Props {
 
 export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNext }: Props) {
   const story = stories[storyIndex];
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    setShow(true);
+    return () => setShow(false);
+  }, []);
+
   if (!story) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-      <div className="relative bg-white rounded-lg shadow-lg max-w-xs w-full p-4 flex flex-col items-center">
+    <div className={`fixed inset-0 flex items-center justify-center z-50 transition-all duration-300 ${show ? 'bg-black bg-opacity-80' : 'bg-black bg-opacity-0 pointer-events-none'}`}>
+      <div className={`relative bg-white rounded-lg shadow-lg max-w-xs w-full p-4 flex flex-col items-center transform transition-all duration-300 ${show ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
         <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">×</button>
         <div className="w-56 h-56 rounded-lg overflow-hidden mb-2">
           <img src={story.image} alt="story" className="w-full h-full object-cover" />
