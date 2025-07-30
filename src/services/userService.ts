@@ -52,3 +52,13 @@ export const getSuggestions = async (token: string): Promise<UserSuggestion[]> =
   });
   return res.data;
 };
+
+export const getFollowers = async (userId: string): Promise<UserSuggestion[]> => {
+  const res = await api.get(`/users/${userId}/followers`);
+  return res.data;
+};
+
+export const getFollowing = async (userId: string): Promise<UserSuggestion[]> => {
+  const res = await api.get(`/users/${userId}/following`);
+  return res.data;
+};
