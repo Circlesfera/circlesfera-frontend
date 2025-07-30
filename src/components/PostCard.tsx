@@ -3,6 +3,7 @@ import { Post } from '@/services/postService';
 import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
+import Link from 'next/link';
 
 export default function PostCard({ post }: { post: Post }) {
   const { user } = useAuth();
@@ -23,9 +24,9 @@ export default function PostCard({ post }: { post: Post }) {
         <span className="ml-auto text-xs text-gray-400">{new Date(post.createdAt).toLocaleString()}</span>
       </div>
       {/* Imagen */}
-      <div className="w-full bg-gray-100 aspect-square overflow-hidden">
-        <img src={post.image} alt="post" className="w-full h-full object-cover" />
-      </div>
+      <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 aspect-square overflow-hidden cursor-pointer">
+        <img src={post.image} alt="post" className="w-full h-full object-cover transition hover:scale-105" />
+      </Link>
       {/* Caption, likes y comentarios */}
       <div className="px-4 py-2">
         <div className="flex items-center gap-4 mb-1">

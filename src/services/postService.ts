@@ -35,6 +35,11 @@ export const toggleLike = async (postId: string, token: string): Promise<{ liked
   return res.data;
 };
 
+export const getPostById = async (id: string): Promise<Post> => {
+  const res = await api.get(`/posts/${id}`);
+  return res.data;
+};
+
 export interface Comment {
   _id: string;
   user: {
