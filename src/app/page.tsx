@@ -8,6 +8,7 @@ import PostCard from '@/components/PostCard';
 import CreatePostForm from '@/components/CreatePostForm';
 import StoriesBar from '@/components/StoriesBar';
 import PostSkeleton from '@/components/PostSkeleton';
+import UserSuggestions from '@/components/UserSuggestions';
 
 export default function FeedPage() {
   const { user, token } = useAuth();
@@ -66,31 +67,41 @@ export default function FeedPage() {
 
   return (
     <ProtectedRoute>
-      <div className="max-w-xl mx-auto mt-8">
-        <StoriesBar />
-        <h1 className="text-2xl font-bold mb-4">¡Bienvenido, {user?.username}!</h1>
-        <CreatePostForm onPostCreated={handlePostCreated} />
-        {loading && (
-          <div className="text-center py-8">
-            {[...Array(3)].map((_, i) => <PostSkeleton key={i} />)}
-          </div>
-        )}
-        {!loading && posts.length === 0 && (
-          <div className="text-center py-8 text-gray-500">No hay publicaciones aún.</div>
-        )}
-        {posts.map((post, idx) => {
-          const isLast = idx === posts.length - 1;
-          return (
-            <div key={post._id} ref={isLast ? lastPostRef : undefined}>
-              <PostCard post={post} />
+      <div className="flex flex-col md:flex-row md:items-start gap-8 max-w-6xl mx-auto mt-8 px-2">
+        <div className="flex-1 max-w-xl w-full mx-auto">
+          <StoriesBar />
+          <h1 className="text-2xl font-bold mb-4">¡Bienvenido, {user?.username}!</h1>
+          <CreatePostForm onPostCreated={handlePostCreated} />
+          {loading && (
+            <div className="text-center py-8">
+              {[...Array(3)].map((_, i) => <PostSkeleton key={i} />)}
             </div>
-          );
-        })}
-        {fetchingMore && (
-          <div className="text-center py-4">
-            <PostSkeleton />
+          )}
+          {!loading && posts.length === 0 && (
+            <div className="text-center py-8 text-gray-500">No hay publicaciones aún.</div>
+          )}
+          {posts.map((post, idx) => {
+            const isLast = idx === posts.length - 1;
+            return (
+              <div key={post._id} ref={isLast ? lastPostRef : undefined}>
+                <PostCard post={post} />
+              </div>
+            );
+          })}
+          {fetchingMore && (
+            <div className="text-center py-4">
+              <PostSkeleton />
+            </div>
+          )}
+          {/* Sugerencias en móvil */}
+          <div className="block md:hidden mt-8">
+            <UserSuggestions />
           </div>
-        )}
+        </div>
+        {/* Sugerencias en lateral derecho (desktop) */}
+        <div className="hidden md:block w-80 flex-shrink-0">
+          <UserSuggestions />
+        </div>
       </div>
     </ProtectedRoute>
   );
