@@ -8,7 +8,7 @@ export default function Header() {
   const unread = useUnreadNotifications();
 
   return (
-    <header className="fixed top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-50">
+    <header className="sticky top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-2 md:px-4 z-50">
       {/* Logo */}
       <div className="flex items-center gap-2">
         <span className="font-bold text-xl text-blue-600">CircleSfera</span>
