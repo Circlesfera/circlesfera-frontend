@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getUserProfile } from '@/services/userService';
 import PostCard from '@/components/PostCard';
+import FollowButton from '@/components/FollowButton';
+import { useAuth } from '@/features/auth/useAuth';
 
 const RESERVED_ROUTES = [
   'login', 'register', 'explore', 'messages', 'notifications', 'profile', 'api'
@@ -18,6 +20,8 @@ export default async function UserProfilePage({ params }: { params: { username: 
     return notFound();
   }
 
+  // Obtener usuario autenticado (solo en cliente)
+  // Para SSR, FollowButton se renderiza solo si no es el propio usuario
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <div className="flex items-center gap-6 mb-6">
@@ -29,7 +33,13 @@ export default async function UserProfilePage({ params }: { params: { username: 
           </span>
         )}
         <div>
-          <div className="text-2xl font-bold">{profile.username}</div>
+          <div className="flex items-center gap-4 mb-1">
+            <div className="text-2xl font-bold">{profile.username}</div>
+            {/* Botón seguir solo si no es el propio usuario */}
+            <ClientOnly>
+              <ProfileFollowButton userId={profile._id} username={profile.username} />
+            </ClientOnly>
+          </div>
           <div className="text-gray-600 mb-1">{profile.bio}</div>
           <div className="flex gap-4 text-sm">
             <span><b>{profile.posts.length}</b> publicaciones</span>
@@ -47,4 +57,26 @@ export default async function UserProfilePage({ params }: { params: { username: 
       </div>
     </div>
   );
+}
+
+// Componente para renderizar FollowButton solo en cliente y evitar SSR
+'use client';
+import { useEffect, useState } from 'react';
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
+  return <>{children}</>;
+}
+
+function ProfileFollowButton({ userId, username }: { userId: string; username: string }) {
+  const { user } = useAuth();
+  const [following, setFollowing] = useState(false);
+  useEffect(() => {
+    if (user && user.following) {
+      setFollowing(user.following.includes(userId));
+    }
+  }, [user, userId]);
+  if (!user || user.username === username) return null;
+  return <FollowButton userId={userId} initialFollowing={following} onChange={setFollowing} />;
 }
