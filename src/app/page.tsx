@@ -1,3 +1,5 @@
+"use client";
+
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
 import { useEffect, useState } from 'react';

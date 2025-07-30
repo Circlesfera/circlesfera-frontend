@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { searchUsers, UserSearchResult } from '@/services/exploreService';
 import Link from 'next/link';
@@ -19,33 +21,33 @@ export default function UserSearch() {
   };
 
   return (
-    <div className="mb-6">
-      <form onSubmit={handleSearch} className="flex gap-2 mb-2">
+    <div className="mb-8 bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <form onSubmit={handleSearch} className="flex gap-2 mb-3">
         <input
           type="text"
           placeholder="Buscar usuarios..."
-          className="flex-1 px-3 py-2 border rounded focus:outline-none"
+          className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--accent)] text-base shadow-sm"
           value={query}
           onChange={e => setQuery(e.target.value)}
         />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition" disabled={loading}>
+        <button type="submit" className="bg-[var(--accent)] text-white px-6 py-2 rounded-full font-semibold hover:bg-violet-700 transition-all shadow-md disabled:opacity-60" disabled={loading}>
           Buscar
         </button>
       </form>
       {loading && <div className="text-gray-400 text-sm">Buscando...</div>}
       {results.length > 0 && (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2 mt-2">
           {results.map(u => (
             <li key={u._id}>
-              <Link href={`/${u.username}`} className="flex items-center gap-2 hover:bg-gray-100 px-2 py-1 rounded">
+              <Link href={`/${u.username}`} className="flex items-center gap-3 hover:bg-gray-100 px-3 py-2 rounded-xl transition-colors">
                 {u.avatar ? (
-                  <img src={u.avatar} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
+                  <img src={u.avatar} alt="avatar" className="w-9 h-9 rounded-full object-cover border-2 border-[var(--accent)] shadow-sm" />
                 ) : (
-                  <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+                  <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-[var(--accent)] to-blue-400 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-sm">
                     {u.username[0].toUpperCase()}
                   </span>
                 )}
-                <span className="font-semibold">{u.username}</span>
+                <span className="font-semibold text-gray-800">{u.username}</span>
               </Link>
             </li>
           ))}

@@ -1,12 +1,15 @@
+"use client";
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '@/services/axios';
 
 interface User {
-  id: string;
+  _id: string;
   username: string;
   email: string;
   avatar?: string;
   bio?: string;
+  following: string[];
 }
 
 interface AuthContextProps {

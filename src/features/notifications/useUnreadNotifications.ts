@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from 'react';
 import { getNotifications } from '@/services/notificationService';
 import { useAuth } from '@/features/auth/useAuth';

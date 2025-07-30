@@ -1,9 +1,11 @@
+"use client";
 import { notFound } from 'next/navigation';
 import { getUserProfile } from '@/services/userService';
 import PostCard from '@/components/PostCard';
 import FollowButton from '@/components/FollowButton';
-import { useAuth } from '@/features/auth/useAuth';
 import EditProfileForm from '@/components/EditProfileForm';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/features/auth/useAuth';
 
 const RESERVED_ROUTES = [
   'login', 'register', 'explore', 'messages', 'notifications', 'profile', 'api'
@@ -27,9 +29,6 @@ export default async function UserProfilePage({ params }: { params: { username: 
 }
 
 // Componente para renderizar FollowButton y EditProfileForm solo en cliente
-'use client';
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/features/auth/useAuth';
 function ClientOnlyProfile({ profile }: { profile: any }) {
   const { user } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
@@ -55,7 +54,7 @@ function ClientOnlyProfile({ profile }: { profile: any }) {
           <div className="flex items-center gap-4 mb-1">
             <div className="text-2xl font-bold">{profileData.username}</div>
             {!isOwnProfile && (
-              <ProfileFollowButton userId={profileData._id} username={profileData.username} />
+              <ProfileFollowButton userId={profileData._id} username={profileData.username} following={user?.following || []} />
             )}
             {isOwnProfile && (
               <button onClick={() => setShowEdit(v => !v)} className="ml-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm">{showEdit ? 'Cancelar' : 'Editar perfil'}</button>
@@ -83,24 +82,14 @@ function ClientOnlyProfile({ profile }: { profile: any }) {
   );
 }
 
-// Componente para renderizar FollowButton solo en cliente y evitar SSR
-'use client';
-import { useEffect, useState } from 'react';
-function ClientOnly({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  if (!mounted) return null;
-  return <>{children}</>;
-}
-
-function ProfileFollowButton({ userId, username }: { userId: string; username: string }) {
+function ProfileFollowButton({ userId, username, following }: { userId: string; username: string; following: string[] }) {
   const { user } = useAuth();
-  const [following, setFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
-    if (user && user.following) {
-      setFollowing(user.following.includes(userId));
+    if (user && following) {
+      setIsFollowing(following.includes(userId));
     }
-  }, [user, userId]);
+  }, [user, userId, following]);
   if (!user || user.username === username) return null;
-  return <FollowButton userId={userId} initialFollowing={following} onChange={setFollowing} />;
+  return <FollowButton userId={userId} initialFollowing={isFollowing} onChange={setIsFollowing} />;
 }

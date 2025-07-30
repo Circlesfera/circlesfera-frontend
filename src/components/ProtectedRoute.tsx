@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from '@/features/auth/useAuth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

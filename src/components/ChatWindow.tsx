@@ -36,8 +36,8 @@ export default function ChatWindow({ conversationId }: { conversationId: string 
   };
 
   return (
-    <section className="flex-1 flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+    <section className="flex-1 flex flex-col h-full bg-white rounded-r-2xl shadow-md">
+      <div className="flex-1 overflow-y-auto p-6 bg-gray-50 rounded-tr-2xl">
         {loading ? (
           <>
             {[...Array(5)].map((_, i) => <MessageSkeleton key={i} align={i % 2 === 0 ? 'left' : 'right'} />)}
@@ -45,11 +45,11 @@ export default function ChatWindow({ conversationId }: { conversationId: string 
         ) : messages.length === 0 ? (
           <div className="text-gray-400 text-sm">No hay mensajes aún.</div>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-3">
             {messages.map(m => (
               <li key={m._id} className={`flex ${m.sender._id === user?._id ? 'justify-end' : 'justify-start'}`}>
-                <div className={`px-3 py-2 rounded-lg max-w-xs ${m.sender._id === user?._id ? 'bg-blue-600 text-white' : 'bg-white border'}`}>
-                  <span className="text-sm">{m.text}</span>
+                <div className={`px-4 py-2 rounded-2xl max-w-xs shadow-sm ${m.sender._id === user?._id ? 'bg-[var(--accent)] text-white' : 'bg-white border border-gray-200'}`}>
+                  <span className="text-base">{m.text}</span>
                   <div className="text-xs text-gray-400 mt-1 text-right">{new Date(m.createdAt).toLocaleTimeString()}</div>
                 </div>
               </li>
@@ -58,16 +58,16 @@ export default function ChatWindow({ conversationId }: { conversationId: string 
           </ul>
         )}
       </div>
-      <form onSubmit={handleSend} className="flex gap-2 p-4 border-t bg-white">
+      <form onSubmit={handleSend} className="flex gap-2 p-5 border-t bg-white rounded-b-2xl">
         <input
           type="text"
-          className="flex-1 px-3 py-2 border rounded focus:outline-none"
+          className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--accent)] text-base shadow-sm"
           placeholder="Escribe un mensaje..."
           value={text}
           onChange={e => setText(e.target.value)}
           disabled={sending}
         />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition" disabled={sending || !text.trim()}>
+        <button type="submit" className="bg-[var(--accent)] text-white px-6 py-2 rounded-full font-semibold hover:bg-violet-700 transition-all shadow-md disabled:opacity-60" disabled={sending || !text.trim()}>
           Enviar
         </button>
       </form>

@@ -35,26 +35,26 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded shadow p-4 mb-6">
-      <h2 className="text-lg font-bold mb-3">Crear nueva publicación</h2>
-      {error && <div className="mb-2 text-red-500 text-sm">{error}</div>}
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-6 mb-8 border border-gray-100 flex flex-col gap-3">
+      <h2 className="text-xl font-bold mb-2 text-[var(--accent)]">Crear nueva publicación</h2>
+      {error && <div className="mb-2 text-red-500 text-sm font-medium">{error}</div>}
       <input
         type="file"
         accept="image/*"
         ref={fileInputRef}
         onChange={e => setImage(e.target.files?.[0] || null)}
-        className="mb-3"
+        className="mb-2 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--accent)] file:text-white hover:file:bg-violet-700 transition-all cursor-pointer"
         required
       />
       <textarea
         placeholder="Escribe un pie de foto..."
-        className="w-full mb-3 px-3 py-2 border rounded focus:outline-none"
+        className="w-full mb-2 px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--accent)] text-base resize-none shadow-sm"
         value={caption}
         onChange={e => setCaption(e.target.value)}
         rows={2}
         maxLength={2200}
       />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition" disabled={loading}>
+      <button type="submit" className="bg-[var(--accent)] text-white px-6 py-2 rounded-full font-semibold hover:bg-violet-700 transition-all shadow-md disabled:opacity-60" disabled={loading}>
         {loading ? 'Publicando...' : 'Publicar'}
       </button>
     </form>

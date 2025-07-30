@@ -35,9 +35,9 @@ export default function StoriesBar() {
   const nextStory = () => setCurrentIndex(i => Math.min(stories.length - 1, i + 1));
 
   return (
-    <div className="w-full flex flex-col items-center mb-6">
+    <div className="w-full flex flex-col items-center mb-8">
       <CreateStoryForm onStoryCreated={fetchStories} />
-      <div className="flex gap-4 overflow-x-auto py-2 w-full">
+      <div className="flex gap-5 overflow-x-auto py-3 w-full px-2 md:px-0">
         {loading ? (
           <>
             {[...Array(5)].map((_, i) => <StorySkeleton key={i} />)}
@@ -46,11 +46,11 @@ export default function StoriesBar() {
           <div className="text-gray-400 text-sm">No hay stories aún.</div>
         ) : (
           stories.map((story, idx) => (
-            <button key={story._id} className="flex flex-col items-center min-w-[70px] focus:outline-none group" onClick={() => openViewer(idx)}>
-              <div className="w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden mb-1 transition-transform duration-200 group-hover:scale-110 group-hover:shadow-lg">
+            <button key={story._id} className="flex flex-col items-center min-w-[80px] focus:outline-none group" onClick={() => openViewer(idx)}>
+              <div className="w-16 h-16 rounded-full border-2 border-[var(--accent)] bg-gradient-to-tr from-[var(--accent)] to-blue-400 overflow-hidden mb-1 transition-transform duration-200 group-hover:scale-110 group-hover:shadow-lg shadow-md">
                 <img src={story.user.avatar || '/default-avatar.png'} alt="avatar" className="w-full h-full object-cover" />
               </div>
-              <span className="text-xs text-center truncate max-w-[60px]">{story.user.username}</span>
+              <span className="text-xs text-center truncate max-w-[70px] font-medium text-gray-700 group-hover:text-[var(--accent)] transition-colors">{story.user.username}</span>
             </button>
           ))
         )}

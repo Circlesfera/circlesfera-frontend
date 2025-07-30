@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { getComments, addComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';

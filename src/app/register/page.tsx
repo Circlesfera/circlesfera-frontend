@@ -1,15 +1,27 @@
+"use client";
+
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/features/auth/useAuth';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { register, loading } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aquí irá la lógica de registro con la API
+    setError('');
+    try {
+      await register(username, email, password);
+      router.push('/');
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Error al registrarse');
+    }
   };
 
   return (
@@ -41,7 +53,9 @@ export default function RegisterPage() {
           onChange={e => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition">Registrarse</button>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition" disabled={loading}>
+          {loading ? 'Registrando...' : 'Registrarse'}
+        </button>
         <p className="mt-4 text-center text-sm">
           ¿Ya tienes cuenta?{' '}
           <Link href="/login" className="text-blue-600 hover:underline">Inicia sesión</Link>

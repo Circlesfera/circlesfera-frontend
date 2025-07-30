@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { getNotifications, markNotificationAsRead, Notification } from '@/services/notificationService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -26,29 +28,29 @@ export default function NotificationList() {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-8">
-      <h2 className="text-xl font-bold mb-4">Notificaciones</h2>
+    <div className="max-w-xl mx-auto mt-10 bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <h2 className="text-xl font-bold mb-4 text-[var(--accent)]">Notificaciones</h2>
       {loading ? (
         <div className="text-gray-400 text-sm">Cargando notificaciones...</div>
       ) : notifications.length === 0 ? (
         <div className="text-gray-400 text-sm">No tienes notificaciones.</div>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-3">
           {notifications.map(n => (
-            <li key={n._id} className={`flex items-center gap-3 p-3 rounded ${n.read ? 'bg-gray-100' : 'bg-blue-50'}`}>
+            <li key={n._id} className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${n.read ? 'bg-gray-100 border-gray-100' : 'bg-blue-50 border-[var(--accent)]/30 shadow-sm'}`}>
               {n.from?.avatar ? (
-                <img src={n.from.avatar} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
+                <img src={n.from.avatar} alt="avatar" className="w-10 h-10 rounded-full object-cover border-2 border-[var(--accent)] shadow-sm" />
               ) : (
-                <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+                <span className="w-10 h-10 rounded-full bg-gradient-to-tr from-[var(--accent)] to-blue-400 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-sm">
                   {n.from?.username[0].toUpperCase()}
                 </span>
               )}
-              <span className="flex-1 text-sm">
+              <span className="flex-1 text-base text-gray-700">
                 <b>{n.from?.username}</b> {n.message}
                 <span className="ml-2 text-xs text-gray-400">{new Date(n.createdAt).toLocaleString()}</span>
               </span>
               {!n.read && (
-                <button onClick={() => handleMarkAsRead(n._id)} className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Marcar como leída</button>
+                <button onClick={() => handleMarkAsRead(n._id)} className="text-xs bg-[var(--accent)] text-white px-3 py-1 rounded-full hover:bg-violet-700 transition-all font-semibold shadow-sm">Marcar como leída</button>
               )}
             </li>
           ))}
