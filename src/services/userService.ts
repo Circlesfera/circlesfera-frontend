@@ -38,3 +38,17 @@ export const editProfile = async (formData: FormData, token: string) => {
   });
   return res.data;
 };
+
+export interface UserSuggestion {
+  _id: string;
+  username: string;
+  avatar?: string;
+  bio?: string;
+}
+
+export const getSuggestions = async (token: string): Promise<UserSuggestion[]> => {
+  const res = await api.get('/users/suggestions', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
