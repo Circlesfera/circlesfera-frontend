@@ -3,6 +3,7 @@ import { getStories, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 import CreateStoryForm from './CreateStoryForm';
 import StoryViewer from './StoryViewer';
+import StorySkeleton from './StorySkeleton';
 
 export default function StoriesBar() {
   const { token } = useAuth();
@@ -38,7 +39,9 @@ export default function StoriesBar() {
       <CreateStoryForm onStoryCreated={fetchStories} />
       <div className="flex gap-4 overflow-x-auto py-2 w-full">
         {loading ? (
-          <div className="text-gray-400 text-sm">Cargando stories...</div>
+          <>
+            {[...Array(5)].map((_, i) => <StorySkeleton key={i} />)}
+          </>
         ) : stories.length === 0 ? (
           <div className="text-gray-400 text-sm">No hay stories aún.</div>
         ) : (
