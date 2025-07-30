@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getConversations, Conversation } from '@/services/messageService';
 import { useAuth } from '@/features/auth/useAuth';
+import ConversationSkeleton from './ConversationSkeleton';
 
 export default function ConversationsList({ onSelect, selectedId }: { onSelect: (id: string) => void; selectedId: string | null }) {
   const { token } = useAuth();
@@ -19,7 +20,9 @@ export default function ConversationsList({ onSelect, selectedId }: { onSelect: 
     <aside className="w-64 border-r border-gray-200 h-full overflow-y-auto">
       <h2 className="text-lg font-bold p-4">Chats</h2>
       {loading ? (
-        <div className="text-gray-400 text-sm p-4">Cargando...</div>
+        <>
+          {[...Array(4)].map((_, i) => <ConversationSkeleton key={i} />)}
+        </>
       ) : conversations.length === 0 ? (
         <div className="text-gray-400 text-sm p-4">No tienes conversaciones.</div>
       ) : (

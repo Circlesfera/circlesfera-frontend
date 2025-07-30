@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getMessages, sendMessage, Message } from '@/services/messageService';
 import { useAuth } from '@/features/auth/useAuth';
+import MessageSkeleton from './MessageSkeleton';
 
 export default function ChatWindow({ conversationId }: { conversationId: string }) {
   const { token, user } = useAuth();
@@ -38,7 +39,9 @@ export default function ChatWindow({ conversationId }: { conversationId: string 
     <section className="flex-1 flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
         {loading ? (
-          <div className="text-gray-400 text-sm">Cargando mensajes...</div>
+          <>
+            {[...Array(5)].map((_, i) => <MessageSkeleton key={i} align={i % 2 === 0 ? 'left' : 'right'} />)}
+          </>
         ) : messages.length === 0 ? (
           <div className="text-gray-400 text-sm">No hay mensajes aún.</div>
         ) : (
