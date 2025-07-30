@@ -28,3 +28,13 @@ export const unfollowUser = async (userId: string, token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const editProfile = async (formData: FormData, token: string) => {
+  const res = await api.put('/users/profile', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
