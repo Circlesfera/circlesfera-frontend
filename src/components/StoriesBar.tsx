@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { getStories, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 import CreateStoryForm from './CreateStoryForm';
+import StoryViewer from './StoryViewer';
 
 export default function StoriesBar() {
   const { token } = useAuth();
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const fetchStories = () => {
     setLoading(true);
@@ -21,6 +24,15 @@ export default function StoriesBar() {
     // eslint-disable-next-line
   }, []);
 
+  const openViewer = (index: number) => {
+    setCurrentIndex(index);
+    setViewerOpen(true);
+  };
+
+  const closeViewer = () => setViewerOpen(false);
+  const prevStory = () => setCurrentIndex(i => Math.max(0, i - 1));
+  const nextStory = () => setCurrentIndex(i => Math.min(stories.length - 1, i + 1));
+
   return (
     <div className="w-full flex flex-col items-center mb-6">
       <CreateStoryForm onStoryCreated={fetchStories} />
@@ -30,16 +42,25 @@ export default function StoriesBar() {
         ) : stories.length === 0 ? (
           <div className="text-gray-400 text-sm">No hay stories aún.</div>
         ) : (
-          stories.map(story => (
-            <div key={story._id} className="flex flex-col items-center min-w-[70px]">
+          stories.map((story, idx) => (
+            <button key={story._id} className="flex flex-col items-center min-w-[70px] focus:outline-none" onClick={() => openViewer(idx)}>
               <div className="w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden mb-1">
                 <img src={story.user.avatar || '/default-avatar.png'} alt="avatar" className="w-full h-full object-cover" />
               </div>
               <span className="text-xs text-center truncate max-w-[60px]">{story.user.username}</span>
-            </div>
+            </button>
           ))
         )}
       </div>
+      {viewerOpen && (
+        <StoryViewer
+          stories={stories}
+          storyIndex={currentIndex}
+          onClose={closeViewer}
+          onPrev={prevStory}
+          onNext={nextStory}
+        />
+      )}
     </div>
   );
 }
