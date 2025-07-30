@@ -1,7 +1,13 @@
 import React from 'react';
 import { Post } from '@/services/postService';
+import LikeButton from './LikeButton';
+import CommentsSection from './CommentsSection';
+import { useAuth } from '@/features/auth/useAuth';
 
 export default function PostCard({ post }: { post: Post }) {
+  const { user } = useAuth();
+  const likedByUser = post.likes.includes(user?._id || '');
+
   return (
     <div className="bg-white rounded shadow mb-6">
       {/* Header usuario */}
@@ -20,10 +26,13 @@ export default function PostCard({ post }: { post: Post }) {
       <div className="w-full bg-gray-100 aspect-square overflow-hidden">
         <img src={post.image} alt="post" className="w-full h-full object-cover" />
       </div>
-      {/* Caption y likes */}
+      {/* Caption, likes y comentarios */}
       <div className="px-4 py-2">
+        <div className="flex items-center gap-4 mb-1">
+          <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
+        </div>
         <div className="font-semibold mb-1">{post.caption}</div>
-        <div className="text-sm text-gray-500">{post.likes.length} likes</div>
+        <CommentsSection postId={post._id} />
       </div>
     </div>
   );
