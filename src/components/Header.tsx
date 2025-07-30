@@ -1,8 +1,11 @@
 import React from 'react';
 import { useAuth } from '@/features/auth/useAuth';
+import Link from 'next/link';
+import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const unread = useUnreadNotifications();
 
   return (
     <header className="fixed top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-50">
@@ -20,6 +23,14 @@ export default function Header() {
       </div>
       {/* Usuario y logout */}
       <nav className="flex items-center gap-6 text-gray-600 text-xl">
+        <Link href="/notifications" className="relative hover:text-blue-600">
+          <span title="Notificaciones">🔔</span>
+          {unread > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 font-bold animate-pulse">
+              {unread}
+            </span>
+          )}
+        </Link>
         {user && (
           <>
             <span className="flex items-center gap-2 text-base">
