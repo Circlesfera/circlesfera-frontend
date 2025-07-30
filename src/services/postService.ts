@@ -62,3 +62,18 @@ export const addComment = async (postId: string, text: string, token: string): P
   });
   return res.data.comment;
 };
+
+export interface FeedResponse {
+  posts: Post[];
+  total: number;
+  page: number;
+  pages: number;
+}
+
+export const getFeed = async (token: string, page = 1, limit = 10): Promise<FeedResponse> => {
+  const res = await api.get('/posts/feed', {
+    headers: { Authorization: `Bearer ${token}` },
+    params: { page, limit },
+  });
+  return res.data;
+};
