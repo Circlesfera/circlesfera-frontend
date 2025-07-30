@@ -6,6 +6,8 @@ import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
+import UserListModal from '@/components/UserListModal';
+import { getFollowers, getFollowing } from '@/services/userService';
 
 const RESERVED_ROUTES = [
   'login', 'register', 'explore', 'messages', 'notifications', 'profile', 'api'
@@ -34,9 +36,33 @@ function ClientOnlyProfile({ profile }: { profile: any }) {
   const [profileData, setProfileData] = useState(profile);
   const isOwnProfile = user && user.username === profile.username;
 
+  // Estado para modales de seguidores/seguidos
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [followersList, setFollowersList] = useState<any[]>([]);
+  const [followingList, setFollowingList] = useState<any[]>([]);
+  const [loadingFollowers, setLoadingFollowers] = useState(false);
+  const [loadingFollowing, setLoadingFollowing] = useState(false);
+
   const reloadProfile = async () => {
     const { getUserProfile } = await import('@/services/userService');
     setProfileData(await getUserProfile(profile.username));
+  };
+
+  // Handlers para abrir modales
+  const handleShowFollowers = async () => {
+    setShowFollowers(true);
+    setLoadingFollowers(true);
+    const data = await getFollowers(profileData._id);
+    setFollowersList(data);
+    setLoadingFollowers(false);
+  };
+  const handleShowFollowing = async () => {
+    setShowFollowing(true);
+    setLoadingFollowing(true);
+    const data = await getFollowing(profileData._id);
+    setFollowingList(data);
+    setLoadingFollowing(false);
   };
 
   return (
@@ -63,8 +89,12 @@ function ClientOnlyProfile({ profile }: { profile: any }) {
           <div className="text-gray-700 mb-2 break-words">{profileData.bio}</div>
           <div className="flex gap-8 text-base font-medium">
             <span><b>{profileData.posts.length}</b> publicaciones</span>
-            <span><b>{profileData.followers.length}</b> seguidores</span>
-            <span><b>{profileData.following.length}</b> seguidos</span>
+            <button className="hover:underline" onClick={handleShowFollowers}>
+              <b>{profileData.followers.length}</b> seguidores
+            </button>
+            <button className="hover:underline" onClick={handleShowFollowing}>
+              <b>{profileData.following.length}</b> seguidos
+            </button>
           </div>
         </div>
       </div>
@@ -86,6 +116,21 @@ function ClientOnlyProfile({ profile }: { profile: any }) {
           </div>
         )}
       </div>
+      {/* Modales de seguidores/seguidos */}
+      <UserListModal
+        open={showFollowers}
+        onClose={() => setShowFollowers(false)}
+        users={followersList}
+        title="Seguidores"
+        currentUserFollowing={user?.following || []}
+      />
+      <UserListModal
+        open={showFollowing}
+        onClose={() => setShowFollowing(false)}
+        users={followingList}
+        title="Seguidos"
+        currentUserFollowing={user?.following || []}
+      />
     </div>
   );
 }
