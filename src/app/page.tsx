@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getPosts, Post } from '@/services/postService';
 import PostCard from '@/components/PostCard';
 import CreatePostForm from '@/components/CreatePostForm';
+import StoriesBar from '@/components/StoriesBar';
 
 export default function FeedPage() {
   const { user } = useAuth();
@@ -25,6 +26,7 @@ export default function FeedPage() {
   return (
     <ProtectedRoute>
       <div className="max-w-xl mx-auto mt-8">
+        <StoriesBar />
         <h1 className="text-2xl font-bold mb-4">¡Bienvenido, {user?.username}!</h1>
         <CreatePostForm onPostCreated={fetchPosts} />
         {loading ? (
