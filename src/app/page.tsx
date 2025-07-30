@@ -1,13 +1,32 @@
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
+import { useEffect, useState } from 'react';
+import { getPosts, Post } from '@/services/postService';
+import PostCard from '@/components/PostCard';
 
 export default function FeedPage() {
   const { user } = useAuth();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getPosts().then(data => {
+      setPosts(data);
+      setLoading(false);
+    });
+  }, []);
+
   return (
     <ProtectedRoute>
       <div className="max-w-xl mx-auto mt-8">
         <h1 className="text-2xl font-bold mb-4">¡Bienvenido, {user?.username}!</h1>
-        <p className="text-gray-600">Este es tu feed privado de CircleSfera.</p>
+        {loading ? (
+          <div className="text-center py-8">Cargando publicaciones...</div>
+        ) : posts.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">No hay publicaciones aún.</div>
+        ) : (
+          posts.map(post => <PostCard key={post._id} post={post} />)
+        )}
       </div>
     </ProtectedRoute>
   );
