@@ -74,10 +74,18 @@ export const getUserProfile = async (token: string): Promise<User> => {
 };
 
 export const updateUserProfile = async (token: string, userData: Partial<User>): Promise<User> => {
-  const res = await api.put('/auth/profile', userData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data.user;
+  try {
+    const res = await api.put('/auth/profile', userData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data.user;
+  } catch (error: any) {
+    console.error('Error en updateUserProfile:', error.response?.data || error.message);
+    if (error.response?.data?.errors) {
+      console.error('Errores de validación:', error.response.data.errors);
+    }
+    throw error;
+  }
 };
 
 export const getUserProfileByUsername = async (username: string): Promise<UserProfile> => {
