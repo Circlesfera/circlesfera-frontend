@@ -8,13 +8,27 @@ export default function NotificationList() {
   const { token } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchNotifications = () => {
+  const fetchNotifications = async () => {
     setLoading(true);
-    getNotifications(token!).then(data => {
-      setNotifications(data);
+    setError(null);
+    try {
+      const data = await getNotifications(token!);
+      if (Array.isArray(data)) {
+        setNotifications(data);
+      } else {
+        console.error('getNotifications no devolvió un array:', data);
+        setError('Error al cargar notificaciones');
+        setNotifications([]);
+      }
+    } catch (error) {
+      console.error('Error al obtener notificaciones:', error);
+      setError('Error al cargar notificaciones');
+      setNotifications([]);
+    } finally {
       setLoading(false);
-    });
+    }
   };
 
   useEffect(() => {
@@ -23,8 +37,12 @@ export default function NotificationList() {
   }, []);
 
   const handleMarkAsRead = async (id: string) => {
-    await markNotificationAsRead(id, token!);
-    fetchNotifications();
+    try {
+      await markNotificationAsRead(id, token!);
+      fetchNotifications();
+    } catch (error) {
+      console.error('Error al marcar notificación como leída:', error);
+    }
   };
 
   return (
@@ -32,6 +50,8 @@ export default function NotificationList() {
       <h2 className="text-xl font-bold mb-4 text-[var(--accent)]">Notificaciones</h2>
       {loading ? (
         <div className="text-gray-400 text-sm">Cargando notificaciones...</div>
+      ) : error ? (
+        <div className="text-red-500 text-sm">{error}</div>
       ) : notifications.length === 0 ? (
         <div className="text-gray-400 text-sm">No tienes notificaciones.</div>
       ) : (

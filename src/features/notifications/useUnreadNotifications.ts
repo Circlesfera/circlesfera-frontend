@@ -9,8 +9,18 @@ export function useUnreadNotifications() {
 
   const fetchUnread = async () => {
     if (!token) return;
-    const notifications = await getNotifications(token);
-    setUnread(notifications.filter(n => !n.read).length);
+    try {
+      const notifications = await getNotifications(token);
+      if (Array.isArray(notifications)) {
+        setUnread(notifications.filter(n => !n.read).length);
+      } else {
+        console.error('getNotifications no devolvió un array:', notifications);
+        setUnread(0);
+      }
+    } catch (error) {
+      console.error('Error al obtener notificaciones:', error);
+      setUnread(0);
+    }
   };
 
   useEffect(() => {

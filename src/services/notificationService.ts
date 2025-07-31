@@ -19,7 +19,7 @@ export const getNotifications = async (token: string): Promise<Notification[]> =
   const res = await api.get('/notifications', {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data;
+  return res.data.notifications;
 };
 
 export const markNotificationAsRead = async (id: string, token: string) => {
