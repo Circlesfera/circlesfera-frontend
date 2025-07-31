@@ -1,7 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
-import FloatingActionButton from '@/components/FloatingActionButton';
 import { AuthProvider } from '@/features/auth/AuthContext';
 
 export const metadata: Metadata = {
@@ -22,7 +21,6 @@ export default function RootLayout({
           <main className="pt-16">
             {children}
           </main>
-          <FloatingActionButton />
         </AuthProvider>
       </body>
     </html>

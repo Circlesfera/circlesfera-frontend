@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
+import CreatePostForm from './CreatePostForm';
+import CreateStoryForm from './CreateStoryForm';
 
 // Iconos SVG simples
 const HomeIcon = () => (
@@ -42,192 +44,287 @@ const MenuIcon = () => (
   </svg>
 );
 
+const PlusIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  </svg>
+);
+
+const PostIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+  </svg>
+);
+
+const StoryIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
 export default function Header() {
   const { user, logout } = useAuth();
   const unread = useUnreadNotifications();
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showCreateMenu, setShowCreateMenu] = useState(false);
+  const [showPostForm, setShowPostForm] = useState(false);
+  const [showStoryForm, setShowStoryForm] = useState(false);
+
+  const handlePostCreated = () => {
+    setShowPostForm(false);
+    setShowCreateMenu(false);
+  };
+
+  const handleStoryCreated = () => {
+    setShowStoryForm(false);
+    setShowCreateMenu(false);
+  };
 
   return (
-    <header className="sticky top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-center px-4 z-50">
-      <div className="max-w-4xl w-full flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center">
-          <Link href="/" className="flex items-center">
-            <span className="font-bold text-2xl text-gray-900 tracking-tight select-none">CircleSfera</span>
-          </Link>
-        </div>
-
-        {/* Buscador centrado - Desktop */}
-        <div className="hidden md:block w-72">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Buscar"
-              className={`w-full px-12 py-2 bg-gray-50 border border-gray-200 rounded-lg text-center text-sm focus:outline-none transition-colors ${
-                searchFocused ? 'border-gray-400 bg-white' : 'hover:border-gray-300'
-              }`}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-            />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              <SearchIcon />
-            </div>
-          </div>
-        </div>
-
-        {/* Navegación derecha - Desktop */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="/" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <HomeIcon />
-          </Link>
-          
-          <Link href="/messages" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <MessageIcon />
-          </Link>
-          
-          <Link href="/explore" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <ExploreIcon />
-          </Link>
-          
-          <Link href="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <NotificationIcon />
-            {unread > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
-                {unread > 9 ? '9+' : unread}
-              </span>
-            )}
-          </Link>
-          
-          {user && (
-            <Link href={`/${user.username}`} className="flex items-center p-1 hover:bg-gray-100 rounded-lg transition-colors">
-              {user.avatar ? (
-                <img 
-                  src={user.avatar} 
-                  alt="avatar" 
-                  className="w-6 h-6 rounded-full object-cover" 
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-xs">
-                  {user.username[0].toUpperCase()}
-                </div>
-              )}
+    <>
+      <header className="sticky top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-center px-4 z-50">
+        <div className="max-w-4xl w-full flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center">
+              <span className="font-bold text-2xl text-gray-900 tracking-tight select-none">CircleSfera</span>
             </Link>
-          )}
-          
-          <button
-            onClick={logout}
-            className="text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            Salir
-          </button>
-        </nav>
+          </div>
 
-        {/* Botón de menú móvil */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <MenuIcon />
-        </button>
-      </div>
-
-      {/* Menú móvil */}
-      {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-white border-b border-gray-200 shadow-lg md:hidden">
-          <div className="p-4 space-y-4">
-            {/* Buscador móvil */}
+          {/* Buscador centrado - Desktop */}
+          <div className="hidden md:block w-72">
             <div className="relative">
               <input
                 type="text"
-                placeholder="Buscar..."
-                className="w-full px-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+                placeholder="Buscar"
+                className={`w-full px-12 py-2 bg-gray-50 border border-gray-200 rounded-lg text-center text-sm focus:outline-none transition-colors ${
+                  searchFocused ? 'border-gray-400 bg-white' : 'hover:border-gray-300'
+                }`}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <SearchIcon />
               </div>
             </div>
+          </div>
 
-            {/* Navegación móvil */}
-            <div className="grid grid-cols-2 gap-2">
-              <Link 
-                href="/" 
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
+          {/* Navegación derecha - Desktop */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <HomeIcon />
+            </Link>
+            
+            <Link href="/messages" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <MessageIcon />
+            </Link>
+            
+            <Link href="/explore" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <ExploreIcon />
+            </Link>
+            
+            <Link href="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <NotificationIcon />
+              {unread > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                  {unread > 9 ? '9+' : unread}
+                </span>
+              )}
+            </Link>
+
+            {/* Botón de crear contenido */}
+            <div className="relative">
+              <button
+                onClick={() => setShowCreateMenu(!showCreateMenu)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <HomeIcon />
-                <span className="text-sm font-medium">Inicio</span>
-              </Link>
-              
-              <Link 
-                href="/messages" 
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <MessageIcon />
-                <span className="text-sm font-medium">Mensajes</span>
-              </Link>
-              
-              <Link 
-                href="/explore" 
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <ExploreIcon />
-                <span className="text-sm font-medium">Explorar</span>
-              </Link>
-              
-              <Link 
-                href="/notifications" 
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors relative"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <NotificationIcon />
-                <span className="text-sm font-medium">Notificaciones</span>
-                {unread > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
-                    {unread > 9 ? '9+' : unread}
-                  </span>
+                <PlusIcon />
+              </button>
+
+              {/* Menú desplegable de crear contenido */}
+              {showCreateMenu && (
+                <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-50">
+                  <div className="space-y-1">
+                    <button
+                      onClick={() => setShowPostForm(true)}
+                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                      <PostIcon />
+                      <span className="font-medium text-gray-900">Crear publicación</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => setShowStoryForm(true)}
+                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                      <StoryIcon />
+                      <span className="font-medium text-gray-900">Crear story</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Avatar del usuario */}
+            <div className="relative">
+              <Link href="/profile" className="block">
+                {user?.avatar ? (
+                  <img 
+                    src={user.avatar} 
+                    alt="avatar" 
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 hover:ring-blue-300 transition-all duration-200" 
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">
+                    {user?.username[0].toUpperCase()}
+                  </div>
                 )}
               </Link>
             </div>
+          </nav>
 
-            {/* Perfil y logout móvil */}
-            <div className="border-t border-gray-200 pt-4">
-              {user && (
-                <Link 
-                  href={`/${user.username}`} 
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors mb-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {user.avatar ? (
-                    <img 
-                      src={user.avatar} 
-                      alt="avatar" 
-                      className="w-8 h-8 rounded-full object-cover" 
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-sm">
-                      {user.username[0].toUpperCase()}
-                    </div>
-                  )}
-                  <span className="text-sm font-medium">{user.username}</span>
-                </Link>
+          {/* Menú móvil */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <MenuIcon />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Menú móvil desplegable */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-16 left-0 w-full bg-white border-b border-gray-200 z-40">
+          <div className="px-4 py-2 space-y-2">
+            <Link href="/" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <HomeIcon />
+              <span>Inicio</span>
+            </Link>
+            
+            <Link href="/messages" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <MessageIcon />
+              <span>Mensajes</span>
+            </Link>
+            
+            <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <ExploreIcon />
+              <span>Explorar</span>
+            </Link>
+            
+            <Link href="/notifications" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <NotificationIcon />
+              <span>Notificaciones</span>
+              {unread > 0 && (
+                <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1 font-bold">
+                  {unread > 9 ? '9+' : unread}
+                </span>
               )}
-              
-              <button
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-left px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              >
-                Cerrar sesión
-              </button>
+            </Link>
+
+            {/* Botón de crear contenido en móvil */}
+            <button
+              onClick={() => setShowCreateMenu(!showCreateMenu)}
+              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+            >
+              <PlusIcon />
+              <span>Crear contenido</span>
+            </button>
+
+            {/* Submenú de crear contenido en móvil */}
+            {showCreateMenu && (
+              <div className="ml-4 space-y-1">
+                <button
+                  onClick={() => setShowPostForm(true)}
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <PostIcon />
+                  <span>Crear publicación</span>
+                </button>
+                
+                <button
+                  onClick={() => setShowStoryForm(true)}
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <StoryIcon />
+                  <span>Crear story</span>
+                </button>
+              </div>
+            )}
+
+            <Link href="/profile" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              {user?.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt="avatar" 
+                  className="w-8 h-8 rounded-full object-cover" 
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
+                  {user?.username[0].toUpperCase()}
+                </div>
+              )}
+              <span>Perfil</span>
+            </Link>
+
+            <button
+              onClick={logout}
+              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors text-red-600"
+            >
+              <span>Salir</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para crear post */}
+      {showPostForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Crear publicación</h2>
+                <button
+                  onClick={() => setShowPostForm(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <CloseIcon />
+                </button>
+              </div>
+              <CreatePostForm onPostCreated={handlePostCreated} />
             </div>
           </div>
         </div>
       )}
-    </header>
+
+      {/* Modal para crear story */}
+      {showStoryForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Crear story</h2>
+                <button
+                  onClick={() => setShowStoryForm(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <CloseIcon />
+                </button>
+              </div>
+              <CreateStoryForm onStoryCreated={handleStoryCreated} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
