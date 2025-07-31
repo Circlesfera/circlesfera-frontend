@@ -145,7 +145,7 @@ export default function FeedPage() {
                     <div 
                       key={`${post._id}-${idx}`} 
                       ref={isLast ? lastPostRef : undefined}
-                      className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                      className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
                     >
                       <PostCard post={post} />
                     </div>
