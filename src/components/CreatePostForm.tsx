@@ -136,7 +136,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       setPostType('image');
       
       onPostCreated();
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(error.response?.data?.message || 'Error al crear la publicación');
     } finally {
       setLoading(false);

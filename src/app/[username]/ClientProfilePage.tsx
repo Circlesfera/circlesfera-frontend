@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
-import { getFollowers, getFollowing } from '@/services/userService';
+import { getFollowers, getFollowing, UserProfile, UserSuggestion } from '@/services/userService';
+import { Post } from '@/services/postService';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
 
-export default function ClientProfilePage({ profile }: { profile: any }) {
+export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
   const { user } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [profileData, setProfileData] = useState(profile);
@@ -16,8 +17,8 @@ export default function ClientProfilePage({ profile }: { profile: any }) {
   // Estado para modales de seguidores/seguidos
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const [followersList, setFollowersList] = useState<any[]>([]);
-  const [followingList, setFollowingList] = useState<any[]>([]);
+  const [followersList, setFollowersList] = useState<UserSuggestion[]>([]);
+  const [followingList, setFollowingList] = useState<UserSuggestion[]>([]);
   const [loadingFollowers, setLoadingFollowers] = useState(false);
   const [loadingFollowing, setLoadingFollowing] = useState(false);
 
@@ -77,7 +78,7 @@ export default function ClientProfilePage({ profile }: { profile: any }) {
       </div>
       {/* Edición de perfil */}
       {isOwnProfile && showEdit && (
-        <EditProfileForm initialBio={profileData.bio} onProfileUpdated={() => { setShowEdit(false); reloadProfile(); }} />
+        <EditProfileForm profile={profileData} onSave={async () => { setShowEdit(false); await reloadProfile(); }} onCancel={() => setShowEdit(false)} />
       )}
       {/* Grid de publicaciones */}
       <div className="mt-10">
@@ -85,9 +86,9 @@ export default function ClientProfilePage({ profile }: { profile: any }) {
           <div className="text-center text-gray-500">Este usuario no ha publicado nada aún.</div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {profileData.posts.map((post: any) => (
+            {profileData.posts.map((post: Post) => (
               <div key={post._id} className="aspect-square overflow-hidden rounded-xl shadow-sm bg-gray-100 cursor-pointer hover:scale-105 transition-transform">
-                <img src={post.image} alt="post" className="w-full h-full object-cover" />
+                <img src={post.content.images?.[0]?.url || '/default-post.jpg'} alt="post" className="w-full h-full object-cover" />
               </div>
             ))}
           </div>

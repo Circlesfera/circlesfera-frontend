@@ -24,7 +24,7 @@ export default function CreateStoryForm({ onStoryCreated }: { onStoryCreated: ()
       setImage(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       onStoryCreated();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.response?.data?.message || 'Error al subir la story');
     } finally {
       setLoading(false);

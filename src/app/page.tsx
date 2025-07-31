@@ -10,7 +10,7 @@ import PostSkeleton from '@/components/PostSkeleton';
 import UserSuggestions from '@/components/UserSuggestions';
 
 export default function FeedPage() {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -32,7 +32,7 @@ export default function FeedPage() {
         setPosts(res.posts);
       }
       
-      setHasMore(pageNum < res.pages);
+      setHasMore(pageNum < res.pagination.pages);
       setPage(pageNum);
     } catch (error) {
       console.error('Error fetching feed:', error);

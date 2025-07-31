@@ -51,7 +51,7 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
   const story = stories[storyIndex];
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -88,14 +88,12 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
   };
 
   const pauseProgress = () => {
-    setIsPaused(true);
     if (progressRef.current) {
       clearInterval(progressRef.current);
     }
   };
 
   const resumeProgress = () => {
-    setIsPaused(false);
     startProgress();
   };
 
@@ -112,7 +110,7 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [handleKeyPress]);
 
   if (!story) return null;
 

@@ -33,7 +33,7 @@ export default function StoriesBar() {
   const [loading, setLoading] = useState(true);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showCreateStory, setShowCreateStory] = useState(false);
+
 
   const fetchStories = async () => {
     if (!token) return;
@@ -53,7 +53,7 @@ export default function StoriesBar() {
 
   useEffect(() => {
     fetchStories();
-  }, [token]);
+  }, [token, fetchStories]);
 
   const openViewer = (index: number) => {
     setCurrentIndex(index);
@@ -65,8 +65,8 @@ export default function StoriesBar() {
   const nextStory = () => setCurrentIndex(i => Math.min(stories.length - 1, i + 1));
 
   const handleCreateStory = () => {
-    setShowCreateStory(true);
     // Aquí se abriría el modal para crear historia
+    console.log('Crear historia');
   };
 
   const formatTimeAgo = (date: string) => {

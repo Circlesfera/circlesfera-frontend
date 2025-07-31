@@ -64,7 +64,7 @@ export default function UserSuggestions() {
         </div>
       ) : (
         <div className="space-y-3">
-          {suggestions.map((suggestion, idx) => (
+          {suggestions.map((suggestion) => (
             <div 
               key={suggestion._id} 
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"

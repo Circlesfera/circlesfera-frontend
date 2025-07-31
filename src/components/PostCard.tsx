@@ -6,7 +6,7 @@ import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Iconos SVG modernos
 const HeartIcon = ({ filled }: { filled: boolean }) => (

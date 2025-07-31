@@ -19,7 +19,7 @@ export default function RegisterPage() {
     try {
       await register(username, email, password);
       router.push('/');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.response?.data?.message || 'Error al registrarse');
     }
   };

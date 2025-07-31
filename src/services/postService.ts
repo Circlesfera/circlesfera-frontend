@@ -194,7 +194,7 @@ export const toggleLike = async (postId: string, token: string): Promise<LikeRes
 };
 
 // Obtener likes de un post
-export const getPostLikes = async (postId: string): Promise<{ success: boolean; likes: any[] }> => {
+export const getPostLikes = async (postId: string): Promise<{ success: boolean; likes: UserProfile[] }> => {
   const res = await api.get(`/posts/${postId}/likes`);
   return res.data;
 };

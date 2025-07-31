@@ -44,9 +44,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [showEditForm, setShowEditForm] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'liked'>('posts');
-  const [posts, setPosts] = useState([]);
-  const [savedPosts, setSavedPosts] = useState([]);
-  const [likedPosts, setLikedPosts] = useState([]);
+
 
   useEffect(() => {
     if (token && user) {

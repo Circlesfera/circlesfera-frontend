@@ -34,7 +34,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
       await addComment(postId, text, token!);
       setText('');
       fetchComments();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.response?.data?.message || 'Error al comentar');
     } finally {
       setSending(false);
