@@ -25,42 +25,65 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center text-blue-600">Regístrate en CircleSfera</h1>
-        {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
-        <input
-          type="text"
-          placeholder="Nombre de usuario"
-          className="w-full mb-4 px-3 py-2 border rounded focus:outline-none"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full mb-4 px-3 py-2 border rounded focus:outline-none"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          className="w-full mb-6 px-3 py-2 border rounded focus:outline-none"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition" disabled={loading}>
-          {loading ? 'Registrando...' : 'Registrarse'}
-        </button>
-        <p className="mt-4 text-center text-sm">
-          ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline">Inicia sesión</Link>
-        </p>
-      </form>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="max-w-sm w-full">
+        <div className="bg-white border border-gray-200 p-8 mb-4">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">CircleSfera</h1>
+            <p className="text-gray-400 text-base font-semibold">
+              Regístrate para ver fotos y videos de tus amigos.
+            </p>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-3">
+            {error && <div className="text-red-500 text-sm text-center mb-3">{error}</div>}
+            
+            <input
+              type="text"
+              placeholder="Nombre de usuario"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
+            
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+            
+            <input
+              type="password"
+              placeholder="Contraseña"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            
+            <button 
+              type="submit" 
+              className="w-full bg-blue-500 text-white py-1.5 rounded font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed" 
+              disabled={loading}
+            >
+              {loading ? 'Registrando...' : 'Registrarse'}
+            </button>
+          </form>
+        </div>
+        
+        <div className="bg-white border border-gray-200 p-4 text-center">
+          <p className="text-gray-900 text-sm">
+            ¿Tienes una cuenta?{' '}
+            <Link href="/login" className="text-blue-500 font-semibold hover:opacity-70 transition-opacity">
+              Inicia sesión
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -24,34 +24,53 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-2">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md mx-auto flex flex-col gap-4 border border-gray-100">
-        <h1 className="text-2xl font-bold mb-2 text-center text-blue-600">Iniciar sesión en CircleSfera</h1>
-        {error && <div className="mb-2 text-red-500 text-sm text-center">{error}</div>}
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition" disabled={loading}>
-          {loading ? 'Entrando...' : 'Entrar'}
-        </button>
-        <p className="mt-2 text-center text-sm text-gray-500">
-          ¿No tienes cuenta?{' '}
-          <Link href="/register" className="text-blue-600 hover:underline">Regístrate</Link>
-        </p>
-      </form>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="max-w-sm w-full">
+        <div className="bg-white border border-gray-200 p-8 mb-4">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">CircleSfera</h1>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-3">
+            {error && <div className="text-red-500 text-sm text-center mb-3">{error}</div>}
+            
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+            
+            <input
+              type="password"
+              placeholder="Contraseña"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            
+            <button 
+              type="submit" 
+              className="w-full bg-blue-500 text-white py-1.5 rounded font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed" 
+              disabled={loading}
+            >
+              {loading ? 'Entrando...' : 'Iniciar sesión'}
+            </button>
+          </form>
+        </div>
+        
+        <div className="bg-white border border-gray-200 p-4 text-center">
+          <p className="text-gray-900 text-sm">
+            ¿No tienes una cuenta?{' '}
+            <Link href="/register" className="text-blue-500 font-semibold hover:opacity-70 transition-opacity">
+              Regístrate
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

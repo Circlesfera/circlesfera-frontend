@@ -1,38 +1,159 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Post } from '@/services/postService';
 import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 
+// Iconos SVG modernos
+const HeartIcon = ({ filled }: { filled: boolean }) => (
+  <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={filled ? 0 : 2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
+
+const CommentIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+  </svg>
+);
+
+const ShareIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+  </svg>
+);
+
+const BookmarkIcon = ({ filled }: { filled: boolean }) => (
+  <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={filled ? 0 : 2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+  </svg>
+);
+
+const MoreIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+  </svg>
+);
+
 export default function PostCard({ post }: { post: Post }) {
   const { user } = useAuth();
   const likedByUser = post.likes.includes(user?._id || '');
+  const [isSaved, setIsSaved] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
+  const formatTimeAgo = (date: string) => {
+    const now = new Date();
+    const postDate = new Date(date);
+    const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return 'ahora';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d`;
+    return postDate.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+  };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md mb-8 transition-transform duration-200 hover:scale-[1.015] hover:shadow-xl border border-gray-100">
-      {/* Header usuario */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-gray-100">
-        {post.user.avatar ? (
-          <img src={post.user.avatar} alt="avatar" className="w-10 h-10 rounded-full object-cover border-2 border-[var(--accent)] shadow-sm" />
-        ) : (
-          <span className="w-10 h-10 rounded-full bg-gradient-to-tr from-[var(--accent)] to-blue-400 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-sm">
-            {post.user.username[0].toUpperCase()}
-          </span>
-        )}
-        <span className="font-semibold text-gray-800 text-base">{post.user.username}</span>
-        <span className="ml-auto text-xs text-gray-400 font-medium">{new Date(post.createdAt).toLocaleString()}</span>
-      </div>
-      {/* Imagen */}
-      <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 aspect-square overflow-hidden cursor-pointer rounded-b-none rounded-t-none">
-        <img src={post.image} alt="post" className="w-full h-full object-cover transition-transform duration-200 hover:scale-105" />
-      </Link>
-      {/* Caption, likes y comentarios */}
-      <div className="px-5 py-3">
-        <div className="flex items-center gap-4 mb-2">
-          <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
+    <div className="card-modern mb-6 animate-fade-in">
+      {/* Header del usuario */}
+      <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center space-x-3">
+          <Link href={`/${post.user.username}`} className="group">
+            {post.user.avatar ? (
+              <img 
+                src={post.user.avatar} 
+                alt="avatar" 
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">
+                {post.user.username[0].toUpperCase()}
+              </div>
+            )}
+          </Link>
+          <div className="flex flex-col">
+            <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors">
+              {post.user.username}
+            </Link>
+            <span className="text-gray-500 text-xs">
+              {formatTimeAgo(post.createdAt)}
+            </span>
+          </div>
         </div>
-        <div className="font-medium mb-2 text-gray-700 break-words">{post.caption}</div>
+        
+        <button 
+          onClick={() => setShowMore(!showMore)}
+          className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200"
+        >
+          <MoreIcon />
+        </button>
+      </div>
+
+      {/* Imagen con efecto hover */}
+      <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 group">
+        <div className="relative overflow-hidden">
+          <img 
+            src={post.image} 
+            alt="post" 
+            className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" 
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+        </div>
+      </Link>
+
+      {/* Acciones */}
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-4">
+            <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
+            
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group">
+              <CommentIcon />
+            </button>
+            
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group">
+              <ShareIcon />
+            </button>
+          </div>
+          
+          <button 
+            onClick={() => setIsSaved(!isSaved)}
+            className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group"
+          >
+            <BookmarkIcon filled={isSaved} />
+          </button>
+        </div>
+
+        {/* Likes */}
+        {post.likes.length > 0 && (
+          <div className="font-semibold text-gray-900 text-sm mb-3">
+            {post.likes.length} me gusta
+          </div>
+        )}
+
+        {/* Caption */}
+        {post.caption && (
+          <div className="mb-3">
+            <span className="font-semibold text-gray-900 text-sm mr-2">
+              {post.user.username}
+            </span>
+            <span className="text-gray-900 text-sm leading-relaxed">
+              {post.caption.length > 100 ? (
+                <>
+                  {post.caption.substring(0, 100)}...
+                  <button className="text-gray-500 hover:text-gray-700 ml-1 font-medium">
+                    más
+                  </button>
+                </>
+              ) : (
+                post.caption
+              )}
+            </span>
+          </div>
+        )}
+
+        {/* Comentarios */}
         <CommentsSection postId={post._id} />
       </div>
     </div>

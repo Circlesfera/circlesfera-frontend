@@ -42,43 +42,46 @@ export default function CommentsSection({ postId }: { postId: string }) {
   };
 
   return (
-    <div className="mt-2">
-      <div className="mb-2 text-sm font-semibold">Comentarios</div>
-      {loading ? (
-        <div className="text-gray-400 text-sm">Cargando comentarios...</div>
-      ) : comments.length === 0 ? (
-        <div className="text-gray-400 text-sm">Sé el primero en comentar.</div>
-      ) : (
-        <ul className="mb-2 max-h-32 overflow-y-auto">
-          {comments.map(c => (
-            <li key={c._id} className="mb-1 flex items-center gap-2">
-              {c.user.avatar ? (
-                <img src={c.user.avatar} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
-              ) : (
-                <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-xs">
-                  {c.user.username[0].toUpperCase()}
-                </span>
-              )}
-              <span className="font-semibold text-xs">{c.user.username}:</span>
-              <span className="text-xs">{c.text}</span>
-            </li>
+    <div>
+      {/* Mostrar algunos comentarios */}
+      {!loading && comments.length > 0 && (
+        <div className="mb-2">
+          {comments.slice(0, 2).map(c => (
+            <div key={c._id} className="mb-1">
+              <span className="font-semibold text-gray-900 text-sm mr-2">
+                {c.user.username}
+              </span>
+              <span className="text-gray-900 text-sm">{c.text}</span>
+            </div>
           ))}
-        </ul>
+          {comments.length > 2 && (
+            <button className="text-gray-400 text-xs hover:opacity-70 transition-opacity">
+              Ver los {comments.length} comentarios
+            </button>
+          )}
+        </div>
       )}
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-2">
+
+      {/* Formulario de comentario */}
+      <form onSubmit={handleSubmit} className="flex items-center border-t border-gray-200 pt-3">
         <input
           type="text"
           placeholder="Añade un comentario..."
-          className="flex-1 px-2 py-1 border rounded text-sm"
+          className="flex-1 text-gray-900 text-sm bg-transparent border-none outline-none"
           value={text}
           onChange={e => setText(e.target.value)}
           disabled={sending}
           maxLength={500}
         />
-        <button type="submit" className="bg-blue-600 text-white px-3 py-1 rounded text-sm font-semibold hover:bg-blue-700 transition" disabled={sending || !text.trim()}>
-          {sending ? '...' : 'Comentar'}
+        <button 
+          type="submit" 
+          className={`text-blue-500 font-semibold text-sm hover:opacity-70 transition-opacity ${!text.trim() || sending ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={sending || !text.trim()}
+        >
+          {sending ? '...' : 'Publicar'}
         </button>
       </form>
+      
       {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
     </div>
   );
