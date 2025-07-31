@@ -27,6 +27,22 @@ api.interceptors.response.use(
       }
     }
     
+    // Si es un error 500, también limpiar tokens por si acaso
+    if (error?.response?.status === 500) {
+      console.error('Error 500 del servidor - posible problema de autenticación');
+      // Solo limpiar tokens si el error parece ser de autenticación
+      if (error?.response?.data?.message?.includes('Token') || 
+          error?.response?.data?.message?.includes('jwt') ||
+          error?.response?.data?.message?.includes('autenticación')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
+      }
+    }
+    
     if (error.code === 'ECONNABORTED') {
       console.error('Request timeout');
     }
