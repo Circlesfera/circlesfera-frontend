@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Post } from '@/services/postService';
 import LikeButton from './LikeButton';
