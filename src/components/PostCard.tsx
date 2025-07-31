@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Post } from '@/services/postService';
 import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Iconos SVG modernos
 const HeartIcon = ({ filled }: { filled: boolean }) => (
@@ -44,11 +45,28 @@ const PlayIcon = () => (
   </svg>
 );
 
+const LocationIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+const TagIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+  </svg>
+);
+
 export default function PostCard({ post }: { post: Post }) {
   const { user } = useAuth();
   const likedByUser = post.likes.includes(user?._id || '');
   const [isSaved, setIsSaved] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [showFullCaption, setShowFullCaption] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const formatTimeAgo = (date: string) => {
     const now = new Date();
@@ -68,45 +86,114 @@ export default function PostCard({ post }: { post: Post }) {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  const handleVideoPlay = () => {
+    if (videoRef.current) {
+      if (isVideoPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    }
+  };
+
   const renderContent = () => {
     switch (post.type) {
       case 'image':
-        return (
-          <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 group">
+        if (post.content.images && post.content.images.length > 1) {
+          return (
+            <div className="relative overflow-hidden">
+              <div className="relative">
+                <img 
+                  src={post.content.images[currentImageIndex].url} 
+                  alt={post.content.images[currentImageIndex].alt || "post"} 
+                  className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105" 
+                />
+                {/* Indicadores de imagen */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  {post.content.images.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                        index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+                {/* Navegación de imágenes */}
+                {currentImageIndex > 0 && (
+                  <button
+                    onClick={() => setCurrentImageIndex(currentImageIndex - 1)}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                )}
+                {currentImageIndex < post.content.images.length - 1 && (
+                  <button
+                    onClick={() => setCurrentImageIndex(currentImageIndex + 1)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        } else {
+          return (
             <div className="relative overflow-hidden">
               <img 
-                src={post.content.image} 
-                alt="post" 
-                className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" 
+                src={post.content.images?.[0]?.url || post.content.image} 
+                alt={post.content.images?.[0]?.alt || "post"} 
+                className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105" 
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
             </div>
-          </Link>
-        );
+          );
+        }
 
       case 'video':
         return (
-          <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 group">
-            <div className="relative overflow-hidden">
-              <video 
-                src={post.content.video?.url} 
-                poster={post.content.video?.thumbnail}
-                className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-                preload="metadata"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative overflow-hidden">
+            <video 
+              ref={videoRef}
+              src={post.content.video?.url} 
+              poster={post.content.video?.thumbnail}
+              className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
+              preload="metadata"
+              onPlay={() => setIsVideoPlaying(true)}
+              onPause={() => setIsVideoPlaying(false)}
+            />
+            {!isVideoPlaying && (
+              <button
+                onClick={handleVideoPlay}
+                className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-all duration-200"
+              >
                 <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center">
                   <PlayIcon />
                 </div>
+              </button>
+            )}
+            {post.content.video?.duration && (
+              <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                {formatDuration(post.content.video.duration)}
               </div>
-              {post.content.video?.duration && (
-                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                  {formatDuration(post.content.video.duration)}
-                </div>
-              )}
+            )}
+          </div>
+        );
+
+      case 'text':
+        return (
+          <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50">
+            <div className="text-gray-900 text-lg leading-relaxed whitespace-pre-wrap">
+              {post.content.text}
             </div>
-          </Link>
+          </div>
         );
 
       default:
@@ -115,7 +202,12 @@ export default function PostCard({ post }: { post: Post }) {
   };
 
   return (
-    <div className="animate-fade-in">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="animate-fade-in"
+    >
       {/* Header del usuario */}
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-3">
@@ -136,9 +228,18 @@ export default function PostCard({ post }: { post: Post }) {
             <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors">
               {post.user.username}
             </Link>
-            <span className="text-gray-500 text-xs">
-              {formatTimeAgo(post.createdAt)}
-            </span>
+            <div className="flex items-center space-x-2 text-gray-500 text-xs">
+              <span>{formatTimeAgo(post.createdAt)}</span>
+              {post.location?.name && (
+                <>
+                  <span>•</span>
+                  <div className="flex items-center space-x-1">
+                    <LocationIcon />
+                    <span>{post.location.name}</span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
         
@@ -190,10 +291,15 @@ export default function PostCard({ post }: { post: Post }) {
               {post.user.username}
             </span>
             <span className="text-gray-900 text-sm leading-relaxed whitespace-pre-wrap">
-              {post.caption.length > 100 ? (
+              {showFullCaption ? (
+                post.caption
+              ) : post.caption.length > 100 ? (
                 <>
                   {post.caption.substring(0, 100)}...
-                  <button className="text-gray-500 hover:text-gray-700 ml-1 font-medium">
+                  <button 
+                    onClick={() => setShowFullCaption(true)}
+                    className="text-gray-500 hover:text-gray-700 ml-1 font-medium"
+                  >
                     más
                   </button>
                 </>
@@ -201,12 +307,37 @@ export default function PostCard({ post }: { post: Post }) {
                 post.caption
               )}
             </span>
+            {showFullCaption && (
+              <button 
+                onClick={() => setShowFullCaption(false)}
+                className="text-gray-500 hover:text-gray-700 ml-1 font-medium text-sm"
+              >
+                menos
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex items-center space-x-2 mb-3">
+            <TagIcon />
+            <div className="flex flex-wrap gap-1">
+              {post.tags.map((tag, index) => (
+                <span 
+                  key={index}
+                  className="text-blue-600 text-xs font-medium hover:text-blue-700 cursor-pointer"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Comentarios */}
         <CommentsSection postId={post._id} />
       </div>
-    </div>
+    </motion.div>
   );
 }
