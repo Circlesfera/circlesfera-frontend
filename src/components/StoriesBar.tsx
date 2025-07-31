@@ -48,7 +48,7 @@ export default function StoriesBar() {
   const nextStory = () => setCurrentIndex(i => Math.min(stories.length - 1, i + 1));
 
   return (
-    <div className="card mb-4">
+    <>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
         <div className="flex items-center space-x-2">
@@ -134,6 +134,6 @@ export default function StoriesBar() {
           onNext={nextStory}
         />
       )}
-    </div>
+    </>
   );
 }
