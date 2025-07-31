@@ -13,6 +13,6 @@ export const searchUsers = async (query: string): Promise<UserSearchResult[]> =>
 };
 
 export const getRecentPosts = async (): Promise<Post[]> => {
-  const res = await api.get('/posts'); // Puedes cambiar a /posts/recent si tienes endpoint
-  return res.data;
+  const res = await api.get('/posts/recent');
+  return res.data.posts;
 };
