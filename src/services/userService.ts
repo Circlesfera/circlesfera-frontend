@@ -169,3 +169,8 @@ export const changePassword = async (currentPassword: string, newPassword: strin
   });
   return res.data;
 };
+
+export const checkUsernameAvailability = async (username: string): Promise<{ available: boolean; username: string }> => {
+  const res = await api.get(`/auth/check-username/${encodeURIComponent(username)}`);
+  return res.data;
+};

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { checkUsernameAvailability } from '@/services/userService';
 
 interface User {
   _id: string;
@@ -39,6 +40,47 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [usernameChanged, setUsernameChanged] = useState(false);
   const [originalUsername] = useState(profile.username);
+  const [usernameAvailability, setUsernameAvailability] = useState<{
+    checking: boolean;
+    available: boolean | null;
+    lastChecked: string;
+  }>({
+    checking: false,
+    available: null,
+    lastChecked: ''
+  });
+
+  // Verificar disponibilidad de username con debounce
+  useEffect(() => {
+    const checkUsername = async () => {
+      if (!formData.username || formData.username.length < 3) {
+        setUsernameAvailability(prev => ({ ...prev, available: null, checking: false }));
+        return;
+      }
+
+      if (formData.username === originalUsername) {
+        setUsernameAvailability(prev => ({ ...prev, available: true, checking: false }));
+        return;
+      }
+
+      setUsernameAvailability(prev => ({ ...prev, checking: true }));
+
+      try {
+        const result = await checkUsernameAvailability(formData.username);
+        setUsernameAvailability({
+          checking: false,
+          available: result.available,
+          lastChecked: formData.username
+        });
+      } catch (error) {
+        console.error('Error verificando username:', error);
+        setUsernameAvailability(prev => ({ ...prev, checking: false }));
+      }
+    };
+
+    const timeoutId = setTimeout(checkUsername, 500); // Debounce de 500ms
+    return () => clearTimeout(timeoutId);
+  }, [formData.username, originalUsername]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -72,6 +114,8 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         newErrors.username = 'El nombre de usuario debe tener entre 3 y 30 caracteres';
       } else if (!formData.username.match(/^[a-zA-Z0-9_]+$/)) {
         newErrors.username = 'El nombre de usuario solo puede contener letras, números y guiones bajos';
+      } else if (formData.username !== originalUsername && usernameAvailability.available === false) {
+        newErrors.username = 'Este nombre de usuario no está disponible';
       }
     }
 
@@ -164,22 +208,49 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
               </span>
             )}
           </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className={`input-modern ${errors.username ? 'border-red-500' : ''} ${usernameChanged ? 'border-orange-300 bg-orange-50' : ''}`}
-            placeholder="nombre_usuario"
-            disabled={loading}
-          />
+          <div className="relative">
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className={`input-modern pr-10 ${errors.username ? 'border-red-500' : ''} ${usernameChanged ? 'border-orange-300 bg-orange-50' : ''} ${usernameAvailability.available === true ? 'border-green-500' : ''} ${usernameAvailability.available === false ? 'border-red-500' : ''}`}
+              placeholder="nombre_usuario"
+              disabled={loading}
+            />
+            {/* Indicador de disponibilidad */}
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+              {usernameAvailability.checking && (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+              )}
+              {!usernameAvailability.checking && formData.username && formData.username.length >= 3 && (
+                <>
+                  {usernameAvailability.available === true && (
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {usernameAvailability.available === false && (
+                    <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
           {errors.username && (
             <p className="text-red-500 text-sm mt-1">{errors.username}</p>
           )}
           {usernameChanged && (
             <p className="text-orange-600 text-sm mt-1">
               ⚠️ Una vez cambiado, no podrás volver a usar tu nombre de usuario anterior hasta que lo cambies de nuevo
+            </p>
+          )}
+          {!errors.username && usernameAvailability.available === true && formData.username !== originalUsername && (
+            <p className="text-green-600 text-sm mt-1">
+              ✅ Este nombre de usuario está disponible
             </p>
           )}
         </div>
