@@ -17,53 +17,61 @@ export default function FeedPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostRef = useRef<HTMLDivElement | null>(null);
 
-  const fetchFeed = useCallback(async (reset = false) => {
+  const fetchFeed = useCallback(async (pageNum: number, append = false) => {
     if (!token) return;
-    if (reset) {
-      setLoading(true);
-      setPage(1);
+    
+    try {
+      const res = await getFeed(token, pageNum, 10);
+      
+      if (append) {
+        setPosts(prev => [...prev, ...res.posts]);
+      } else {
+        setPosts(res.posts);
+      }
+      
+      setHasMore(pageNum < res.pages);
+      setPage(pageNum);
+    } catch (error) {
+      console.error('Error fetching feed:', error);
+    } finally {
+      setLoading(false);
+      setFetchingMore(false);
+      setIsRefreshing(false);
     }
-    const res = await getFeed(token, reset ? 1 : page, 10);
-    if (reset) {
-      setPosts(res.posts);
-    } else {
-      setPosts(prev => [...prev, ...res.posts]);
-    }
-    setHasMore(page < res.pages);
-    setLoading(false);
-    setFetchingMore(false);
-  }, [token, page]);
-
-  useEffect(() => {
-    fetchFeed(true);
-    // eslint-disable-next-line
   }, [token]);
 
+  // Carga inicial
   useEffect(() => {
-    if (!hasMore || loading) return;
+    if (token) {
+      setLoading(true);
+      fetchFeed(1, false);
+    }
+  }, [token, fetchFeed]);
+
+  // Intersection Observer para paginación infinita
+  useEffect(() => {
+    if (!hasMore || loading || fetchingMore) return;
+    
     if (observer.current) observer.current.disconnect();
+    
     observer.current = new window.IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
+      if (entries[0].isIntersecting && hasMore) {
         setFetchingMore(true);
-        setPage(prev => prev + 1);
+        fetchFeed(page + 1, true);
       }
     });
+    
     if (lastPostRef.current) observer.current.observe(lastPostRef.current);
-  }, [hasMore, loading, posts]);
+  }, [hasMore, loading, fetchingMore, page, fetchFeed]);
 
-  useEffect(() => {
-    if (page === 1) return;
-    fetchFeed();
-    // eslint-disable-next-line
-  }, [page]);
-
-  const handlePostCreated = () => {
-    setPage(1);
-    fetchFeed(true);
-  };
+  const handlePostCreated = useCallback(() => {
+    setIsRefreshing(true);
+    fetchFeed(1, false);
+  }, [fetchFeed]);
 
   return (
     <ProtectedRoute>
@@ -141,7 +149,7 @@ export default function FeedPage() {
                   const isLast = idx === posts.length - 1;
                   return (
                     <div 
-                      key={post._id} 
+                      key={`${post._id}-${idx}`} 
                       ref={isLast ? lastPostRef : undefined}
                       className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300"
                     >
