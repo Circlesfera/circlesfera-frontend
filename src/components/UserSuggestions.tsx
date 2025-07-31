@@ -16,12 +16,25 @@ export default function UserSuggestions() {
   const { token, user } = useAuth();
   const [suggestions, setSuggestions] = useState<UserSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) return;
     setLoading(true);
+    setError(null);
     getSuggestions(token).then(data => {
-      setSuggestions(data);
+      if (Array.isArray(data)) {
+        setSuggestions(data);
+      } else {
+        console.error('getSuggestions no devolvió un array:', data);
+        setError('Error al cargar sugerencias');
+        setSuggestions([]);
+      }
+      setLoading(false);
+    }).catch(error => {
+      console.error('Error al obtener sugerencias:', error);
+      setError('Error al cargar sugerencias');
+      setSuggestions([]);
       setLoading(false);
     });
   }, [token]);
@@ -53,6 +66,13 @@ export default function UserSuggestions() {
               <div className="w-16 h-6 bg-gray-200 rounded"></div>
             </div>
           ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-6">
+          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <UsersIcon />
+          </div>
+          <p className="text-red-500 text-sm">{error}</p>
         </div>
       ) : suggestions.length === 0 ? (
         <div className="text-center py-6">

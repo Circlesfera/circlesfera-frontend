@@ -120,24 +120,24 @@ export const getSuggestions = async (token: string): Promise<UserSuggestion[]> =
   const res = await api.get('/users/suggestions', {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data;
+  return res.data.suggestions;
 };
 
 export const getFollowers = async (userId: string): Promise<UserSuggestion[]> => {
   const res = await api.get(`/users/${userId}/followers`);
-  return res.data;
+  return res.data.followers;
 };
 
 export const getFollowing = async (userId: string): Promise<UserSuggestion[]> => {
   const res = await api.get(`/users/${userId}/following`);
-  return res.data;
+  return res.data.following;
 };
 
 export const searchUsers = async (query: string, token: string): Promise<UserSuggestion[]> => {
   const res = await api.get(`/users/search?q=${encodeURIComponent(query)}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data;
+  return res.data.users;
 };
 
 export const blockUser = async (userId: string, token: string) => {
