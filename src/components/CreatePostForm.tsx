@@ -153,7 +153,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   };
 
   return (
-    <div className="card mb-6">
+    <div>
       <div className="p-6">
         <div className="flex items-center space-x-4 mb-6">
           {user?.avatar ? (
