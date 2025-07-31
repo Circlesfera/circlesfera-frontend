@@ -32,7 +32,7 @@ export default function UserSuggestions() {
     <div className="card p-4 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <UsersIcon />
           <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
         </div>
