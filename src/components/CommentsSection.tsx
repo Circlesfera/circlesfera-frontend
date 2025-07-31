@@ -14,8 +14,20 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
   const fetchComments = () => {
     setLoading(true);
+    setError('');
     getComments(postId).then(data => {
-      setComments(data.comments);
+      if (data && data.comments) {
+        setComments(data.comments);
+      } else {
+        console.error('getComments no devolvió datos válidos:', data);
+        setError('Error al cargar comentarios');
+        setComments([]);
+      }
+      setLoading(false);
+    }).catch(err => {
+      console.error('Error al obtener comentarios:', err);
+      setError('Error al cargar comentarios');
+      setComments([]);
       setLoading(false);
     });
   };
@@ -34,8 +46,9 @@ export default function CommentsSection({ postId }: { postId: string }) {
       await createComment(postId, text, undefined, token!);
       setText('');
       fetchComments();
-    } catch (err: unknown) {
-      setError(err?.response?.data?.message || 'Error al comentar');
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || 'Error al comentar';
+      setError(errorMessage);
     } finally {
       setSending(false);
     }

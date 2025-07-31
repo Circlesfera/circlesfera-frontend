@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { getConversations, Conversation } from '@/services/conversationService';
+import { getConversations, Conversation } from '../services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
 import ConversationSkeleton from './ConversationSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,9 +48,15 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     try {
       setLoading(true);
       const response = await getConversations(token);
-      setConversations(response.conversations);
+      if (response && response.conversations) {
+        setConversations(response.conversations);
+      } else {
+        console.error('getConversations no devolvió datos válidos:', response);
+        setConversations([]);
+      }
     } catch (error) {
       console.error('Error fetching conversations:', error);
+      setConversations([]);
     } finally {
       setLoading(false);
     }
@@ -62,7 +68,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
   const filteredConversations = conversations.filter(conv => {
     const matchesSearch = conv.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         conv.participants.some(p => 
+                         conv.participants.some((p: any) => 
                            p.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            p.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
                          );
@@ -91,7 +97,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     }
     
     // Para conversaciones directas, mostrar el otro participante
-    const otherParticipant = conversation.participants.find(p => p._id !== user?._id);
+    const otherParticipant = conversation.participants.find((p: any) => p._id !== user?._id);
     return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
   };
 
@@ -100,7 +106,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
       return conversation.avatar;
     }
     
-    const otherParticipant = conversation.participants.find(p => p._id !== user?._id);
+    const otherParticipant = conversation.participants.find((p: any) => p._id !== user?._id);
     return otherParticipant?.avatar;
   };
 
@@ -109,7 +115,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
       return conversation.name?.[0]?.toUpperCase() || 'G';
     }
     
-    const otherParticipant = conversation.participants.find(p => p._id !== user?._id);
+    const otherParticipant = conversation.participants.find((p: any) => p._id !== user?._id);
     return otherParticipant?.username[0]?.toUpperCase() || 'U';
   };
 

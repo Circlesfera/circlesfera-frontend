@@ -66,6 +66,7 @@ export default function PostCard({ post }: { post: Post }) {
   const [showFullCaption, setShowFullCaption] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const formatTimeAgo = (date: string) => {
@@ -149,7 +150,7 @@ export default function PostCard({ post }: { post: Post }) {
           return (
             <div className="relative overflow-hidden">
               <img 
-                src={post.content.images?.[0]?.url || post.content.image} 
+                src={post.content.images?.[0]?.url} 
                 alt={post.content.images?.[0]?.alt || "post"} 
                 className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105" 
               />

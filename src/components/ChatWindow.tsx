@@ -107,13 +107,16 @@ export default function ChatWindow({ conversationId, conversationName, participa
           _id: user!._id,
           username: user!.username,
           avatar: user!.avatar,
-          fullName: user!.fullName
+          fullName: user!.fullName || undefined
         },
         type: 'text',
         content: {
           text: text.trim()
         },
         status: 'sent',
+        isEdited: false,
+        isDeleted: false,
+        isForwarded: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };

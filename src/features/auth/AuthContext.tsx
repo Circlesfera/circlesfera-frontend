@@ -9,7 +9,41 @@ interface User {
   email: string;
   avatar?: string;
   bio?: string;
+  fullName?: string;
+  website?: string;
+  location?: string;
+  phone?: string;
+  gender?: string;
+  birthDate?: string;
+  isPrivate?: boolean;
+  isVerified?: boolean;
+  isActive?: boolean;
+  lastSeen?: string;
+  followers: string[];
   following: string[];
+  posts: string[];
+  savedPosts: string[];
+  blockedUsers: string[];
+  preferences?: {
+    notifications: {
+      likes: boolean;
+      comments: boolean;
+      follows: boolean;
+      mentions: boolean;
+      messages: boolean;
+    };
+    privacy: {
+      showEmail: boolean;
+      showPhone: boolean;
+      showBirthDate: boolean;
+    };
+  };
+  followersCount?: number;
+  followingCount?: number;
+  postsCount?: number;
+  isFollowing?: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface AuthContextProps {

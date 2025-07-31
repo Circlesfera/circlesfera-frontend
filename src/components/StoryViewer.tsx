@@ -51,6 +51,7 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
   const story = stories[storyIndex];
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
