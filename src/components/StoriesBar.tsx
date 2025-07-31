@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getStories, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
-import CreateStoryForm from './CreateStoryForm';
 import StoryViewer from './StoryViewer';
 import StorySkeleton from './StorySkeleton';
 
@@ -55,7 +54,6 @@ export default function StoriesBar() {
           <StoryIcon />
           <h2 className="font-semibold text-gray-900 text-sm">Historias</h2>
         </div>
-        <CreateStoryForm onStoryCreated={fetchStories} />
       </div>
       
       {/* Contenedor de stories */}

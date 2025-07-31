@@ -5,7 +5,6 @@ import { useAuth } from '@/features/auth/useAuth';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { getFeed, Post } from '@/services/postService';
 import PostCard from '@/components/PostCard';
-import CreatePostForm from '@/components/CreatePostForm';
 import StoriesBar from '@/components/StoriesBar';
 import PostSkeleton from '@/components/PostSkeleton';
 import UserSuggestions from '@/components/UserSuggestions';
@@ -127,11 +126,6 @@ export default function FeedPage() {
                 {/* Stories con diseño mejorado */}
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                   <StoriesBar />
-                </div>
-                
-                {/* Formulario de crear post con diseño mejorado */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden" data-create-post>
-                  <CreatePostForm onPostCreated={handlePostCreated} />
                 </div>
                 
                 {/* Posts con mejor espaciado */}
