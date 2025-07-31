@@ -14,6 +14,19 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error('Axios Error:', error);
+    
+    // Si es un error de autenticación (401), limpiar tokens
+    if (error?.response?.status === 401) {
+      // Limpiar tokens del localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Redirigir a login si no estamos ya ahí
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+    
     if (error.code === 'ECONNABORTED') {
       console.error('Request timeout');
     }

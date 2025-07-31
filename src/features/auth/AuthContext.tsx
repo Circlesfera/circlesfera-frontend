@@ -62,6 +62,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Función para limpiar tokens inválidos
+  const clearInvalidTokens = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  };
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
@@ -80,6 +88,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(res.data.user);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
+    } catch (error: any) {
+      // Si hay error de autenticación, limpiar tokens
+      if (error?.response?.status === 401) {
+        clearInvalidTokens();
+      }
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -91,16 +105,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await api.post('/auth/register', { username, email, password });
       // Login automático tras registro
       await login(email, password);
+    } catch (error: any) {
+      // Si hay error de autenticación, limpiar tokens
+      if (error?.response?.status === 401) {
+        clearInvalidTokens();
+      }
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    clearInvalidTokens();
   };
 
   return (
