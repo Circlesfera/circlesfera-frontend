@@ -71,6 +71,27 @@ export default function FeedPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Feed principal */}
           <div className="flex-1 max-w-2xl mx-auto w-full">
+            {/* Mensaje de bienvenida */}
+            {!loading && posts.length === 0 && (
+              <div className="card mb-6">
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">¡Bienvenido a CircleSfera!</h3>
+                  <p className="text-gray-500 mb-4">Comparte tu primera foto y conecta con amigos</p>
+                  <button 
+                    onClick={() => document.querySelector('[data-create-post]')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="btn-primary"
+                  >
+                    Crear tu primera publicación
+                  </button>
+                </div>
+              </div>
+            )}
+            
             {/* Stories */}
             <StoriesBar />
             
@@ -83,24 +104,6 @@ export default function FeedPage() {
                 {[...Array(3)].map((_, i) => (
                   <PostSkeleton key={i} />
                 ))}
-              </div>
-            )}
-            
-            {!loading && posts.length === 0 && (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">¡Bienvenido a CircleSfera!</h3>
-                <p className="text-gray-500 mb-4">Comparte tu primera foto y conecta con amigos</p>
-                <button 
-                  onClick={() => document.querySelector('[data-create-post]')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="btn-primary"
-                >
-                  Crear tu primera publicación
-                </button>
               </div>
             )}
             
