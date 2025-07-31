@@ -1,4 +1,5 @@
 import api from './axios';
+import { UserProfile } from './userService';
 
 export interface Post {
   _id: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getComments, addComment, Comment } from '@/services/postService';
+import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 
 export default function CommentsSection({ postId }: { postId: string }) {
@@ -15,7 +15,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
   const fetchComments = () => {
     setLoading(true);
     getComments(postId).then(data => {
-      setComments(data);
+      setComments(data.comments);
       setLoading(false);
     });
   };
@@ -31,7 +31,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
     if (!text.trim()) return;
     setSending(true);
     try {
-      await addComment(postId, text, token!);
+      await createComment(postId, text, undefined, token!);
       setText('');
       fetchComments();
     } catch (err: unknown) {
@@ -51,7 +51,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
               <span className="font-semibold text-gray-900 text-sm mr-2">
                 {c.user.username}
               </span>
-              <span className="text-gray-900 text-sm">{c.text}</span>
+              <span className="text-gray-900 text-sm">{c.content}</span>
             </div>
           ))}
           {comments.length > 2 && (
