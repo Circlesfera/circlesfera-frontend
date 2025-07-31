@@ -5,7 +5,7 @@ import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 
-// Iconos SVG simples
+// Iconos SVG modernos
 const HeartIcon = ({ filled }: { filled: boolean }) => (
   <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={filled ? 0 : 2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -36,6 +36,18 @@ const MoreIcon = () => (
   </svg>
 );
 
+const PlayIcon = () => (
+  <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M8 5v14l11-7z" />
+  </svg>
+);
+
+const TextIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+);
+
 export default function PostCard({ post }: { post: Post }) {
   const { user } = useAuth();
   const likedByUser = post.likes.includes(user?._id || '');
@@ -54,26 +66,94 @@ export default function PostCard({ post }: { post: Post }) {
     return postDate.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
   };
 
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const renderContent = () => {
+    switch (post.type) {
+      case 'text':
+        return (
+          <div className="p-6 bg-gray-50 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <TextIcon />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-900 leading-relaxed whitespace-pre-wrap">
+                  {post.content.text}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'image':
+        return (
+          <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 group">
+            <div className="relative overflow-hidden">
+              <img 
+                src={post.content.image} 
+                alt="post" 
+                className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" 
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+            </div>
+          </Link>
+        );
+
+      case 'video':
+        return (
+          <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 group">
+            <div className="relative overflow-hidden">
+              <video 
+                src={post.content.video?.url} 
+                poster={post.content.video?.thumbnail}
+                className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                preload="metadata"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center">
+                  <PlayIcon />
+                </div>
+              </div>
+              {post.content.video?.duration && (
+                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                  {formatDuration(post.content.video.duration)}
+                </div>
+              )}
+            </div>
+          </Link>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="card mb-4">
+    <div className="card mb-6 animate-fade-in hover-lift">
       {/* Header del usuario */}
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-3">
-          <Link href={`/${post.user.username}`}>
+          <Link href={`/${post.user.username}`} className="group">
             {post.user.avatar ? (
               <img 
                 src={post.user.avatar} 
                 alt="avatar" 
-                className="w-8 h-8 rounded-full object-cover" 
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-xs">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">
                 {post.user.username[0].toUpperCase()}
               </div>
             )}
           </Link>
           <div className="flex flex-col">
-            <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-gray-700">
+            <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors">
               {post.user.username}
             </Link>
             <span className="text-gray-500 text-xs">
@@ -84,39 +164,33 @@ export default function PostCard({ post }: { post: Post }) {
         
         <button 
           onClick={() => setShowMore(!showMore)}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200"
         >
           <MoreIcon />
         </button>
       </div>
 
-      {/* Imagen */}
-      <Link href={`/post/${post._id}`} prefetch={false}>
-        <img 
-          src={post.image} 
-          alt="post" 
-          className="w-full h-auto object-cover" 
-        />
-      </Link>
+      {/* Contenido según el tipo */}
+      {renderContent()}
 
       {/* Acciones */}
-      <div className="px-4 py-3">
-        <div className="flex items-center justify-between mb-3">
+      <div className="px-6 py-4">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4">
             <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
             
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105">
               <CommentIcon />
             </button>
             
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105">
               <ShareIcon />
             </button>
           </div>
           
           <button 
             onClick={() => setIsSaved(!isSaved)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105"
           >
             <BookmarkIcon filled={isSaved} />
           </button>
@@ -124,18 +198,18 @@ export default function PostCard({ post }: { post: Post }) {
 
         {/* Likes */}
         {post.likes.length > 0 && (
-          <div className="font-semibold text-gray-900 text-sm mb-2">
+          <div className="font-semibold text-gray-900 text-sm mb-3">
             {post.likes.length} me gusta
           </div>
         )}
 
         {/* Caption */}
         {post.caption && (
-          <div className="mb-2">
+          <div className="mb-3">
             <span className="font-semibold text-gray-900 text-sm mr-2">
               {post.user.username}
             </span>
-            <span className="text-gray-900 text-sm">
+            <span className="text-gray-900 text-sm leading-relaxed">
               {post.caption.length > 100 ? (
                 <>
                   {post.caption.substring(0, 100)}...

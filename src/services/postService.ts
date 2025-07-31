@@ -7,18 +7,67 @@ export interface Post {
     username: string;
     avatar?: string;
   };
-  image: string;
+  type: 'text' | 'image' | 'video';
+  content: {
+    text?: string;
+    image?: string;
+    video?: {
+      url: string;
+      duration: number;
+      thumbnail: string;
+    };
+  };
   caption: string;
   likes: string[];
+  views: number;
+  isPublic: boolean;
   createdAt: string;
 }
 
-export const getPosts = async (): Promise<Post[]> => {
-  const res = await api.get('/posts');
+export const getPosts = async (type?: string): Promise<Post[]> => {
+  const params = type ? { type } : {};
+  const res = await api.get('/posts', { params });
   return res.data;
 };
 
 export const createPost = async (formData: FormData, token: string): Promise<Post> => {
+  const res = await api.post('/posts', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data.post;
+};
+
+export const createTextPost = async (text: string, caption: string, token: string): Promise<Post> => {
+  const res = await api.post('/posts', { type: 'text', text, caption }, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data.post;
+};
+
+export const createImagePost = async (file: File, caption: string, token: string): Promise<Post> => {
+  const formData = new FormData();
+  formData.append('type', 'image');
+  formData.append('file', file);
+  formData.append('caption', caption);
+  
+  const res = await api.post('/posts', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data.post;
+};
+
+export const createVideoPost = async (file: File, caption: string, token: string): Promise<Post> => {
+  const formData = new FormData();
+  formData.append('type', 'video');
+  formData.append('file', file);
+  formData.append('caption', caption);
+  
   const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -38,6 +87,12 @@ export const toggleLike = async (postId: string, token: string): Promise<{ liked
 export const getPostById = async (id: string): Promise<Post> => {
   const res = await api.get(`/posts/${id}`);
   return res.data;
+};
+
+export const deletePost = async (postId: string, token: string): Promise<void> => {
+  await api.delete(`/posts/${postId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 };
 
 export interface Comment {

@@ -1,42 +1,88 @@
-import React, { useRef, useState } from 'react';
-import { createPost } from '@/services/postService';
-import { useAuth } from '@/features/auth/useAuth';
+"use client";
 
-// Iconos SVG simples
+import React, { useState, useRef } from 'react';
+import { useAuth } from '@/features/auth/useAuth';
+import { createTextPost, createImagePost, createVideoPost } from '@/services/postService';
+
+// Iconos SVG
+const TextIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  </svg>
+);
+
 const ImageIcon = () => (
-  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
   </svg>
 );
 
+const VideoIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+);
+
 const UploadIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
   </svg>
 );
 
 const CloseIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
 
-export default function CreatePostForm({ onPostCreated }: { onPostCreated: () => void }) {
-  const { token, user } = useAuth();
+interface CreatePostFormProps {
+  onPostCreated: () => void;
+}
+
+export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
+  const { user, token } = useAuth();
+  const [postType, setPostType] = useState<'text' | 'image' | 'video'>('text');
+  const [text, setText] = useState('');
   const [caption, setCaption] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageChange = (file: File | null) => {
-    if (file) {
-      setImage(file);
+  const handleFileSelect = (selectedFile: File) => {
+    if (selectedFile) {
+      // Validar tipo de archivo
+      const isImage = selectedFile.type.startsWith('image/');
+      const isVideo = selectedFile.type.startsWith('video/');
+      
+      if (postType === 'image' && !isImage) {
+        setError('Por favor selecciona una imagen válida');
+        return;
+      }
+      
+      if (postType === 'video' && !isVideo) {
+        setError('Por favor selecciona un video válido');
+        return;
+      }
+
+      // Validar tamaño
+      const maxSize = postType === 'image' ? 5 * 1024 * 1024 : 100 * 1024 * 1024; // 5MB para imágenes, 100MB para videos
+      if (selectedFile.size > maxSize) {
+        setError(`El archivo es demasiado grande. Máximo ${postType === 'image' ? '5MB' : '100MB'}`);
+        return;
+      }
+
+      setFile(selectedFile);
+      setError('');
+
+      // Crear preview
       const reader = new FileReader();
-      reader.onload = (e) => setImagePreview(e.target?.result as string);
-      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
     }
   };
 
@@ -53,159 +99,261 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      handleImageChange(file);
+    
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile) {
+      handleFileSelect(droppedFile);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    if (!image) {
-      setError('Selecciona una imagen');
-      return;
-    }
+    if (!token) return;
+
     setLoading(true);
+    setError('');
+
     try {
-      const formData = new FormData();
-      formData.append('image', image);
-      formData.append('caption', caption);
-      await createPost(formData, token!);
+      if (postType === 'text') {
+        if (!text.trim()) {
+          setError('El texto es obligatorio');
+          return;
+        }
+        await createTextPost(text.trim(), caption, token);
+      } else if (postType === 'image' || postType === 'video') {
+        if (!file) {
+          setError(`Por favor selecciona un ${postType === 'image' ? 'imagen' : 'video'}`);
+          return;
+        }
+        
+        if (postType === 'image') {
+          await createImagePost(file, caption, token);
+        } else {
+          await createVideoPost(file, caption, token);
+        }
+      }
+
+      // Limpiar formulario
+      setText('');
       setCaption('');
-      setImage(null);
-      setImagePreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      setFile(null);
+      setPreview(null);
+      setPostType('text');
+      
       onPostCreated();
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Error al crear el post');
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Error al crear la publicación');
     } finally {
       setLoading(false);
     }
   };
 
-  const removeImage = () => {
-    setImage(null);
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+  const resetForm = () => {
+    setText('');
+    setCaption('');
+    setFile(null);
+    setPreview(null);
+    setPostType('text');
+    setError('');
   };
 
   return (
-    <div className="card mb-4">
-      {/* Header */}
-      <div className="flex items-center px-4 py-3 border-b border-gray-100">
-        <div className="flex items-center space-x-3">
+    <div className="card mb-6">
+      <div className="p-6">
+        <div className="flex items-center space-x-4 mb-6">
           {user?.avatar ? (
-            <img 
-              src={user.avatar} 
-              alt="avatar" 
-              className="w-8 h-8 rounded-full object-cover" 
-            />
+            <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-full object-cover" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-xs">
-              {user?.username[0].toUpperCase()}
-            </div>
-          )}
-          <span className="font-semibold text-gray-900 text-sm">Crear publicación</span>
-        </div>
-      </div>
-      
-      <form onSubmit={handleSubmit} className="p-4">
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-            {error}
-          </div>
-        )}
-        
-        {/* Área de upload de imagen */}
-        <div className="mb-4">
-          {!imagePreview ? (
-            <div
-              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                isDragOver 
-                  ? 'border-blue-400 bg-blue-50' 
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <ImageIcon />
-              <p className="mt-2 text-gray-600 font-medium">Arrastra una imagen aquí o</p>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="mt-2 btn-primary"
-              >
-                <UploadIcon />
-                <span className="ml-2">Seleccionar imagen</span>
-              </button>
-              <p className="mt-2 text-gray-500 text-xs">PNG, JPG hasta 10MB</p>
-            </div>
-          ) : (
-            <div className="relative">
-              <img 
-                src={imagePreview} 
-                alt="preview" 
-                className="w-full h-64 object-cover rounded-lg" 
-              />
-              <button
-                type="button"
-                onClick={removeImage}
-                className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
-              >
-                <CloseIcon />
-              </button>
+            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white">
+              {user?.username?.[0]?.toUpperCase()}
             </div>
           )}
           
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={e => handleImageChange(e.target.files?.[0] || null)}
-            className="hidden"
-          />
-        </div>
-        
-        {/* Textarea para caption */}
-        <div className="mb-4">
-          <textarea
-            placeholder="¿Qué quieres compartir?"
-            className="input-modern resize-none"
-            value={caption}
-            onChange={e => setCaption(e.target.value)}
-            rows={4}
-            maxLength={2200}
-          />
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-gray-500 text-xs">
-              {caption.length}/2200 caracteres
-            </span>
-            {caption.length > 2000 && (
-              <span className="text-orange-500 text-xs">
-                Casi llegaste al límite
-              </span>
-            )}
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900">Crear publicación</h3>
+            <p className="text-sm text-gray-500">Comparte lo que quieras con tus amigos</p>
           </div>
         </div>
-        
-        {/* Botón de publicación */}
-        <button 
-          type="submit" 
-          className={`w-full btn-primary ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          disabled={loading || !image}
-        >
-          {loading ? (
-            <div className="flex items-center justify-center">
-              <div className="spinner mr-2"></div>
-              Publicando...
+
+        {/* Selector de tipo de publicación */}
+        <div className="flex space-x-2 mb-6">
+          <button
+            type="button"
+            onClick={() => setPostType('text')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+              postType === 'text' 
+                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <TextIcon />
+            <span className="font-medium">Texto</span>
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => setPostType('image')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+              postType === 'image' 
+                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <ImageIcon />
+            <span className="font-medium">Imagen</span>
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => setPostType('video')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+              postType === 'video' 
+                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <VideoIcon />
+            <span className="font-medium">Video</span>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          {/* Contenido según el tipo */}
+          {postType === 'text' && (
+            <div className="mb-4">
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="¿Qué quieres compartir?"
+                className="w-full p-4 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                rows={4}
+                maxLength={5000}
+              />
+              <div className="text-right text-sm text-gray-500 mt-1">
+                {text.length}/5000 caracteres
+              </div>
             </div>
-          ) : (
-            'Compartir publicación'
           )}
-        </button>
-      </form>
+
+          {(postType === 'image' || postType === 'video') && (
+            <div className="mb-4">
+              {!preview ? (
+                <div
+                  className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                    isDragOver 
+                      ? 'border-blue-400 bg-blue-50' 
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  <UploadIcon className="mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-600 mb-2">
+                    Arrastra un {postType === 'image' ? 'imagen' : 'video'} aquí o
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="btn-primary"
+                  >
+                    Seleccionar {postType === 'image' ? 'imagen' : 'video'}
+                  </button>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {postType === 'image' 
+                      ? 'PNG, JPG, GIF, WebP hasta 5MB' 
+                      : 'MP4, AVI, MOV, WebM hasta 100MB'
+                    }
+                  </p>
+                </div>
+              ) : (
+                <div className="relative">
+                  {postType === 'image' ? (
+                    <img src={preview} alt="preview" className="w-full h-64 object-cover rounded-lg" />
+                  ) : (
+                    <video 
+                      src={preview} 
+                      controls 
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFile(null);
+                      setPreview(null);
+                    }}
+                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                  >
+                    <CloseIcon />
+                  </button>
+                </div>
+              )}
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={postType === 'image' ? 'image/*' : 'video/*'}
+                onChange={(e) => {
+                  const selectedFile = e.target.files?.[0];
+                  if (selectedFile) {
+                    handleFileSelect(selectedFile);
+                  }
+                }}
+                className="hidden"
+              />
+            </div>
+          )}
+
+          {/* Caption */}
+          <div className="mb-4">
+            <textarea
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              placeholder="Añade una descripción (opcional)"
+              className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+              rows={2}
+              maxLength={2200}
+            />
+            <div className="text-right text-sm text-gray-500 mt-1">
+              {caption.length}/2200 caracteres
+            </div>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Botones */}
+          <div className="flex justify-end space-x-3">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={loading || (postType === 'text' && !text.trim()) || ((postType === 'image' || postType === 'video') && !file)}
+            >
+              {loading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="spinner"></div>
+                  <span>Publicando...</span>
+                </div>
+              ) : (
+                'Publicar'
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
