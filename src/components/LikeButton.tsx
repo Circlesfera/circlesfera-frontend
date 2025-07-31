@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { toggleLike } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';

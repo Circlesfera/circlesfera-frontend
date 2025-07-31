@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { followUser, unfollowUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
