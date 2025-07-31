@@ -5,7 +5,7 @@ import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 
-// Iconos SVG modernos
+// Iconos SVG simples
 const HeartIcon = ({ filled }: { filled: boolean }) => (
   <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={filled ? 0 : 2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -55,25 +55,25 @@ export default function PostCard({ post }: { post: Post }) {
   };
 
   return (
-    <div className="card-modern mb-6 animate-fade-in">
+    <div className="card mb-4">
       {/* Header del usuario */}
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-3">
-          <Link href={`/${post.user.username}`} className="group">
+          <Link href={`/${post.user.username}`}>
             {post.user.avatar ? (
               <img 
                 src={post.user.avatar} 
                 alt="avatar" 
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
+                className="w-8 h-8 rounded-full object-cover" 
               />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">
+              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-xs">
                 {post.user.username[0].toUpperCase()}
               </div>
             )}
           </Link>
           <div className="flex flex-col">
-            <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors">
+            <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-gray-700">
               {post.user.username}
             </Link>
             <span className="text-gray-500 text-xs">
@@ -84,22 +84,19 @@ export default function PostCard({ post }: { post: Post }) {
         
         <button 
           onClick={() => setShowMore(!showMore)}
-          className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200"
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <MoreIcon />
         </button>
       </div>
 
-      {/* Imagen con efecto hover */}
-      <Link href={`/post/${post._id}`} prefetch={false} className="block w-full bg-gray-100 group">
-        <div className="relative overflow-hidden">
-          <img 
-            src={post.image} 
-            alt="post" 
-            className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" 
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-        </div>
+      {/* Imagen */}
+      <Link href={`/post/${post._id}`} prefetch={false}>
+        <img 
+          src={post.image} 
+          alt="post" 
+          className="w-full h-auto object-cover" 
+        />
       </Link>
 
       {/* Acciones */}
@@ -108,18 +105,18 @@ export default function PostCard({ post }: { post: Post }) {
           <div className="flex items-center space-x-4">
             <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
             
-            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <CommentIcon />
             </button>
             
-            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <ShareIcon />
             </button>
           </div>
           
           <button 
             onClick={() => setIsSaved(!isSaved)}
-            className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <BookmarkIcon filled={isSaved} />
           </button>
@@ -127,18 +124,18 @@ export default function PostCard({ post }: { post: Post }) {
 
         {/* Likes */}
         {post.likes.length > 0 && (
-          <div className="font-semibold text-gray-900 text-sm mb-3">
+          <div className="font-semibold text-gray-900 text-sm mb-2">
             {post.likes.length} me gusta
           </div>
         )}
 
         {/* Caption */}
         {post.caption && (
-          <div className="mb-3">
+          <div className="mb-2">
             <span className="font-semibold text-gray-900 text-sm mr-2">
               {post.user.username}
             </span>
-            <span className="text-gray-900 text-sm leading-relaxed">
+            <span className="text-gray-900 text-sm">
               {post.caption.length > 100 ? (
                 <>
                   {post.caption.substring(0, 100)}...

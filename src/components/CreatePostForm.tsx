@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { createPost } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 
-// Iconos SVG modernos
+// Iconos SVG simples
 const ImageIcon = () => (
   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -10,7 +10,7 @@ const ImageIcon = () => (
 );
 
 const UploadIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
   </svg>
 );
@@ -91,7 +91,7 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
   };
 
   return (
-    <div className="card-modern mb-6 animate-fade-in">
+    <div className="card mb-4">
       {/* Header */}
       <div className="flex items-center px-4 py-3 border-b border-gray-100">
         <div className="flex items-center space-x-3">
@@ -99,10 +99,10 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
             <img 
               src={user.avatar} 
               alt="avatar" 
-              className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200" 
+              className="w-8 h-8 rounded-full object-cover" 
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
+            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-xs">
               {user?.username[0].toUpperCase()}
             </div>
           )}
@@ -121,10 +121,10 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
         <div className="mb-4">
           {!imagePreview ? (
             <div
-              className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                 isDragOver 
                   ? 'border-blue-400 bg-blue-50' 
-                  : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                  : 'border-gray-300 hover:border-gray-400'
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -147,7 +147,7 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
               <img 
                 src={imagePreview} 
                 alt="preview" 
-                className="w-full h-64 object-cover rounded-lg shadow-lg" 
+                className="w-full h-64 object-cover rounded-lg" 
               />
               <button
                 type="button"
@@ -172,7 +172,7 @@ export default function CreatePostForm({ onPostCreated }: { onPostCreated: () =>
         <div className="mb-4">
           <textarea
             placeholder="¿Qué quieres compartir?"
-            className="input-modern w-full resize-none"
+            className="input-modern resize-none"
             value={caption}
             onChange={e => setCaption(e.target.value)}
             rows={4}

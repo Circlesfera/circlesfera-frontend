@@ -5,23 +5,10 @@ import { getSuggestions, UserSuggestion } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import FollowButton from './FollowButton';
 
-// Iconos SVG modernos
+// Iconos SVG simples
 const UsersIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-  </svg>
-);
-
-const EyeIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-  </svg>
-);
-
-const LinkIcon = () => (
-  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
   </svg>
 );
 
@@ -42,9 +29,9 @@ export default function UserSuggestions() {
   if (!user) return null;
 
   return (
-    <div className="card-modern p-6 animate-fade-in">
+    <div className="card p-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <UsersIcon />
           <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
@@ -81,8 +68,7 @@ export default function UserSuggestions() {
           {suggestions.map((suggestion, idx) => (
             <div 
               key={suggestion._id} 
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-all duration-200 animate-fade-in"
-              style={{ animationDelay: `${idx * 100}ms` }}
+              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
               {/* Avatar */}
               <div className="relative">
@@ -90,10 +76,10 @@ export default function UserSuggestions() {
                   <img 
                     src={suggestion.avatar} 
                     alt="avatar" 
-                    className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 hover:ring-blue-300 transition-all duration-200" 
+                    className="w-10 h-10 rounded-full object-cover" 
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">
+                  <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white text-sm">
                     {suggestion.username[0].toUpperCase()}
                   </div>
                 )}
@@ -101,7 +87,7 @@ export default function UserSuggestions() {
               
               {/* Información del usuario */}
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-gray-900 text-sm truncate hover:text-blue-600 transition-colors cursor-pointer">
+                <div className="font-semibold text-gray-900 text-sm truncate hover:text-gray-700 cursor-pointer">
                   {suggestion.username}
                 </div>
                 {suggestion.bio && (
@@ -127,8 +113,8 @@ export default function UserSuggestions() {
       )}
       
       {/* Footer con enlaces */}
-      <div className="mt-8 pt-6 border-t border-gray-100">
-        <div className="text-gray-400 text-xs space-y-4">
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <div className="text-gray-400 text-xs space-y-3">
           {/* Enlaces principales */}
           <div className="flex flex-wrap gap-2">
             {[
@@ -138,10 +124,9 @@ export default function UserSuggestions() {
               <React.Fragment key={link}>
                 <a 
                   href="#" 
-                  className="hover:text-gray-600 hover:underline transition-colors flex items-center space-x-1"
+                  className="hover:text-gray-600 hover:underline transition-colors"
                 >
-                  <LinkIcon />
-                  <span>{link}</span>
+                  {link}
                 </a>
                 {idx < 8 && <span className="text-gray-300">•</span>}
               </React.Fragment>
@@ -151,7 +136,7 @@ export default function UserSuggestions() {
           {/* Copyright */}
           <div className="flex items-center justify-center space-x-2">
             <span>© 2024</span>
-            <span className="text-gradient-accent font-semibold">CircleSfera</span>
+            <span className="font-semibold text-gray-600">CircleSfera</span>
             <span>desde España</span>
           </div>
         </div>

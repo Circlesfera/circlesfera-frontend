@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { toggleLike } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 
-// Iconos SVG para like
-const HeartIcon = ({ filled, animate }: { filled: boolean; animate: boolean }) => (
+// Icono SVG simple para like
+const HeartIcon = ({ filled }: { filled: boolean }) => (
   <svg 
-    className={`w-6 h-6 transition-all duration-300 ${animate ? 'scale-125' : 'scale-100'}`}
+    className="w-6 h-6" 
     fill={filled ? "currentColor" : "none"} 
     stroke="currentColor" 
     viewBox="0 0 24 24"
@@ -35,7 +35,7 @@ export default function LikeButton({ postId, initialLiked, initialCount }: { pos
       setCount(res.likesCount);
       if (res.liked) {
         setAnimate(true);
-        setTimeout(() => setAnimate(false), 350);
+        setTimeout(() => setAnimate(false), 300);
       }
     } finally {
       setLoading(false);
@@ -46,31 +46,13 @@ export default function LikeButton({ postId, initialLiked, initialCount }: { pos
     <button
       onClick={handleLike}
       disabled={loading}
-      className={`p-2 rounded-full transition-all duration-200 group ${
+      className={`p-2 rounded-lg transition-all duration-200 ${
         liked 
           ? 'text-red-500 hover:bg-red-50' 
-          : 'text-gray-600 hover:bg-gray-100 hover:text-red-500'
+          : 'text-gray-600 hover:bg-gray-100'
       } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
-      <HeartIcon filled={liked} animate={animate} />
-      
-      {/* Efecto de partículas cuando se da like */}
-      {animate && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-red-500 rounded-full animate-ping"
-              style={{
-                left: `${50 + Math.cos(i * 60 * Math.PI / 180) * 20}%`,
-                top: `${50 + Math.sin(i * 60 * Math.PI / 180) * 20}%`,
-                animationDelay: `${i * 50}ms`,
-                animationDuration: '0.6s'
-              }}
-            />
-          ))}
-        </div>
-      )}
+      <HeartIcon filled={liked} />
     </button>
   );
 }
