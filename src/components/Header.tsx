@@ -174,7 +174,7 @@ export default function Header() {
 
             {/* Avatar del usuario */}
             <div className="relative">
-              <Link href="/profile" className="block">
+              <Link href={`/${user?.username}`} className="block">
                 {user?.avatar ? (
                   <img 
                     src={user.avatar} 
@@ -261,7 +261,7 @@ export default function Header() {
               </div>
             )}
 
-            <Link href="/profile" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               {user?.avatar ? (
                 <img 
                   src={user.avatar} 
