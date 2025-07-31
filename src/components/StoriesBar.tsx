@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getStoriesForFeed, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 import StoryViewer from './StoryViewer';
@@ -34,8 +34,7 @@ export default function StoriesBar() {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-
-  const fetchStories = async () => {
+  const fetchStories = useCallback(async () => {
     if (!token) return;
     
     try {
@@ -49,11 +48,11 @@ export default function StoriesBar() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchStories();
-  }, [token, fetchStories]);
+  }, [fetchStories]);
 
   const openViewer = (index: number) => {
     setCurrentIndex(index);
