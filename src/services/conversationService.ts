@@ -104,7 +104,7 @@ export const createDirectConversation = async (participantId: string, token: str
 };
 
 // Crear conversación grupal
-export const createGroupConversation = async (name: string, participantIds: string[], description?: string, token: string): Promise<ConversationResponse> => {
+export const createGroupConversation = async (name: string, participantIds: string[], token: string, description?: string): Promise<ConversationResponse> => {
   const res = await api.post('/conversations/group', {
     name,
     participantIds,

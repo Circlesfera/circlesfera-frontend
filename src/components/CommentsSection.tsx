@@ -43,7 +43,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
     if (!text.trim()) return;
     setSending(true);
     try {
-      await createComment(postId, text, undefined, token!);
+      await createComment(postId, text, token!, undefined);
       setText('');
       fetchComments();
     } catch (err: unknown) {

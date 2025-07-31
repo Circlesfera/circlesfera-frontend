@@ -131,10 +131,10 @@ export const createPost = async (formData: FormData, token: string): Promise<Pos
 };
 
 // Crear publicación de imagen
-export const createImagePost = async (files: File[], caption: string, location?: string, tags?: string, token: string): Promise<PostResponse> => {
+export const createImagePost = async (files: File[], caption: string, token: string, location?: string, tags?: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'image');
-  files.forEach((file, index) => {
+  files.forEach((file) => {
     formData.append('images', file);
   });
   formData.append('caption', caption);
@@ -151,7 +151,7 @@ export const createImagePost = async (files: File[], caption: string, location?:
 };
 
 // Crear publicación de video
-export const createVideoPost = async (file: File, caption: string, location?: string, tags?: string, token: string): Promise<PostResponse> => {
+export const createVideoPost = async (file: File, caption: string, token: string, location?: string, tags?: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'video');
   formData.append('video', file);
@@ -169,7 +169,7 @@ export const createVideoPost = async (file: File, caption: string, location?: st
 };
 
 // Crear publicación de texto
-export const createTextPost = async (text: string, caption?: string, location?: string, tags?: string, token: string): Promise<PostResponse> => {
+export const createTextPost = async (text: string, token: string, caption?: string, location?: string, tags?: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'text');
   formData.append('text', text);
@@ -251,7 +251,7 @@ export const getCommentReplies = async (commentId: string, page = 1, limit = 5):
 };
 
 // Crear un comentario
-export const createComment = async (postId: string, content: string, parentComment?: string, token: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
+export const createComment = async (postId: string, content: string, token: string, parentComment?: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
   const res = await api.post(`/comments/post/${postId}`, { content, parentComment }, {
     headers: { Authorization: `Bearer ${token}` },
   });

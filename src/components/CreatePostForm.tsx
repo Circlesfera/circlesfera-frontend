@@ -123,9 +123,9 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       const fullCaption = text.trim() ? `${text.trim()}\n\n${caption}` : caption;
       
       if (postType === 'image') {
-        await createImagePost([file], fullCaption, undefined, undefined, token);
+        await createImagePost([file], fullCaption, token, undefined, undefined);
       } else {
-        await createVideoPost(file, fullCaption, undefined, undefined, token);
+        await createVideoPost(file, fullCaption, token, undefined, undefined);
       }
 
       // Limpiar formulario
