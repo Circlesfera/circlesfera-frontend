@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { getStories, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
