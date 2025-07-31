@@ -46,8 +46,9 @@ export default function CommentsSection({ postId }: { postId: string }) {
       await createComment(postId, text, undefined, token!);
       setText('');
       fetchComments();
-    } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || 'Error al comentar';
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      const errorMessage = error?.response?.data?.message || 'Error al comentar';
       setError(errorMessage);
     } finally {
       setSending(false);

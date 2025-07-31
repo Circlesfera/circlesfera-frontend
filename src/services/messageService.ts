@@ -72,7 +72,7 @@ export interface MessagesResponse {
 export interface MessageResponse {
   success: boolean;
   message: Message;
-  message?: string;
+  errorMessage?: string;
 }
 
 // Obtener mensajes de una conversación
@@ -96,7 +96,7 @@ export const sendTextMessage = async (conversationId: string, content: string, t
 };
 
 // Enviar mensaje de imagen
-export const sendImageMessage = async (conversationId: string, file: File, caption?: string, token: string): Promise<MessageResponse> => {
+export const sendImageMessage = async (conversationId: string, file: File, token: string, caption?: string): Promise<MessageResponse> => {
   const formData = new FormData();
   formData.append('image', file);
   if (caption) formData.append('caption', caption);
@@ -111,7 +111,7 @@ export const sendImageMessage = async (conversationId: string, file: File, capti
 };
 
 // Enviar mensaje de video
-export const sendVideoMessage = async (conversationId: string, file: File, caption?: string, token: string): Promise<MessageResponse> => {
+export const sendVideoMessage = async (conversationId: string, file: File, token: string, caption?: string): Promise<MessageResponse> => {
   const formData = new FormData();
   formData.append('video', file);
   if (caption) formData.append('caption', caption);
@@ -126,7 +126,7 @@ export const sendVideoMessage = async (conversationId: string, file: File, capti
 };
 
 // Enviar mensaje de ubicación
-export const sendLocationMessage = async (conversationId: string, latitude: number, longitude: number, name?: string, address?: string, token: string): Promise<MessageResponse> => {
+export const sendLocationMessage = async (conversationId: string, latitude: number, longitude: number, token: string, name?: string, address?: string): Promise<MessageResponse> => {
   const res = await api.post(`/messages/conversation/${conversationId}/location`, {
     latitude,
     longitude,
@@ -176,7 +176,7 @@ export const searchMessages = async (conversationId: string, query: string, toke
 };
 
 // Obtener estadísticas de mensajes
-export const getMessageStats = async (conversationId: string, token: string): Promise<{ success: boolean; stats: any }> => {
+export const getMessageStats = async (conversationId: string, token: string): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
   const res = await api.get(`/messages/conversation/${conversationId}/stats`, {
     headers: { Authorization: `Bearer ${token}` }
   });

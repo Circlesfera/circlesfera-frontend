@@ -121,8 +121,9 @@ export default function ChatWindow({ conversationId, conversationName, participa
         updatedAt: new Date().toISOString()
       };
       setMessages(prev => [...prev, newMessage]);
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      console.error('Error sending message:', err);
     } finally {
       setSending(false);
     }
@@ -131,7 +132,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend(e as any);
+      handleSend(e as React.FormEvent);
     }
   };
 

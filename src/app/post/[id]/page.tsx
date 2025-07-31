@@ -4,13 +4,15 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { notFound } from 'next/navigation';
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function PostDetailPage({ params }: Props) {
+  const { id } = await params;
   let post = null;
   try {
-    post = await getPostById(params.id);
+    const response = await getPostById(id);
+    post = response.post;
   } catch {
     return notFound();
   }

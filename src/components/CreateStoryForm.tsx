@@ -100,23 +100,25 @@ export default function CreateStoryForm({ onStoryCreated, onClose, isOpen = fals
     setLoading(true);
 
     try {
-      let story: Story;
+      let storyResponse;
 
       switch (storyType) {
         case 'image':
           if (!file) throw new Error('No se seleccionó archivo');
-          story = await createImageStory(file, token, caption, location);
+          storyResponse = await createImageStory(file, token, caption, location);
           break;
         case 'video':
           if (!file) throw new Error('No se seleccionó archivo');
-          story = await createVideoStory(file, token, caption, location);
+          storyResponse = await createVideoStory(file, token, caption, location);
           break;
         case 'text':
-          story = await createTextStory(textContent, token, caption, location);
+          storyResponse = await createTextStory(textContent, token, caption, location);
           break;
         default:
           throw new Error('Tipo de story no válido');
       }
+
+      const story = storyResponse.story;
 
       // Limpiar formulario
       setFile(null);

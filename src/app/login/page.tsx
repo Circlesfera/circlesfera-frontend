@@ -19,7 +19,9 @@ export default function LoginPage() {
       await login(email, password);
       router.push('/');
     } catch (err: unknown) {
-      setError(err?.response?.data?.message || 'Error al iniciar sesión');
+      const error = err as { response?: { data?: { message?: string } } };
+      const errorMessage = error?.response?.data?.message || 'Error al iniciar sesión';
+      setError(errorMessage);
     }
   };
 

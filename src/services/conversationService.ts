@@ -190,7 +190,7 @@ export const deleteConversation = async (conversationId: string, token: string):
 };
 
 // Obtener estadísticas de conversaciones
-export const getConversationStats = async (token: string): Promise<{ success: boolean; stats: any }> => {
+export const getConversationStats = async (token: string): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
   const res = await api.get('/conversations/stats', {
     headers: { Authorization: `Bearer ${token}` }
   });

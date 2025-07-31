@@ -123,9 +123,9 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       const fullCaption = text.trim() ? `${text.trim()}\n\n${caption}` : caption;
       
       if (postType === 'image') {
-        await createImagePost(file, fullCaption, token);
+        await createImagePost([file], fullCaption, undefined, undefined, token);
       } else {
-        await createVideoPost(file, fullCaption, token);
+        await createVideoPost(file, fullCaption, undefined, undefined, token);
       }
 
       // Limpiar formulario
@@ -137,7 +137,8 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       
       onPostCreated();
     } catch (error: unknown) {
-      setError(error.response?.data?.message || 'Error al crear la publicación');
+      const err = error as { response?: { data?: { message?: string } } };
+      setError(err?.response?.data?.message || 'Error al crear la publicación');
     } finally {
       setLoading(false);
     }
@@ -213,7 +214,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
-                <UploadIcon className="mx-auto mb-4 text-gray-400" />
+                <UploadIcon />
                 <p className="text-gray-600 mb-2">
                   Arrastra un {postType === 'image' ? 'imagen' : 'video'} aquí o
                 </p>

@@ -24,6 +24,8 @@ const HeartIcon = ({ filled }: { filled: boolean }) => (
 export default function LikeButton({ postId, initialLiked, initialCount }: { postId: string; initialLiked: boolean; initialCount: number }) {
   const { token } = useAuth();
   const [liked, setLiked] = useState(initialLiked);
+  const [count, setCount] = useState(initialCount);
+  const [animate, setAnimate] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLike = async () => {
