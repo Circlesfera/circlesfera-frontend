@@ -7,9 +7,8 @@ export interface Post {
     username: string;
     avatar?: string;
   };
-  type: 'text' | 'image' | 'video';
+  type: 'image' | 'video';
   content: {
-    text?: string;
     image?: string;
     video?: {
       url: string;
@@ -36,13 +35,6 @@ export const createPost = async (formData: FormData, token: string): Promise<Pos
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
     },
-  });
-  return res.data.post;
-};
-
-export const createTextPost = async (text: string, caption: string, token: string): Promise<Post> => {
-  const res = await api.post('/posts', { type: 'text', text, caption }, {
-    headers: { Authorization: `Bearer ${token}` },
   });
   return res.data.post;
 };
