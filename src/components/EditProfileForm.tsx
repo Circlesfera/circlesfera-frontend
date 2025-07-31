@@ -25,6 +25,7 @@ interface EditProfileFormProps {
 
 export default function EditProfileForm({ profile, onSave, onCancel }: EditProfileFormProps) {
   const [formData, setFormData] = useState({
+    username: profile.username || '',
     fullName: profile.fullName || '',
     bio: profile.bio || '',
     website: profile.website || '',
@@ -36,6 +37,8 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [usernameChanged, setUsernameChanged] = useState(false);
+  const [originalUsername] = useState(profile.username);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -45,6 +48,11 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       ...prev,
       [name]: newValue
     }));
+
+    // Detectar si el username ha cambiado
+    if (name === 'username') {
+      setUsernameChanged(value !== originalUsername);
+    }
 
     // Limpiar error del campo
     if (errors[name]) {
@@ -57,6 +65,15 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
+
+    // Validar username
+    if (formData.username) {
+      if (formData.username.length < 3 || formData.username.length > 30) {
+        newErrors.username = 'El nombre de usuario debe tener entre 3 y 30 caracteres';
+      } else if (!formData.username.match(/^[a-zA-Z0-9_]+$/)) {
+        newErrors.username = 'El nombre de usuario solo puede contener letras, números y guiones bajos';
+      }
+    }
 
     if (formData.fullName && formData.fullName.length > 50) {
       newErrors.fullName = 'El nombre completo no puede exceder 50 caracteres';
@@ -135,6 +152,36 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
               Cambiar foto de perfil
             </button>
           </div>
+        </div>
+
+        {/* Nombre de usuario */}
+        <div>
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+            Nombre de usuario
+            {usernameChanged && (
+              <span className="text-orange-600 ml-2 text-xs">
+                ⚠️ Cambiado
+              </span>
+            )}
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            className={`input-modern ${errors.username ? 'border-red-500' : ''} ${usernameChanged ? 'border-orange-300 bg-orange-50' : ''}`}
+            placeholder="nombre_usuario"
+            disabled={loading}
+          />
+          {errors.username && (
+            <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+          )}
+          {usernameChanged && (
+            <p className="text-orange-600 text-sm mt-1">
+              ⚠️ Una vez cambiado, no podrás volver a usar tu nombre de usuario anterior hasta que lo cambies de nuevo
+            </p>
+          )}
         </div>
 
         {/* Nombre completo */}
