@@ -86,7 +86,7 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
 
 export const getUserProfileByUsername = async (username: string): Promise<UserProfile> => {
   const res = await api.get(`/users/profile/${username}`);
-  return res.data;
+  return res.data.user;
 };
 
 export const followUser = async (userId: string) => {
