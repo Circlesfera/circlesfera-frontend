@@ -57,6 +57,41 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+// Función para obtener datos del localStorage de forma segura
+const getStoredAuthData = () => {
+  if (typeof window === 'undefined') {
+    return { token: null, user: null };
+  }
+  
+  try {
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedToken && storedUser) {
+      return {
+        token: storedToken,
+        user: JSON.parse(storedUser)
+      };
+    }
+  } catch (error) {
+    console.error('Error reading from localStorage:', error);
+  }
+  
+  return { token: null, user: null };
+};
+
+// Función para limpiar tokens de forma segura
+const clearStoredAuthData = () => {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    } catch (error) {
+      console.error('Error clearing localStorage:', error);
+    }
+  }
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -66,16 +101,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const clearInvalidTokens = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    clearStoredAuthData();
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const { token: storedToken, user: storedUser } = getStoredAuthData();
     if (storedToken && storedUser) {
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      setUser(storedUser);
     }
     setLoading(false);
   }, []);
@@ -86,8 +119,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await api.post('/auth/login', { email, password });
       setToken(res.data.token);
       setUser(res.data.user);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      
+      // Guardar en localStorage de forma segura
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+        } catch (error) {
+          console.error('Error saving to localStorage:', error);
+        }
+      }
     } catch (error: any) {
       // Si hay error de autenticación, limpiar tokens
       if (error?.response?.status === 401) {

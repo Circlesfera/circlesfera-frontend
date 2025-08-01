@@ -9,15 +9,25 @@ const api = axios.create({
   }
 });
 
+// Función para obtener token de forma segura
+const getToken = () => {
+  if (typeof window === 'undefined') {
+    return null; // No hay localStorage en SSR
+  }
+  try {
+    return localStorage.getItem('token');
+  } catch (error) {
+    console.error('Error getting token from localStorage:', error);
+    return null;
+  }
+};
+
 // Interceptor para agregar token automáticamente
 api.interceptors.request.use(
   (config) => {
-    // Solo agregar token si estamos en el cliente
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -34,13 +44,15 @@ api.interceptors.response.use(
     
     // Si es un error de autenticación (401), limpiar tokens
     if (error?.response?.status === 401) {
-      // Limpiar tokens del localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      
-      // Redirigir a login si no estamos ya ahí
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
+      // Limpiar tokens del localStorage solo en el cliente
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        // Redirigir a login si no estamos ya ahí
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
       }
     }
     
@@ -51,11 +63,13 @@ api.interceptors.response.use(
       if (error?.response?.data?.message?.includes('Token') || 
           error?.response?.data?.message?.includes('jwt') ||
           error?.response?.data?.message?.includes('autenticación')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        
-        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
+          if (!window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+          }
         }
       }
     }
