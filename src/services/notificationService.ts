@@ -15,15 +15,11 @@ export interface Notification {
   createdAt: string;
 }
 
-export const getNotifications = async (token: string): Promise<Notification[]> => {
-  const res = await api.get('/notifications', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getNotifications = async (): Promise<Notification[]> => {
+  const res = await api.get('/notifications');
   return res.data.notifications;
 };
 
-export const markNotificationAsRead = async (id: string, token: string) => {
-  await api.put(`/notifications/${id}/read`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const markNotificationAsRead = async (id: string) => {
+  await api.put(`/notifications/${id}/read`, {});
 };
