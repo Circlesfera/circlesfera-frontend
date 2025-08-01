@@ -10,7 +10,7 @@ import PostSkeleton from '@/components/PostSkeleton';
 import UserSuggestions from '@/components/UserSuggestions';
 
 export default function FeedPage() {
-  const { token } = useAuth();
+  const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -21,10 +21,10 @@ export default function FeedPage() {
   const lastPostRef = useRef<HTMLDivElement | null>(null);
 
   const fetchFeed = useCallback(async (pageNum: number, append = false) => {
-    if (!token) return;
+    if (!user) return;
     
     try {
-      const res = await getFeed(token, pageNum, 10);
+      const res = await getFeed(pageNum, 10);
       
       if (append) {
         setPosts(prev => [...prev, ...res.posts]);
@@ -41,15 +41,15 @@ export default function FeedPage() {
       setFetchingMore(false);
       setIsRefreshing(false);
     }
-  }, [token]);
+  }, [user]);
 
   // Carga inicial
   useEffect(() => {
-    if (token) {
+    if (user) {
       setLoading(true);
       fetchFeed(1, false);
     }
-  }, [token, fetchFeed]);
+  }, [user, fetchFeed]);
 
   // Intersection Observer para paginación infinita
   useEffect(() => {

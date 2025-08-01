@@ -89,9 +89,8 @@ export interface LikeResponse {
 }
 
 // Obtener el feed de publicaciones
-export const getFeed = async (token: string, page = 1, limit = 10): Promise<FeedResponse> => {
+export const getFeed = async (page = 1, limit = 10): Promise<FeedResponse> => {
   const res = await api.get('/posts/feed', {
-    headers: { Authorization: `Bearer ${token}` },
     params: { page, limit },
   });
   return res.data;
@@ -120,18 +119,17 @@ export const getPostById = async (id: string): Promise<PostResponse> => {
 };
 
 // Crear una nueva publicación
-export const createPost = async (formData: FormData, token: string): Promise<PostResponse> => {
+export const createPost = async (formData: FormData): Promise<PostResponse> => {
   const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}`,
     },
   });
   return res.data;
 };
 
 // Crear publicación de imagen
-export const createImagePost = async (files: File[], caption: string, token: string, location?: string, tags?: string): Promise<PostResponse> => {
+export const createImagePost = async (files: File[], caption: string, location?: string, tags?: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'image');
   files.forEach((file) => {
@@ -144,14 +142,13 @@ export const createImagePost = async (files: File[], caption: string, token: str
   const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}`,
     },
   });
   return res.data;
 };
 
 // Crear publicación de video
-export const createVideoPost = async (file: File, caption: string, token: string, location?: string, tags?: string): Promise<PostResponse> => {
+export const createVideoPost = async (file: File, caption: string, location?: string, tags?: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'video');
   formData.append('video', file);
@@ -162,14 +159,13 @@ export const createVideoPost = async (file: File, caption: string, token: string
   const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}`,
     },
   });
   return res.data;
 };
 
 // Crear publicación de texto
-export const createTextPost = async (text: string, token: string, caption?: string, location?: string, tags?: string): Promise<PostResponse> => {
+export const createTextPost = async (text: string, caption?: string, location?: string, tags?: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'text');
   formData.append('text', text);
@@ -180,17 +176,14 @@ export const createTextPost = async (text: string, token: string, caption?: stri
   const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}`,
     },
   });
   return res.data;
 };
 
 // Dar/quitar like a un post
-export const toggleLike = async (postId: string, token: string): Promise<LikeResponse> => {
-  const res = await api.post(`/posts/${postId}/like`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const toggleLike = async (postId: string): Promise<LikeResponse> => {
+  const res = await api.post(`/posts/${postId}/like`, {});
   return res.data;
 };
 
@@ -201,18 +194,14 @@ export const getPostLikes = async (postId: string): Promise<{ success: boolean; 
 };
 
 // Actualizar un post
-export const updatePost = async (postId: string, data: { caption?: string; location?: string; tags?: string }, token: string): Promise<PostResponse> => {
-  const res = await api.put(`/posts/${postId}`, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const updatePost = async (postId: string, data: { caption?: string; location?: string; tags?: string }): Promise<PostResponse> => {
+  const res = await api.put(`/posts/${postId}`, data);
   return res.data;
 };
 
 // Eliminar un post
-export const deletePost = async (postId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/posts/${postId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const deletePost = async (postId: string): Promise<{ success: boolean; message: string }> => {
+  const res = await api.delete(`/posts/${postId}`);
   return res.data;
 };
 
@@ -251,34 +240,26 @@ export const getCommentReplies = async (commentId: string, page = 1, limit = 5):
 };
 
 // Crear un comentario
-export const createComment = async (postId: string, content: string, token: string, parentComment?: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
-  const res = await api.post(`/comments/post/${postId}`, { content, parentComment }, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const createComment = async (postId: string, content: string, parentComment?: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
+  const res = await api.post(`/comments/post/${postId}`, { content, parentComment });
   return res.data;
 };
 
 // Actualizar un comentario
-export const updateComment = async (commentId: string, content: string, token: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
-  const res = await api.put(`/comments/${commentId}`, { content }, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const updateComment = async (commentId: string, content: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
+  const res = await api.put(`/comments/${commentId}`, { content });
   return res.data;
 };
 
 // Dar/quitar like a un comentario
-export const toggleCommentLike = async (commentId: string, token: string): Promise<LikeResponse> => {
-  const res = await api.post(`/comments/${commentId}/like`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const toggleCommentLike = async (commentId: string): Promise<LikeResponse> => {
+  const res = await api.post(`/comments/${commentId}/like`, {});
   return res.data;
 };
 
 // Eliminar un comentario
-export const deleteComment = async (commentId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/comments/${commentId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const deleteComment = async (commentId: string): Promise<{ success: boolean; message: string }> => {
+  const res = await api.delete(`/comments/${commentId}`);
   return res.data;
 };
 
