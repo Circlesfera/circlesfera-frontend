@@ -66,18 +66,14 @@ export interface UserProfile {
   isFollowing?: boolean;
 }
 
-export const getUserProfile = async (token: string): Promise<User> => {
-  const res = await api.get('/auth/profile', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getUserProfile = async (): Promise<User> => {
+  const res = await api.get('/auth/profile');
   return res.data.user;
 };
 
-export const updateUserProfile = async (token: string, userData: Partial<User>): Promise<User> => {
+export const updateUserProfile = async (userData: Partial<User>): Promise<User> => {
   try {
-    const res = await api.put('/auth/profile', userData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await api.put('/auth/profile', userData);
     return res.data.user;
   } catch (error: any) {
     console.error('Error en updateUserProfile:', error.response?.data || error.message);
@@ -93,23 +89,18 @@ export const getUserProfileByUsername = async (username: string): Promise<UserPr
   return res.data;
 };
 
-export const followUser = async (userId: string, token: string) => {
-  await api.post(`/users/${userId}/follow`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const followUser = async (userId: string) => {
+  await api.post(`/users/${userId}/follow`, {});
 };
 
-export const unfollowUser = async (userId: string, token: string) => {
-  await api.post(`/users/${userId}/unfollow`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const unfollowUser = async (userId: string) => {
+  await api.post(`/users/${userId}/unfollow`, {});
 };
 
-export const editProfile = async (formData: FormData, token: string) => {
+export const editProfile = async (formData: FormData) => {
   const res = await api.put('/users/profile', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}`,
     },
   });
   return res.data;
@@ -124,10 +115,8 @@ export interface UserSuggestion {
   isFollowing?: boolean;
 }
 
-export const getSuggestions = async (token: string): Promise<UserSuggestion[]> => {
-  const res = await api.get('/users/suggestions', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getSuggestions = async (): Promise<UserSuggestion[]> => {
+  const res = await api.get('/users/suggestions');
   return res.data.suggestions;
 };
 
@@ -141,31 +130,23 @@ export const getFollowing = async (userId: string): Promise<UserSuggestion[]> =>
   return res.data.following;
 };
 
-export const searchUsers = async (query: string, token: string): Promise<UserSuggestion[]> => {
-  const res = await api.get(`/users/search?q=${encodeURIComponent(query)}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const searchUsers = async (query: string): Promise<UserSuggestion[]> => {
+  const res = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
   return res.data.users;
 };
 
-export const blockUser = async (userId: string, token: string) => {
-  await api.post(`/users/${userId}/block`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const blockUser = async (userId: string) => {
+  await api.post(`/users/${userId}/block`, {});
 };
 
-export const unblockUser = async (userId: string, token: string) => {
-  await api.post(`/users/${userId}/unblock`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const unblockUser = async (userId: string) => {
+  await api.post(`/users/${userId}/unblock`, {});
 };
 
-export const changePassword = async (currentPassword: string, newPassword: string, token: string) => {
+export const changePassword = async (currentPassword: string, newPassword: string) => {
   const res = await api.put('/auth/change-password', {
     currentPassword,
     newPassword
-  }, {
-    headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
 };

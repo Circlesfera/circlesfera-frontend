@@ -13,20 +13,20 @@ export default function FollowButton({
   initialFollowing: boolean;
   onChange?: (following: boolean) => void;
 }) {
-  const { token } = useAuth();
+  const { user } = useAuth();
   const [following, setFollowing] = useState(initialFollowing);
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
-    if (loading) return;
+    if (loading || !user) return;
     setLoading(true);
     try {
       if (following) {
-        await unfollowUser(userId, token!);
+        await unfollowUser(userId);
         setFollowing(false);
         onChange?.(false);
       } else {
-        await followUser(userId, token!);
+        await followUser(userId);
         setFollowing(true);
         onChange?.(true);
       }

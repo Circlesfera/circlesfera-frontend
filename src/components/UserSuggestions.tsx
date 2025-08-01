@@ -13,16 +13,16 @@ const UsersIcon = () => (
 );
 
 export default function UserSuggestions() {
-  const { token, user } = useAuth();
+  const { user } = useAuth();
   const [suggestions, setSuggestions] = useState<UserSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!token) return;
+    if (!user) return;
     setLoading(true);
     setError(null);
-    getSuggestions(token).then(data => {
+    getSuggestions().then(data => {
       if (Array.isArray(data)) {
         setSuggestions(data);
       } else {
@@ -37,7 +37,7 @@ export default function UserSuggestions() {
       setSuggestions([]);
       setLoading(false);
     });
-  }, [token]);
+  }, [user]);
 
   if (!user) return null;
 

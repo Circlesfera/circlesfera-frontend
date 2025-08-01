@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getUserProfile } from '@/services/userService';
+import { getUserProfileByUsername } from '@/services/userService';
 import ClientProfilePage from './ClientProfilePage';
 
 const RESERVED_ROUTES = [
@@ -15,7 +15,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
 
   let profile = null;
   try {
-    profile = await getUserProfile(username);
+    profile = await getUserProfileByUsername(username);
   } catch {
     return notFound();
   }
