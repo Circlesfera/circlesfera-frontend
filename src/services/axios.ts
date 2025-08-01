@@ -36,12 +36,14 @@ api.interceptors.request.use(
       url: config.url,
       fullUrl: `${config.baseURL}${config.url}`,
       headers: config.headers,
-      hasToken: !!token
+      hasToken: !!token,
+      baseURL: config.baseURL
     });
     
     return config;
   },
   (error) => {
+    console.error('❌ Axios Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -58,15 +60,42 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Debug: mostrar error detallado
-    console.error('❌ Axios Error Debug:', {
+    // Debug: mostrar error detallado con más información
+    const errorInfo = {
       status: error?.response?.status,
       statusText: error?.response?.statusText,
       url: error?.config?.url,
       method: error?.config?.method?.toUpperCase(),
       message: error?.response?.data?.message || error?.message,
-      fullError: error
-    });
+      fullError: error,
+      // Información adicional para debug
+      hasResponse: !!error?.response,
+      hasRequest: !!error?.request,
+      code: error?.code,
+      name: error?.name,
+      stack: error?.stack,
+      // Configuración de la petición
+      config: {
+        baseURL: error?.config?.baseURL,
+        url: error?.config?.url,
+        method: error?.config?.method,
+        headers: error?.config?.headers,
+        timeout: error?.config?.timeout
+      }
+    };
+    
+    console.error('❌ Axios Error Debug:', errorInfo);
+    
+    // Si el error está vacío, mostrar información adicional
+    if (!error?.response && !error?.request) {
+      console.error('🚨 Error sin response ni request - posible problema de red:', {
+        error: error,
+        errorType: typeof error,
+        errorKeys: error ? Object.keys(error) : 'No error object',
+        window: typeof window !== 'undefined',
+        navigator: typeof navigator !== 'undefined'
+      });
+    }
     
     // Si es un error de autenticación (401), limpiar tokens
     if (error?.response?.status === 401) {
