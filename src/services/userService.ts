@@ -85,6 +85,13 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
 };
 
 export const getUserProfileByUsername = async (username: string): Promise<UserProfile> => {
+  console.log('🔍 getUserProfileByUsername Debug:', {
+    username,
+    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
+    constructedUrl: `/users/profile/${username}`,
+    fullUrl: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/users/profile/${username}`
+  });
+  
   const res = await api.get(`/users/profile/${username}`);
   return res.data.user;
 };
