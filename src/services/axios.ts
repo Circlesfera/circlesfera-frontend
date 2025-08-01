@@ -29,6 +29,16 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Debug: mostrar la URL que se está construyendo
+    console.log('🔍 Axios Request Debug:', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      fullUrl: `${config.baseURL}${config.url}`,
+      headers: config.headers,
+      hasToken: !!token
+    });
+    
     return config;
   },
   (error) => {
@@ -38,9 +48,25 @@ api.interceptors.request.use(
 
 // Interceptor para manejar errores
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Debug: mostrar respuesta exitosa
+    console.log('✅ Axios Response Debug:', {
+      status: response.status,
+      url: response.config.url,
+      method: response.config.method?.toUpperCase()
+    });
+    return response;
+  },
   (error) => {
-    console.error('Axios Error:', error);
+    // Debug: mostrar error detallado
+    console.error('❌ Axios Error Debug:', {
+      status: error?.response?.status,
+      statusText: error?.response?.statusText,
+      url: error?.config?.url,
+      method: error?.config?.method?.toUpperCase(),
+      message: error?.response?.data?.message || error?.message,
+      fullError: error
+    });
     
     // Si es un error de autenticación (401), limpiar tokens
     if (error?.response?.status === 401) {
