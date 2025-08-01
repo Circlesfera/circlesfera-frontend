@@ -10,6 +10,7 @@ import PostSkeleton from '@/components/PostSkeleton';
 import UserSuggestions from '@/components/UserSuggestions';
 import DebugAuth from '@/components/DebugAuth';
 import DebugNetwork from '@/components/DebugNetwork';
+import TestAPI from '@/components/TestAPI';
 
 export default function FeedPage() {
   const { user, loading: authLoading } = useAuth();
@@ -118,6 +119,7 @@ export default function FeedPage() {
     <ProtectedRoute>
       <DebugAuth />
       <DebugNetwork />
+      <TestAPI />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
