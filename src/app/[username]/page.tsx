@@ -34,7 +34,10 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
       }
     };
 
-    loadProfile();
+    // Solo cargar cuando estemos en el cliente
+    if (typeof window !== 'undefined') {
+      loadProfile();
+    }
   }, [params]);
 
   if (loading) {
