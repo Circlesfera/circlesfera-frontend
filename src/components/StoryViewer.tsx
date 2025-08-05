@@ -175,10 +175,25 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
             controls={false}
             onLoadedData={(e) => {
               const video = e.target as HTMLVideoElement;
-              video.play().catch(console.error);
+              console.log('Video loaded successfully:', story.content.video?.url);
+              video.play().catch(error => {
+                console.error('Error playing video:', error);
+              });
             }}
             onError={(e) => {
-              console.error('Error loading video:', e);
+              const video = e.target as HTMLVideoElement;
+              console.error('Error loading video:', {
+                src: story.content.video?.url,
+                error: video.error,
+                networkState: video.networkState,
+                readyState: video.readyState
+              });
+            }}
+            onLoadStart={() => {
+              console.log('Video load started:', story.content.video?.url);
+            }}
+            onCanPlay={() => {
+              console.log('Video can play:', story.content.video?.url);
             }}
             style={{ 
               backgroundColor: '#000',
