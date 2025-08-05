@@ -116,35 +116,69 @@ export default function StoriesBar() {
       {/* Contenedor de stories con scroll horizontal */}
       <div className="relative">
         <div className="flex gap-4 overflow-x-auto py-6 px-6 scrollbar-hide">
-          {/* Story para crear nuevo */}
-          <div className="flex flex-col items-center min-w-[80px] flex-shrink-0">
-            <button
-              onClick={handleCreateStory}
-              className="relative w-16 h-16 mb-3 group"
-            >
-              <div className="w-full h-full rounded-full border-2 border-gray-300 bg-white p-0.5 group-hover:border-blue-400 transition-all duration-200">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center group-hover:from-blue-100 group-hover:to-purple-100 transition-all duration-200">
-                  {user?.avatar ? (
-                    <img 
-                      src={user.avatar} 
-                      alt="avatar" 
-                      className="w-14 h-14 rounded-full object-cover" 
-                    />
-                  ) : (
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm">
-                      {user?.username[0].toUpperCase()}
+          {/* Tu historia actual (si existe) */}
+          {(() => {
+            const currentUserStory = usersWithStories.find(user => user._id === user?._id);
+            return currentUserStory ? (
+              <button 
+                className="flex flex-col items-center min-w-[80px] flex-shrink-0 focus:outline-none group" 
+                onClick={() => openViewer(currentUserStory)}
+              >
+                <div className="relative w-16 h-16 mb-3">
+                  <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
+                    <div className="w-full h-full rounded-full bg-white p-0.5">
+                      {user?.avatar ? (
+                        <img 
+                          src={user.avatar} 
+                          alt="avatar" 
+                          className="w-full h-full object-cover rounded-full" 
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm">
+                          {user?.username[0].toUpperCase()}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                  {/* Indicador de tiempo */}
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  </div>
                 </div>
+                <div className="text-center">
+                  <span className="text-xs font-medium text-gray-900 truncate max-w-[64px] block">
+                    Tu historia
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {formatTimeAgo(currentUserStory.latestStory.createdAt)}
+                  </span>
+                </div>
+              </button>
+            ) : (
+              <div className="flex flex-col items-center min-w-[80px] flex-shrink-0">
+                <div className="relative w-16 h-16 mb-3">
+                  <div className="w-full h-full rounded-full border-2 border-gray-300 bg-white p-0.5">
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+                      {user?.avatar ? (
+                        <img 
+                          src={user.avatar} 
+                          alt="avatar" 
+                          className="w-14 h-14 rounded-full object-cover" 
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm">
+                          {user?.username[0].toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-xs text-center text-gray-600 font-medium">
+                  Tu historia
+                </span>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-lg group-hover:bg-blue-600 transition-all duration-200">
-                <PlusIcon />
-              </div>
-            </button>
-            <span className="text-xs text-center text-gray-600 font-medium">
-              Tu historia
-            </span>
-          </div>
+            );
+          })()}
 
           {/* Usuarios con stories */}
           {loading ? (
@@ -172,38 +206,40 @@ export default function StoriesBar() {
                 </div>
               </div>
             ) : (
-              usersWithStories.map((userWithStories) => (
-                <button 
-                  key={userWithStories._id}
-                  className="flex flex-col items-center min-w-[80px] flex-shrink-0 focus:outline-none group" 
-                  onClick={() => openViewer(userWithStories)}
-                >
-                  <div className="relative w-16 h-16 mb-3">
-                    <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
-                      <div className="w-full h-full rounded-full bg-white p-0.5">
-                        <img 
-                          src={userWithStories.avatar || '/default-avatar.png'} 
-                          alt="avatar" 
-                          className="w-full h-full object-cover rounded-full" 
-                        />
+              usersWithStories
+                .filter(userWithStories => userWithStories._id !== user?._id) // Excluir al usuario actual ya que se muestra arriba
+                .map((userWithStories) => (
+                  <button 
+                    key={userWithStories._id}
+                    className="flex flex-col items-center min-w-[80px] flex-shrink-0 focus:outline-none group" 
+                    onClick={() => openViewer(userWithStories)}
+                  >
+                    <div className="relative w-16 h-16 mb-3">
+                      <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
+                        <div className="w-full h-full rounded-full bg-white p-0.5">
+                          <img 
+                            src={userWithStories.avatar || '/default-avatar.png'} 
+                            alt="avatar" 
+                            className="w-full h-full object-cover rounded-full" 
+                          />
+                        </div>
+                      </div>
+                      {/* Indicador de tiempo */}
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       </div>
                     </div>
-                    {/* Indicador de tiempo */}
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="text-center">
+                      <span className="text-xs font-medium text-gray-900 truncate max-w-[64px] block">
+                        {userWithStories.username}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formatTimeAgo(userWithStories.latestStory.createdAt)}
+                      </span>
                     </div>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-xs font-medium text-gray-900 truncate max-w-[64px] block">
-                      {userWithStories.username}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {formatTimeAgo(userWithStories.latestStory.createdAt)}
-                    </span>
-                  </div>
-                </button>
-              ))
-            )}
+                  </button>
+                ))
+              )}
         </div>
         
         {/* Indicadores de scroll */}
