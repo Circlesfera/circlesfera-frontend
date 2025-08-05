@@ -52,6 +52,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
 
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -164,6 +165,24 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
         );
       
       case 'video':
+        if (videoError) {
+          return (
+            <div className="w-full h-full flex items-center justify-center bg-black">
+              <div className="text-center text-white">
+                <div className="text-2xl mb-4">⚠️</div>
+                <div className="text-lg mb-2">Error al cargar el video</div>
+                <div className="text-sm text-gray-300">{videoError}</div>
+                <button 
+                  onClick={() => setVideoError(null)}
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Reintentar
+                </button>
+              </div>
+            </div>
+          );
+        }
+        
         return (
           <video 
             src={story.content.video?.url}
@@ -176,24 +195,43 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
             onLoadedData={(e) => {
               const video = e.target as HTMLVideoElement;
               console.log('Video loaded successfully:', story.content.video?.url);
+              setVideoError(null);
               video.play().catch(error => {
                 console.error('Error playing video:', error);
+                setVideoError('Error al reproducir el video');
               });
             }}
             onError={(e) => {
               const video = e.target as HTMLVideoElement;
-              console.error('Error loading video:', {
+              const error = video.error;
+              const errorInfo = {
                 src: story.content.video?.url,
-                error: video.error,
+                error: error ? {
+                  code: error.code,
+                  message: error.message
+                } : 'No error object',
                 networkState: video.networkState,
-                readyState: video.readyState
-              });
+                readyState: video.readyState,
+                currentSrc: video.currentSrc,
+                duration: video.duration,
+                videoWidth: video.videoWidth,
+                videoHeight: video.videoHeight
+              };
+              console.error('Error loading video:', errorInfo);
+              setVideoError(`Error al cargar el video: ${error?.message || 'URL no válida'}`);
             }}
             onLoadStart={() => {
               console.log('Video load started:', story.content.video?.url);
+              setVideoError(null);
             }}
             onCanPlay={() => {
               console.log('Video can play:', story.content.video?.url);
+            }}
+            onLoadedMetadata={() => {
+              console.log('Video metadata loaded:', story.content.video?.url);
+            }}
+            onCanPlayThrough={() => {
+              console.log('Video can play through:', story.content.video?.url);
             }}
             style={{ 
               backgroundColor: '#000',
