@@ -171,7 +171,19 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
             className="w-full h-full object-cover"
             autoPlay
             muted
-            loop
+            playsInline
+            controls={false}
+            onLoadedData={(e) => {
+              const video = e.target as HTMLVideoElement;
+              video.play().catch(console.error);
+            }}
+            onError={(e) => {
+              console.error('Error loading video:', e);
+            }}
+            style={{ 
+              backgroundColor: '#000',
+              objectFit: 'cover'
+            }}
           />
         );
       
