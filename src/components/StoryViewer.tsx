@@ -56,11 +56,30 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
 
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Función para corregir URLs de video
+  const getCorrectVideoUrl = (url: string) => {
+    if (url.startsWith('/uploads/')) {
+      // Si la URL es relativa, convertirla a la URL del backend
+      return `http://localhost:5001${url}`;
+    }
+    return url;
+  };
+
+  // Función para corregir URLs de imagen
+  const getCorrectImageUrl = (url: string) => {
+    if (url.startsWith('/uploads/')) {
+      // Si la URL es relativa, convertirla a la URL del backend
+      return `http://localhost:5001${url}`;
+    }
+    return url;
+  };
+
   // Cargar stories del usuario
   useEffect(() => {
     const loadUserStories = async () => {
       try {
         setLoading(true);
+        setVideoError(null); // Reset video error when loading new stories
         const response = await getUserStories(username);
         if (response.success) {
           setStories(response.stories);
@@ -78,6 +97,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
   useEffect(() => {
     if (stories.length > 0) {
       setShow(true);
+      setVideoError(null); // Reset video error when changing story
       startProgress();
     }
     return () => {
@@ -158,7 +178,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
       case 'image':
         return (
           <img 
-            src={story.content.image?.url} 
+            src={getCorrectImageUrl(story.content.image?.url || '')} 
             alt={story.content.image?.alt || "story"} 
             className="w-full h-full object-cover" 
           />
@@ -185,8 +205,8 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
         
         return (
           <video 
-            src={story.content.video?.url}
-            poster={story.content.video?.thumbnail}
+            src={getCorrectVideoUrl(story.content.video?.url || '')}
+            poster={getCorrectVideoUrl(story.content.video?.thumbnail || '')}
             className="w-full h-full object-cover"
             autoPlay
             muted
@@ -206,6 +226,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
               const error = video.error;
               const errorInfo = {
                 src: story.content.video?.url,
+                correctedSrc: getCorrectVideoUrl(story.content.video?.url || ''),
                 error: error ? {
                   code: error.code,
                   message: error.message
@@ -221,8 +242,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
               setVideoError(`Error al cargar el video: ${error?.message || 'URL no válida'}`);
             }}
             onLoadStart={() => {
-              console.log('Video load started:', story.content.video?.url);
-              setVideoError(null);
+              console.log('Video load started:', getCorrectVideoUrl(story.content.video?.url || ''));
             }}
             onCanPlay={() => {
               console.log('Video can play:', story.content.video?.url);
