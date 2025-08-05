@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Story } from '@/services/storyService';
+import { getUserStories, Story } from '@/services/storyService';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
-  stories: Story[];
-  storyIndex: number;
+  userId: string;
+  username: string;
   onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
 }
 
 // Iconos SVG
@@ -47,23 +45,46 @@ const ShareIcon = () => (
   </svg>
 );
 
-export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNext }: Props) {
-  const story = stories[storyIndex];
+export default function StoryViewer({ userId, username, onClose }: Props) {
+  const [stories, setStories] = useState<Story[]>([]);
+  const [storyIndex, setStoryIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Cargar stories del usuario
   useEffect(() => {
-    setShow(true);
-    startProgress();
+    const loadUserStories = async () => {
+      try {
+        setLoading(true);
+        const response = await getUserStories(username);
+        if (response.success) {
+          setStories(response.stories);
+        }
+      } catch (error) {
+        console.error('Error loading user stories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserStories();
+  }, [username]);
+
+  useEffect(() => {
+    if (stories.length > 0) {
+      setShow(true);
+      startProgress();
+    }
     return () => {
       if (progressRef.current) {
         clearInterval(progressRef.current);
       }
     };
-  }, [storyIndex]);
+  }, [stories, storyIndex]);
 
   const startProgress = () => {
     setProgress(0);
@@ -77,7 +98,7 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
       setProgress(prev => {
         if (prev >= 100) {
           if (storyIndex < stories.length - 1) {
-            onNext();
+            setStoryIndex(prev => prev + 1);
           } else {
             onClose();
           }
@@ -102,9 +123,9 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
     if (e.key === 'Escape') {
       onClose();
     } else if (e.key === 'ArrowLeft') {
-      onPrev();
+      setStoryIndex(prev => Math.max(0, prev - 1));
     } else if (e.key === 'ArrowRight') {
-      onNext();
+      setStoryIndex(prev => Math.min(stories.length - 1, prev + 1));
     }
   };
 
@@ -113,7 +134,23 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
-  if (!story) return null;
+  const story = stories[storyIndex];
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <div className="text-white">Cargando historias...</div>
+      </div>
+    );
+  }
+
+  if (!story || stories.length === 0) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <div className="text-white">No hay historias disponibles</div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (story.type) {
@@ -240,7 +277,7 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
           {/* Navegación */}
           <div className="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
             <button
-              onClick={onPrev}
+              onClick={() => setStoryIndex(prev => Math.max(0, prev - 1))}
               disabled={storyIndex === 0}
               className="w-12 h-12 rounded-full bg-black bg-opacity-50 flex items-center justify-center text-white hover:bg-opacity-70 transition-all duration-200 pointer-events-auto disabled:opacity-50 disabled:pointer-events-none"
             >
@@ -248,7 +285,7 @@ export default function StoryViewer({ stories, storyIndex, onClose, onPrev, onNe
             </button>
             
             <button
-              onClick={onNext}
+              onClick={() => setStoryIndex(prev => Math.min(stories.length - 1, prev + 1))}
               disabled={storyIndex === stories.length - 1}
               className="w-12 h-12 rounded-full bg-black bg-opacity-50 flex items-center justify-center text-white hover:bg-opacity-70 transition-all duration-200 pointer-events-auto disabled:opacity-50 disabled:pointer-events-none"
             >

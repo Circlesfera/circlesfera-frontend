@@ -4,9 +4,37 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { getFollowers, getFollowing, UserProfile, UserSuggestion } from '@/services/userService';
 import { Post } from '@/services/postService';
+import { Story } from '@/services/storyService';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
+import Link from 'next/link';
+
+// Iconos SVG
+const PostsIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+
+const VideoIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+);
+
+const StoryIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+  </svg>
+);
+
+const SettingsIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
 
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
   const { user } = useAuth();
@@ -21,6 +49,18 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   const [followingList, setFollowingList] = useState<UserSuggestion[]>([]);
   const [loadingFollowers, setLoadingFollowers] = useState(false);
   const [loadingFollowing, setLoadingFollowing] = useState(false);
+
+  // Estadísticas calculadas desde el backend
+  const stats = {
+    posts: profileData?.postsCount || 0,
+    videos: profileData?.posts?.filter((post: Post) => post.type === 'video').length || 0,
+    images: profileData?.posts?.filter((post: Post) => post.type === 'image').length || 0,
+    stories: profileData?.storiesCount || 0,
+    followers: profileData?.followersCount || 0,
+    following: profileData?.followingCount || 0,
+    likes: profileData?.totalLikes || 0,
+    comments: profileData?.totalComments || 0
+  };
 
   const reloadProfile = async () => {
     const { getUserProfile } = await import('@/services/userService');
@@ -76,56 +116,178 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   }
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 px-2">
+    <div className="max-w-4xl mx-auto mt-10 px-2">
       {/* Cabecera de perfil */}
-      <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
-        {profileData.avatar ? (
-          <img src={profileData.avatar} alt="avatar" className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-md" />
-        ) : (
-          <span className="w-32 h-32 rounded-full bg-gradient-to-tr from-blue-500 to-blue-600 flex items-center justify-center font-bold text-white text-5xl border-4 border-white shadow-md">
-            {profileData.username?.[0]?.toUpperCase() || '?'}
-          </span>
-        )}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-4 mb-2 flex-wrap">
-            <div className="text-3xl font-extrabold text-gray-900 truncate">{profileData.username}</div>
-            {!isOwnProfile && (
-              <ProfileFollowButton userId={profileData._id} username={profileData.username} following={user?.following || []} />
-            )}
-            {isOwnProfile && (
-              <button onClick={() => setShowEdit(v => !v)} className="ml-2 px-4 py-1 bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 text-sm font-semibold border border-gray-200 transition-colors shadow-sm">{showEdit ? 'Cancelar' : 'Editar perfil'}</button>
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+        <div className="flex flex-col md:flex-row items-start gap-8">
+          {/* Avatar */}
+          <div className="flex-shrink-0">
+            {profileData.avatar ? (
+              <img 
+                src={profileData.avatar} 
+                alt="avatar" 
+                className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg" 
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold border-4 border-white shadow-lg">
+                {profileData.username?.[0]?.toUpperCase() || '?'}
+              </div>
             )}
           </div>
-          <div className="text-gray-700 mb-2 break-words">{profileData.bio || ''}</div>
-          <div className="flex gap-8 text-base font-medium">
-            <span><b>{profileData.posts?.length || 0}</b> publicaciones</span>
-            <button className="hover:underline" onClick={handleShowFollowers}>
-              <b>{profileData.followers?.length || 0}</b> seguidores
-            </button>
-            <button className="hover:underline" onClick={handleShowFollowing}>
-              <b>{profileData.following?.length || 0}</b> seguidos
-            </button>
+
+          {/* Información del perfil */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-4 mb-4 flex-wrap">
+              <h1 className="text-3xl font-bold text-gray-900">{profileData.username}</h1>
+              
+              {!isOwnProfile && (
+                <ProfileFollowButton userId={profileData._id} username={profileData.username} following={user?.following || []} />
+              )}
+              
+              {isOwnProfile && (
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => setShowEdit(v => !v)} 
+                    className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 text-sm font-semibold border border-gray-200 transition-colors shadow-sm"
+                  >
+                    {showEdit ? 'Cancelar' : 'Editar perfil'}
+                  </button>
+                  <Link 
+                    href="/settings" 
+                    className="p-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors shadow-sm"
+                  >
+                    <SettingsIcon />
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Información personal */}
+            <div className="mb-6">
+              {profileData.fullName && (
+                <div className="font-semibold text-gray-900 mb-2">{profileData.fullName}</div>
+              )}
+              {profileData.bio && (
+                <div className="text-gray-700 mb-2 break-words">{profileData.bio}</div>
+              )}
+              {profileData.website && (
+                <a 
+                  href={profileData.website} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  {profileData.website}
+                </a>
+              )}
+            </div>
+
+            {/* Estadísticas detalladas */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <PostsIcon />
+                </div>
+                <div className="font-bold text-xl text-gray-900">{stats.posts}</div>
+                <div className="text-sm text-gray-600">Publicaciones</div>
+              </div>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <VideoIcon />
+                </div>
+                <div className="font-bold text-xl text-gray-900">{stats.videos}</div>
+                <div className="text-sm text-gray-600">Videos</div>
+              </div>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <StoryIcon />
+                </div>
+                <div className="font-bold text-xl text-gray-900">{stats.stories}</div>
+                <div className="text-sm text-gray-600">Stories</div>
+              </div>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <div className="font-bold text-xl text-gray-900">{stats.likes}</div>
+                <div className="text-sm text-gray-600">Me gusta</div>
+              </div>
+            </div>
+
+            {/* Seguidores y seguidos */}
+            <div className="flex gap-8 text-base font-medium">
+              <button className="hover:underline flex items-center gap-2" onClick={handleShowFollowers}>
+                <span className="font-bold text-gray-900">{stats.followers}</span>
+                <span className="text-gray-600">seguidores</span>
+              </button>
+              <button className="hover:underline flex items-center gap-2" onClick={handleShowFollowing}>
+                <span className="font-bold text-gray-900">{stats.following}</span>
+                <span className="text-gray-600">siguiendo</span>
+              </button>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-gray-900">{stats.comments}</span>
+                <span className="text-gray-600">comentarios</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       {/* Edición de perfil */}
       {isOwnProfile && showEdit && (
-        <EditProfileForm profile={profileData} onSave={async () => { setShowEdit(false); await reloadProfile(); }} onCancel={() => setShowEdit(false)} />
+        <div className="mb-8">
+          <EditProfileForm profile={profileData} onSave={async () => { setShowEdit(false); await reloadProfile(); }} onCancel={() => setShowEdit(false)} />
+        </div>
       )}
+
       {/* Grid de publicaciones */}
-      <div className="mt-10">
-        {!profileData.posts || profileData.posts.length === 0 ? (
-          <div className="text-center text-gray-500">Este usuario no ha publicado nada aún.</div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {profileData.posts.map((post: Post) => (
-              <div key={post._id} className="aspect-square overflow-hidden rounded-xl shadow-sm bg-gray-100 cursor-pointer hover:scale-105 transition-transform">
-                <img src={post.content?.images?.[0]?.url || '/default-post.jpg'} alt="post" className="w-full h-full object-cover" />
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="p-6 border-b border-gray-100">
+          <h2 className="text-xl font-semibold text-gray-900">Publicaciones</h2>
+        </div>
+        
+        <div className="p-6">
+          {!profileData.posts || profileData.posts.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <PostsIcon />
               </div>
-            ))}
-          </div>
-        )}
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No hay publicaciones aún</h3>
+              <p className="text-gray-600">Cuando compartas fotos y videos, aparecerán aquí.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {profileData.posts.map((post: Post) => (
+                <div key={post._id} className="aspect-square overflow-hidden rounded-xl shadow-sm bg-gray-100 cursor-pointer hover:scale-105 transition-transform group">
+                  <div className="relative w-full h-full">
+                    <img 
+                      src={post.content?.images?.[0]?.url || post.content?.video?.thumbnail || '/default-post.jpg'} 
+                      alt="post" 
+                      className="w-full h-full object-cover" 
+                    />
+                    {post.type === 'video' && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
+                          <VideoIcon />
+                        </div>
+                      </div>
+                    )}
+                    <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                      {post.likes?.length || 0} ❤️
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
       {/* Modales de seguidores/seguidos */}
       <UserListModal
         open={showFollowers}
@@ -148,11 +310,14 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 function ProfileFollowButton({ userId, username, following }: { userId: string; username: string; following: string[] }) {
   const { user } = useAuth();
   const [isFollowing, setIsFollowing] = useState(false);
+  
   useEffect(() => {
     if (user && following) {
       setIsFollowing(following.includes(userId));
     }
   }, [user, userId, following]);
+  
   if (!user || user.username === username) return null;
+  
   return <FollowButton userId={userId} initialFollowing={isFollowing} onChange={setIsFollowing} />;
 } 

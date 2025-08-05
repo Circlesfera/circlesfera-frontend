@@ -60,9 +60,13 @@ export interface UserProfile {
   followers: string[];
   following: string[];
   posts: Post[];
+  stories?: any[];
   followersCount?: number;
   followingCount?: number;
   postsCount?: number;
+  storiesCount?: number;
+  totalLikes?: number;
+  totalComments?: number;
   isFollowing?: boolean;
 }
 

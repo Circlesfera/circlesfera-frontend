@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { getStoriesForFeed, Story } from '@/services/storyService';
+import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 import StoryViewer from './StoryViewer';
 import StorySkeleton from './StorySkeleton';
-import { motion, AnimatePresence } from 'framer-motion';
+import CreateStoryForm from './CreateStoryForm';
 
 // Iconos SVG modernos
 const StoryIcon = () => (
@@ -28,44 +28,57 @@ const CameraIcon = () => (
 );
 
 export default function StoriesBar() {
-  const { token, user } = useAuth();
-  const [stories, setStories] = useState<Story[]>([]);
+  const { user } = useAuth();
+  const [usersWithStories, setUsersWithStories] = useState<UserWithStories[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewerOpen, setViewerOpen] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedUser, setSelectedUser] = useState<UserWithStories | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const fetchStories = useCallback(async () => {
-    if (!token) return;
+  const fetchUsersWithStories = useCallback(async () => {
+    if (!user) {
+      return;
+    }
     
     try {
       setLoading(true);
-      const response = await getStoriesForFeed(token);
+      const response = await getUsersWithStories();
       if (response.success) {
-        setStories(response.stories);
+        setUsersWithStories(response.users);
       }
     } catch (error) {
-      console.error('Error fetching stories:', error);
+      console.error('Error fetching users with stories:', error);
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
-    fetchStories();
-  }, [fetchStories]);
+    fetchUsersWithStories();
+  }, [fetchUsersWithStories]);
 
-  const openViewer = (index: number) => {
-    setCurrentIndex(index);
+  const openViewer = (userWithStories: UserWithStories) => {
+    setSelectedUser(userWithStories);
     setViewerOpen(true);
   };
 
-  const closeViewer = () => setViewerOpen(false);
-  const prevStory = () => setCurrentIndex(i => Math.max(0, i - 1));
-  const nextStory = () => setCurrentIndex(i => Math.min(stories.length - 1, i + 1));
+  const closeViewer = () => {
+    setViewerOpen(false);
+    setSelectedUser(null);
+  };
 
   const handleCreateStory = () => {
-    // Aquí se abriría el modal para crear historia
-    console.log('Crear historia');
+    setShowCreateForm(true);
+  };
+
+  const handleStoryCreated = () => {
+    // Recargar la lista de usuarios con stories
+    fetchUsersWithStories();
+    setShowCreateForm(false);
+  };
+
+  const handleCloseCreateForm = () => {
+    setShowCreateForm(false);
   };
 
   const formatTimeAgo = (date: string) => {
@@ -104,11 +117,7 @@ export default function StoriesBar() {
       <div className="relative">
         <div className="flex gap-4 overflow-x-auto py-6 px-6 scrollbar-hide">
           {/* Story para crear nuevo */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center min-w-[80px] flex-shrink-0"
-          >
+          <div className="flex flex-col items-center min-w-[80px] flex-shrink-0">
             <button
               onClick={handleCreateStory}
               className="relative w-16 h-16 mb-3 group"
@@ -135,29 +144,19 @@ export default function StoriesBar() {
             <span className="text-xs text-center text-gray-600 font-medium">
               Tu historia
             </span>
-          </motion.div>
+          </div>
 
-          {/* Stories existentes */}
-          <AnimatePresence>
-            {loading ? (
-              <>
-                {[...Array(6)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <StorySkeleton />
-                  </motion.div>
-                ))}
-              </>
-            ) : stories.length === 0 ? (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex items-center justify-center w-full py-12"
-              >
+          {/* Usuarios con stories */}
+          {loading ? (
+            <>
+              {[...Array(6)].map((_, i) => (
+                <div key={i}>
+                  <StorySkeleton />
+                </div>
+              ))}
+            </>
+          ) : usersWithStories.length === 0 ? (
+            <div className="flex items-center justify-center w-full py-12">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                     <StoryIcon />
@@ -171,22 +170,19 @@ export default function StoriesBar() {
                     Crear mi primera historia
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ) : (
-              stories.map((story, idx) => (
-                <motion.button 
-                  key={story._id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
+              usersWithStories.map((userWithStories) => (
+                <button 
+                  key={userWithStories._id}
                   className="flex flex-col items-center min-w-[80px] flex-shrink-0 focus:outline-none group" 
-                  onClick={() => openViewer(idx)}
+                  onClick={() => openViewer(userWithStories)}
                 >
                   <div className="relative w-16 h-16 mb-3">
                     <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
                       <div className="w-full h-full rounded-full bg-white p-0.5">
                         <img 
-                          src={story.user.avatar || '/default-avatar.png'} 
+                          src={userWithStories.avatar || '/default-avatar.png'} 
                           alt="avatar" 
                           className="w-full h-full object-cover rounded-full" 
                         />
@@ -199,16 +195,15 @@ export default function StoriesBar() {
                   </div>
                   <div className="text-center">
                     <span className="text-xs font-medium text-gray-900 truncate max-w-[64px] block">
-                      {story.user.username}
+                      {userWithStories.username}
                     </span>
                     <span className="text-xs text-gray-500">
-                      {formatTimeAgo(story.createdAt)}
+                      {formatTimeAgo(userWithStories.latestStory.createdAt)}
                     </span>
                   </div>
-                </motion.button>
+                </button>
               ))
             )}
-          </AnimatePresence>
         </div>
         
         {/* Indicadores de scroll */}
@@ -225,14 +220,22 @@ export default function StoriesBar() {
       </div>
 
       {/* Viewer de stories */}
-      {viewerOpen && (
+      {viewerOpen && selectedUser && (
         <StoryViewer
-          stories={stories}
-          storyIndex={currentIndex}
+          userId={selectedUser._id}
+          username={selectedUser.username}
           onClose={closeViewer}
-          onPrev={prevStory}
-          onNext={nextStory}
         />
+      )}
+
+      {/* Modal para crear story */}
+      {showCreateForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <CreateStoryForm
+            onStoryCreated={handleStoryCreated}
+            onClose={handleCloseCreateForm}
+          />
+        </div>
       )}
     </>
   );

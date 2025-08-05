@@ -129,15 +129,13 @@ export const createPost = async (formData: FormData): Promise<PostResponse> => {
 };
 
 // Crear publicación de imagen
-export const createImagePost = async (files: File[], caption: string, location?: string, tags?: string): Promise<PostResponse> => {
+export const createImagePost = async (files: File[], caption: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'image');
   files.forEach((file) => {
     formData.append('images', file);
   });
   formData.append('caption', caption);
-  if (location) formData.append('location', location);
-  if (tags) formData.append('tags', tags);
   
   const res = await api.post('/posts', formData, {
     headers: {
@@ -148,13 +146,11 @@ export const createImagePost = async (files: File[], caption: string, location?:
 };
 
 // Crear publicación de video
-export const createVideoPost = async (file: File, caption: string, location?: string, tags?: string): Promise<PostResponse> => {
+export const createVideoPost = async (file: File, caption: string): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'video');
   formData.append('video', file);
   formData.append('caption', caption);
-  if (location) formData.append('location', location);
-  if (tags) formData.append('tags', tags);
   
   const res = await api.post('/posts', formData, {
     headers: {
