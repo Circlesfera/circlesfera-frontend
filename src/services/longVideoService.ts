@@ -187,7 +187,7 @@ export const getUserLongVideos = async (
   limit: number = 10
 ): Promise<GetLongVideosResponse> => {
   try {
-    const response = await api.get(`/api/long-videos/user/${username}?page=${page}&limit=${limit}`);
+    const response = await api.get(`/long-videos/user/${username}?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: any) {
     console.error('Error fetching user long videos:', error);
@@ -198,7 +198,7 @@ export const getUserLongVideos = async (
 // Obtener un video largo específico
 export const getLongVideo = async (videoId: string): Promise<GetLongVideoResponse> => {
   try {
-    const response = await api.get(`/api/long-videos/${videoId}`);
+    const response = await api.get(`/long-videos/${videoId}`);
     return response.data;
   } catch (error: any) {
     console.error('Error fetching long video:', error);
@@ -209,7 +209,7 @@ export const getLongVideo = async (videoId: string): Promise<GetLongVideoRespons
 // Dar like a un video largo
 export const likeLongVideo = async (videoId: string): Promise<LikeLongVideoResponse> => {
   try {
-    const response = await api.post(`/api/long-videos/${videoId}/like`);
+    const response = await api.post(`/long-videos/${videoId}/like`);
     return response.data;
   } catch (error: any) {
     console.error('Error liking long video:', error);
@@ -220,7 +220,7 @@ export const likeLongVideo = async (videoId: string): Promise<LikeLongVideoRespo
 // Quitar like de un video largo
 export const unlikeLongVideo = async (videoId: string): Promise<LikeLongVideoResponse> => {
   try {
-    const response = await api.delete(`/api/long-videos/${videoId}/like`);
+    const response = await api.delete(`/long-videos/${videoId}/like`);
     return response.data;
   } catch (error: any) {
     console.error('Error unliking long video:', error);
@@ -231,7 +231,7 @@ export const unlikeLongVideo = async (videoId: string): Promise<LikeLongVideoRes
 // Comentar un video largo
 export const commentLongVideo = async (videoId: string, content: string): Promise<CommentLongVideoResponse> => {
   try {
-    const response = await api.post(`/api/long-videos/${videoId}/comment`, { content });
+    const response = await api.post(`/long-videos/${videoId}/comment`, { content });
     return response.data;
   } catch (error: any) {
     console.error('Error commenting long video:', error);
@@ -242,7 +242,7 @@ export const commentLongVideo = async (videoId: string, content: string): Promis
 // Eliminar un video largo
 export const deleteLongVideo = async (videoId: string): Promise<DeleteLongVideoResponse> => {
   try {
-    const response = await api.delete(`/api/long-videos/${videoId}`);
+    const response = await api.delete(`/long-videos/${videoId}`);
     return response.data;
   } catch (error: any) {
     console.error('Error deleting long video:', error);
@@ -253,7 +253,7 @@ export const deleteLongVideo = async (videoId: string): Promise<DeleteLongVideoR
 // Obtener categorías disponibles
 export const getCategories = async (): Promise<GetCategoriesResponse> => {
   try {
-    const response = await api.get('/api/long-videos/categories');
+    const response = await api.get('/long-videos/categories');
     return response.data;
   } catch (error: any) {
     console.error('Error fetching categories:', error);
@@ -268,7 +268,7 @@ export const searchLongVideos = async (
   limit: number = 10
 ): Promise<SearchLongVideosResponse> => {
   try {
-    const response = await api.get(`/api/long-videos/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
+    const response = await api.get(`/long-videos/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: any) {
     console.error('Error searching long videos:', error);
