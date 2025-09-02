@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserPosts } from '@/services/postService';
-import { getUserReels } from '@/services/reelService';
+import { getUserReels, testReelsAPI } from '@/services/reelService';
 import { getUserLongVideos } from '@/services/longVideoService';
 import { getUserStories } from '@/services/storyService';
 import { Post } from '@/services/postService';
@@ -185,6 +185,12 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   const loadReels = async (page: number = 1, append: boolean = false) => {
     try {
       console.log('🔄 loadReels llamado con:', { username, page, append });
+      
+      // Ejecutar prueba de API primero
+      console.log('🧪 Ejecutando prueba de API...');
+      const testResult = await testReelsAPI(username);
+      console.log('🧪 Resultado de prueba:', testResult);
+      
       const response = await getUserReels(username, page, 12);
       console.log('✅ loadReels respuesta:', response);
       if (response.success) {
