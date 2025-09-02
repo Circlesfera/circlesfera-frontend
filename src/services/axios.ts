@@ -26,8 +26,20 @@ const getToken = () => {
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
+    console.log('Axios interceptor - Configuración completa:', {
+      url: config.url,
+      method: config.method,
+      headers: config.headers,
+      token: token ? `Bearer ${token.substring(0, 20)}...` : 'No hay token'
+    });
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Axios interceptor - Token enviado:', `Bearer ${token.substring(0, 20)}...`);
+      console.log('Axios interceptor - URL:', config.url);
+      console.log('Axios interceptor - Método:', config.method);
+    } else {
+      console.log('Axios interceptor - No hay token disponible');
     }
     return config;
   },

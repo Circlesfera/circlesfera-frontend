@@ -137,7 +137,7 @@ export const createImagePost = async (files: File[], caption: string): Promise<P
   });
   formData.append('caption', caption);
   
-  const res = await api.post('/posts', formData, {
+  const res = await api.post('/posts/media', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -152,7 +152,7 @@ export const createVideoPost = async (file: File, caption: string): Promise<Post
   formData.append('video', file);
   formData.append('caption', caption);
   
-  const res = await api.post('/posts', formData, {
+  const res = await api.post('/posts/media', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -198,6 +198,12 @@ export const updatePost = async (postId: string, data: { caption?: string; locat
 // Eliminar un post
 export const deletePost = async (postId: string): Promise<{ success: boolean; message: string }> => {
   const res = await api.delete(`/posts/${postId}`);
+  return res.data;
+};
+
+// Fijar/desfijar post
+export const togglePinPost = async (postId: string): Promise<{ success: boolean; message: string; isPinned: boolean }> => {
+  const res = await api.patch(`/posts/${postId}/pin`);
   return res.data;
 };
 

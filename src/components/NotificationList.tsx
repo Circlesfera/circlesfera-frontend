@@ -14,7 +14,7 @@ export default function NotificationList() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getNotifications(token!);
+      const data = await getNotifications();
       if (Array.isArray(data)) {
         setNotifications(data);
       } else {
@@ -38,7 +38,7 @@ export default function NotificationList() {
 
   const handleMarkAsRead = async (id: string) => {
     try {
-      await markNotificationAsRead(id, token!);
+      await markNotificationAsRead(id);
       fetchNotifications();
     } catch (error) {
       console.error('Error al marcar notificación como leída:', error);

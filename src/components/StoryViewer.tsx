@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { getUserStories, Story } from '@/services/storyService';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -107,7 +107,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
     };
   }, [stories, storyIndex]);
 
-  const startProgress = () => {
+  const startProgress = useCallback(() => {
     setProgress(0);
     setIsPaused(false);
     
@@ -118,29 +118,32 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
     progressRef.current = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
-          if (storyIndex < stories.length - 1) {
-            setStoryIndex(prev => prev + 1);
-          } else {
-            onClose();
-          }
+          // Usar setTimeout para evitar problemas de renderizado
+          setTimeout(() => {
+            if (storyIndex < stories.length - 1) {
+              setStoryIndex(prev => prev + 1);
+            } else {
+              onClose();
+            }
+          }, 0);
           return 0;
         }
         return prev + 1;
       });
     }, 50); // 5 segundos total (50ms * 100)
-  };
+  }, [storyIndex, stories.length, onClose]);
 
-  const pauseProgress = () => {
+  const pauseProgress = useCallback(() => {
     if (progressRef.current) {
       clearInterval(progressRef.current);
     }
-  };
+  }, []);
 
-  const resumeProgress = () => {
+  const resumeProgress = useCallback(() => {
     startProgress();
-  };
+  }, [startProgress]);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
+  const handleKeyPress = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       onClose();
     } else if (e.key === 'ArrowLeft') {
@@ -148,7 +151,15 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
     } else if (e.key === 'ArrowRight') {
       setStoryIndex(prev => Math.min(stories.length - 1, prev + 1));
     }
-  };
+  }, [onClose, stories.length]);
+
+  const handlePreviousStory = useCallback(() => {
+    setStoryIndex(prev => Math.max(0, prev - 1));
+  }, []);
+
+  const handleNextStory = useCallback(() => {
+    setStoryIndex(prev => Math.min(stories.length - 1, prev + 1));
+  }, [stories.length]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
@@ -362,7 +373,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
           {/* Navegación */}
           <div className="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
             <button
-              onClick={() => setStoryIndex(prev => Math.max(0, prev - 1))}
+              onClick={handlePreviousStory}
               disabled={storyIndex === 0}
               className="w-12 h-12 rounded-full bg-black bg-opacity-50 flex items-center justify-center text-white hover:bg-opacity-70 transition-all duration-200 pointer-events-auto disabled:opacity-50 disabled:pointer-events-none"
             >
@@ -370,7 +381,7 @@ export default function StoryViewer({ userId, username, onClose }: Props) {
             </button>
             
             <button
-              onClick={() => setStoryIndex(prev => Math.min(stories.length - 1, prev + 1))}
+              onClick={handleNextStory}
               disabled={storyIndex === stories.length - 1}
               className="w-12 h-12 rounded-full bg-black bg-opacity-50 flex items-center justify-center text-white hover:bg-opacity-70 transition-all duration-200 pointer-events-auto disabled:opacity-50 disabled:pointer-events-none"
             >

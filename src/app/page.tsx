@@ -36,9 +36,9 @@ export default function FeedPage() {
       
       setHasMore(pageNum < res.pagination.pages);
       setPage(pageNum);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching feed:', error);
-      setError(error?.response?.data?.message || 'Error al cargar el feed');
+      setError((error as any)?.response?.data?.message || 'Error al cargar el feed');
     } finally {
       setLoading(false);
       setFetchingMore(false);
@@ -76,6 +76,10 @@ export default function FeedPage() {
     setIsRefreshing(true);
     fetchFeed(1, false);
   }, [fetchFeed]);
+
+  const handlePostDeleted = useCallback((postId: string) => {
+    setPosts(prev => prev.filter(post => post._id !== postId));
+  }, []);
 
   // Mostrar loading mientras se autentica
   if (authLoading) {
@@ -187,7 +191,7 @@ export default function FeedPage() {
                       ref={isLast ? lastPostRef : undefined}
                       className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
                     >
-                      <PostCard post={post} />
+                      <PostCard post={post} onPostDeleted={handlePostDeleted} />
                     </div>
                   );
                 })}

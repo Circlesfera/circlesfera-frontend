@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound } from 'next/navigation';
-import { getUserProfileByUsername } from '@/services/userService';
+import { getUserProfileByUsername, UserProfile } from '@/services/userService';
 import ClientProfilePage from './ClientProfilePage';
 import { useEffect, useState } from 'react';
 
@@ -10,7 +10,7 @@ const RESERVED_ROUTES = [
 ];
 
 export default function UserProfilePage({ params }: { params: Promise<{ username: string }> }) {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 

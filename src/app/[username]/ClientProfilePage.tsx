@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { getFollowers, getFollowing, UserProfile, UserSuggestion } from '@/services/userService';
 import { Post } from '@/services/postService';
@@ -62,10 +62,24 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     comments: profileData?.totalComments || 0
   };
 
-  const reloadProfile = async () => {
-    const { getUserProfile } = await import('@/services/userService');
-    setProfileData(await getUserProfile(profile?.username || ''));
-  };
+      const reloadProfile = useCallback(async () => {
+      try {
+        const { getUserProfileByUsername } = await import('@/services/userService');
+        const newProfileData = await getUserProfileByUsername(profileData?.username || '');
+        setProfileData(newProfileData);
+      } catch (error) {
+        console.error('Error al recargar perfil:', error);
+      }
+    }, [profileData?.username]);
+
+  // Función simple: recargar perfil completo desde el backend
+  const forceRefreshPosts = useCallback(async () => {
+    try {
+      await reloadProfile();
+    } catch (error) {
+      console.error('Error al recargar perfil:', error);
+    }
+  }, [reloadProfile]);
 
   // Handlers para abrir modales
   const handleShowFollowers = async () => {
@@ -245,13 +259,51 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         </div>
       )}
 
+      {/* Botón de emergencia para sincronización */}
+                {isOwnProfile && (
+            <div className="bg-blue-100 border-2 border-blue-500 rounded-lg p-4 mb-6">
+              <div className="flex justify-between items-center">
+                <div className="text-blue-800 font-semibold">
+                  🔄 Sincronización de Posts
+                </div>
+                <div className="flex space-x-3">
+                  <button 
+                    onClick={forceRefreshPosts}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold text-lg"
+                  >
+                    🔄 Recargar Posts
+                  </button>
+                  <button 
+                    onClick={reloadProfile}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-bold"
+                  >
+                    🔄 Recargar Perfil
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
       {/* Grid de publicaciones */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Publicaciones</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-900">Publicaciones</h2>
+            {isOwnProfile && (
+              <button 
+                onClick={forceRefreshPosts}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+              >
+                <span>🔄</span>
+                <span>Recargar posts</span>
+              </button>
+            )}
+          </div>
         </div>
         
         <div className="p-6">
+          
+          
           {!profileData.posts || profileData.posts.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">

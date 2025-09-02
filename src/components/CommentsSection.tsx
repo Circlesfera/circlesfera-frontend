@@ -43,7 +43,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
     if (!text.trim()) return;
     setSending(true);
     try {
-      await createComment(postId, text, token!, undefined);
+      await createComment(postId, text);
       setText('');
       fetchComments();
     } catch (err: unknown) {
@@ -60,16 +60,16 @@ export default function CommentsSection({ postId }: { postId: string }) {
       {/* Mostrar algunos comentarios */}
       {!loading && comments.length > 0 && (
         <div className="mb-2">
-          {comments.slice(0, 2).map(c => (
+          {comments.slice(0, 1).map(c => (
             <div key={c._id} className="mb-1">
-              <span className="font-semibold text-gray-900 text-sm mr-2">
+              <span className="font-semibold text-gray-900 text-base mr-2">
                 {c.user.username}
               </span>
-              <span className="text-gray-900 text-sm">{c.content}</span>
+              <span className="text-gray-900 text-base">{c.content}</span>
             </div>
           ))}
-          {comments.length > 2 && (
-            <button className="text-gray-400 text-xs hover:opacity-70 transition-opacity">
+          {comments.length > 1 && (
+            <button className="text-gray-400 text-sm hover:opacity-70 transition-opacity">
               Ver los {comments.length} comentarios
             </button>
           )}
@@ -77,11 +77,11 @@ export default function CommentsSection({ postId }: { postId: string }) {
       )}
 
       {/* Formulario de comentario */}
-      <form onSubmit={handleSubmit} className="flex items-center border-t border-gray-200 pt-3">
+      <form onSubmit={handleSubmit} className="flex items-center border-t border-gray-200 pt-2">
         <input
           type="text"
           placeholder="Añade un comentario..."
-          className="flex-1 text-gray-900 text-sm bg-transparent border-none outline-none"
+          className="flex-1 text-gray-900 text-base bg-transparent border-none outline-none py-2"
           value={text}
           onChange={e => setText(e.target.value)}
           disabled={sending}
@@ -89,7 +89,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
         />
         <button 
           type="submit" 
-          className={`text-blue-500 font-semibold text-sm hover:opacity-70 transition-opacity ${!text.trim() || sending ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`text-blue-500 font-semibold text-base hover:opacity-70 transition-opacity px-3 py-2 ${!text.trim() || sending ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={sending || !text.trim()}
         >
           {sending ? '...' : 'Publicar'}

@@ -33,7 +33,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
       setError('');
 
       try {
-        const searchResults = await searchUsers(query, token);
+        const searchResults = await searchUsers(query);
         setResults(searchResults);
       } catch (err) {
         console.error('Error searching users:', err);
