@@ -99,7 +99,9 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
 
   // Cargar contenido inicial
   useEffect(() => {
-    loadInitialContent();
+    if (username) {
+      loadInitialContent();
+    }
   }, [username]);
 
   // Cargar contenido cuando cambie la pestaña
@@ -182,7 +184,9 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   // Cargar reels
   const loadReels = async (page: number = 1, append: boolean = false) => {
     try {
+      console.log('🔄 loadReels llamado con:', { username, page, append });
       const response = await getUserReels(username, page, 12);
+      console.log('✅ loadReels respuesta:', response);
       if (response.success) {
         if (append) {
           setReels(prev => [...prev, ...response.reels]);
@@ -192,8 +196,15 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         setHasMoreReels(response.reels.length === 12);
         setReelsPage(page);
       }
-    } catch (error) {
-      console.error('Error loading reels:', error);
+    } catch (error: any) {
+      console.error('❌ Error loading reels:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        method: error.config?.method
+      });
       // No propagar el error, solo establecer reels vacío
       if (!append) {
         setReels([]);

@@ -41,13 +41,19 @@ export default function StoriesBar() {
     }
     
     try {
+      console.log('🔄 fetchUsersWithStories ejecutándose...');
       setLoading(true);
       const response = await getUsersWithStories();
+      console.log('📡 Respuesta de getUsersWithStories:', response);
       if (response.success) {
+        console.log('✅ Usuarios con stories obtenidos:', response.users.length);
+        console.log('👥 Usuarios:', response.users.map(u => ({ username: u.username, storiesCount: u.storiesCount })));
         setUsersWithStories(response.users);
+      } else {
+        console.log('❌ Error en respuesta:', response.message);
       }
     } catch (error) {
-      console.error('Error fetching users with stories:', error);
+      console.error('❌ Error fetching users with stories:', error);
     } finally {
       setLoading(false);
     }
@@ -63,6 +69,7 @@ export default function StoriesBar() {
   };
 
   const closeViewer = () => {
+    console.log('🚪 closeViewer ejecutándose en StoriesBar');
     setViewerOpen(false);
     setSelectedUser(null);
   };
@@ -75,6 +82,14 @@ export default function StoriesBar() {
     // Recargar la lista de usuarios con stories
     fetchUsersWithStories();
     setShowCreateForm(false);
+  };
+
+  const handleStoryDeleted = (storyId: string) => {
+    console.log('🗑️ Story eliminada, actualizando lista:', storyId);
+    console.log('🔄 Llamando a fetchUsersWithStories...');
+    // Recargar la lista de usuarios con stories
+    fetchUsersWithStories();
+    console.log('✅ fetchUsersWithStories llamado');
   };
 
   const handleCloseCreateForm = () => {
@@ -258,9 +273,11 @@ export default function StoriesBar() {
       {/* Viewer de stories */}
       {viewerOpen && selectedUser && (
         <StoryViewer
+          story={selectedUser.latestStory}
           userId={selectedUser._id}
           username={selectedUser.username}
           onClose={closeViewer}
+          onStoryDeleted={handleStoryDeleted}
         />
       )}
 

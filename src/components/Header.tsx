@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 import CreatePostForm from './CreatePostForm';
 import CreateStoryForm from './CreateStoryForm';
+import CreateReelForm from './CreateReelForm';
+import CreateLongVideoForm from './CreateLongVideoForm';
 import UserSearch from './UserSearch';
 
 // Iconos SVG modernos
@@ -64,6 +66,18 @@ const StoryIcon = () => (
   </svg>
 );
 
+const ReelIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+);
+
+const VideoIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2M9 14l2-2 4-4M9 14l4 4M9 14l2-2" />
+  </svg>
+);
+
 const CloseIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -85,6 +99,8 @@ export default function Header() {
   const [showCreateMenu, setShowCreateMenu] = useState(false);
   const [showPostForm, setShowPostForm] = useState(false);
   const [showStoryForm, setShowStoryForm] = useState(false);
+  const [showReelForm, setShowReelForm] = useState(false);
+  const [showLongVideoForm, setShowLongVideoForm] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -152,14 +168,14 @@ export default function Header() {
             {/* Logo */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center group">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <span className="font-bold text-2xl text-gray-900 tracking-tight select-none group-hover:text-blue-600 transition-colors">
-                CircleSfera
-              </span>
-            </Link>
-          </div>
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
+                  <span className="text-white font-bold text-lg">C</span>
+                </div>
+                <span className="font-bold text-2xl text-gray-900 tracking-tight select-none group-hover:text-blue-600 transition-colors">
+                  CircleSfera
+                </span>
+              </Link>
+            </div>
 
           {/* Buscador centrado - Desktop */}
           <div className="hidden md:block w-72 relative" ref={searchRef}>
@@ -322,6 +338,7 @@ export default function Header() {
             </button>
           </div>
         </div>
+      </div>
       </header>
 
       {/* Menú móvil desplegable */}
@@ -379,6 +396,22 @@ export default function Header() {
                 >
                   <StoryIcon />
                   <span>Crear story</span>
+                </button>
+
+                <button
+                  onClick={() => setShowReelForm(true)}
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <ReelIcon />
+                  <span>Crear reel</span>
+                </button>
+
+                <button
+                  onClick={() => setShowLongVideoForm(true)}
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <VideoIcon />
+                  <span>Crear video largo</span>
                 </button>
               </div>
             )}
@@ -447,6 +480,28 @@ export default function Header() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal para crear reel */}
+      {showReelForm && (
+        <CreateReelForm
+          onReelCreated={() => {
+            setShowReelForm(false);
+            // Aquí puedes agregar lógica adicional después de crear el reel
+          }}
+          onClose={() => setShowReelForm(false)}
+        />
+      )}
+
+      {/* Modal para crear video largo */}
+      {showLongVideoForm && (
+        <CreateLongVideoForm
+          onVideoCreated={() => {
+            setShowLongVideoForm(false);
+            // Aquí puedes agregar lógica adicional después de crear el video
+          }}
+          onClose={() => setShowLongVideoForm(false)}
+        />
       )}
     </>
   );

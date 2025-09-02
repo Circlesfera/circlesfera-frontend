@@ -8,6 +8,7 @@ import { Story } from '@/services/storyService';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
+import ProfileTabs from '@/components/ProfileTabs';
 import Link from 'next/link';
 
 // Iconos SVG
@@ -53,8 +54,8 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   // Estadísticas calculadas desde el backend
   const stats = {
     posts: profileData?.postsCount || 0,
-    videos: profileData?.posts?.filter((post: Post) => post.type === 'video').length || 0,
-    images: profileData?.posts?.filter((post: Post) => post.type === 'image').length || 0,
+    reels: profileData?.reelsCount || 0,
+    videos: profileData?.longVideosCount || 0,
     stories: profileData?.storiesCount || 0,
     followers: profileData?.followersCount || 0,
     following: profileData?.followingCount || 0,
@@ -254,51 +255,12 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
 
 
-      {/* Grid de publicaciones */}
+      {/* Pestañas de contenido */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-900">Publicaciones</h2>
-          </div>
-        </div>
-        
-        <div className="p-6">
-          
-          
-          {!profileData.posts || profileData.posts.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <PostsIcon />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No hay publicaciones aún</h3>
-              <p className="text-gray-600">Cuando compartas fotos y videos, aparecerán aquí.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {profileData.posts.map((post: Post) => (
-                <div key={post._id} className="aspect-square overflow-hidden rounded-xl shadow-sm bg-gray-100 cursor-pointer hover:scale-105 transition-transform group">
-                  <div className="relative w-full h-full">
-                    <img 
-                      src={post.content?.images?.[0]?.url || post.content?.video?.thumbnail || '/default-post.jpg'} 
-                      alt="post" 
-                      className="w-full h-full object-cover" 
-                    />
-                    {post.type === 'video' && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
-                          <VideoIcon />
-                        </div>
-                      </div>
-                    )}
-                    <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                      {post.likes?.length || 0} ❤️
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ProfileTabs 
+          username={profileData.username} 
+          isOwnProfile={isOwnProfile || false} 
+        />
       </div>
 
       {/* Modales de seguidores/seguidos */}

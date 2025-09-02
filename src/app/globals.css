@@ -1,6 +1,172 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+/* Estilos para iconos de stories */
+.story-icon {
+  color: white;
+}
+
+.story-icon:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Estilos para iconos en StoryViewer */
+.story-viewer svg {
+  color: white;
+}
+
+.story-viewer button:hover svg {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Scrollbar personalizado para la barra de stories */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animaciones para stories */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* Gradientes para stories */
+.border-gradient-to-r {
+  background: linear-gradient(to right, #8b5cf6, #ec4899, #f97316);
+}
+
+/* Estilos para el progreso de stories */
+.story-progress {
+  height: 4px;
+  background-color: #1f2937;
+}
+
+.story-progress-bar {
+  height: 100%;
+  background-color: white;
+  transition: all 0.1s ease;
+}
+
+/* Estilos para botones de interacción */
+.story-interaction-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-interaction-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.story-interaction-btn:hover .story-icon {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Estilos para el input de respuesta */
+.story-reply-input {
+  @apply flex-1 bg-white/90 backdrop-blur-sm rounded-full px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.story-reply-btn {
+  @apply w-12 h-12 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 rounded-full flex items-center justify-center transition-colors;
+}
+
+/* Estilos para el header de stories */
+.story-header {
+  @apply absolute top-4 left-4 right-4 z-20 flex items-center justify-between;
+}
+
+.story-user-info {
+  @apply flex items-center space-x-3;
+}
+
+.story-user-avatar {
+  @apply w-10 h-10 rounded-full overflow-hidden border-2 border-white;
+}
+
+.story-user-details {
+  @apply text-white;
+}
+
+.story-username {
+  @apply font-semibold text-sm;
+}
+
+.story-fullname {
+  @apply text-xs text-gray-300;
+}
+
+/* Estilos para el contenido de stories */
+.story-content {
+  @apply relative w-full h-full flex items-center justify-center;
+}
+
+.story-image {
+  @apply max-w-full max-h-full object-contain;
+}
+
+.story-video {
+  @apply max-w-full max-h-full object-contain;
+}
+
+.story-text {
+  @apply max-w-md mx-8 text-center p-8 rounded-2xl;
+}
+
+/* Estilos para caption */
+.story-caption {
+  @apply absolute bottom-32 left-4 right-4 text-center;
+}
+
+.story-caption-text {
+  @apply text-white text-lg font-medium bg-black/50 px-4 py-2 rounded-full inline-block;
+}
+
+/* Estilos para controles de navegación */
+.story-nav-controls {
+  @apply absolute inset-y-0 left-0 w-1/3 cursor-w-resize;
+}
+
+.story-nav-controls-right {
+  @apply absolute inset-y-0 right-0 w-1/3 cursor-e-resize;
+}
+
 :root {
   /* Paleta de colores moderna y atractiva */
   --background: #ffffff;
