@@ -149,6 +149,13 @@ export const getUserReels = async (username: string, page: number = 1, limit: nu
       method: (error as any).config?.method,
       baseURL: (error as any).config?.baseURL
     });
+    
+    // Loggear el error completo de forma expandida
+    console.error('❌ Error completo expandido:');
+    console.error('Error object:', JSON.stringify(error, null, 2));
+    console.error('Error response:', JSON.stringify((error as any).response, null, 2));
+    console.error('Error config:', JSON.stringify((error as any).config, null, 2));
+    
     throw error;
   }
 };
