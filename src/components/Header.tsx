@@ -146,11 +146,12 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 left-0 w-full h-16 bg-white/95 backdrop-blur-md border-b border-gray-200 flex items-center justify-center px-4 z-50">
-        <div className="max-w-4xl w-full flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center group">
+      <header className="sticky top-0 left-0 w-full bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm z-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center group">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
                 <span className="text-white font-bold text-lg">C</span>
               </div>

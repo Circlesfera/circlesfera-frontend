@@ -4,8 +4,8 @@ import Header from '@/components/Header';
 import { AuthProvider } from '@/features/auth/AuthContext';
 
 export const metadata: Metadata = {
-  title: 'CircleSfera - Conecta y comparte',
-  description: 'Una plataforma para compartir momentos especiales y conectar con amigos',
+  title: 'CircleSfera',
+  description: 'Redefining social media in a connected world.',
 };
 
 export default function RootLayout({
