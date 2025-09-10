@@ -128,82 +128,15 @@ export const getReelsForFeed = async (page: number = 1, limit: number = 10): Pro
   }
 };
 
-// Función de prueba para debuggear
-export const testReelsAPI = async (username: string) => {
-  try {
-    console.log('🧪 TEST: Probando API de reels directamente');
-    
-    // Probar con fetch nativo
-    const fetchUrl = `http://localhost:5001/api/reels/user/${username}`;
-    console.log('🧪 TEST: Probando con fetch a:', fetchUrl);
-    
-    const fetchResponse = await fetch(fetchUrl);
-    console.log('🧪 TEST: Fetch response status:', fetchResponse.status);
-    console.log('🧪 TEST: Fetch response ok:', fetchResponse.ok);
-    
-    if (fetchResponse.ok) {
-      const fetchData = await fetchResponse.json();
-      console.log('🧪 TEST: Fetch data:', fetchData);
-    } else {
-      console.log('🧪 TEST: Fetch error:', fetchResponse.statusText);
-    }
-    
-    // Probar con axios (URL corregida)
-    console.log('🧪 TEST: Probando con axios');
-    const axiosResponse = await api.get(`/reels/user/${username}`);
-    console.log('🧪 TEST: Axios response status:', axiosResponse.status);
-    console.log('🧪 TEST: Axios data:', axiosResponse.data);
-    
-    return { success: true, fetch: fetchResponse.status, axios: axiosResponse.status };
-  } catch (error: any) {
-    console.error('🧪 TEST: Error en test:', error);
-    console.error('🧪 TEST: Error details:', {
-      message: error.message,
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      url: error.config?.url,
-      method: error.config?.method,
-      baseURL: error.config?.baseURL
-    });
-    return { success: false, error: error.message };
-  }
-};
 
 // Obtener reels de un usuario específico
 export const getUserReels = async (username: string, page: number = 1, limit: number = 10): Promise<GetReelsResponse> => {
   try {
     const url = `/reels/user/${username}?page=${page}&limit=${limit}`;
-    console.log('🔄 getUserReels llamando a:', url);
-    console.log('🔄 Base URL configurada:', 'http://localhost:5001/api');
-    console.log('🔄 URL completa sería:', `http://localhost:5001/api${url}`);
-    
-    // Verificar la configuración de axios
-    console.log('🔄 Configuración de axios:', {
-      baseURL: (api as any).defaults?.baseURL,
-      timeout: (api as any).defaults?.timeout,
-      headers: (api as any).defaults?.headers
-    });
-    
     const response = await api.get(url);
-    console.log('✅ getUserReels respuesta exitosa:', response.status);
     return response.data;
   } catch (error: unknown) {
-    console.error('❌ Error fetching user reels:', error);
-    console.error('❌ Error details:', {
-      message: (error as any).message,
-      status: (error as any).response?.status,
-      statusText: (error as any).response?.statusText,
-      url: (error as any).config?.url,
-      method: (error as any).config?.method,
-      baseURL: (error as any).config?.baseURL
-    });
-    
-    // Loggear el error completo de forma expandida
-    console.error('❌ Error completo expandido:');
-    console.error('Error object:', JSON.stringify(error, null, 2));
-    console.error('Error response:', JSON.stringify((error as any).response, null, 2));
-    console.error('Error config:', JSON.stringify((error as any).config, null, 2));
-    
+    console.error('Error fetching user reels:', error);
     throw error;
   }
 };

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserPosts } from '@/services/postService';
-import { getUserReels, testReelsAPI } from '@/services/reelService';
+import { getUserReels } from '@/services/reelService';
 import { getUserStories } from '@/services/storyService';
 import { Post } from '@/services/postService';
 import { Reel } from '@/services/reelService';
@@ -24,7 +24,7 @@ interface TabData {
 }
 
 export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps) {
-  const { user } = useAuth();
+  useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('posts');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,15 +165,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   // Cargar reels
   const loadReels = async (page: number = 1, append: boolean = false) => {
     try {
-      console.log('🔄 loadReels llamado con:', { username, page, append });
-      
-      // Ejecutar prueba de API primero
-      console.log('🧪 Ejecutando prueba de API...');
-      const testResult = await testReelsAPI(username);
-      console.log('🧪 Resultado de prueba:', testResult);
-      
       const response = await getUserReels(username, page, 12);
-      console.log('✅ loadReels respuesta:', response);
       if (response.success) {
         if (append) {
           setReels(prev => [...prev, ...response.reels]);
