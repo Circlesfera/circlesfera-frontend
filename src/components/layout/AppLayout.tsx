@@ -6,7 +6,9 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 import { Button } from '@/design-system/Button';
-import { Card } from '@/design-system/Card';
+import CreatePostForm from '@/components/CreatePostForm';
+import CreateStoryForm from '@/components/CreateStoryForm';
+import CreateReelForm from '@/components/CreateReelForm';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -60,6 +62,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const { user } = useAuth();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createType, setCreateType] = useState<'post' | 'story' | 'reel' | null>(null);
 
   const navigation: NavigationItem[] = [
     { name: 'Inicio', href: '/', icon: HomeIcon },
@@ -74,6 +78,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
       return pathname === '/';
     }
     return pathname.startsWith(href);
+  };
+
+  const handleCreateContent = (type: 'post' | 'story' | 'reel') => {
+    setCreateType(type);
+    setShowCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setShowCreateModal(false);
+    setCreateType(null);
   };
 
   return (
@@ -134,6 +148,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 size="lg"
                 fullWidth
                 leftIcon={<PlusIcon className="h-5 w-5" />}
+                onClick={() => setShowCreateModal(true)}
               >
                 Crear Contenido
               </Button>
@@ -216,6 +231,110 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </div>
             </div>
             {/* Navigation items for mobile */}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Crear Contenido */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black/50" onClick={handleCloseCreateModal} />
+            <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-full">
+              {!createType ? (
+                // Modal de selección de tipo
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-bold text-gray-900">Crear Contenido</h2>
+                    <button
+                      onClick={handleCloseCreateModal}
+                      className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => handleCreateContent('post')}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group"
+                    >
+                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
+                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <h3 className="font-semibold text-gray-900">Publicación</h3>
+                        <p className="text-sm text-gray-600">Comparte una foto o video</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => handleCreateContent('story')}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 group"
+                    >
+                      <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200">
+                        <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <h3 className="font-semibold text-gray-900">Story</h3>
+                        <p className="text-sm text-gray-600">Comparte un momento efímero</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => handleCreateContent('reel')}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all duration-200 group"
+                    >
+                      <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center group-hover:bg-pink-200 transition-colors duration-200">
+                        <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <h3 className="font-semibold text-gray-900">Reel</h3>
+                        <p className="text-sm text-gray-600">Crea un video corto</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                // Formulario específico
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Crear {createType === 'post' ? 'Publicación' : createType === 'story' ? 'Story' : 'Reel'}
+                    </h2>
+                    <button
+                      onClick={handleCloseCreateModal}
+                      className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  {createType === 'post' && (
+                    <CreatePostForm onPostCreated={handleCloseCreateModal} />
+                  )}
+                  {createType === 'story' && (
+                    <CreateStoryForm onClose={handleCloseCreateModal} />
+                  )}
+                  {createType === 'reel' && (
+                    <CreateReelForm 
+                      onReelCreated={handleCloseCreateModal} 
+                      onClose={handleCloseCreateModal} 
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
