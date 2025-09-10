@@ -11,11 +11,6 @@ import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnima
 import LazyImage from './LazyImage';
 
 // Iconos SVG modernos
-const HeartIcon = ({ filled }: { filled: boolean }) => (
-  <svg className="w-5 h-5" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={filled ? 0 : 2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-  </svg>
-);
 
 const CommentIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,12 +42,6 @@ const PlayIcon = () => (
   </svg>
 );
 
-const LocationIcon = () => (
-  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
 
 const TagIcon = () => (
   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,8 +190,8 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
             <div className="relative overflow-hidden">
               <div className="relative">
                 <LazyImage 
-                  src={post.content.images[currentImageIndex].url} 
-                  alt={post.content.images[currentImageIndex].alt || "post"} 
+                  src={post.content.images[currentImageIndex]?.url || ''} 
+                  alt={post.content.images[currentImageIndex]?.alt || "post"} 
                   className="w-full h-auto object-cover" 
                 />
                 {/* Indicadores de imagen */}
@@ -245,7 +234,7 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
           return (
             <div className="relative overflow-hidden">
               <LazyImage 
-                src={post.content.images?.[0]?.url} 
+                src={post.content.images?.[0]?.url || ''} 
                 alt={post.content.images?.[0]?.alt || "post"} 
                 className="w-full h-auto object-cover" 
               />
@@ -302,9 +291,8 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
       ref={ref}
       initial={fadeInUp.initial}
       animate={isInView ? fadeInUp.animate : fadeInUp.initial}
-      transition={fadeInUp.transition}
-      {...cardAnimation}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      whileHover={cardAnimation.whileHover}
       className="animate-fade-in"
     >
       {/* Header del usuario */}
@@ -313,13 +301,13 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
           <Link href={`/${post.user.username}`} className="group">
             {post.user.avatar ? (
               <LazyImage 
-                src={post.user.avatar} 
+                src={post.user.avatar || ''} 
                 alt="avatar" 
                 className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">
-                {post.user.username[0].toUpperCase()}
+                {post.user.username?.[0]?.toUpperCase() || 'U'}
               </div>
             )}
           </Link>
