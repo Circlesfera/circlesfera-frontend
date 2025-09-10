@@ -208,12 +208,40 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </div>
 
         {/* Page Content */}
-        <main className="py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="py-4 sm:py-6 pb-20 lg:pb-6">
+          <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
             {children}
           </div>
         </main>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 lg:hidden">
+        <div className="flex justify-around items-center py-2">
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={cn(
+                "flex flex-col items-center p-2 rounded-lg transition-colors duration-200",
+                isActive(item.href)
+                  ? "text-blue-600 bg-blue-50"
+                  : "text-gray-500 hover:text-gray-700"
+              )}
+            >
+              <div className="relative">
+                <item.icon className="h-6 w-6" />
+                {item.badge && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                    {item.badge > 9 ? '9+' : item.badge}
+                  </span>
+                )}
+              </div>
+              <span className="text-xs mt-1 font-medium">{item.name}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
