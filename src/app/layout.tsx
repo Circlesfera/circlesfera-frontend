@@ -1,11 +1,18 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import Header from '@/components/Header';
+import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/features/auth/AuthContext';
+import AppLayout from '@/components/layout/AppLayout';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'CircleSfera',
-  description: 'Redefining social media in a connected world.',
+  title: 'CircleSfera - Red Social',
+  description: 'Una red social moderna para compartir momentos',
+  keywords: ['red social', 'instagram', 'tiktok', 'videos', 'fotos', 'stories'],
+  authors: [{ name: 'CircleSfera Team' }],
+  viewport: 'width=device-width, initial-scale=1',
+  themeColor: '#0ea5e9',
 };
 
 export default function RootLayout({
@@ -14,13 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className="bg-gray-50">
+    <html lang="es" className={inter.className}>
+      <body className="antialiased">
         <AuthProvider>
-          <Header />
-          <main className="pt-16">
+          <AppLayout>
             {children}
-          </main>
+          </AppLayout>
         </AuthProvider>
       </body>
     </html>
