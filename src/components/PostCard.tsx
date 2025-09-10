@@ -7,6 +7,8 @@ import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
+import LazyImage from './LazyImage';
 
 // Iconos SVG modernos
 const HeartIcon = ({ filled }: { filled: boolean }) => (
@@ -74,6 +76,10 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
+  
+  // Animaciones
+  const { ref, isInView } = useInViewAnimation();
+  const cardAnimation = useCardAnimation();
 
   const formatTimeAgo = (date: string) => {
     const now = new Date();
@@ -194,7 +200,7 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
           return (
             <div className="relative overflow-hidden">
               <div className="relative">
-                <img 
+                <LazyImage 
                   src={post.content.images[currentImageIndex].url} 
                   alt={post.content.images[currentImageIndex].alt || "post"} 
                   className="w-full h-auto object-cover" 
@@ -238,7 +244,7 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
         } else {
           return (
             <div className="relative overflow-hidden">
-              <img 
+              <LazyImage 
                 src={post.content.images?.[0]?.url} 
                 alt={post.content.images?.[0]?.alt || "post"} 
                 className="w-full h-auto object-cover" 
@@ -293,8 +299,11 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      ref={ref}
+      initial={fadeInUp.initial}
+      animate={isInView ? fadeInUp.animate : fadeInUp.initial}
+      transition={fadeInUp.transition}
+      {...cardAnimation}
       transition={{ duration: 0.3 }}
       className="animate-fade-in"
     >
@@ -303,10 +312,10 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
         <div className="flex items-center space-x-3">
           <Link href={`/${post.user.username}`} className="group">
             {post.user.avatar ? (
-              <img 
+              <LazyImage 
                 src={post.user.avatar} 
                 alt="avatar" 
-                className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
+                className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">

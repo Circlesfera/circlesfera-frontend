@@ -9,6 +9,7 @@ import CreatePostForm from './CreatePostForm';
 import CreateStoryForm from './CreateStoryForm';
 import CreateReelForm from './CreateReelForm';
 import UserSearch from './UserSearch';
+import ThemeToggle from './ThemeToggle';
 
 // Iconos SVG modernos
 const HomeIcon = () => (
@@ -160,7 +161,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 left-0 w-full bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm z-50">
+      <header className="sticky top-0 left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -231,6 +232,9 @@ export default function Header() {
               )}
               <span className="sr-only">Notificaciones</span>
             </Link>
+
+            {/* Toggle de tema */}
+            <ThemeToggle size="md" />
 
             {/* Botón de crear contenido */}
             <div className="relative">
