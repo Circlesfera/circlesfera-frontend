@@ -9,6 +9,7 @@ import { Button } from '@/design-system/Button';
 import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
+import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -51,7 +52,7 @@ interface NavigationItem {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  badge?: number;
+  badge?: number | undefined;
 }
 
 interface AppLayoutProps {
@@ -64,12 +65,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createType, setCreateType] = useState<'post' | 'story' | 'reel' | null>(null);
+  const unreadNotifications = useUnreadNotifications();
 
   const navigation: NavigationItem[] = [
     { name: 'Inicio', href: '/', icon: HomeIcon },
     { name: 'Explorar', href: '/explore', icon: ExploreIcon },
-    { name: 'Mensajes', href: '/messages', icon: MessageIcon, badge: 3 },
-    { name: 'Notificaciones', href: '/notifications', icon: NotificationIcon, badge: 5 },
+    { name: 'Mensajes', href: '/messages', icon: MessageIcon },
+    { name: 'Notificaciones', href: '/notifications', icon: NotificationIcon, badge: unreadNotifications > 0 ? unreadNotifications : undefined },
     { name: 'Perfil', href: `/profile`, icon: ProfileIcon },
   ];
 
