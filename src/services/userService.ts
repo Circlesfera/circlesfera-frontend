@@ -66,7 +66,6 @@ export interface UserProfile {
   postsCount?: number;
   storiesCount?: number;
   reelsCount?: number;
-  longVideosCount?: number;
   totalLikes?: number;
   totalComments?: number;
   isFollowing?: boolean;

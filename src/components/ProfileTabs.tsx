@@ -4,11 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels, testReelsAPI } from '@/services/reelService';
-import { getUserLongVideos } from '@/services/longVideoService';
 import { getUserStories } from '@/services/storyService';
 import { Post } from '@/services/postService';
 import { Reel } from '@/services/reelService';
-import { LongVideo } from '@/services/longVideoService';
 import { Story } from '@/services/storyService';
 
 interface ProfileTabsProps {
@@ -16,7 +14,7 @@ interface ProfileTabsProps {
   isOwnProfile: boolean;
 }
 
-type TabType = 'posts' | 'reels' | 'videos' | 'stories';
+type TabType = 'posts' | 'reels' | 'stories';
 
 interface TabData {
   id: TabType;
@@ -34,22 +32,18 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   // Estados para cada tipo de contenido
   const [posts, setPosts] = useState<Post[]>([]);
   const [reels, setReels] = useState<Reel[]>([]);
-  const [longVideos, setLongVideos] = useState<LongVideo[]>([]);
   const [stories, setStories] = useState<Story[]>([]);
 
   // Estados de paginación
   const [postsPage, setPostsPage] = useState(1);
   const [reelsPage, setReelsPage] = useState(1);
-  const [videosPage, setVideosPage] = useState(1);
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const [hasMoreReels, setHasMoreReels] = useState(true);
-  const [hasMoreVideos, setHasMoreVideos] = useState(true);
 
   // Contadores de contenido
   const [contentCounts, setContentCounts] = useState({
     posts: 0,
     reels: 0,
-    videos: 0,
     stories: 0
   });
 
@@ -74,16 +68,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         </svg>
       ),
       count: contentCounts.reels
-    },
-    {
-      id: 'videos',
-      label: 'Videos',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2M9 14l2-2 4-4M9 14l4 4M9 14l2-2" />
-        </svg>
-      ),
-      count: contentCounts.videos
     },
     {
       id: 'stories',
@@ -112,8 +96,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
           await loadPosts();
         } else if (activeTab === 'reels' && reels.length === 0) {
           await loadReels();
-        } else if (activeTab === 'videos' && longVideos.length === 0) {
-          await loadLongVideos();
         } else if (activeTab === 'stories' && stories.length === 0) {
           await loadStories();
         }
@@ -154,7 +136,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
       setContentCounts({
         posts: posts.length,
         reels: reels.length,
-        videos: longVideos.length,
         stories: stories.length
       });
     } catch (error) {
@@ -219,28 +200,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
     }
   };
 
-  // Cargar videos largos
-  const loadLongVideos = async (page: number = 1, append: boolean = false) => {
-    try {
-      const response = await getUserLongVideos(username, page, 12);
-      if (response.success) {
-        if (append) {
-          setLongVideos(prev => [...prev, ...response.longVideos]);
-        } else {
-          setLongVideos(response.longVideos);
-        }
-        setHasMoreVideos(response.longVideos.length === 12);
-        setVideosPage(page);
-      }
-    } catch (error) {
-      console.error('Error loading long videos:', error);
-      // No propagar el error, solo establecer videos vacío
-      if (!append) {
-        setLongVideos([]);
-      }
-      setHasMoreVideos(false);
-    }
-  };
 
   // Cargar stories
   const loadStories = async () => {
@@ -267,8 +226,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         await loadPosts(postsPage + 1, true);
       } else if (activeTab === 'reels' && hasMoreReels) {
         await loadReels(reelsPage + 1, true);
-      } else if (activeTab === 'videos' && hasMoreVideos) {
-        await loadLongVideos(videosPage + 1, true);
       }
     } catch (error) {
       console.error('Error loading more content:', error);
@@ -295,7 +252,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               <div key={post._id} className="aspect-square relative group cursor-pointer">
                 {post.content.images && post.content.images.length > 0 ? (
                   <img
-                    src={post.content.images[0].url}
+                    src={post.content.images[0]?.url || ''}
                     alt={post.caption || 'Post'}
                     className="w-full h-full object-cover"
                   />
@@ -394,62 +351,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
           </div>
         );
 
-      case 'videos':
-        if (longVideos.length === 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-              <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2M9 14l2-2 4-4M9 14l4 4M9 14l2-2" />
-              </svg>
-              <h3 className="text-lg font-medium mb-2">No hay videos aún</h3>
-              <p className="text-sm text-center">Cuando subas videos largos, aparecerán aquí</p>
-            </div>
-          );
-        }
-        return (
-          <div className="grid grid-cols-3 gap-1 md:gap-2">
-            {longVideos.map((video) => (
-              <div key={video._id} className="aspect-[16/9] relative group cursor-pointer">
-                <video
-                  src={video.video.url}
-                  className="w-full h-full object-cover rounded-lg"
-                  muted
-                />
-                
-                {/* Overlay con estadísticas */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <div className="flex items-center space-x-4 text-white">
-                    <div className="flex items-center space-x-1">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                      </svg>
-                      <span className="text-sm font-medium">{video.likes?.length || 0}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                      </svg>
-                      <span className="text-sm font-medium">{video.views?.length || 0}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Indicador de video largo */}
-                <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-                  <svg className="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2M9 14l2-2 4-4M9 14l4 4M9 14l2-2" />
-                  </svg>
-                  IGTV
-                </div>
-
-                {/* Título del video */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                  <p className="text-white text-xs font-medium truncate">{video.title}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
 
       case 'stories':
         if (stories.length === 0) {
@@ -580,7 +481,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             {!loading && 
               ((activeTab === 'posts' && posts.length === 0) ||
                (activeTab === 'reels' && reels.length === 0) ||
-               (activeTab === 'videos' && longVideos.length === 0) ||
                (activeTab === 'stories' && stories.length === 0)) && 
               renderEmptyState()
             }
@@ -588,8 +488,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             {/* Botón de cargar más */}
             {!loading && 
               ((activeTab === 'posts' && hasMorePosts) ||
-               (activeTab === 'reels' && hasMoreReels) ||
-               (activeTab === 'videos' && hasMoreVideos)) && (
+               (activeTab === 'reels' && hasMoreReels)) && (
               <div className="text-center mt-8">
                 <button
                   onClick={loadMoreContent}

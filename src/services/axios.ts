@@ -1,12 +1,13 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { config } from '@/config/env';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: config.apiUrl,
   timeout: 10000,
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 });
 
 // Función para obtener token de forma segura
@@ -71,20 +72,64 @@ api.interceptors.request.use(
 
 // Interceptor para manejar errores
 api.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
-    // Si es un error de autenticación (401), limpiar tokens
-    if (error?.response?.status === 401) {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        
-        if (!window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
+  (error: AxiosError) => {
+    const status = error.response?.status;
+    const message = error.response?.data?.message || error.message || 'Error desconocido';
+
+    // Log de errores en desarrollo
+    if (process.env.NODE_ENV === 'development') {
+      console.error('API Error Details:');
+      console.error('- Status:', status || 'No status');
+      console.error('- Message:', message || 'No message');
+      console.error('- URL:', error.config?.url || 'No URL');
+      console.error('- Method:', error.config?.method || 'No method');
+      console.error('- Error:', error.message || 'No error message');
+      console.error('- Full Error:', error);
+    }
+
+    // Manejo específico de errores
+    switch (status) {
+      case 401:
+        // Error de autenticación - limpiar tokens y redirigir
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
+          if (!window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+          }
         }
-      }
+        break;
+      
+      case 403:
+        // Error de autorización
+        console.warn('Acceso denegado:', message);
+        break;
+      
+      case 404:
+        // Recurso no encontrado
+        console.warn('Recurso no encontrado:', message);
+        break;
+      
+      case 429:
+        // Rate limit excedido
+        console.warn('Demasiadas solicitudes:', message);
+        break;
+      
+      case 500:
+        // Error interno del servidor
+        console.error('Error interno del servidor:', message);
+        break;
+      
+      default:
+        if (status && status >= 500) {
+          console.error('Error del servidor:', message);
+        } else if (status && status >= 400) {
+          console.warn('Error del cliente:', message);
+        }
     }
     
     return Promise.reject(error);

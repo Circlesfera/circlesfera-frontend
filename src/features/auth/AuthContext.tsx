@@ -2,49 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '@/services/axios';
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  avatar?: string;
-  bio?: string;
-  fullName?: string;
-  website?: string;
-  location?: string;
-  phone?: string;
-  gender?: string;
-  birthDate?: string;
-  isPrivate?: boolean;
-  isVerified?: boolean;
-  isActive?: boolean;
-  lastSeen?: string;
-  followers: string[];
-  following: string[];
-  posts: string[];
-  savedPosts: string[];
-  blockedUsers: string[];
-  preferences?: {
-    notifications: {
-      likes: boolean;
-      comments: boolean;
-      follows: boolean;
-      mentions: boolean;
-      messages: boolean;
-    };
-    privacy: {
-      showEmail: boolean;
-      showPhone: boolean;
-      showBirthDate: boolean;
-    };
-  };
-  followersCount?: number;
-  followingCount?: number;
-  postsCount?: number;
-  isFollowing?: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { User, ApiResponse, LoginResponse } from '@/types';
 
 interface AuthContextProps {
   user: User | null;
@@ -53,6 +11,7 @@ interface AuthContextProps {
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -116,18 +75,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const res = await api.post('/auth/login', { email, password });
-      setToken(res.data.token);
-      setUser(res.data.user);
+      const res = await api.post<LoginResponse>('/auth/login', { email, password });
       
-      // Guardar en localStorage de forma segura
-      if (typeof window !== 'undefined') {
-        try {
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('user', JSON.stringify(res.data.user));
-        } catch (error) {
-          console.error('Error saving to localStorage:', error);
+      if (res.data.success && res.data.token && res.data.user) {
+        setToken(res.data.token);
+        setUser(res.data.user);
+        
+        // Guardar en localStorage de forma segura
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+          } catch (error) {
+            console.error('Error saving to localStorage:', error);
+          }
         }
+      } else {
+        throw new Error(res.data.message || 'Error en el login');
       }
     } catch (error: any) {
       // Si hay error de autenticación, limpiar tokens
@@ -157,12 +121,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const refreshUser = async () => {
+    if (!token) return;
+    
+    try {
+      const res = await api.get<ApiResponse<User>>('/auth/profile');
+      if (res.data.success && res.data.data) {
+        setUser(res.data.data);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify(res.data.data));
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing user:', error);
+      // Si hay error, limpiar tokens
+      clearInvalidTokens();
+    }
+  };
+
   const logout = () => {
     clearInvalidTokens();
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

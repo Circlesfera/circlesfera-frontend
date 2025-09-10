@@ -55,7 +55,6 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   const stats = {
     posts: profileData?.postsCount || 0,
     reels: profileData?.reelsCount || 0,
-    videos: profileData?.longVideosCount || 0,
     stories: profileData?.storiesCount || 0,
     followers: profileData?.followersCount || 0,
     following: profileData?.followingCount || 0,

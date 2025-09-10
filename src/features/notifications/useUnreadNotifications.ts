@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { getNotifications } from '@/services/notificationService';
+import { getUnreadCount } from '@/services/notificationService';
 import { useAuth } from '@/features/auth/useAuth';
 
 export function useUnreadNotifications() {
@@ -8,17 +8,16 @@ export function useUnreadNotifications() {
   const [unread, setUnread] = useState(0);
 
   const fetchUnread = async () => {
-    if (!user) return;
+    if (!user) {
+      setUnread(0);
+      return;
+    }
+    
     try {
-      const notifications = await getNotifications();
-      if (Array.isArray(notifications)) {
-        setUnread(notifications.filter(n => !n.read).length);
-      } else {
-        console.error('getNotifications no devolvió un array:', notifications);
-        setUnread(0);
-      }
+      const unreadCount = await getUnreadCount();
+      setUnread(unreadCount);
     } catch (error) {
-      console.error('Error al obtener notificaciones:', error);
+      console.error('Error al obtener conteo de notificaciones:', error);
       setUnread(0);
     }
   };

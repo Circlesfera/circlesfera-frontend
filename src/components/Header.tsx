@@ -8,7 +8,6 @@ import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifi
 import CreatePostForm from './CreatePostForm';
 import CreateStoryForm from './CreateStoryForm';
 import CreateReelForm from './CreateReelForm';
-import CreateLongVideoForm from './CreateLongVideoForm';
 import UserSearch from './UserSearch';
 
 // Iconos SVG modernos
@@ -100,7 +99,6 @@ export default function Header() {
   const [showPostForm, setShowPostForm] = useState(false);
   const [showStoryForm, setShowStoryForm] = useState(false);
   const [showReelForm, setShowReelForm] = useState(false);
-  const [showLongVideoForm, setShowLongVideoForm] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -406,13 +404,6 @@ export default function Header() {
                   <span>Crear reel</span>
                 </button>
 
-                <button
-                  onClick={() => setShowLongVideoForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <VideoIcon />
-                  <span>Crear video largo</span>
-                </button>
               </div>
             )}
 
@@ -493,16 +484,6 @@ export default function Header() {
         />
       )}
 
-      {/* Modal para crear video largo */}
-      {showLongVideoForm && (
-        <CreateLongVideoForm
-          onVideoCreated={() => {
-            setShowLongVideoForm(false);
-            // Aquí puedes agregar lógica adicional después de crear el video
-          }}
-          onClose={() => setShowLongVideoForm(false)}
-        />
-      )}
     </>
   );
 }
