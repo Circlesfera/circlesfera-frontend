@@ -72,11 +72,6 @@ const ReelIcon = () => (
   </svg>
 );
 
-const VideoIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2M9 14l2-2 4-4M9 14l4 4M9 14l2-2" />
-  </svg>
-);
 
 const CloseIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,7 +279,7 @@ export default function Header() {
                   />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
-                    {user?.username[0].toUpperCase()}
+                    {user?.username?.[0]?.toUpperCase() || 'U'}
                   </div>
                 )}
               </button>
@@ -298,10 +293,10 @@ export default function Header() {
                       className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
                     >
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-                        {user?.username[0].toUpperCase()}
+                        {user?.username?.[0]?.toUpperCase() || 'U'}
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">{user?.username}</div>
+                        <div className="font-medium text-gray-900">{user?.username || 'Usuario'}</div>
                         <div className="text-sm text-gray-500">Ver perfil</div>
                       </div>
                     </Link>
@@ -420,7 +415,7 @@ export default function Header() {
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-                  {user?.username[0].toUpperCase()}
+                  {user?.username?.[0]?.toUpperCase() || 'U'}
                 </div>
               )}
               <span>Perfil</span>
