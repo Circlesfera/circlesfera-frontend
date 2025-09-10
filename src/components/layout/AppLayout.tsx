@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 import { Button } from '@/design-system/Button';
-import CreatePostForm from '@/components/CreatePostForm';
-import CreateStoryForm from '@/components/CreateStoryForm';
-import CreateReelForm from '@/components/CreateReelForm';
+import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
+import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
+import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -321,13 +321,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   </div>
                   
                   {createType === 'post' && (
-                    <CreatePostForm onPostCreated={handleCloseCreateModal} />
+                    <CompactCreatePostForm onPostCreated={handleCloseCreateModal} />
                   )}
                   {createType === 'story' && (
-                    <CreateStoryForm onClose={handleCloseCreateModal} />
+                    <CompactCreateStoryForm onClose={handleCloseCreateModal} />
                   )}
                   {createType === 'reel' && (
-                    <CreateReelForm 
+                    <CompactCreateReelForm 
                       onReelCreated={handleCloseCreateModal} 
                       onClose={handleCloseCreateModal} 
                     />
