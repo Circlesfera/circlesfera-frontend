@@ -1,5 +1,5 @@
 import './globals.css';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import { ThemeProvider } from '@/features/theme/ThemeContext';
@@ -12,7 +12,11 @@ export const metadata: Metadata = {
   description: 'Una red social moderna para compartir momentos',
   keywords: ['red social', 'instagram', 'tiktok', 'videos', 'fotos', 'stories'],
   authors: [{ name: 'CircleSfera Team' }],
-  viewport: 'width=device-width, initial-scale=1',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
   themeColor: '#0ea5e9',
 };
 
