@@ -153,14 +153,16 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       const formData = new FormData();
       formData.append('avatar', avatarFile);
 
-      const updatedUser = await editProfile(formData);
+      const response = await editProfile(formData);
       
       // Actualizar el perfil local
       setAvatarFile(null);
       setAvatarPreview(null);
       
       // Notificar al componente padre sobre la actualización
-      await onSave({ avatar: updatedUser.avatar });
+      if (response.user && response.user.avatar) {
+        await onSave({ avatar: response.user.avatar });
+      }
       
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
