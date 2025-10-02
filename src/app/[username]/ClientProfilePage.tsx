@@ -95,6 +95,17 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     }
   }, [user, profileData, isOwnProfile]);
 
+  // Mantener el estado sincronizado cuando el usuario se actualice
+  useEffect(() => {
+    if (user && profileData && !isOwnProfile) {
+      const isFollowing = user.following?.includes(profileData._id) || false;
+      // Solo actualizar si el estado ha cambiado realmente
+      if (isFollowing !== isFollowingProfile) {
+        setIsFollowingProfile(isFollowing);
+      }
+    }
+  }, [user?.following, profileData?._id, isOwnProfile, isFollowingProfile]);
+
       const reloadProfile = useCallback(async () => {
       try {
         const { getUserProfileByUsername } = await import('@/services/userService');
@@ -110,10 +121,8 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
   // Función para manejar cambios en el seguimiento
   const handleFollowChange = useCallback(async (isFollowing: boolean) => {
+    // Actualizar el estado local inmediatamente
     setIsFollowingProfile(isFollowing);
-    
-    // Recargar los datos del perfil para actualizar contadores
-    await reloadProfile();
     
     // Actualizar el estado del usuario actual para reflejar el cambio
     if (user) {
@@ -126,6 +135,9 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         }
       }
     }
+    
+    // Recargar los datos del perfil para actualizar contadores
+    await reloadProfile();
   }, [reloadProfile, user, refreshUser]);
 
 
