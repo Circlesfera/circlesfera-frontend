@@ -76,6 +76,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   const [showFollowing, setShowFollowing] = useState(false);
   const [followersList, setFollowersList] = useState<UserSuggestion[]>([]);
   const [followingList, setFollowingList] = useState<UserSuggestion[]>([]);
+  const [isFollowingProfile, setIsFollowingProfile] = useState(false);
 
   // Estadísticas calculadas desde el backend
   const stats = {
@@ -88,6 +89,13 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     comments: profileData?.totalComments || 0
   };
 
+  // Determinar si estamos siguiendo al perfil actual
+  useEffect(() => {
+    if (user && profileData && !isOwnProfile) {
+      setIsFollowingProfile(user.following?.includes(profileData._id) || false);
+    }
+  }, [user, profileData, isOwnProfile]);
+
       const reloadProfile = useCallback(async () => {
       try {
         const { getUserProfileByUsername } = await import('@/services/userService');
@@ -97,6 +105,14 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         console.error('Error al recargar perfil:', error);
       }
     }, [profileData?.username]);
+
+  // Función para manejar cambios en el seguimiento
+  const handleFollowChange = useCallback(async (isFollowing: boolean) => {
+    setIsFollowingProfile(isFollowing);
+    
+    // Recargar los datos del perfil para actualizar contadores
+    await reloadProfile();
+  }, [reloadProfile]);
 
 
 
@@ -157,7 +173,8 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
             <ProfileFollowButton 
               userId={profileData._id} 
               username={profileData.username} 
-              following={user?.following || []} 
+              isFollowing={isFollowingProfile}
+              onFollowChange={handleFollowChange}
             />
           ) : undefined}
         />
@@ -213,17 +230,20 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   );
 }
 
-function ProfileFollowButton({ userId, username, following }: { userId: string; username: string; following: string[] }) {
+function ProfileFollowButton({ 
+  userId, 
+  username, 
+  isFollowing, 
+  onFollowChange 
+}: { 
+  userId: string; 
+  username: string; 
+  isFollowing: boolean;
+  onFollowChange: (isFollowing: boolean) => void;
+}) {
   const { user } = useAuth();
-  const [isFollowing, setIsFollowing] = useState(false);
-  
-  useEffect(() => {
-    if (user && following) {
-      setIsFollowing(following.includes(userId));
-    }
-  }, [user, userId, following]);
   
   if (!user || user.username === username) return null;
   
-  return <FollowButton userId={userId} initialFollowing={isFollowing} onChange={setIsFollowing} />;
+  return <FollowButton userId={userId} initialFollowing={isFollowing} onChange={onFollowChange} />;
 } 
