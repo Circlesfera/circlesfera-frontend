@@ -3,7 +3,7 @@ import { config } from '@/config/env';
 
 const api = axios.create({
   baseURL: config.apiUrl,
-  timeout: 10000,
+  timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'),
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error: AxiosError) => {
+  (error: AxiosError<{ message?: string }>) => {
     const status = error.response?.status;
     const message = error.response?.data?.message || error.message || 'Error desconocido';
 
@@ -94,6 +94,15 @@ api.interceptors.response.use(
     switch (status) {
       case 401:
         // Error de autenticación - limpiar tokens y redirigir
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('🔐 Error de autenticación:', {
+            message,
+            url: error.config?.url,
+            method: error.config?.method,
+            hasToken: !!getToken(),
+          });
+        }
+        
         if (typeof window !== 'undefined') {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
