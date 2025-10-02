@@ -34,6 +34,11 @@ export default function ModernProfileHeader({
 }: ModernProfileHeaderProps) {
   const [imageError, setImageError] = useState(false);
 
+  // Reset image error when avatar changes
+  React.useEffect(() => {
+    setImageError(false);
+  }, [user.avatar]);
+
   // Debug: Log avatar information
   console.log('Avatar debug:', {
     hasAvatar: !!user.avatar,
