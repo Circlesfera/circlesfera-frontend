@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import FollowButton from './FollowButton';
 
 interface User {
@@ -8,6 +9,7 @@ interface User {
   fullName?: string;
   bio?: string;
   isVerified?: boolean;
+  isFollowing?: boolean;
 }
 
 interface Props {
@@ -20,7 +22,13 @@ interface Props {
 
 export default function UserListModal({ open, onClose, users, title, currentUserFollowing }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  // Función para navegar al perfil del usuario
+  const handleUserClick = (username: string) => {
+    onClose(); // Cerrar el modal
+    router.push(`/${username}`); // Navegar al perfil
+  };
 
   // Filtrar usuarios basado en el término de búsqueda
   const filteredUsers = useMemo(() => {
@@ -98,10 +106,13 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                 {filteredUsers.map(user => (
                   <div 
                     key={user._id} 
-                    className="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-200 hover:shadow-md group cursor-pointer"
+                    className="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-200 hover:shadow-md group"
                   >
-                    {/* Avatar */}
-                    <div className="relative flex-shrink-0">
+                    {/* Avatar - Clickeable para navegar al perfil */}
+                    <div 
+                      className="relative flex-shrink-0 cursor-pointer"
+                      onClick={() => handleUserClick(user.username)}
+                    >
                       {user.avatar ? (
                         <img 
                           src={user.avatar} 
@@ -110,7 +121,7 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                         />
                       ) : (
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200">
-                          {user.username[0].toUpperCase()}
+                          {user.username?.[0]?.toUpperCase() || 'U'}
                         </div>
                       )}
                       {/* Verified badge */}
@@ -123,8 +134,11 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                       )}
                     </div>
 
-                    {/* User Info */}
-                    <div className="flex-1 min-w-0">
+                    {/* User Info - Clickeable para navegar al perfil */}
+                    <div 
+                      className="flex-1 min-w-0 cursor-pointer"
+                      onClick={() => handleUserClick(user.username)}
+                    >
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
                           {user.fullName || user.username}
@@ -145,7 +159,7 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                     <div className="flex-shrink-0">
                       <FollowButton 
                         userId={user._id} 
-                        initialFollowing={currentUserFollowing.includes(user._id)} 
+                        initialFollowing={user.isFollowing || currentUserFollowing.includes(user._id)} 
                         onChange={() => {}} 
                       />
                     </div>
