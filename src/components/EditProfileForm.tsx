@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { checkUsernameAvailability } from '@/services/userService';
+import React, { useState, useEffect, useRef } from 'react';
+import { checkUsernameAvailability, editProfile } from '@/services/userService';
 
 interface User {
   _id: string;
@@ -49,6 +49,10 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
     available: null,
     lastChecked: ''
   });
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Verificar disponibilidad de username con debounce
   useEffect(() => {
@@ -105,6 +109,70 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
     }
   };
 
+  const handleFileSelect = (file: File) => {
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setErrors(prev => ({ ...prev, avatar: 'Por favor selecciona una imagen válida' }));
+      return;
+    }
+
+    // Validar tamaño (máximo 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      setErrors(prev => ({ ...prev, avatar: 'La imagen es demasiado grande. Máximo 5MB' }));
+      return;
+    }
+
+    setAvatarFile(file);
+    setErrors(prev => ({ ...prev, avatar: '' }));
+
+    // Crear preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setAvatarPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  const handleChangePhotoClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUploadAvatar = async () => {
+    if (!avatarFile) return;
+
+    setAvatarUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('avatar', avatarFile);
+
+      const updatedUser = await editProfile(formData);
+      
+      // Actualizar el perfil local
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      
+      // Notificar al componente padre sobre la actualización
+      await onSave({ avatar: updatedUser.avatar });
+      
+    } catch (error: any) {
+      console.error('Error uploading avatar:', error);
+      setErrors(prev => ({ 
+        ...prev, 
+        avatar: error.response?.data?.message || 'Error al subir la imagen' 
+      }));
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -152,7 +220,23 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Preparar datos para envío, excluyendo campos vacíos
+      const dataToSave: Partial<User> = {
+        username: formData.username,
+        fullName: formData.fullName,
+        bio: formData.bio,
+        website: formData.website,
+        location: formData.location,
+        phone: formData.phone,
+        gender: formData.gender,
+        isPrivate: formData.isPrivate,
+      };
+      
+      if (formData.birthDate) {
+        dataToSave.birthDate = formData.birthDate;
+      }
+      
+      await onSave(dataToSave);
     } catch (error) {
       console.error('Error updating profile:', error);
     } finally {
@@ -178,7 +262,13 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         {/* Avatar */}
         <div className="flex items-center space-x-4">
           <div className="flex-shrink-0">
-            {profile.avatar ? (
+            {avatarPreview ? (
+              <img 
+                src={avatarPreview} 
+                alt="avatar preview" 
+                className="w-20 h-20 rounded-full object-cover ring-2 ring-blue-300" 
+              />
+            ) : profile.avatar ? (
               <img 
                 src={profile.avatar} 
                 alt="avatar" 
@@ -186,15 +276,43 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
               />
             ) : (
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-xl font-bold">
-                {profile.username[0].toUpperCase()}
+                {profile.username?.[0]?.toUpperCase() || 'U'}
               </div>
             )}
           </div>
           <div>
             <div className="font-semibold text-gray-900">{profile.username}</div>
-            <button type="button" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-              Cambiar foto de perfil
-            </button>
+            <div className="flex items-center space-x-2">
+              <button 
+                type="button" 
+                onClick={handleChangePhotoClick}
+                disabled={avatarUploading}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:text-gray-400 disabled:cursor-not-allowed"
+              >
+                {avatarPreview ? 'Cambiar imagen' : 'Cambiar foto de perfil'}
+              </button>
+              {avatarPreview && (
+                <button
+                  type="button"
+                  onClick={handleUploadAvatar}
+                  disabled={avatarUploading}
+                  className="text-green-600 hover:text-green-800 text-sm font-medium disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  {avatarUploading ? 'Subiendo...' : 'Guardar'}
+                </button>
+              )}
+            </div>
+            {errors.avatar && (
+              <p className="text-red-500 text-sm mt-1">{errors.avatar}</p>
+            )}
+            {/* Input de archivo oculto */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileInputChange}
+              className="hidden"
+            />
           </div>
         </div>
 
