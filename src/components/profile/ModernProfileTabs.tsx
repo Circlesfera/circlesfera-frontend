@@ -209,22 +209,22 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     }
 
     return (
-      <div className="p-6 lg:p-8">
+      <div className="p-4 sm:p-6">
         <ModernContentGrid content={safeCurrentContent} type={activeTab} />
         {hasMore && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-6">
             <button 
               onClick={handleLoadMore}
               disabled={loading}
-              className="px-8 py-4 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
+              className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-lg hover:from-gray-200 hover:to-gray-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium text-sm"
             >
               {loading ? (
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
                   Cargando...
                 </div>
               ) : (
-                'Cargar más contenido'
+                'Cargar más'
               )}
             </button>
           </div>
@@ -236,9 +236,9 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
   return (
     <div className="relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/20 to-purple-50/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/10 to-purple-50/10"></div>
       
-      <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/30 overflow-hidden">
+      <div className="relative bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/40 overflow-hidden">
         {/* Pestañas mejoradas */}
         <div className="border-b border-gray-200/50">
           <div className="flex">
@@ -246,7 +246,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-6 py-6 text-sm font-semibold transition-all duration-300 relative ${
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-300 relative ${
                   activeTab === tab.id
                     ? 'text-blue-600 bg-gradient-to-r from-blue-50 to-purple-50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/50'
@@ -338,15 +338,15 @@ function ModernEmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnPr
   const message = getEmptyMessage();
 
   return (
-    <div className="text-center py-20 px-6">
-      <div className={`w-24 h-24 mx-auto mb-6 bg-gradient-to-r ${message.color} rounded-3xl flex items-center justify-center text-4xl shadow-lg`}>
+    <div className="text-center py-12 px-6">
+      <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${message.color} rounded-2xl flex items-center justify-center text-2xl shadow-md`}>
         {message.icon}
       </div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-3">{message.title}</h3>
-      <p className="text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">{message.subtitle}</p>
+      <h3 className="text-lg font-bold text-gray-900 mb-2">{message.title}</h3>
+      <p className="text-gray-600 mb-6 max-w-sm mx-auto leading-relaxed text-sm">{message.subtitle}</p>
       {isOwnProfile && (
         <div className="flex justify-center gap-4">
-          <button className={`px-8 py-4 bg-gradient-to-r ${message.color} text-white rounded-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 font-semibold`}>
+          <button className={`px-6 py-3 bg-gradient-to-r ${message.color} text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 font-medium text-sm`}>
             Crear {tabType === 'posts' ? 'Publicación' : tabType === 'reels' ? 'Reel' : 'Story'}
           </button>
         </div>
@@ -414,13 +414,13 @@ function ModernContentGrid({ content, type }: { content: any[]; type: TabType })
   );
 }
 
-// Componente para el skeleton de carga mejorado
+// Componente para el skeleton de carga compacto
 function ModernContentSkeleton() {
   return (
-    <div className="p-6 lg:p-8">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 lg:gap-4">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <div key={index} className="aspect-square rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse shadow-lg" />
+    <div className="p-4 sm:p-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div key={index} className="aspect-square rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse shadow-md" />
         ))}
       </div>
     </div>

@@ -140,8 +140,8 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {/* Header del perfil moderno */}
         <ModernProfileHeader
           user={convertToUser(profileData)}
@@ -167,10 +167,10 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
         {/* Edición de perfil */}
         {isOwnProfile && showEdit && (
-          <div className="mb-8">
+          <div className="mb-6">
             <div className="relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50"></div>
-              <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/30 p-6 lg:p-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-purple-50/50"></div>
+              <div className="relative bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/40 p-4 sm:p-6">
                 <EditProfileForm 
                   profile={profileData} 
                   onSave={async () => { 
