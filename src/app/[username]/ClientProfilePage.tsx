@@ -7,9 +7,9 @@ import { User } from '@/types';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
-import ProfileHeader from '@/components/profile/ProfileHeader';
-import ProfileInfo from '@/components/profile/ProfileInfo';
-import ProfileTabs from '@/components/profile/ProfileTabs';
+import ModernProfileHeader from '@/components/profile/ModernProfileHeader';
+import ModernProfileInfo from '@/components/profile/ModernProfileInfo';
+import ModernProfileTabs from '@/components/profile/ModernProfileTabs';
 
 
 // Función para convertir UserProfile a User
@@ -140,49 +140,56 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   }
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-2">
-      {/* Header del perfil */}
-      <ProfileHeader
-        user={convertToUser(profileData)}
-        isOwnProfile={isOwnProfile || false}
-        stats={stats}
-        onEditClick={() => setShowEdit(v => !v)}
-        onFollowersClick={handleShowFollowers}
-        onFollowingClick={handleShowFollowing}
-        followButton={!isOwnProfile ? (
-          <ProfileFollowButton 
-            userId={profileData._id} 
-            username={profileData.username} 
-            following={user?.following || []} 
-          />
-        ) : undefined}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header del perfil moderno */}
+        <ModernProfileHeader
+          user={convertToUser(profileData)}
+          isOwnProfile={isOwnProfile || false}
+          stats={stats}
+          onEditClick={() => setShowEdit(v => !v)}
+          onFollowersClick={handleShowFollowers}
+          onFollowingClick={handleShowFollowing}
+          followButton={!isOwnProfile ? (
+            <ProfileFollowButton 
+              userId={profileData._id} 
+              username={profileData.username} 
+              following={user?.following || []} 
+            />
+          ) : undefined}
+        />
 
-      {/* Información adicional del perfil */}
-      <ProfileInfo 
-        user={convertToUser(profileData)} 
-        isOwnProfile={isOwnProfile || false} 
-      />
+        {/* Información adicional del perfil moderno */}
+        <ModernProfileInfo 
+          user={convertToUser(profileData)} 
+          isOwnProfile={isOwnProfile || false} 
+        />
 
-      {/* Edición de perfil */}
-      {isOwnProfile && showEdit && (
-        <div className="mb-8">
-          <EditProfileForm 
-            profile={profileData} 
-            onSave={async () => { 
-              setShowEdit(false); 
-              await reloadProfile(); 
-            }} 
-            onCancel={() => setShowEdit(false)} 
-          />
-        </div>
-      )}
+        {/* Edición de perfil */}
+        {isOwnProfile && showEdit && (
+          <div className="mb-8">
+            <div className="relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50"></div>
+              <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/30 p-6 lg:p-8">
+                <EditProfileForm 
+                  profile={profileData} 
+                  onSave={async () => { 
+                    setShowEdit(false); 
+                    await reloadProfile(); 
+                  }} 
+                  onCancel={() => setShowEdit(false)} 
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
-      {/* Pestañas de contenido */}
-      <ProfileTabs 
-        username={profileData.username} 
-        isOwnProfile={isOwnProfile || false} 
-      />
+        {/* Pestañas de contenido modernas */}
+        <ModernProfileTabs 
+          username={profileData.username} 
+          isOwnProfile={isOwnProfile || false} 
+        />
+      </div>
 
       {/* Modales de seguidores/seguidos */}
       <UserListModal
