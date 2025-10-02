@@ -159,7 +159,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       setAvatarFile(null);
       setAvatarPreview(null);
       
-      // Notificar al componente padre sobre la actualización
+      // Notificar al componente padre sobre la actualización del avatar
       if (response.user && response.user.avatar) {
         await onSave({ avatar: response.user.avatar });
       }
