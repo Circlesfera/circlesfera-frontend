@@ -165,50 +165,22 @@ export default function ModernProfileHeader({
               )}
             </div>
 
-            {/* Statistics Grid - Compact */}
-            <div className="grid grid-cols-4 gap-3 mb-4">
-              <CompactStatCard 
-                icon="posts" 
-                count={stats.posts} 
-                label="Posts" 
-              />
-              <CompactStatCard 
-                icon="reels" 
-                count={stats.reels} 
-                label="Reels" 
-              />
-              <CompactStatCard 
-                icon="stories" 
-                count={stats.stories} 
-                label="Stories" 
-              />
-              <CompactStatCard 
-                icon="likes" 
-                count={stats.likes} 
-                label="Likes" 
-              />
-            </div>
-
-            {/* Followers and Following - Compact */}
-            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm font-medium">
+            {/* Followers and Following - Enhanced */}
+            <div className="flex flex-wrap justify-center sm:justify-start gap-6 text-base font-medium">
               <button 
-                className="hover:underline flex items-center gap-1 transition-all duration-200 hover:text-blue-600" 
+                className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105" 
                 onClick={onFollowersClick}
               >
-                <span className="font-bold text-gray-900">{formatNumber(stats.followers)}</span>
+                <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.followers)}</span>
                 <span className="text-gray-600">seguidores</span>
               </button>
               <button 
-                className="hover:underline flex items-center gap-1 transition-all duration-200 hover:text-blue-600" 
+                className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105" 
                 onClick={onFollowingClick}
               >
-                <span className="font-bold text-gray-900">{formatNumber(stats.following)}</span>
+                <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.following)}</span>
                 <span className="text-gray-600">siguiendo</span>
               </button>
-              <div className="flex items-center gap-1">
-                <span className="font-bold text-gray-900">{formatNumber(stats.comments)}</span>
-                <span className="text-gray-600">comentarios</span>
-              </div>
             </div>
           </div>
         </div>
@@ -217,53 +189,3 @@ export default function ModernProfileHeader({
   );
 }
 
-interface CompactStatCardProps {
-  icon: 'posts' | 'reels' | 'stories' | 'likes';
-  count: number;
-  label: string;
-}
-
-function CompactStatCard({ icon, count, label }: CompactStatCardProps) {
-  const getIcon = () => {
-    switch (icon) {
-      case 'posts':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        );
-      case 'reels':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-        );
-      case 'stories':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        );
-      case 'likes':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        );
-    }
-  };
-
-  return (
-    <div className="text-center group cursor-pointer">
-      <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-white/50 hover:bg-white/90 hover:border-white/70 transition-all duration-300 hover:scale-105 hover:shadow-md">
-        <div className="flex items-center justify-center mb-1 text-gray-600 group-hover:text-blue-600 transition-colors duration-300">
-          {getIcon()}
-        </div>
-        <div className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-          {formatNumber(count)}
-        </div>
-        <div className="text-xs text-gray-600 font-medium">{label}</div>
-      </div>
-    </div>
-  );
-}
