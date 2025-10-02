@@ -58,36 +58,34 @@ export default function ModernProfileHeader({
       
       <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 p-4 sm:p-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
-          {/* Avatar Section - Compact */}
+          {/* Avatar Section - Simplified for debugging */}
           <div className="flex-shrink-0 relative group">
             <div className="relative">
-              {/* Avatar Ring with Gradient - Smaller */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-0.5 group-hover:p-1 transition-all duration-300">
-                <div className="w-full h-full bg-white rounded-full p-0.5">
-                  {user.avatar && !imageError ? (
-                    <img 
-                      src={user.avatar} 
-                      alt={`Avatar de ${user.username}`}
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-md transition-transform group-hover:scale-105 duration-300" 
-                      onError={(e) => {
-                        console.error('Error loading avatar:', user.avatar, e);
-                        setImageError(true);
-                      }}
-                      onLoad={() => {
-                        console.log('Avatar loaded successfully:', user.avatar);
-                      }}
-                    />
-                  ) : (
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold shadow-md">
-                      {user.username?.[0]?.toUpperCase() || '?'}
-                    </div>
-                  )}
-                </div>
+              {/* Simple Avatar Container */}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500 overflow-hidden bg-gray-100">
+                {user.avatar && !imageError ? (
+                  <img 
+                    src={user.avatar} 
+                    alt={`Avatar de ${user.username}`}
+                    className="w-full h-full object-cover" 
+                    onError={(e) => {
+                      console.error('Error loading avatar:', user.avatar, e);
+                      setImageError(true);
+                    }}
+                    onLoad={() => {
+                      console.log('Avatar loaded successfully:', user.avatar);
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
+                    {user.username?.[0]?.toUpperCase() || '?'}
+                  </div>
+                )}
               </div>
               
               {/* Verified Badge - Compact */}
               {user.isVerified && (
-                <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-1 shadow-md">
+                <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1 shadow-md">
                   <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
