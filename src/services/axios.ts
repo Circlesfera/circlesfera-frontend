@@ -85,23 +85,14 @@ api.interceptors.response.use(
     const status = error.response?.status;
     const message = error.response?.data?.message || error.message || 'Error desconocido';
 
-    // Log de errores en desarrollo
-    if (process.env.NODE_ENV === 'development') {
-      console.error('API Error Details:');
-      console.error('- Status:', status || 'No status');
-      console.error('- Message:', message || 'No message');
-      
-      // Acceso seguro a las propiedades del error
-      try {
-        console.error('- URL:', error.config?.url || 'No URL');
-        console.error('- Method:', error.config?.method || 'No method');
-      } catch (configError) {
-        console.error('- URL: No disponible (error accessing config)');
-        console.error('- Method: No disponible (error accessing config)');
-      }
-      
-      console.error('- Error:', error.message || 'No error message');
-      console.error('- Full Error:', error);
+    // Log de errores en desarrollo (solo para errores críticos)
+    if (process.env.NODE_ENV === 'development' && status && status >= 500) {
+      console.error('API Error Details:', {
+        status: status || 'No status',
+        message: message || 'No message',
+        url: error.config?.url || 'No URL',
+        method: error.config?.method || 'No method'
+      });
     }
 
     // Manejo específico de errores

@@ -121,7 +121,10 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
         }
       }
     } catch (err) {
-      console.error(`Error loading ${type}:`, err);
+      // Solo logear errores críticos
+      if (err instanceof Error && err.message.includes('500')) {
+        console.error(`Error loading ${type}:`, err);
+      }
       setError(`Error al cargar ${type}`);
     } finally {
       setLoading(false);

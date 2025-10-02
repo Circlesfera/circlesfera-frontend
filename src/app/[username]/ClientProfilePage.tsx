@@ -30,7 +30,6 @@ const convertToUser = (profile: UserProfile): User => {
   // Propiedades opcionales
   if (profile.avatar) {
     user.avatar = profile.avatar;
-    console.log('Avatar set in convertToUser:', profile.avatar);
   }
   if (profile.bio) user.bio = profile.bio;
   if (profile.fullName) user.fullName = profile.fullName;
@@ -102,7 +101,10 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         const newProfileData = await getUserProfileByUsername(profileData?.username || '');
         setProfileData(newProfileData);
       } catch (error) {
-        console.error('Error al recargar perfil:', error);
+        // Solo logear errores críticos
+        if (error instanceof Error && error.message.includes('500')) {
+          console.error('Error al recargar perfil:', error);
+        }
       }
     }, [profileData?.username]);
 
@@ -124,7 +126,10 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       const data = await getFollowers(profileData._id);
       setFollowersList(data);
     } catch (error) {
-      console.error('Error loading followers:', error);
+      // Solo logear errores críticos
+      if (error instanceof Error && error.message.includes('500')) {
+        console.error('Error loading followers:', error);
+      }
       setFollowersList([]);
     }
   };
@@ -136,7 +141,10 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       const data = await getFollowing(profileData._id);
       setFollowingList(data);
     } catch (error) {
-      console.error('Error loading following:', error);
+      // Solo logear errores críticos
+      if (error instanceof Error && error.message.includes('500')) {
+        console.error('Error loading following:', error);
+      }
       setFollowingList([]);
     }
   };

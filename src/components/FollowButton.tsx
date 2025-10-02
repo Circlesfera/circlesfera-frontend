@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { followUser, unfollowUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 
@@ -22,7 +22,6 @@ export default function FollowButton({
     
     // Verificar autenticación antes de proceder
     if (!user) {
-      console.warn('Usuario no autenticado - redirigiendo al login');
       return;
     }
     
@@ -38,11 +37,9 @@ export default function FollowButton({
         onChange?.(true);
       }
     } catch (error: any) {
-      console.error('Error en follow/unfollow:', error);
-      
-      // Si es error de autenticación, el interceptor ya maneja la redirección
-      if (error.response?.status === 401) {
-        console.warn('Error de autenticación - el usuario será redirigido al login');
+      // Solo logear errores críticos
+      if (error.response?.status >= 500) {
+        console.error('Error en follow/unfollow:', error);
       }
       
       // No cambiar el estado en caso de error

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { User } from '@/types';
 import { formatNumber } from '@/utils/format';
@@ -35,17 +35,11 @@ export default function ModernProfileHeader({
   const [imageError, setImageError] = useState(false);
 
   // Reset image error when avatar changes
-  React.useEffect(() => {
+  useEffect(() => {
     setImageError(false);
   }, [user.avatar]);
 
   // Debug: Log avatar information
-  console.log('Avatar debug:', {
-    hasAvatar: !!user.avatar,
-    avatarUrl: user.avatar,
-    imageError,
-    username: user.username
-  });
 
   return (
     <div className="relative overflow-hidden">
@@ -68,13 +62,8 @@ export default function ModernProfileHeader({
                     src={user.avatar} 
                     alt={`Avatar de ${user.username}`}
                     className="w-full h-full object-cover" 
-                    onError={(e) => {
-                      console.error('Error loading avatar:', user.avatar, e);
-                      setImageError(true);
-                    }}
-                    onLoad={() => {
-                      console.log('Avatar loaded successfully:', user.avatar);
-                    }}
+                 onError={() => setImageError(true)}
+                 onLoad={() => setImageError(false)}
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
