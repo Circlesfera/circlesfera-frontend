@@ -179,7 +179,7 @@ export default function ModernProfileHeader({
                 onClick={onFollowingClick}
               >
                 <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.following)}</span>
-                <span className="text-gray-600">siguiendo</span>
+                <span className="text-gray-600">seguidos</span>
               </button>
             </div>
           </div>
