@@ -76,6 +76,12 @@ api.interceptors.response.use(
     return response;
   },
   (error: AxiosError<{ message?: string }>) => {
+    // Validar que el error tiene la estructura esperada
+    if (!error || typeof error !== 'object') {
+      console.error('Error inesperado en interceptor de axios:', error);
+      return Promise.reject(error);
+    }
+    
     const status = error.response?.status;
     const message = error.response?.data?.message || error.message || 'Error desconocido';
 
@@ -84,8 +90,16 @@ api.interceptors.response.use(
       console.error('API Error Details:');
       console.error('- Status:', status || 'No status');
       console.error('- Message:', message || 'No message');
-      console.error('- URL:', error.config?.url || 'No URL');
-      console.error('- Method:', error.config?.method || 'No method');
+      
+      // Acceso seguro a las propiedades del error
+      try {
+        console.error('- URL:', error.config?.url || 'No URL');
+        console.error('- Method:', error.config?.method || 'No method');
+      } catch (configError) {
+        console.error('- URL: No disponible (error accessing config)');
+        console.error('- Method: No disponible (error accessing config)');
+      }
+      
       console.error('- Error:', error.message || 'No error message');
       console.error('- Full Error:', error);
     }
@@ -97,9 +111,10 @@ api.interceptors.response.use(
         if (process.env.NODE_ENV === 'development') {
           console.warn('🔐 Error de autenticación:', {
             message,
-            url: error.config?.url,
-            method: error.config?.method,
+            url: error.config?.url || 'No disponible',
+            method: error.config?.method || 'No disponible',
             hasToken: !!getToken(),
+            status,
           });
         }
         
