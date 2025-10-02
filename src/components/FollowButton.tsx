@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { followUser, unfollowUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 
@@ -16,6 +16,11 @@ export default function FollowButton({
   const { user } = useAuth();
   const [following, setFollowing] = useState(initialFollowing);
   const [loading, setLoading] = useState(false);
+
+  // Sincronizar el estado cuando cambie initialFollowing
+  useEffect(() => {
+    setFollowing(initialFollowing);
+  }, [initialFollowing]);
 
   const handleClick = async () => {
     if (loading || !user) return;

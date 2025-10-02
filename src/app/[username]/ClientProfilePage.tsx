@@ -65,7 +65,7 @@ const convertToUser = (profile: UserProfile): User => {
 };
 
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [profileData, setProfileData] = useState(profile);
   const isOwnProfile = user && user.username === profile?.username;
@@ -114,7 +114,19 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     
     // Recargar los datos del perfil para actualizar contadores
     await reloadProfile();
-  }, [reloadProfile]);
+    
+    // Actualizar el estado del usuario actual para reflejar el cambio
+    if (user) {
+      try {
+        await refreshUser();
+      } catch (error) {
+        // Solo logear errores críticos
+        if (error instanceof Error && error.message.includes('500')) {
+          console.error('Error refreshing user after follow:', error);
+        }
+      }
+    }
+  }, [reloadProfile, user, refreshUser]);
 
 
 
