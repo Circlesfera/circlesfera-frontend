@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import FollowButton from './FollowButton';
 
@@ -22,7 +22,13 @@ interface Props {
 
 export default function UserListModal({ open, onClose, users, title, currentUserFollowing }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [localUsers, setLocalUsers] = useState<User[]>(users);
   const router = useRouter();
+
+  // Actualizar usuarios locales cuando cambien las props
+  useEffect(() => {
+    setLocalUsers(users);
+  }, [users]);
 
   // Función para navegar al perfil del usuario
   const handleUserClick = (username: string) => {
@@ -30,17 +36,28 @@ export default function UserListModal({ open, onClose, users, title, currentUser
     router.push(`/${username}`); // Navegar al perfil
   };
 
+  // Función para manejar cambios en el estado de seguir
+  const handleFollowChange = (userId: string, isFollowing: boolean) => {
+    setLocalUsers(prevUsers => 
+      prevUsers.map(user => 
+        user._id === userId 
+          ? { ...user, isFollowing }
+          : user
+      )
+    );
+  };
+
   // Filtrar usuarios basado en el término de búsqueda
   const filteredUsers = useMemo(() => {
-    if (!searchTerm.trim()) return users;
+    if (!searchTerm.trim()) return localUsers;
     
     const term = searchTerm.toLowerCase();
-    return users.filter(user => 
+    return localUsers.filter(user => 
       user.username.toLowerCase().includes(term) ||
       user.fullName?.toLowerCase().includes(term) ||
       user.bio?.toLowerCase().includes(term)
     );
-  }, [users, searchTerm]);
+  }, [localUsers, searchTerm]);
 
   if (!open) return null;
 
@@ -51,7 +68,7 @@ export default function UserListModal({ open, onClose, users, title, currentUser
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-500 mt-1">{users.length} usuario{users.length !== 1 ? 's' : ''}</p>
+            <p className="text-sm text-gray-500 mt-1">{localUsers.length} usuario{localUsers.length !== 1 ? 's' : ''}</p>
           </div>
           <button 
             onClick={onClose} 
@@ -160,7 +177,7 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                       <FollowButton 
                         userId={user._id} 
                         initialFollowing={user.isFollowing || currentUserFollowing.includes(user._id)} 
-                        onChange={() => {}} 
+                        onChange={(isFollowing) => handleFollowChange(user._id, isFollowing)} 
                       />
                     </div>
                   </div>
