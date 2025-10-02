@@ -34,6 +34,14 @@ export default function ModernProfileHeader({
 }: ModernProfileHeaderProps) {
   const [imageError, setImageError] = useState(false);
 
+  // Debug: Log avatar information
+  console.log('Avatar debug:', {
+    hasAvatar: !!user.avatar,
+    avatarUrl: user.avatar,
+    imageError,
+    username: user.username
+  });
+
   return (
     <div className="relative overflow-hidden">
       {/* Hero Background */}
@@ -56,7 +64,13 @@ export default function ModernProfileHeader({
                       src={user.avatar} 
                       alt={`Avatar de ${user.username}`}
                       className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-md transition-transform group-hover:scale-105 duration-300" 
-                      onError={() => setImageError(true)}
+                      onError={(e) => {
+                        console.error('Error loading avatar:', user.avatar, e);
+                        setImageError(true);
+                      }}
+                      onLoad={() => {
+                        console.log('Avatar loaded successfully:', user.avatar);
+                      }}
                     />
                   ) : (
                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold shadow-md">

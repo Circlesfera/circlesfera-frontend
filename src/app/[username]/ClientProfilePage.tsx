@@ -28,7 +28,10 @@ const convertToUser = (profile: UserProfile): User => {
   };
 
   // Propiedades opcionales
-  if (profile.avatar) user.avatar = profile.avatar;
+  if (profile.avatar) {
+    user.avatar = profile.avatar;
+    console.log('Avatar set in convertToUser:', profile.avatar);
+  }
   if (profile.bio) user.bio = profile.bio;
   if (profile.fullName) user.fullName = profile.fullName;
   if (profile.website) user.website = profile.website;
