@@ -103,7 +103,7 @@ export const unfollowUser = async (userId: string) => {
 };
 
 export const editProfile = async (formData: FormData) => {
-  const res = await api.put('/users/profile', formData, {
+  const res = await api.put('/auth/profile', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
