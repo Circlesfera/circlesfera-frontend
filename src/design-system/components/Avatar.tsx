@@ -64,7 +64,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       : '';
 
     const interactiveClasses = interactive
-      ? 'cursor-pointer hover:scale-105 transition-transform duration-200'
+      ? 'cursor-pointer hover:opacity-90 transition-opacity duration-200'
       : '';
 
     // Generar iniciales del fallback

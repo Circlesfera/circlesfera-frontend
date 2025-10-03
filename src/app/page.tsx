@@ -85,8 +85,8 @@ export default function HomePage() {
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
-              <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2">
-                <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse"></div>
+              <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+                <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse p-2"></div>
                 <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
               </div>
             ))}
@@ -122,8 +122,8 @@ export default function HomePage() {
       <Card className="p-6">
         <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
           {/* Add Story Button */}
-          <div className="flex-shrink-0 flex flex-col items-center space-y-2">
-            <div className="relative">
+          <div className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+            <div className="relative p-2">
               <Avatar
                 src={user?.avatar}
                 alt="Tu historia"
@@ -142,8 +142,8 @@ export default function HomePage() {
 
         {/* Stories */}
         {stories.map((story) => (
-          <div key={story.id} className="flex-shrink-0 flex flex-col items-center space-y-2">
-            <div className="relative">
+          <div key={story.id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+            <div className="relative p-2">
               <Avatar
                 src={story.avatar}
                 alt={story.username}

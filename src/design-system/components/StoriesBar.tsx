@@ -64,8 +64,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
         <div className="flex space-x-6 overflow-x-auto scrollbar-hide">
           {/* Loading skeletons */}
           {[...Array(8)].map((_, index) => (
-            <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2">
-              <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse"></div>
+            <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+              <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse p-2"></div>
               <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
             </div>
           ))}
@@ -79,8 +79,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
       <div className="flex space-x-6 overflow-x-auto scrollbar-hide">
         {/* Create Story Button */}
         {currentUser && (
-          <div className="flex-shrink-0 flex flex-col items-center space-y-2">
-            <div className="relative group cursor-pointer" onClick={onCreateStory}>
+          <div className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+            <div className="relative group cursor-pointer p-2" onClick={onCreateStory}>
               <Avatar
                 src={currentUser.avatar}
                 alt="Tu historia"
@@ -102,9 +102,9 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
 
         {/* Stories */}
         {usersWithStories.map((user) => (
-          <div key={user.id} className="flex-shrink-0 flex flex-col items-center space-y-2">
+          <div key={user.id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
             <div 
-              className="relative group cursor-pointer" 
+              className="relative group cursor-pointer p-2" 
               onClick={() => onStoryClick?.(user)}
             >
               <Avatar
