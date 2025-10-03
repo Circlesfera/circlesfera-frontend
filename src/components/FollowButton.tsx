@@ -27,25 +27,43 @@ export default function FollowButton({
     
     // Verificar autenticación antes de proceder
     if (!user) {
+      console.error('Usuario no autenticado');
       return;
     }
+    
+    console.log('🔍 FollowButton - Iniciando acción:', {
+      userId,
+      following,
+      currentUser: user.username,
+      action: following ? 'unfollow' : 'follow'
+    });
     
     setLoading(true);
     try {
       if (following) {
+        console.log('🔍 FollowButton - Ejecutando unfollowUser para userId:', userId);
         await unfollowUser(userId);
         setFollowing(false);
         onChange?.(false);
+        console.log('✅ FollowButton - Unfollow exitoso');
       } else {
+        console.log('🔍 FollowButton - Ejecutando followUser para userId:', userId);
         await followUser(userId);
         setFollowing(true);
         onChange?.(true);
+        console.log('✅ FollowButton - Follow exitoso');
       }
     } catch (error: any) {
-      // Solo logear errores críticos
-      if (error.response?.status >= 500) {
-        console.error('Error en follow/unfollow:', error);
-      }
+      console.error('Error en follow/unfollow:', {
+        error: error,
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        url: error.config?.url,
+        method: error.config?.method
+      });
+      
+      // Mostrar mensaje de error al usuario
+      alert(`Error: ${error.response?.data?.message || error.message || 'Error desconocido'}`);
       
       // No cambiar el estado en caso de error
     } finally {

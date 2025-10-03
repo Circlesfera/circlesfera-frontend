@@ -95,11 +95,47 @@ export const getUserProfileByUsername = async (username: string): Promise<UserPr
 };
 
 export const followUser = async (userId: string) => {
-  await api.post(`/users/${userId}/follow`, {});
+  console.log('🔍 userService - followUser llamada:', {
+    userId,
+    url: `/users/${userId}/follow`,
+    method: 'POST'
+  });
+  
+  try {
+    const response = await api.post(`/users/${userId}/follow`, {});
+    console.log('✅ userService - followUser respuesta:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ userService - followUser error:', {
+      status: error.response?.status,
+      message: error.response?.data?.message || error.message,
+      url: error.config?.url,
+      method: error.config?.method
+    });
+    throw error;
+  }
 };
 
 export const unfollowUser = async (userId: string) => {
-  await api.delete(`/users/${userId}/follow`);
+  console.log('🔍 userService - unfollowUser llamada:', {
+    userId,
+    url: `/users/${userId}/follow`,
+    method: 'DELETE'
+  });
+  
+  try {
+    const response = await api.delete(`/users/${userId}/follow`);
+    console.log('✅ userService - unfollowUser respuesta:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ userService - unfollowUser error:', {
+      status: error.response?.status,
+      message: error.response?.data?.message || error.message,
+      url: error.config?.url,
+      method: error.config?.method
+    });
+    throw error;
+  }
 };
 
 export const editProfile = async (formData: FormData) => {
