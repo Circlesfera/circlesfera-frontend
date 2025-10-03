@@ -21,6 +21,11 @@ export default function FollowButton({
 
   // Sincronizar el estado cuando cambie initialFollowing
   useEffect(() => {
+    console.log('🔍 FollowButton - Sincronizando estado:', {
+      userId,
+      initialFollowing,
+      currentFollowing: following
+    });
     setFollowing(initialFollowing);
   }, [initialFollowing, userId]);
 

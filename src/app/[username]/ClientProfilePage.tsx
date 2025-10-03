@@ -93,14 +93,14 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     if (user && profileData && !isOwnProfile) {
       // Usar la información isFollowing que viene del backend
       const isFollowing = profileData.isFollowing || false;
-      // Solo loggear en desarrollo para debugging
-      if (process.env.NODE_ENV === 'development') {
-        console.log('🔍 ClientProfilePage - Estado inicial de seguimiento:', {
-          username: profileData.username,
-          isFollowing,
-          fromBackend: profileData.isFollowing
-        });
-      }
+      // Loggear siempre para debugging del problema
+      console.log('🔍 ClientProfilePage - Estado inicial de seguimiento:', {
+        username: profileData.username,
+        isFollowing,
+        fromBackend: profileData.isFollowing,
+        profileData: profileData,
+        userFollowing: user.following
+      });
       setIsFollowingProfile(isFollowing);
     }
   }, [user, profileData, isOwnProfile]);
