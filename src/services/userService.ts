@@ -99,7 +99,7 @@ export const followUser = async (userId: string) => {
 };
 
 export const unfollowUser = async (userId: string) => {
-  await api.post(`/users/${userId}/unfollow`, {});
+  await api.delete(`/users/${userId}/follow`);
 };
 
 export const editProfile = async (formData: FormData) => {
