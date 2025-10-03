@@ -149,10 +149,10 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
       >
         {visibleAvatars.map((child, index) => (
           <div key={index} className="relative">
-            {React.cloneElement(child as React.ReactElement, {
+            {React.cloneElement(child as React.ReactElement<AvatarProps>, {
               size,
               className: cn(
-                (child as React.ReactElement).props.className,
+                (child as React.ReactElement<AvatarProps>).props.className,
                 'ring-2 ring-white'
               ),
             })}
