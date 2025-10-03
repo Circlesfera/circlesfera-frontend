@@ -60,8 +60,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
 
   if (loading) {
     return (
-      <Card className={cn("p-4", className)}>
-        <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
+      <Card className={cn("p-6", className)}>
+        <div className="flex space-x-6 overflow-x-auto scrollbar-hide">
           {/* Loading skeletons */}
           {[...Array(8)].map((_, index) => (
             <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2">
@@ -75,8 +75,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
   }
 
   return (
-    <Card className={cn("p-4", className)}>
-      <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
+    <Card className={cn("p-6", className)}>
+      <div className="flex space-x-6 overflow-x-auto scrollbar-hide">
         {/* Create Story Button */}
         {currentUser && (
           <div className="flex-shrink-0 flex flex-col items-center space-y-2">

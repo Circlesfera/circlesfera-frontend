@@ -79,9 +79,9 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-2xl mx-auto space-y-6 px-4">
         {/* Loading State */}
-        <Card className="p-4">
+        <Card className="p-6">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
@@ -117,9 +117,9 @@ export default function HomePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 px-4">
       {/* Stories Section */}
-      <Card className="p-4">
+      <Card className="p-6">
         <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
           {/* Add Story Button */}
           <div className="flex-shrink-0 flex flex-col items-center space-y-2">

@@ -99,7 +99,7 @@ const ModernAppLayout: React.FC<ModernAppLayoutProps> = ({ children }) => {
           "pb-16 lg:pb-0" // Padding bottom para mobile nav
         )}
       >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-12 py-6">
           {children}
         </div>
       </main>
