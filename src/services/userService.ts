@@ -148,6 +148,22 @@ export const unblockUser = async (userId: string) => {
   await api.post(`/users/${userId}/unblock`, {});
 };
 
+export const muteUser = async (userId: string) => {
+  await api.post(`/users/${userId}/mute`, {});
+};
+
+export const unmuteUser = async (userId: string) => {
+  await api.delete(`/users/${userId}/mute`);
+};
+
+export const restrictUser = async (userId: string) => {
+  await api.post(`/users/${userId}/restrict`, {});
+};
+
+export const unrestrictUser = async (userId: string) => {
+  await api.delete(`/users/${userId}/restrict`);
+};
+
 export const changePassword = async (currentPassword: string, newPassword: string) => {
   const res = await api.put('/auth/change-password', {
     currentPassword,
