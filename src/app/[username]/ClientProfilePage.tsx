@@ -88,24 +88,42 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     comments: profileData?.totalComments || 0
   };
 
-  // Determinar si estamos siguiendo al perfil actual
+  // Determinar si estamos siguiendo al perfil actual usando la información del backend
   useEffect(() => {
     if (user && profileData && !isOwnProfile) {
-      const isFollowing = user.following?.includes(profileData._id) || false;
+      // Usar la información isFollowing que viene del backend
+      const isFollowing = profileData.isFollowing || false;
+      // Solo loggear en desarrollo para debugging
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 ClientProfilePage - Estado inicial de seguimiento:', {
+          username: profileData.username,
+          isFollowing,
+          fromBackend: profileData.isFollowing
+        });
+      }
       setIsFollowingProfile(isFollowing);
     }
   }, [user, profileData, isOwnProfile]);
 
-  // Mantener el estado sincronizado cuando el usuario se actualice
+  // Mantener el estado sincronizado cuando el perfil se actualice
   useEffect(() => {
     if (user && profileData && !isOwnProfile) {
-      const isFollowing = user.following?.includes(profileData._id) || false;
+      // Usar la información isFollowing que viene del backend
+      const isFollowing = profileData.isFollowing || false;
       // Solo actualizar si el estado ha cambiado realmente
       if (isFollowing !== isFollowingProfile) {
+        // Solo loggear en desarrollo para debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔄 ClientProfilePage - Actualizando estado de seguimiento:', {
+            username: profileData.username,
+            oldState: isFollowingProfile,
+            newState: isFollowing
+          });
+        }
         setIsFollowingProfile(isFollowing);
       }
     }
-  }, [user?.following, profileData?._id, isOwnProfile, isFollowingProfile]);
+  }, [profileData?.isFollowing, profileData?._id, isOwnProfile, isFollowingProfile]);
 
       const reloadProfile = useCallback(async () => {
       try {
@@ -122,8 +140,29 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
   // Función para manejar cambios en el seguimiento
   const handleFollowChange = useCallback(async (isFollowing: boolean) => {
+    // Solo loggear en desarrollo para debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔄 ClientProfilePage - handleFollowChange:', {
+        username: profileData?.username,
+        newState: isFollowing,
+        previousState: isFollowingProfile
+      });
+    }
+    
     // Actualizar el estado local inmediatamente
     setIsFollowingProfile(isFollowing);
+    
+    // Actualizar el estado del perfil para reflejar el cambio
+    setProfileData(prevData => {
+      if (!prevData) return prevData;
+      return {
+        ...prevData,
+        isFollowing,
+        followersCount: isFollowing 
+          ? (prevData.followersCount || 0) + 1 
+          : Math.max((prevData.followersCount || 0) - 1, 0)
+      };
+    });
     
     // Actualizar el estado del usuario actual para reflejar el cambio
     if (user) {
@@ -139,7 +178,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     
     // Recargar los datos del perfil para actualizar contadores
     await reloadProfile();
-  }, [reloadProfile, user, refreshUser]);
+  }, [reloadProfile, user, refreshUser, profileData?.username, isFollowingProfile]);
 
 
 
