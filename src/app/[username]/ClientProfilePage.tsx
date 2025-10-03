@@ -242,12 +242,23 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           onFollowersClick={handleShowFollowers}
           onFollowingClick={handleShowFollowing}
           followButton={!isOwnProfile ? (
-            <ProfileFollowButton 
-              userId={profileData._id} 
-              username={profileData.username} 
-              isFollowing={isFollowingProfile}
-              onFollowChange={handleFollowChange}
-            />
+            <div className="flex flex-col gap-2">
+              <ProfileFollowButton 
+                userId={profileData._id} 
+                username={profileData.username} 
+                isFollowing={isFollowingProfile}
+                onFollowChange={handleFollowChange}
+              />
+              {/* Debug info - remover después */}
+              <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
+                <div>Debug Info:</div>
+                <div>profileData.isFollowing: {String(profileData.isFollowing)}</div>
+                <div>isFollowingProfile: {String(isFollowingProfile)}</div>
+                <div>user.following includes profileData._id: {String(user?.following?.includes(profileData._id))}</div>
+                <div>profileData._id: {profileData._id}</div>
+                <div>user.following: {JSON.stringify(user?.following)}</div>
+              </div>
+            </div>
           ) : undefined}
         />
 
