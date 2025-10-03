@@ -86,7 +86,7 @@ export default function HomePage() {
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
               <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2">
-                <div className="w-16 h-16 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse"></div>
                 <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
               </div>
             ))}
@@ -127,7 +127,7 @@ export default function HomePage() {
               <Avatar
                 src={user?.avatar}
                 alt="Tu historia"
-                size="lg"
+                size="xl"
                 fallback={user?.fullName || user?.username || 'Tú'}
                 interactive
                 ring
@@ -147,7 +147,7 @@ export default function HomePage() {
               <Avatar
                 src={story.avatar}
                 alt={story.username}
-                size="lg"
+                size="xl"
                 fallback={story.fullName || story.username}
                 interactive
                 ring={story.hasUnviewedStories}

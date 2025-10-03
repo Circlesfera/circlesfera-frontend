@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
-import { Card, Avatar, Button } from './index';
+import React from 'react';
+import Card from './Card';
+import Avatar from './Avatar';
 import { cn } from '@/utils/cn';
 
 export interface Story {
@@ -64,7 +65,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
           {/* Loading skeletons */}
           {[...Array(8)].map((_, index) => (
             <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2">
-              <div className="w-16 h-16 bg-gray-200 rounded-full animate-pulse"></div>
+              <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse"></div>
               <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
             </div>
           ))}
@@ -83,7 +84,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
               <Avatar
                 src={currentUser.avatar}
                 alt="Tu historia"
-                size="lg"
+                size="xl"
                 fallback={currentUser.fullName || currentUser.username}
                 interactive
                 ring
@@ -109,7 +110,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
               <Avatar
                 src={user.avatar}
                 alt={user.username}
-                size="lg"
+                size="xl"
                 fallback={user.fullName || user.username}
                 interactive
                 ring={user.hasUnviewedStories}
