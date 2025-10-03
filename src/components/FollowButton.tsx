@@ -61,7 +61,7 @@ export default function FollowButton({
         loading 
           ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
           : following 
-            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105' 
+            ? 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 hover:scale-105 border border-red-200' 
             : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 hover:scale-105 shadow-md hover:shadow-lg'
       }`}
     >
@@ -73,9 +73,9 @@ export default function FollowButton({
       ) : following ? (
         <span className="flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
-          Siguiendo
+          Dejar de seguir
         </span>
       ) : (
         <span className="flex items-center gap-1">
