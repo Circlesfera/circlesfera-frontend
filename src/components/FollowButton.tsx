@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { followUser, unfollowUser, muteUser, restrictUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import Button from '@/design-system/components/Button';
-import { cn } from '@/utils/cn';
 
 export default function FollowButton({
   userId,
