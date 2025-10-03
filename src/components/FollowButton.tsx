@@ -19,8 +19,9 @@ export default function FollowButton({
 
   // Sincronizar el estado cuando cambie initialFollowing
   useEffect(() => {
+    console.log('FollowButton: initialFollowing cambió a:', initialFollowing, 'para userId:', userId);
     setFollowing(initialFollowing);
-  }, [initialFollowing]);
+  }, [initialFollowing, userId]);
 
   const handleClick = async () => {
     if (loading || !user) return;
@@ -30,16 +31,22 @@ export default function FollowButton({
       return;
     }
     
+    console.log('FollowButton: handleClick - estado actual following:', following, 'userId:', userId);
+    
     setLoading(true);
     try {
       if (following) {
+        console.log('FollowButton: Ejecutando unfollow para userId:', userId);
         await unfollowUser(userId);
         setFollowing(false);
         onChange?.(false);
+        console.log('FollowButton: unfollow completado, nuevo estado: false');
       } else {
+        console.log('FollowButton: Ejecutando follow para userId:', userId);
         await followUser(userId);
         setFollowing(true);
         onChange?.(true);
+        console.log('FollowButton: follow completado, nuevo estado: true');
       }
     } catch (error: any) {
       // Solo logear errores críticos

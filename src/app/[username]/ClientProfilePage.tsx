@@ -91,7 +91,15 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   // Determinar si estamos siguiendo al perfil actual
   useEffect(() => {
     if (user && profileData && !isOwnProfile) {
-      setIsFollowingProfile(user.following?.includes(profileData._id) || false);
+      const isFollowing = user.following?.includes(profileData._id) || false;
+      console.log('ClientProfilePage: Determinando estado de seguimiento:', {
+        username: profileData.username,
+        userId: profileData._id,
+        userFollowing: user.following,
+        isFollowing,
+        isOwnProfile
+      });
+      setIsFollowingProfile(isFollowing);
     }
   }, [user, profileData, isOwnProfile]);
 
@@ -121,13 +129,18 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
   // Función para manejar cambios en el seguimiento
   const handleFollowChange = useCallback(async (isFollowing: boolean) => {
+    console.log('ClientProfilePage: handleFollowChange llamado con isFollowing:', isFollowing);
+    
     // Actualizar el estado local inmediatamente
     setIsFollowingProfile(isFollowing);
+    console.log('ClientProfilePage: Estado local actualizado a:', isFollowing);
     
     // Actualizar el estado del usuario actual para reflejar el cambio
     if (user) {
       try {
+        console.log('ClientProfilePage: Refrescando usuario...');
         await refreshUser();
+        console.log('ClientProfilePage: Usuario refrescado');
       } catch (error) {
         // Solo logear errores críticos
         if (error instanceof Error && error.message.includes('500')) {
@@ -137,7 +150,9 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     }
     
     // Recargar los datos del perfil para actualizar contadores
+    console.log('ClientProfilePage: Recargando perfil...');
     await reloadProfile();
+    console.log('ClientProfilePage: Perfil recargado');
   }, [reloadProfile, user, refreshUser]);
 
 
