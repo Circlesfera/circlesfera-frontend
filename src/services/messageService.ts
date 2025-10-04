@@ -77,7 +77,7 @@ export interface MessageResponse {
 
 // Obtener mensajes de una conversación
 export const getMessages = async (conversationId: string, token: string, page = 1, limit = 50): Promise<MessagesResponse> => {
-  const res = await api.get(`/messages/conversation/${conversationId}`, {
+  const res = await api.get(`/api/messages/conversation/${conversationId}`, {
     headers: { Authorization: `Bearer ${token}` },
     params: { page, limit }
   });
@@ -86,7 +86,7 @@ export const getMessages = async (conversationId: string, token: string, page = 
 
 // Enviar mensaje de texto
 export const sendTextMessage = async (conversationId: string, content: string, token: string, replyTo?: string): Promise<MessageResponse> => {
-  const res = await api.post(`/messages/conversation/${conversationId}/text`, {
+  const res = await api.post(`/api/messages/conversation/${conversationId}/text`, {
     content,
     replyTo
   }, {
@@ -101,7 +101,7 @@ export const sendImageMessage = async (conversationId: string, file: File, token
   formData.append('image', file);
   if (caption) formData.append('caption', caption);
   
-  const res = await api.post(`/messages/conversation/${conversationId}/image`, formData, {
+  const res = await api.post(`/api/messages/conversation/${conversationId}/image`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
@@ -116,7 +116,7 @@ export const sendVideoMessage = async (conversationId: string, file: File, token
   formData.append('video', file);
   if (caption) formData.append('caption', caption);
   
-  const res = await api.post(`/messages/conversation/${conversationId}/video`, formData, {
+  const res = await api.post(`/api/messages/conversation/${conversationId}/video`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
@@ -127,7 +127,7 @@ export const sendVideoMessage = async (conversationId: string, file: File, token
 
 // Enviar mensaje de ubicación
 export const sendLocationMessage = async (conversationId: string, latitude: number, longitude: number, token: string, name?: string, address?: string): Promise<MessageResponse> => {
-  const res = await api.post(`/messages/conversation/${conversationId}/location`, {
+  const res = await api.post(`/api/messages/conversation/${conversationId}/location`, {
     latitude,
     longitude,
     name,
@@ -140,7 +140,7 @@ export const sendLocationMessage = async (conversationId: string, latitude: numb
 
 // Editar mensaje
 export const editMessage = async (messageId: string, content: string, token: string): Promise<MessageResponse> => {
-  const res = await api.put(`/messages/${messageId}`, {
+  const res = await api.put(`/api/messages/${messageId}`, {
     content
   }, {
     headers: { Authorization: `Bearer ${token}` }
@@ -150,7 +150,7 @@ export const editMessage = async (messageId: string, content: string, token: str
 
 // Eliminar mensaje
 export const deleteMessage = async (messageId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/messages/${messageId}`, {
+  const res = await api.delete(`/api/messages/${messageId}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
@@ -158,7 +158,7 @@ export const deleteMessage = async (messageId: string, token: string): Promise<{
 
 // Reenviar mensaje
 export const forwardMessage = async (messageId: string, conversationIds: string[], token: string): Promise<{ success: boolean; messages: Message[] }> => {
-  const res = await api.post(`/messages/${messageId}/forward`, {
+  const res = await api.post(`/api/messages/${messageId}/forward`, {
     conversationIds
   }, {
     headers: { Authorization: `Bearer ${token}` }
@@ -168,7 +168,7 @@ export const forwardMessage = async (messageId: string, conversationIds: string[
 
 // Buscar mensajes
 export const searchMessages = async (conversationId: string, query: string, token: string, page = 1, limit = 20): Promise<MessagesResponse> => {
-  const res = await api.get(`/messages/conversation/${conversationId}/search`, {
+  const res = await api.get(`/api/messages/conversation/${conversationId}/search`, {
     headers: { Authorization: `Bearer ${token}` },
     params: { query, page, limit }
   });
@@ -177,7 +177,7 @@ export const searchMessages = async (conversationId: string, query: string, toke
 
 // Obtener estadísticas de mensajes
 export const getMessageStats = async (conversationId: string, token: string): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
-  const res = await api.get(`/messages/conversation/${conversationId}/stats`, {
+  const res = await api.get(`/api/messages/conversation/${conversationId}/stats`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;

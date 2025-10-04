@@ -78,7 +78,7 @@ export interface ConversationResponse {
 
 // Obtener conversaciones del usuario
 export const getConversations = async (token: string, page = 1, limit = 20): Promise<ConversationsResponse> => {
-  const res = await api.get('/conversations', {
+  const res = await api.get('/api/conversations', {
     headers: { Authorization: `Bearer ${token}` },
     params: { page, limit }
   });
@@ -87,7 +87,7 @@ export const getConversations = async (token: string, page = 1, limit = 20): Pro
 
 // Obtener una conversación específica
 export const getConversation = async (conversationId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.get(`/conversations/${conversationId}`, {
+  const res = await api.get(`/api/conversations/${conversationId}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
@@ -95,7 +95,7 @@ export const getConversation = async (conversationId: string, token: string): Pr
 
 // Crear conversación directa
 export const createDirectConversation = async (participantId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.post('/conversations/direct', {
+  const res = await api.post('/api/conversations/direct', {
     participantId
   }, {
     headers: { Authorization: `Bearer ${token}` }
@@ -105,7 +105,7 @@ export const createDirectConversation = async (participantId: string, token: str
 
 // Crear conversación grupal
 export const createGroupConversation = async (name: string, participantIds: string[], token: string, description?: string): Promise<ConversationResponse> => {
-  const res = await api.post('/conversations/group', {
+  const res = await api.post('/api/conversations/group', {
     name,
     participantIds,
     description
@@ -117,7 +117,7 @@ export const createGroupConversation = async (name: string, participantIds: stri
 
 // Agregar participante a conversación grupal
 export const addParticipant = async (conversationId: string, participantId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.post(`/conversations/${conversationId}/participants`, {
+  const res = await api.post(`/api/conversations/${conversationId}/participants`, {
     participantId
   }, {
     headers: { Authorization: `Bearer ${token}` }
@@ -127,7 +127,7 @@ export const addParticipant = async (conversationId: string, participantId: stri
 
 // Remover participante de conversación grupal
 export const removeParticipant = async (conversationId: string, participantId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.delete(`/conversations/${conversationId}/participants`, {
+  const res = await api.delete(`/api/conversations/${conversationId}/participants`, {
     headers: { Authorization: `Bearer ${token}` },
     data: { participantId }
   });
@@ -136,7 +136,7 @@ export const removeParticipant = async (conversationId: string, participantId: s
 
 // Agregar administrador
 export const addAdmin = async (conversationId: string, adminId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.post(`/conversations/${conversationId}/admins`, {
+  const res = await api.post(`/api/conversations/${conversationId}/admins`, {
     adminId
   }, {
     headers: { Authorization: `Bearer ${token}` }
@@ -146,7 +146,7 @@ export const addAdmin = async (conversationId: string, adminId: string, token: s
 
 // Remover administrador
 export const removeAdmin = async (conversationId: string, adminId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.delete(`/conversations/${conversationId}/admins`, {
+  const res = await api.delete(`/api/conversations/${conversationId}/admins`, {
     headers: { Authorization: `Bearer ${token}` },
     data: { adminId }
   });
@@ -159,7 +159,7 @@ export const updateConversation = async (conversationId: string, updates: {
   description?: string;
   avatar?: string;
 }, token: string): Promise<ConversationResponse> => {
-  const res = await api.put(`/conversations/${conversationId}`, updates, {
+  const res = await api.put(`/api/conversations/${conversationId}`, updates, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
@@ -167,7 +167,7 @@ export const updateConversation = async (conversationId: string, updates: {
 
 // Archivar conversación
 export const archiveConversation = async (conversationId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.post(`/conversations/${conversationId}/archive`, {}, {
+  const res = await api.post(`/api/conversations/${conversationId}/archive`, {}, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
@@ -175,7 +175,7 @@ export const archiveConversation = async (conversationId: string, token: string)
 
 // Desarchivar conversación
 export const unarchiveConversation = async (conversationId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.post(`/conversations/${conversationId}/unarchive`, {}, {
+  const res = await api.post(`/api/conversations/${conversationId}/unarchive`, {}, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
@@ -183,7 +183,7 @@ export const unarchiveConversation = async (conversationId: string, token: strin
 
 // Eliminar conversación
 export const deleteConversation = async (conversationId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/conversations/${conversationId}`, {
+  const res = await api.delete(`/api/conversations/${conversationId}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
@@ -191,7 +191,7 @@ export const deleteConversation = async (conversationId: string, token: string):
 
 // Obtener estadísticas de conversaciones
 export const getConversationStats = async (token: string): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
-  const res = await api.get('/conversations/stats', {
+  const res = await api.get('/api/conversations/stats', {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;

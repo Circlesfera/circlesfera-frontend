@@ -8,11 +8,11 @@ export interface UserSearchResult {
 }
 
 export const searchUsers = async (query: string): Promise<UserSearchResult[]> => {
-  const res = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
+  const res = await api.get(`/api/users/search?q=${encodeURIComponent(query)}`);
   return res.data;
 };
 
 export const getRecentPosts = async (): Promise<Post[]> => {
-  const res = await api.get('/posts/recent');
+  const res = await api.get('/api/posts/recent');
   return res.data.posts;
 };
