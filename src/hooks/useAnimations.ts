@@ -61,11 +61,11 @@ export const staggerItem = {
 };
 
 // Hook para animaciones cuando el elemento entra en vista
-export const useInViewAnimation = (threshold = 0.1) => {
+export const useInViewAnimation = (amount = 0.1) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
-    threshold,
+    amount,
     margin: '0px 0px -100px 0px'
   });
 

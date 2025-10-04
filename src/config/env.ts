@@ -2,8 +2,8 @@
 
 export const config = {
   // API Configuration
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
-  appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.location.origin.replace(':3000', ':5001') + '/api' : 'http://localhost:5001/api'),
+  appUrl: process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'),
   
   // App Configuration
   appName: process.env.NEXT_PUBLIC_APP_NAME || 'CircleSfera',

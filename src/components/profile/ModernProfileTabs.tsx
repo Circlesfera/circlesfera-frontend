@@ -78,21 +78,21 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     setError(null);
 
     try {
-      let newContent: any[] = [];
+      let newContent: (Post | Reel | Story)[] = [];
       let hasMore = false;
 
       switch (type) {
         case 'posts':
           const postsData = await getUserPosts(username, page, 12);
           newContent = Array.isArray(postsData?.posts) ? postsData.posts : [];
-          hasMore = (postsData as any)?.hasMore || false;
-          setContentCounts(prev => ({ ...prev, posts: (postsData as any)?.total || newContent.length }));
+          hasMore = postsData?.hasMore || false;
+          setContentCounts(prev => ({ ...prev, posts: postsData?.pagination?.total || newContent.length }));
           break;
         case 'reels':
           const reelsData = await getUserReels(username, page, 12);
           newContent = Array.isArray(reelsData?.reels) ? reelsData.reels : [];
-          hasMore = (reelsData as any)?.hasMore || false;
-          setContentCounts(prev => ({ ...prev, reels: (reelsData as any)?.total || newContent.length }));
+          hasMore = (reelsData?.pagination?.page || 0) < (reelsData?.pagination?.pages || 0);
+          setContentCounts(prev => ({ ...prev, reels: reelsData?.pagination?.total || newContent.length }));
           break;
         case 'stories':
           const storiesData = await getUserStories(username);
@@ -103,21 +103,21 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
 
       if (append) {
         if (type === 'posts') {
-          setPosts(prev => [...prev, ...newContent]);
+          setPosts(prev => [...prev, ...(newContent as Post[])]);
           setHasMorePosts(hasMore);
         } else if (type === 'reels') {
-          setReels(prev => [...prev, ...newContent]);
+          setReels(prev => [...prev, ...(newContent as Reel[])]);
           setHasMoreReels(hasMore);
         }
       } else {
         if (type === 'posts') {
-          setPosts(newContent);
+          setPosts(newContent as Post[]);
           setHasMorePosts(hasMore);
         } else if (type === 'reels') {
-          setReels(newContent);
+          setReels(newContent as Reel[]);
           setHasMoreReels(hasMore);
         } else if (type === 'stories') {
-          setStories(newContent);
+          setStories(newContent as Story[]);
         }
       }
     } catch (err) {
@@ -237,11 +237,11 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
   };
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/10 to-purple-50/10"></div>
+    <div className="relative">
+      {/* Background - Simplified */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/5 to-purple-50/5 rounded-xl"></div>
       
-      <div className="relative bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/40 overflow-hidden">
+      <div className="relative bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100/50 overflow-hidden">
         {/* Pestañas mejoradas */}
         <div className="border-b border-gray-200/50">
           <div className="flex">
@@ -359,7 +359,7 @@ function ModernEmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnPr
 }
 
 // Componente para la cuadrícula de contenido mejorada
-function ModernContentGrid({ content, type }: { content: any[]; type: TabType }) {
+function ModernContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type: TabType }) {
   // Asegurar que content siempre sea un array
   const safeContent = Array.isArray(content) ? content : [];
 
@@ -369,7 +369,7 @@ function ModernContentGrid({ content, type }: { content: any[]; type: TabType })
         {safeContent.map((story) => (
           <div key={story._id} className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <img 
-              src={story.content?.images?.[0]?.url || ''} 
+              src={(story as Story).content?.image?.url || ''} 
               alt="Story"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
@@ -387,13 +387,13 @@ function ModernContentGrid({ content, type }: { content: any[]; type: TabType })
         <div key={item._id} className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
           {type === 'posts' ? (
             <img 
-              src={item.content?.images?.[0]?.url || ''} 
+              src={(item as Post).content?.images?.[0]?.url || ''} 
               alt="Post"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
           ) : (
             <video 
-              src={item.content?.video?.url || ''}
+              src={(item as Reel).video?.url || ''}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               muted
             />

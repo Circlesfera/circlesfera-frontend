@@ -3,15 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import { Card, PostCard, Button, Avatar } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
-import { getFeedPosts } from '@/services/postService';
-import { getUsersWithStories } from '@/services/storyService';
+import { getFeedPosts, Post } from '@/services/postService';
+import { getUsersWithStories, UserWithStories } from '@/services/storyService';
+import CommentsModal from '@/components/CommentsModal';
+import ShareModal from '@/components/ShareModal';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const { user } = useAuth();
-  const [posts, setPosts] = useState<any[]>([]);
-  const [stories, setStories] = useState<any[]>([]);
+  const router = useRouter();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [stories, setStories] = useState<UserWithStories[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [commentsModal, setCommentsModal] = useState<{ isOpen: boolean; postId: string; postAuthor: string; postImage?: string | undefined }>({ isOpen: false, postId: '', postAuthor: '' });
+  const [shareModal, setShareModal] = useState<{ isOpen: boolean; postId: string; postUrl?: string | undefined; postCaption?: string | undefined }>({ isOpen: false, postId: '', postUrl: '', postCaption: '' });
 
   // Cargar datos iniciales
   useEffect(() => {
@@ -44,31 +50,38 @@ export default function HomePage() {
 
   const handleLike = (postId: string) => {
     setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId
+      prevPosts.map((post: Post) =>
+        post._id === postId
           ? {
               ...post,
               isLiked: !post.isLiked,
-              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+              likes: post.isLiked ? post.likes.filter(id => id !== user?._id) : [...post.likes, user?._id || ''],
             }
           : post
       )
     );
   };
 
-  const handleComment = (postId: string) => {
-    console.log('Comentar en post:', postId);
-    // TODO: Implementar modal de comentarios
+  const handleComment = (postId: string, postAuthor: string, postImage?: string) => {
+    setCommentsModal({
+      isOpen: true,
+      postId,
+      postAuthor,
+      postImage
+    });
   };
 
-  const handleShare = (postId: string) => {
-    console.log('Compartir post:', postId);
-    // TODO: Implementar funcionalidad de compartir
+  const handleShare = (postId: string, postUrl?: string, postCaption?: string) => {
+    setShareModal({
+      isOpen: true,
+      postId,
+      postUrl,
+      postCaption
+    });
   };
 
   const handleUserClick = (userId: string) => {
-    console.log('Ver perfil de usuario:', userId);
-    // TODO: Navegar al perfil del usuario
+    router.push(`/${userId}`);
   };
 
   const PlusIcon = () => (
@@ -141,28 +154,28 @@ export default function HomePage() {
           </div>
 
         {/* Stories */}
-        {stories.map((story) => (
-          <div key={story.id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+        {stories.map((userWithStories) => (
+          <div key={userWithStories._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
             <div className="relative p-2">
               <Avatar
-                src={story.avatar}
-                alt={story.username}
+                src={userWithStories.avatar}
+                alt={userWithStories.username}
                 size="xl"
-                fallback={story.fullName || story.username}
+                fallback={userWithStories.fullName || userWithStories.username}
                 interactive
-                ring={story.hasUnviewedStories}
+                ring={true}
                 ringColor="purple"
               />
-              {story.storiesCount > 1 && (
+              {userWithStories.storiesCount > 1 && (
                 <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                   <span className="text-xs font-bold text-gray-700">
-                    {story.storiesCount}
+                    {userWithStories.storiesCount}
                   </span>
                 </div>
               )}
             </div>
             <span className="text-xs text-gray-600 font-medium truncate max-w-16">
-              {story.username}
+              {userWithStories.username}
             </span>
           </div>
         ))}
@@ -173,12 +186,45 @@ export default function HomePage() {
       <div className="space-y-6">
         {posts.map((post) => (
           <PostCard
-            key={post.id}
-            post={post}
+            key={post._id}
+            post={{
+              id: post._id,
+              user: {
+                id: post.user._id,
+                username: post.user.username,
+                ...(post.user.avatar && { avatar: post.user.avatar }),
+                ...(post.user.fullName && { fullName: post.user.fullName }),
+              },
+              content: {
+                type: post.type,
+                url: post.content.images?.[0]?.url || post.content.video?.url || '',
+                ...(post.content.text && { text: post.content.text }),
+              },
+              caption: post.caption,
+              likes: post.likes.length,
+              comments: post.comments.length,
+              isLiked: post.isLiked || false,
+              createdAt: post.createdAt,
+            }}
             onLike={handleLike}
-            onComment={handleComment}
-            onShare={handleShare}
-            onUserClick={handleUserClick}
+            onComment={(postId) => {
+              const post = posts.find(p => p._id === postId);
+              if (post) {
+                handleComment(postId, post.user.username, post.content?.images?.[0]?.url);
+              }
+            }}
+            onShare={(postId) => {
+              const post = posts.find(p => p._id === postId);
+              if (post) {
+                handleShare(postId, `${window.location.origin}/post/${postId}`, post.caption);
+              }
+            }}
+            onUserClick={(userId) => {
+              const post = posts.find(p => p.user._id === userId);
+              if (post) {
+                handleUserClick(post.user._id);
+              }
+            }}
             className="animate-fade-in"
           />
         ))}
@@ -247,6 +293,23 @@ export default function HomePage() {
           </div>
         </Card>
       )}
+
+      {/* Modals */}
+      <CommentsModal
+        isOpen={commentsModal.isOpen}
+        onClose={() => setCommentsModal({ isOpen: false, postId: '', postAuthor: '' })}
+        postId={commentsModal.postId}
+        postAuthor={commentsModal.postAuthor}
+        postImage={commentsModal.postImage}
+      />
+
+      <ShareModal
+        isOpen={shareModal.isOpen}
+        onClose={() => setShareModal({ isOpen: false, postId: '', postUrl: '', postCaption: '' })}
+        postId={shareModal.postId}
+        postUrl={shareModal.postUrl}
+        postCaption={shareModal.postCaption}
+      />
     </div>
   );
 }

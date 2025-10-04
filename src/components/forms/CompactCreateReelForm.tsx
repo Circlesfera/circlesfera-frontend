@@ -13,11 +13,6 @@ const VideoIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const UploadIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-  </svg>
-);
 
 const CloseIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +55,7 @@ interface ReelFormData {
   allowStitches: boolean;
 }
 
-export default function CompactCreateReelForm({ onReelCreated, onClose }: CompactCreateReelFormProps) {
+export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose }: CompactCreateReelFormProps) {
   const { user } = useAuth();
   const [formData, setFormData] = useState<ReelFormData>({
     caption: '',
@@ -144,20 +139,19 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
     setError(null);
 
     try {
-      await createReel(videoFile, {
-        caption: formData.caption,
-        hashtags: formData.hashtags.split(' ').filter(tag => tag.trim()),
-        location: formData.location,
-        audio: {
-          title: formData.audioTitle,
-          artist: formData.audioArtist
-        },
-        settings: {
-          allowComments: formData.allowComments,
-          allowDuets: formData.allowDuets,
-          allowStitches: formData.allowStitches
-        }
-      });
+      // Crear FormData para el reel
+      const reelFormData = new FormData();
+      reelFormData.append('video', videoFile);
+      reelFormData.append('caption', formData.caption);
+      reelFormData.append('hashtags', formData.hashtags);
+      reelFormData.append('location', formData.location);
+      reelFormData.append('audioTitle', formData.audioTitle);
+      reelFormData.append('audioArtist', formData.audioArtist);
+      reelFormData.append('allowComments', formData.allowComments.toString());
+      reelFormData.append('allowDuets', formData.allowDuets.toString());
+      reelFormData.append('allowStitches', formData.allowStitches.toString());
+
+      await createReel(reelFormData);
 
       // Limpiar formulario
       setFormData({

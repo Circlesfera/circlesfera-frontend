@@ -164,11 +164,12 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         await onSave({ avatar: response.user.avatar });
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading avatar:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen';
       setErrors(prev => ({ 
         ...prev, 
-        avatar: error.response?.data?.message || 'Error al subir la imagen' 
+        avatar: errorMessage
       }));
     } finally {
       setAvatarUploading(false);

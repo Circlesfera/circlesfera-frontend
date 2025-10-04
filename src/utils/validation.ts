@@ -5,7 +5,7 @@ export interface ValidationRule {
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
-  custom?: (value: any) => string | null;
+  custom?: (value: unknown) => string | null;
 }
 
 export interface ValidationResult {
@@ -13,7 +13,7 @@ export interface ValidationResult {
   errors: string[];
 }
 
-export const validateField = (value: any, rules: ValidationRule): ValidationResult => {
+export const validateField = (value: unknown, rules: ValidationRule): ValidationResult => {
   const errors: string[] = [];
 
   // Validación requerida
@@ -58,7 +58,7 @@ export const validateField = (value: any, rules: ValidationRule): ValidationResu
   };
 };
 
-export const validateForm = (data: Record<string, any>, rules: Record<string, ValidationRule>): ValidationResult => {
+export const validateForm = (data: Record<string, unknown>, rules: Record<string, ValidationRule>): ValidationResult => {
   const errors: string[] = [];
   let isValid = true;
 

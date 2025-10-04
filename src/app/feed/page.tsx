@@ -7,7 +7,6 @@ import { Post } from '@/services/postService';
 import FeedCard from '@/components/feed/FeedCard';
 import { Card } from '@/design-system/Card';
 import { Button } from '@/design-system/Button';
-import { cn } from '@/utils/cn';
 
 // Iconos SVG
 const RefreshIcon = ({ className }: { className?: string }) => (
@@ -54,7 +53,7 @@ export default function FeedPage() {
         setPosts(response.posts);
       }
       
-      setHasMore(response.hasMore);
+      setHasMore(response.hasMore || false);
       setPage(pageNum);
     } catch (err) {
       console.error('Error fetching feed:', err);
@@ -80,7 +79,7 @@ export default function FeedPage() {
     if (observer.current) observer.current.disconnect();
     
     observer.current = new window.IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
+      if (entries[0]?.isIntersecting && hasMore) {
         setFetchingMore(true);
         fetchFeed(page + 1, true);
       }

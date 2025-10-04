@@ -128,15 +128,15 @@ export default function FeedCard({
 
       {/* Content */}
       <div className="px-4 pb-2">
-        {post.content.caption && (
+        {post.caption && (
           <p className="text-gray-900 text-sm leading-relaxed mb-3">
-            {post.content.caption}
+            {post.caption}
           </p>
         )}
       </div>
 
       {/* Media */}
-      {post.content.images && post.content.images.length > 0 && !imageError && (
+      {post.content.images && post.content.images.length > 0 && post.content.images[0] && !imageError && (
         <div className="relative">
           <img
             src={post.content.images[0].url}
@@ -196,17 +196,12 @@ export default function FeedCard({
       {post.comments.length > 0 && (
         <div className="px-4 pb-4 border-t border-gray-100 pt-3">
           <div className="space-y-2">
-            {post.comments.slice(0, 2).map((comment) => (
-              <div key={comment._id} className="flex items-start gap-2">
+            {post.comments.slice(0, 2).map((commentId, index) => (
+              <div key={commentId || index} className="flex items-start gap-2">
                 <div className="w-6 h-6 bg-gray-300 rounded-full flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm">
-                    <span className="font-semibold text-gray-900">
-                      {comment.user.username}
-                    </span>
-                    <span className="text-gray-700 ml-2">
-                      {comment.content}
-                    </span>
+                  <p className="text-sm text-gray-700">
+                    Comentario #{index + 1}
                   </p>
                 </div>
               </div>

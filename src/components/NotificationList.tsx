@@ -1,14 +1,28 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getNotifications, markNotificationAsRead, Notification } from '@/services/notificationService';
-import { useAuth } from '@/features/auth/useAuth';
+import { getNotifications, markNotificationAsRead } from '@/services/notificationService';
+import type { Notification } from '@/types';
 
 export default function NotificationList() {
-  const { token } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Función para generar el mensaje de notificación basado en el tipo
+  const getNotificationMessage = (notification: Notification): string => {
+    const typeMessages = {
+      like: 'le gustó tu publicación',
+      comment: 'comentó en tu publicación',
+      follow: 'empezó a seguirte',
+      mention: 'te mencionó en un comentario',
+      message: 'te envió un mensaje',
+      story: 'vio tu story',
+      post: 'publicó algo nuevo',
+      reel: 'creó un nuevo reel'
+    };
+    return typeMessages[notification.type] || 'realizó una acción';
+  };
 
   const fetchNotifications = async () => {
     setLoading(true);
@@ -84,7 +98,7 @@ export default function NotificationList() {
           <ul className="flex flex-col gap-4">
             {notifications.map(n => (
               <li key={n._id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
-                n.read 
+                n.isRead 
                   ? 'bg-gray-50 border-gray-200 hover:bg-gray-100' 
                   : 'bg-blue-50 border-blue-200 shadow-sm hover:bg-blue-100'
               }`}>
@@ -92,14 +106,14 @@ export default function NotificationList() {
                   <img src={n.from.avatar} alt="avatar" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0" />
                 ) : (
                   <span className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-sm flex-shrink-0">
-                    {n.from?.username[0].toUpperCase()}
+                    {n.from?.username?.[0]?.toUpperCase()}
                   </span>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <span className="text-sm text-gray-700">
-                        <span className="font-semibold text-gray-900">{n.from?.username}</span> {n.message}
+                        <span className="font-semibold text-gray-900">{n.from?.username}</span> {getNotificationMessage(n)}
                       </span>
                     </div>
                     <span className="text-xs text-gray-400 ml-4 flex-shrink-0">
@@ -111,7 +125,7 @@ export default function NotificationList() {
                       })}
                     </span>
                   </div>
-                  {!n.read && (
+                  {!n.isRead && (
                     <button 
                       onClick={() => handleMarkAsRead(n._id)} 
                       className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-full transition-colors font-medium shadow-sm"

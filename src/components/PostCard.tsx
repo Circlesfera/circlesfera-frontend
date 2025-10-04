@@ -5,10 +5,10 @@ import { Post, updatePost, deletePost, togglePinPost } from '@/services/postServ
 import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
 import LazyImage from './LazyImage';
+import ReportModal from './ReportModal';
 
 // Iconos SVG modernos
 
@@ -49,7 +49,21 @@ const TagIcon = () => (
   </svg>
 );
 
-export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDeleted?: (postId: string) => void }) {
+interface PostCardProps {
+  post: Post;
+  onPostDeleted?: (postId: string) => void;
+  onComment?: (postId: string, postAuthor: string, postImage?: string) => void;
+  onShare?: (postId: string, postUrl?: string, postCaption?: string) => void;
+  onUserClick?: (userId: string) => void;
+}
+
+export default function PostCard({ 
+  post, 
+  onPostDeleted, 
+  onComment,
+  onShare,
+  onUserClick 
+}: PostCardProps) {
   const { user } = useAuth();
   const likedByUser = post.likes.includes(user?._id || '');
   const [isSaved, setIsSaved] = useState(false);
@@ -63,6 +77,7 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
   const [isPinned, setIsPinned] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
   
@@ -115,6 +130,20 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showMore]);
+
+  // Función para reportar post
+  const handleReportPost = async (reason: string, description?: string) => {
+    try {
+      // TODO: Implementar endpoint de reporte en el backend
+      console.log('Reportando post:', { postId: post._id, reason, description });
+      // Simular llamada a API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setShowReportModal(false);
+    } catch (error) {
+      console.error('Error al reportar post:', error);
+      throw error;
+    }
+  };
 
   // Función para editar post
   const handleEditPost = async () => {
@@ -298,7 +327,10 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
       {/* Header del usuario */}
       <div className="flex items-center justify-between px-6 py-1">
         <div className="flex items-center space-x-3">
-          <Link href={`/${post.user.username}`} className="group">
+          <button 
+            onClick={() => onUserClick?.(post.user._id)}
+            className="group"
+          >
             {post.user.avatar ? (
               <LazyImage 
                 src={post.user.avatar || ''} 
@@ -310,12 +342,15 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
                 {post.user.username?.[0]?.toUpperCase() || 'U'}
               </div>
             )}
-          </Link>
+          </button>
           <div className="flex flex-col">
             <div className="flex items-center space-x-2">
-              <Link href={`/${post.user.username}`} className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors">
+              <button 
+                onClick={() => onUserClick?.(post.user._id)}
+                className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors"
+              >
                 {post.user.username}
-              </Link>
+              </button>
               {isPinned && (
                 <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M5 15l7-7 7 7" />
@@ -394,7 +429,7 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
                 <button
                   onClick={() => {
                     setShowMore(false);
-                    // TODO: Implementar reportar post
+                    setShowReportModal(true);
                   }}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                 >
@@ -418,11 +453,17 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
           <div className="flex items-center space-x-4">
             <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
             
-            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105">
+            <button 
+              onClick={() => onComment?.(post._id, post.user.username, post.content?.images?.[0]?.url)}
+              className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105"
+            >
               <CommentIcon />
             </button>
             
-            <button className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105">
+            <button 
+              onClick={() => onShare?.(post._id, `${window.location.origin}/post/${post._id}`, post.caption)}
+              className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105"
+            >
               <ShareIcon />
             </button>
           </div>
@@ -555,6 +596,14 @@ export default function PostCard({ post, onPostDeleted }: { post: Post; onPostDe
           {error}
         </div>
       )}
+
+      {/* Report Modal */}
+      <ReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        postId={post._id}
+        onReport={handleReportPost}
+      />
     </motion.div>
   );
 }

@@ -35,7 +35,7 @@ const LazyComponent: React.FC<LazyComponentProps> = ({
   className,
 }) => {
   return (
-    <Suspense fallback={fallback || <DefaultFallback minHeight={minHeight} className={className} />}>
+    <Suspense fallback={fallback || <DefaultFallback {...(minHeight && { minHeight })} {...(className && { className })} />}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -55,11 +55,15 @@ export const createLazyComponent = <P extends object>(
 ) => {
   const LazyComponent = lazy(importFunc);
   
-  return React.forwardRef<any, P>((props, ref) => (
+  const ForwardedComponent = React.forwardRef<HTMLElement, P>((props, ref) => (
     <Suspense fallback={fallback || <DefaultFallback />}>
       <LazyComponent {...props} ref={ref} />
     </Suspense>
   ));
+  
+  ForwardedComponent.displayName = `LazyComponent(Component)`;
+  
+  return ForwardedComponent;
 };
 
 // Componentes lazy predefinidos

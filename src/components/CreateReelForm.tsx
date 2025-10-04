@@ -90,7 +90,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
-    if (files.length > 0) {
+    if (files.length > 0 && files[0]) {
       handleVideoSelect(files[0]);
     }
   }, [handleVideoSelect]);

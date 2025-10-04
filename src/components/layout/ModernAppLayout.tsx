@@ -73,22 +73,34 @@ const ModernAppLayout: React.FC<ModernAppLayoutProps> = ({ children }) => {
     );
   }
 
+  // Transformar el usuario para que coincida con los tipos esperados
+  const transformedUser = user ? {
+    id: user._id,
+    username: user.username,
+    ...(user.avatar && { avatar: user.avatar }),
+    ...(user.fullName && { fullName: user.fullName })
+  } : undefined;
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar para desktop */}
-      <Sidebar
-        user={user}
-        items={sidebarItems}
-        onLogout={handleLogout}
-        className="hidden lg:flex"
-      />
+      {transformedUser && (
+        <Sidebar
+          user={transformedUser}
+          items={sidebarItems}
+          onLogout={handleLogout}
+          className="hidden lg:flex"
+        />
+      )}
 
       {/* Header */}
-      <Header
-        user={user}
-        onSearch={handleSearch}
-        onLogout={handleLogout}
-      />
+      {transformedUser && (
+        <Header
+          user={transformedUser}
+          onSearch={handleSearch}
+          onLogout={handleLogout}
+        />
+      )}
 
       {/* Main content */}
       <main

@@ -36,88 +36,91 @@ export default function ProfileHeader({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-      <div className="flex flex-col md:flex-row items-start gap-8">
-        {/* Avatar Section */}
+    <div className="bg-white rounded-none sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
+        {/* Avatar Section - Optimizado para móvil */}
         <div className="flex-shrink-0 relative">
           <div className="relative">
             {user.avatar && !imageError ? (
               <img 
                 src={user.avatar} 
                 alt={`Avatar de ${user.username}`}
-                className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform hover:scale-105" 
+                className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform hover:scale-105" 
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold border-4 border-white shadow-lg">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-3xl sm:text-4xl lg:text-5xl font-bold border-4 border-white shadow-lg">
                 {user.username?.[0]?.toUpperCase() || '?'}
               </div>
             )}
             
             {/* Verified Badge */}
             {user.isVerified && (
-              <div className="absolute -bottom-2 -right-2 bg-blue-500 rounded-full p-2 shadow-lg">
-                <VerifiedIcon className="w-4 h-4 text-white" />
+              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-blue-500 rounded-full p-1.5 sm:p-2 shadow-lg">
+                <VerifiedIcon className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </div>
             )}
           </div>
         </div>
 
-        {/* Profile Information */}
-        <div className="flex-1 min-w-0">
+        {/* Profile Information - Optimizado para móvil */}
+        <div className="flex-1 min-w-0 w-full sm:w-auto">
           {/* Username and Actions */}
-          <div className="flex items-center gap-4 mb-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-bold text-gray-900">{user.username}</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
+            <div className="flex items-center gap-2 justify-center sm:justify-start">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{user.username}</h1>
               {user.isVerified && (
-                <VerifiedIcon className="w-6 h-6 text-blue-500" />
+                <VerifiedIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
               )}
             </div>
             
-            {!isOwnProfile && followButton}
-            
-            {isOwnProfile && (
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={onEditClick}
-                  className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 text-sm font-semibold border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
-                >
-                  <EditIcon className="w-4 h-4" />
-                  Editar perfil
-                </button>
-                <Link 
-                  href="/settings" 
-                  className="p-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
-                  title="Configuración"
-                >
-                  <SettingsIcon className="w-5 h-5" />
-                </Link>
-              </div>
-            )}
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              {!isOwnProfile && followButton}
+              
+              {isOwnProfile && (
+                <>
+                  <button 
+                    onClick={onEditClick}
+                    className="px-3 sm:px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-semibold border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1 sm:gap-2"
+                  >
+                    <EditIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Editar perfil</span>
+                    <span className="sm:hidden">Editar</span>
+                  </button>
+                  <Link 
+                    href="/settings" 
+                    className="p-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                    title="Configuración"
+                  >
+                    <SettingsIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Personal Information */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6 text-center sm:text-left">
             {user.fullName && (
-              <div className="font-semibold text-gray-900 mb-2 text-lg">{user.fullName}</div>
+              <div className="font-semibold text-gray-900 mb-2 text-base sm:text-lg">{user.fullName}</div>
             )}
             {user.bio && (
-              <div className="text-gray-700 mb-2 break-words leading-relaxed">{user.bio}</div>
+              <div className="text-gray-700 mb-2 break-words leading-relaxed text-sm sm:text-base">{user.bio}</div>
             )}
             {user.website && (
               <a 
                 href={user.website.startsWith('http') ? user.website : `https://${user.website}`}
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+                className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 text-sm sm:text-base"
               >
                 {user.website}
               </a>
             )}
           </div>
 
-          {/* Statistics Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+          {/* Statistics Grid - Optimizado para móvil */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
             <StatCard 
               icon="posts" 
               count={stats.posts} 
@@ -140,8 +143,8 @@ export default function ProfileHeader({
             />
           </div>
 
-          {/* Followers and Following */}
-          <div className="flex gap-8 text-base font-medium">
+          {/* Followers and Following - Optimizado para móvil */}
+          <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-6 lg:gap-8 text-sm sm:text-base font-medium">
             <button 
               className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600" 
               onClick={onFollowersClick}
@@ -205,13 +208,13 @@ function StatCard({ icon, count, label }: StatCardProps) {
 
   return (
     <div className="text-center group">
-      <div className="flex items-center justify-center mb-2 text-gray-600 group-hover:text-blue-600 transition-colors duration-200">
+      <div className="flex items-center justify-center mb-1 sm:mb-2 text-gray-600 group-hover:text-blue-600 transition-colors duration-200">
         {getIcon()}
       </div>
-      <div className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+      <div className="font-bold text-lg sm:text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
         {formatNumber(count)}
       </div>
-      <div className="text-sm text-gray-600">{label}</div>
+      <div className="text-xs sm:text-sm text-gray-600">{label}</div>
     </div>
   );
 }

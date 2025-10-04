@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { followUser, unfollowUser, muteUser, restrictUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
+import { useNotifications } from '@/hooks/useNotifications';
 import Button from '@/design-system/components/Button';
 
 export default function FollowButton({
@@ -15,6 +16,7 @@ export default function FollowButton({
   onChange?: (following: boolean) => void;
 }) {
   const { user } = useAuth();
+  const { success, error: showError } = useNotifications();
   const [following, setFollowing] = useState(initialFollowing);
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -68,13 +70,10 @@ export default function FollowButton({
       await followUser(userId);
       setFollowing(true);
       onChange?.(true);
-    } catch (error: any) {
-      // Solo logear errores críticos
-      if (error.response?.status >= 500) {
-        console.error('Error en follow:', error);
-      }
-      
-      // No cambiar el estado en caso de error
+      success('¡Usuario seguido!', 'Ahora verás sus publicaciones en tu feed');
+    } catch (error: unknown) {
+      console.error('Error al seguir usuario:', error);
+      showError('Error al seguir', 'No se pudo seguir al usuario. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -90,13 +89,10 @@ export default function FollowButton({
       await unfollowUser(userId);
       setFollowing(false);
       onChange?.(false);
-    } catch (error: any) {
-      // Solo logear errores críticos
-      if (error.response?.status >= 500) {
-        console.error('Error en unfollow:', error);
-      }
-      
-      // No cambiar el estado en caso de error
+      success('Usuario dejado de seguir', 'Ya no verás sus publicaciones en tu feed');
+    } catch (error: unknown) {
+      console.error('Error al dejar de seguir usuario:', error);
+      showError('Error al dejar de seguir', 'No se pudo dejar de seguir al usuario. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -106,11 +102,10 @@ export default function FollowButton({
     try {
       await muteUser(userId);
       setShowMenu(false);
-      // TODO: Mostrar notificación de éxito
-      console.log('Usuario silenciado exitosamente');
-    } catch (error: any) {
+      success('Usuario silenciado', 'No verás más sus publicaciones en tu feed');
+    } catch (error: unknown) {
       console.error('Error al silenciar usuario:', error);
-      // TODO: Mostrar notificación de error
+      showError('Error al silenciar', 'No se pudo silenciar al usuario. Inténtalo de nuevo.');
     }
   };
 
@@ -118,11 +113,10 @@ export default function FollowButton({
     try {
       await restrictUser(userId);
       setShowMenu(false);
-      // TODO: Mostrar notificación de éxito
-      console.log('Usuario restringido exitosamente');
-    } catch (error: any) {
+      success('Usuario restringido', 'Sus comentarios serán ocultados para ti');
+    } catch (error: unknown) {
       console.error('Error al restringir usuario:', error);
-      // TODO: Mostrar notificación de error
+      showError('Error al restringir', 'No se pudo restringir al usuario. Inténtalo de nuevo.');
     }
   };
 

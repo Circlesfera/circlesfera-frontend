@@ -175,10 +175,10 @@ export const designTokens = {
 // Utilidades para acceder a los tokens
 export const getColor = (colorPath: string) => {
   const keys = colorPath.split('.');
-  let value: any = designTokens.colors;
+  let value: Record<string, unknown> = designTokens.colors;
   
   for (const key of keys) {
-    value = value?.[key];
+    value = value?.[key] as Record<string, unknown>;
   }
   
   return value || colorPath;

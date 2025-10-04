@@ -118,14 +118,14 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
     setError('');
 
     try {
-      let story: Story;
+      let response;
 
       if (storyType === 'text') {
         if (!text.trim()) {
           setError('Por favor escribe algún texto');
           return;
         }
-        story = await createTextStory(text, textColor, backgroundColor);
+        response = await createTextStory(text, undefined, undefined, backgroundColor, textColor);
       } else {
         if (!file) {
           setError(`Por favor selecciona un ${storyType === 'image' ? 'imagen' : 'video'}`);
@@ -133,10 +133,15 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
         }
 
         if (storyType === 'image') {
-          story = await createImageStory(file, text);
+          response = await createImageStory(file, text);
         } else {
-          story = await createVideoStory(file, text);
+          response = await createVideoStory(file, text);
         }
+      }
+
+      if (!response.success || !response.story) {
+        setError('Error al crear la story');
+        return;
       }
 
       // Limpiar formulario
@@ -147,7 +152,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
       setTextColor('#ffffff');
       setBackgroundColor('#000000');
       
-      onStoryCreated?.(story);
+      onStoryCreated?.(response.story);
       onClose?.();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };

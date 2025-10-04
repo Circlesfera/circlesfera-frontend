@@ -2,13 +2,12 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
-import { getFollowers, getFollowing, UserProfile, UserSuggestion } from '@/services/userService';
+import { getFollowers, getFollowing, UserProfile, UserSuggestion, updateUserProfile } from '@/services/userService';
 import { User } from '@/types';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
 import ModernProfileHeader from '@/components/profile/ModernProfileHeader';
-import ModernProfileInfo from '@/components/profile/ModernProfileInfo';
 import ModernProfileTabs from '@/components/profile/ModernProfileTabs';
 
 
@@ -123,7 +122,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         setIsFollowingProfile(isFollowing);
       }
     }
-  }, [profileData?.isFollowing, profileData?._id, isOwnProfile, isFollowingProfile]);
+  }, [profileData?.isFollowing, profileData?._id, profileData, user, isOwnProfile, isFollowingProfile]);
 
       const reloadProfile = useCallback(async () => {
       try {
@@ -262,23 +261,30 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           ) : undefined}
         />
 
-        {/* Información adicional del perfil moderno */}
-        <ModernProfileInfo 
-          user={convertToUser(profileData)} 
-          isOwnProfile={isOwnProfile || false} 
-        />
 
         {/* Edición de perfil */}
         {isOwnProfile && showEdit && (
           <div className="mb-6">
-            <div className="relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-purple-50/50"></div>
-              <div className="relative bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/40 p-4 sm:p-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-purple-50/20 rounded-xl"></div>
+              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
                 <EditProfileForm 
                   profile={profileData} 
-                  onSave={async () => { 
-                    setShowEdit(false); 
-                    await reloadProfile(); 
+                  onSave={async (updatedData) => { 
+                    try {
+                      // Actualizar el perfil usando el servicio
+                      await updateUserProfile(updatedData);
+                      // Actualizar el estado local
+                      setProfileData(prev => ({ ...prev, ...updatedData }));
+                      // Cerrar el modal
+                      setShowEdit(false); 
+                      // Recargar el perfil desde el servidor
+                      await reloadProfile();
+                    } catch (error) {
+                      console.error('Error guardando perfil:', error);
+                      // Mostrar error al usuario
+                      alert('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
+                    }
                   }} 
                   onCancel={() => setShowEdit(false)} 
                 />

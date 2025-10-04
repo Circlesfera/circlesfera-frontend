@@ -73,6 +73,7 @@ export interface GetReelsResponse {
     total: number;
     pages: number;
   };
+  hasMore?: boolean;
 }
 
 export interface GetReelResponse {
@@ -201,7 +202,7 @@ export const searchReelsByHashtag = async (hashtag: string, page: number = 1, li
   try {
     const response = await api.get(`/reels/search/hashtag/${hashtag}?page=${page}&limit=${limit}`);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error searching reels by hashtag:', error);
     throw error;
   }
@@ -212,7 +213,7 @@ export const getTrendingReels = async (timeFrame: 'week' | 'month' = 'week', lim
   try {
     const response = await api.get(`/reels/trending?timeFrame=${timeFrame}&limit=${limit}`);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching trending reels:', error);
     throw error;
   }

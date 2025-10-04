@@ -1,5 +1,6 @@
 import api from './axios';
 import { Post } from './postService';
+import type { Story } from '@/types';
 
 export interface User {
   _id: string;
@@ -60,7 +61,7 @@ export interface UserProfile {
   followers: string[];
   following: string[];
   posts: Post[];
-  stories?: any[];
+  stories?: Story[];
   followersCount?: number;
   followingCount?: number;
   postsCount?: number;
@@ -80,10 +81,13 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
   try {
     const res = await api.put('/auth/profile', userData);
     return res.data.user;
-  } catch (error: any) {
-    console.error('Error en updateUserProfile:', error.response?.data || error.message);
-    if (error.response?.data?.errors) {
-      console.error('Errores de validación:', error.response.data.errors);
+  } catch (error: unknown) {
+    console.error('Error en updateUserProfile:', (error as Error)?.message || 'Error desconocido');
+    if (error && typeof error === 'object' && 'response' in error) {
+      const apiError = error as { response?: { data?: { errors?: string[] } } };
+      if (apiError.response?.data?.errors) {
+        console.error('Errores de validación:', apiError.response.data.errors);
+      }
     }
     throw error;
   }

@@ -236,28 +236,27 @@ body {
 
 /* Efectos de hover */
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  @apply transition-all duration-300 ease-in-out;
 }
 
 .hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
+  @apply -translate-y-1 shadow-xl;
 }
 
 .hover-scale {
-  transition: transform 0.3s ease;
+  @apply transition-transform duration-300 ease-in-out;
 }
 
 .hover-scale:hover {
-  transform: scale(1.05);
+  @apply scale-105;
 }
 
 .hover-glow {
-  transition: all 0.3s ease;
+  @apply transition-all duration-300 ease-in-out;
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  @apply shadow-lg;
 }
 
 /* Gradientes de texto */
@@ -277,15 +276,11 @@ body {
 
 /* Efectos de glassmorphism */
 .glass {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  @apply bg-white/25 backdrop-blur-md border border-white/20;
 }
 
 .glass-dark {
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply bg-black/25 backdrop-blur-md border border-white/10;
 }
 
 /* Utilidades de scrollbar */
@@ -300,35 +295,33 @@ body {
 
 /* Efectos de focus */
 .focus-ring {
-  transition: all 0.3s ease;
+  @apply transition-all duration-300 ease-in-out;
 }
 
 .focus-ring:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  @apply outline-none ring-2 ring-blue-500/10;
 }
 
 /* Transiciones suaves */
 .transition-smooth {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply transition-all duration-300 ease-out;
 }
 
 .transition-fast {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply transition-all duration-150 ease-out;
 }
 
 .transition-slow {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply transition-all duration-500 ease-out;
 }
 
 /* Efectos de sombra dinámica */
 .shadow-dynamic {
-  box-shadow: var(--shadow-base);
-  transition: box-shadow 0.3s ease;
+  @apply shadow-sm transition-shadow duration-300 ease-in-out;
 }
 
 .shadow-dynamic:hover {
-  box-shadow: var(--shadow-lg);
+  @apply shadow-lg;
 }
 
 /* Efectos de enlace */
@@ -350,6 +343,70 @@ body {
 
 .link-hover:hover::after {
   width: 100%;
+}
+
+/* Componentes del sistema de diseño */
+.input-modern {
+  @apply w-full px-4 py-3 text-sm leading-5 text-gray-900 border border-gray-300 rounded-lg bg-white transition-all duration-150 ease-in-out;
+}
+
+.input-modern:focus {
+  @apply outline-none ring-2 ring-blue-500 border-blue-500;
+}
+
+.input-modern::placeholder {
+  @apply text-gray-400 text-sm;
+}
+
+.input-modern:disabled {
+  @apply bg-gray-50 text-gray-500 cursor-not-allowed;
+}
+
+
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium px-6 py-3 rounded-lg transition-all duration-150 ease-in-out shadow-sm;
+}
+
+.btn-primary:hover {
+  @apply bg-gradient-to-r from-blue-700 to-purple-700 shadow-md;
+}
+
+.btn-primary:focus {
+  @apply outline-none ring-2 ring-blue-500;
+}
+
+.btn-primary:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.btn-primary:disabled:hover {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 shadow-sm;
+}
+
+.btn-ghost {
+  @apply text-gray-700 font-medium px-4 py-2 rounded-lg transition-all duration-150 ease-in-out;
+}
+
+.btn-ghost:hover {
+  @apply bg-gray-100;
+}
+
+.btn-ghost:focus {
+  @apply outline-none ring-2 ring-gray-400;
+}
+
+.btn-ghost:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.spinner {
+  @apply animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive utilities */

@@ -99,7 +99,7 @@ export default function UserSuggestions() {
                   />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-sm border border-gray-200">
-                    {suggestion.username[0].toUpperCase()}
+                    {suggestion?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                 )}
               </div>

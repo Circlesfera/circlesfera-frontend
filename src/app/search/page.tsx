@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { searchUsers } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -16,10 +17,10 @@ interface SearchResult {
   isFollowing?: boolean;
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
-  const { user } = useAuth();
+  const { user: _user } = useAuth(); // Mantenido para futuras funcionalidades
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -80,7 +81,7 @@ export default function SearchPage() {
               Resultados de búsqueda
             </h1>
             <p className="text-gray-600">
-              Buscando: <span className="font-semibold text-gray-900">"{query}"</span>
+              Buscando: <span className="font-semibold text-gray-900">&quot;{query}&quot;</span>
             </p>
           </div>
 
@@ -118,7 +119,7 @@ export default function SearchPage() {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No se encontraron resultados</h3>
               <p className="text-gray-600">
-                No se encontraron usuarios que coincidan con "{query}"
+                No se encontraron usuarios que coincidan con &quot;{query}&quot;
               </p>
             </div>
           ) : (
@@ -135,14 +136,16 @@ export default function SearchPage() {
                 >
                   <div className="flex items-center space-x-4">
                     {user.avatar ? (
-                      <img 
+                      <Image 
                         src={user.avatar} 
                         alt="avatar" 
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover" 
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-                        {user.username[0].toUpperCase()}
+                        {user.username?.[0]?.toUpperCase() || 'U'}
                       </div>
                     )}
                     
@@ -184,5 +187,20 @@ export default function SearchPage() {
         </div>
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando búsqueda...</p>
+        </div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import { ThemeProvider } from '@/features/theme/ThemeContext';
 import AppLayout from '@/components/layout/AppLayout';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,13 +37,15 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
       </head>
       <body className="antialiased">
-        <ThemeProvider>
-          <AuthProvider>
-            <AppLayout>
-              {children}
-            </AppLayout>
-          </AuthProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider>
+            <AuthProvider>
+              <AppLayout>
+                {children}
+              </AppLayout>
+            </AuthProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

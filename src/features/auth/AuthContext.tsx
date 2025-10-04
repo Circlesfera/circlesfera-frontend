@@ -93,10 +93,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         throw new Error(res.data.message || 'Error en el login');
       }
-    } catch (error: any) {
+    } catch (error) {
       // Si hay error de autenticación, limpiar tokens
-      if (error?.response?.status === 401) {
-        clearInvalidTokens();
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status?: number } };
+        if (axiosError.response?.status === 401) {
+          clearInvalidTokens();
+        }
       }
       throw error;
     } finally {
@@ -110,10 +113,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await api.post('/auth/register', { username, email, password });
       // Login automático tras registro
       await login(email, password);
-    } catch (error: any) {
+    } catch (error) {
       // Si hay error de autenticación, limpiar tokens
-      if (error?.response?.status === 401) {
-        clearInvalidTokens();
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status?: number } };
+        if (axiosError.response?.status === 401) {
+          clearInvalidTokens();
+        }
       }
       throw error;
     } finally {

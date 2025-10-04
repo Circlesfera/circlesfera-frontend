@@ -175,14 +175,14 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         setHasMoreReels(response.reels.length === 12);
         setReelsPage(page);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error loading reels:', error);
       console.error('❌ Error details:', {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        method: error.config?.method
+        message: error instanceof Error ? error.message : 'Unknown error',
+        status: error && typeof error === 'object' && 'response' in error ? (error as { response?: { status?: number } }).response?.status : undefined,
+        statusText: error && typeof error === 'object' && 'response' in error ? (error as { response?: { statusText?: string } }).response?.statusText : undefined,
+        url: error && typeof error === 'object' && 'config' in error ? (error as { config?: { url?: string } }).config?.url : undefined,
+        method: error && typeof error === 'object' && 'config' in error ? (error as { config?: { method?: string } }).config?.method : undefined
       });
       // No propagar el error, solo establecer reels vacío
       if (!append) {

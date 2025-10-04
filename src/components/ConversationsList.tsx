@@ -121,17 +121,17 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-200 bg-white">
-        <div className="flex items-center justify-between mb-6">
+      {/* Header - Optimizado para móvil */}
+      <div className="p-4 sm:p-6 border-b border-gray-200 bg-white">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">Conversaciones</h2>
-            <p className="text-sm text-gray-500">Gestiona tus chats y mensajes</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Conversaciones</h2>
+            <p className="text-xs sm:text-sm text-gray-500">Gestiona tus chats y mensajes</p>
           </div>
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setFilter(filter === 'all' ? 'unread' : filter === 'unread' ? 'groups' : 'all')}
-              className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-gray-800"
+              className="p-2 sm:p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-gray-800"
               title={filter === 'all' ? 'Mostrar no leídos' : filter === 'unread' ? 'Mostrar grupos' : 'Mostrar todos'}
             >
               <FilterIcon />
@@ -139,7 +139,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             {onCreateNew && (
               <button
                 onClick={onCreateNew}
-                className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
                 title="Nueva conversación"
               >
                 <PlusIcon />
@@ -148,9 +148,9 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
           </div>
         </div>
         
-        {/* Barra de búsqueda */}
+        {/* Barra de búsqueda - Optimizada para móvil */}
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <SearchIcon />
           </div>
           <input
@@ -158,7 +158,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             placeholder="Buscar conversaciones..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white shadow-sm"
+            className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white shadow-sm"
           />
         </div>
       </div>
@@ -217,9 +217,9 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                     }`}
                     onClick={() => onSelect(conversation)}
                   >
-                    {/* Avatar */}
-                    <div className="relative">
-                      <div className="w-12 h-12 rounded-full overflow-hidden">
+                    {/* Avatar - Optimizado para móvil */}
+                    <div className="relative flex-shrink-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden">
                         {getConversationAvatar(conversation) ? (
                           <img 
                             src={getConversationAvatar(conversation)} 
@@ -227,7 +227,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                             className="w-full h-full object-cover" 
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-lg">
+                          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm sm:text-lg">
                             {getConversationInitials(conversation)}
                           </div>
                         )}
@@ -235,34 +235,34 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                       
                       {/* Indicador de grupo */}
                       {conversation.type === 'group' && (
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center">
                           <GroupIcon />
                         </div>
                       )}
                       
                       {/* Indicador de no leídos */}
                       {conversation.unreadCount > 0 && (
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
                         </div>
                       )}
                     </div>
 
-                    {/* Información de la conversación */}
+                    {/* Información de la conversación - Optimizada para móvil */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-900 truncate">
+                        <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base">
                           {getConversationName(conversation)}
                         </h3>
                         {conversation.lastMessage && (
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                             {formatTimeAgo(conversation.lastMessage.createdAt)}
                           </span>
                         )}
                       </div>
                       
                       {conversation.lastMessage && (
-                        <p className="text-sm text-gray-600 truncate mt-1">
+                        <p className="text-xs sm:text-sm text-gray-600 truncate mt-1">
                           {conversation.lastMessage.type === 'text' 
                             ? conversation.lastMessage.content.text
                             : conversation.lastMessage.type === 'image'

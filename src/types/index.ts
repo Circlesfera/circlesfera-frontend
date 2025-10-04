@@ -59,6 +59,7 @@ export interface Post {
   content: {
     images?: MediaFile[];
     video?: MediaFile;
+    text?: string;
   };
   caption?: string;
   location?: {
@@ -68,10 +69,7 @@ export interface Post {
       coordinates: number[];
     };
   };
-  likes: Array<{
-    user: string;
-    createdAt: string;
-  }>;
+  likes: string[];
   comments: Comment[];
   shares: Array<{
     user: string;
@@ -84,6 +82,7 @@ export interface Post {
   isPublic: boolean;
   isArchived: boolean;
   isDeleted: boolean;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -280,7 +279,7 @@ export interface Message {
 }
 
 // Tipos para respuestas de API
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
@@ -348,7 +347,7 @@ export interface AuthContextType {
 }
 
 // Tipos para hooks
-export interface UseAuthReturn extends AuthContextType {}
+export type UseAuthReturn = AuthContextType;
 
 // Tipos para componentes
 export interface ComponentProps {
@@ -458,14 +457,14 @@ export interface AppConfig {
 export interface AppError {
   code: string;
   message: string;
-  details?: any;
+  details?: Record<string, unknown>;
   timestamp: string;
 }
 
 // Tipos para eventos
 export interface AppEvent {
   type: string;
-  payload: any;
+  payload: Record<string, unknown>;
   timestamp: string;
   userId?: string;
 }

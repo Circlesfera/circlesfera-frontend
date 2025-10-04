@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/features/auth/useAuth';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels } from '@/services/reelService';
 import { getUserStories } from '@/services/storyService';
@@ -25,7 +24,6 @@ interface TabData {
 }
 
 export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps) {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('posts');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,46 +78,46 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
     setError(null);
 
     try {
-      let newContent: any[] = [];
+      let newContent: (Post | Reel | Story)[] = [];
       let hasMore = false;
 
       switch (type) {
         case 'posts':
           const postsData = await getUserPosts(username, page, 12);
-          newContent = postsData.posts || [];
-          hasMore = postsData.hasMore || false;
-          setContentCounts(prev => ({ ...prev, posts: postsData.total || 0 }));
+          newContent = Array.isArray(postsData?.posts) ? postsData.posts : [];
+          hasMore = postsData?.hasMore || false;
+          setContentCounts(prev => ({ ...prev, posts: postsData?.pagination?.total || newContent.length }));
           break;
         case 'reels':
           const reelsData = await getUserReels(username, page, 12);
-          newContent = reelsData.reels || [];
-          hasMore = reelsData.hasMore || false;
-          setContentCounts(prev => ({ ...prev, reels: reelsData.total || 0 }));
+          newContent = Array.isArray(reelsData?.reels) ? reelsData.reels : [];
+          hasMore = reelsData?.hasMore || false;
+          setContentCounts(prev => ({ ...prev, reels: reelsData?.pagination?.total || newContent.length }));
           break;
         case 'stories':
           const storiesData = await getUserStories(username);
-          newContent = storiesData || [];
-          setContentCounts(prev => ({ ...prev, stories: storiesData.length || 0 }));
+          newContent = Array.isArray(storiesData) ? storiesData : [];
+          setContentCounts(prev => ({ ...prev, stories: Array.isArray(storiesData) ? storiesData.length : 0 }));
           break;
       }
 
       if (append) {
         if (type === 'posts') {
-          setPosts(prev => [...prev, ...newContent]);
+          setPosts(prev => [...prev, ...(newContent as Post[])]);
           setHasMorePosts(hasMore);
         } else if (type === 'reels') {
-          setReels(prev => [...prev, ...newContent]);
+          setReels(prev => [...prev, ...(newContent as Reel[])]);
           setHasMoreReels(hasMore);
         }
       } else {
         if (type === 'posts') {
-          setPosts(newContent);
+          setPosts(newContent as Post[]);
           setHasMorePosts(hasMore);
         } else if (type === 'reels') {
-          setReels(newContent);
+          setReels(newContent as Reel[]);
           setHasMoreReels(hasMore);
         } else if (type === 'stories') {
-          setStories(newContent);
+          setStories(newContent as Story[]);
         }
       }
     } catch (err) {
@@ -203,19 +201,22 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
     const currentContent = activeTab === 'posts' ? posts : activeTab === 'reels' ? reels : stories;
     const hasMore = activeTab === 'posts' ? hasMorePosts : activeTab === 'reels' ? hasMoreReels : false;
 
-    if (currentContent.length === 0) {
+    // Asegurar que currentContent siempre sea un array
+    const safeCurrentContent = Array.isArray(currentContent) ? currentContent : [];
+
+    if (safeCurrentContent.length === 0) {
       return <EmptyState tabType={activeTab} isOwnProfile={isOwnProfile} />;
     }
 
     return (
-      <div className="p-6">
-        <ContentGrid content={currentContent} type={activeTab} />
+      <div className="p-3 sm:p-4 lg:p-6">
+        <ContentGrid content={safeCurrentContent} type={activeTab} />
         {hasMore && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-6 sm:mt-8">
             <button 
               onClick={handleLoadMore}
               disabled={loading}
-              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>
@@ -226,7 +227,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-none sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       {/* Pestañas */}
       <div className="border-b border-gray-200">
         <div className="flex">
@@ -234,15 +235,18 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 text-sm font-medium transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-all duration-200 ${
                 activeTab === tab.id
                   ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               {tab.icon}
-              <span>{tab.label}</span>
-              <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-xs">
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">
+                {tab.id === 'posts' ? 'Posts' : tab.id === 'reels' ? 'Reels' : 'Stories'}
+              </span>
+              <span className="bg-gray-200 text-gray-600 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
                 {formatNumber(tab.count)}
               </span>
             </button>
@@ -323,14 +327,17 @@ function EmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnProfile:
 }
 
 // Componente para la cuadrícula de contenido
-function ContentGrid({ content, type }: { content: any[]; type: TabType }) {
+function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type: TabType }) {
+  // Asegurar que content siempre sea un array
+  const safeContent = Array.isArray(content) ? content : [];
+
   if (type === 'stories') {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {content.map((story) => (
-          <div key={story._id} className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
+        {safeContent.map((story) => (
+          <div key={story._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer">
             <img 
-              src={story.content.images?.[0]?.url || ''} 
+              src={(story as Story).content?.image?.url || ''} 
               alt="Story"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             />
@@ -342,18 +349,18 @@ function ContentGrid({ content, type }: { content: any[]; type: TabType }) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {content.map((item) => (
-        <div key={item._id} className="aspect-square rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+      {safeContent.map((item) => (
+        <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
           {type === 'posts' ? (
             <img 
-              src={item.content.images?.[0]?.url || ''} 
+              src={(item as Post).content?.images?.[0]?.url || ''} 
               alt="Post"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             />
           ) : (
             <video 
-              src={item.content.video?.url || ''}
+              src={(item as Reel).video?.url || ''}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               muted
             />
@@ -368,10 +375,10 @@ function ContentGrid({ content, type }: { content: any[]; type: TabType }) {
 // Componente para el skeleton de carga
 function ContentSkeleton() {
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="p-3 sm:p-4 lg:p-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
         {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="aspect-square rounded-2xl bg-gray-200 animate-pulse" />
+          <div key={index} className="aspect-square rounded-xl sm:rounded-2xl bg-gray-200 animate-pulse" />
         ))}
       </div>
     </div>

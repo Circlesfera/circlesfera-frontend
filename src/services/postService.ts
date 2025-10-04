@@ -8,6 +8,7 @@ export interface Post {
     username: string;
     avatar?: string;
     fullName?: string;
+    isVerified?: boolean;
   };
   type: 'image' | 'video' | 'text';
   content: {
@@ -42,6 +43,7 @@ export interface Post {
   isPublic: boolean;
   isArchived: boolean;
   isDeleted: boolean;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -74,6 +76,7 @@ export interface FeedResponse {
     total: number;
     pages: number;
   };
+  hasMore?: boolean;
 }
 
 export interface PostResponse {
@@ -94,6 +97,13 @@ export const getFeed = async (page = 1, limit = 10): Promise<FeedResponse> => {
     params: { page, limit },
   });
   return res.data;
+};
+
+// Alias para getFeedPosts (para compatibilidad)
+export const getFeedPosts = async (options?: { offset?: number; limit?: number }): Promise<FeedResponse> => {
+  const page = options?.offset ? Math.floor(options.offset / (options.limit || 10)) + 1 : 1;
+  const limit = options?.limit || 10;
+  return getFeed(page, limit);
 };
 
 // Obtener posts trending

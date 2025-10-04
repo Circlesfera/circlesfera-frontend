@@ -158,14 +158,14 @@ export default function Header() {
     <>
       <header className="sticky top-0 left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            {/* Logo */}
+          <div className="flex items-center justify-between h-12 sm:h-14 lg:h-16">
+            {/* Logo - Optimizado para móvil */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center group">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-200">
-                  <span className="text-white font-bold text-sm sm:text-lg">C</span>
+                <div className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-200">
+                  <span className="text-white font-bold text-xs sm:text-sm lg:text-lg">C</span>
                 </div>
-                <span className="font-bold text-lg sm:text-2xl text-gray-900 tracking-tight select-none group-hover:text-blue-600 transition-colors">
+                <span className="font-bold text-base sm:text-lg lg:text-2xl text-gray-900 tracking-tight select-none group-hover:text-blue-600 transition-colors">
                   CircleSfera
                 </span>
               </Link>
@@ -202,26 +202,26 @@ export default function Header() {
           </div>
 
           {/* Navegación derecha - Desktop */}
-          <nav className="hidden md:flex items-center gap-2">
-            <Link href="/" className="p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+            <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <HomeIcon />
               <span className="sr-only">Inicio</span>
             </Link>
             
-            <Link href="/messages" className="p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+            <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <MessageIcon />
               <span className="sr-only">Mensajes</span>
             </Link>
             
-            <Link href="/explore" className="p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+            <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <ExploreIcon />
               <span className="sr-only">Explorar</span>
             </Link>
             
-            <Link href="/notifications" className="relative p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+            <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <NotificationIcon />
               {unread > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center font-bold animate-pulse">
                   {unread > 9 ? '9+' : unread}
                 </span>
               )}
@@ -235,7 +235,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setShowCreateMenu(!showCreateMenu)}
-                className="p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group"
+                className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group"
               >
                 <PlusIcon />
                 <span className="sr-only">Crear contenido</span>
@@ -275,10 +275,10 @@ export default function Header() {
                   <img 
                     src={user.avatar} 
                     alt="avatar" 
-                    className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
+                    className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
+                  <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs lg:text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
                     {user?.username?.[0]?.toUpperCase() || 'U'}
                   </div>
                 )}
@@ -325,8 +325,18 @@ export default function Header() {
             </div>
           </nav>
 
-          {/* Menú móvil */}
-          <div className="md:hidden">
+          {/* Menú móvil - Optimizado */}
+          <div className="md:hidden flex items-center gap-2">
+            {/* Notificaciones en móvil */}
+            <Link href="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <NotificationIcon />
+              {unread > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold animate-pulse">
+                  {unread > 9 ? '9+' : unread}
+                </span>
+              )}
+            </Link>
+            
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -338,10 +348,10 @@ export default function Header() {
       </div>
       </header>
 
-      {/* Menú móvil desplegable */}
+      {/* Menú móvil desplegable - Optimizado */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-16 left-0 w-full bg-white border-b border-gray-200 z-40 animate-slide-in">
-          <div className="px-4 py-2 space-y-2">
+        <div className="md:hidden fixed top-12 sm:top-14 lg:top-16 left-0 w-full bg-white border-b border-gray-200 z-40 animate-slide-in">
+          <div className="px-4 py-2 space-y-1">
             <Link href="/" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <HomeIcon />
               <span>Inicio</span>
@@ -355,16 +365,6 @@ export default function Header() {
             <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <ExploreIcon />
               <span>Explorar</span>
-            </Link>
-            
-            <Link href="/notifications" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-              <NotificationIcon />
-              <span>Notificaciones</span>
-              {unread > 0 && (
-                <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1 font-bold">
-                  {unread > 9 ? '9+' : unread}
-                </span>
-              )}
             </Link>
 
             {/* Botón de crear contenido en móvil */}
@@ -402,7 +402,6 @@ export default function Header() {
                   <ReelIcon />
                   <span>Crear reel</span>
                 </button>
-
               </div>
             )}
 
@@ -419,6 +418,14 @@ export default function Header() {
                 </div>
               )}
               <span>Perfil</span>
+            </Link>
+
+            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Configuración</span>
             </Link>
 
             <button

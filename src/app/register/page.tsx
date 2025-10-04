@@ -43,7 +43,7 @@ export default function RegisterPage() {
             <input
               type="text"
               placeholder="Nombre de usuario"
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-gray-400"
               value={username}
               onChange={e => setUsername(e.target.value)}
               required
@@ -52,7 +52,7 @@ export default function RegisterPage() {
             <input
               type="email"
               placeholder="Correo electrónico"
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-gray-400"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
@@ -61,7 +61,7 @@ export default function RegisterPage() {
             <input
               type="password"
               placeholder="Contraseña"
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-gray-400"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-gray-400"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required

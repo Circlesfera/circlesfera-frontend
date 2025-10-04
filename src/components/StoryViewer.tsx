@@ -326,7 +326,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
-    const handleClickOutside = (_event: MouseEvent) => {
+    const handleClickOutside = () => {
       if (showMoreMenu) {
         setShowMoreMenu(false);
       }

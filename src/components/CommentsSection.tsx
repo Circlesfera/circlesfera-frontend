@@ -5,7 +5,7 @@ import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 
 export default function CommentsSection({ postId }: { postId: string }) {
-  const { token, user } = useAuth();
+  const { token: _token, user: _user } = useAuth(); // Mantenidos para futuras funcionalidades
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);

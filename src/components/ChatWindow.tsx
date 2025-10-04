@@ -64,7 +64,6 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const [hasMore, setHasMore] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchMessages = useCallback(async (pageNum = 1, append = false) => {
     if (!token) return;
@@ -106,8 +105,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
         sender: {
           _id: user!._id,
           username: user!.username,
-          avatar: user!.avatar,
-          fullName: user!.fullName || undefined
+          ...(user!.avatar && { avatar: user!.avatar }),
+          ...(user!.fullName && { fullName: user!.fullName })
         },
         type: 'text',
         content: {
@@ -136,9 +135,6 @@ export default function ChatWindow({ conversationId, conversationName, participa
     }
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const handleLoadMore = () => {
     if (hasMore && !loading) {
@@ -159,13 +155,13 @@ export default function ChatWindow({ conversationId, conversationName, participa
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-3`}
+        className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-2 sm:mb-3`}
       >
-        <div className={`max-w-xs lg:max-w-md ${isOwnMessage ? 'order-2' : 'order-1'}`}>
-          {/* Avatar del remitente */}
+        <div className={`max-w-[85%] sm:max-w-xs lg:max-w-md ${isOwnMessage ? 'order-2' : 'order-1'}`}>
+          {/* Avatar del remitente - Optimizado para móvil */}
           {!isOwnMessage && (
             <div className="flex items-end mb-1">
-              <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden mr-2">
                 {message.sender.avatar ? (
                   <img 
                     src={message.sender.avatar} 
@@ -173,22 +169,22 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     className="w-full h-full object-cover" 
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm">
-                    {message.sender.username[0].toUpperCase()}
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
+                    {message.sender.username?.[0]?.toUpperCase() || 'U'}
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* Contenido del mensaje */}
-          <div className={`px-4 py-2 rounded-2xl shadow-sm ${
+          {/* Contenido del mensaje - Optimizado para móvil */}
+          <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${
             isOwnMessage 
               ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' 
               : 'bg-white border border-gray-200'
           }`}>
             {isTextMessage && (
-              <div className="text-sm whitespace-pre-wrap">{message.content.text}</div>
+              <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content.text}</div>
             )}
             
             {isImageMessage && (
@@ -217,10 +213,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
             
             {isLocationMessage && (
               <div className="space-y-2">
-                <div className="bg-gray-100 rounded-lg p-3">
-                  <div className="flex items-center space-x-2 mb-2">
+                <div className="bg-gray-100 rounded-lg p-2 sm:p-3">
+                  <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                     <LocationIcon />
-                    <span className="font-medium text-sm">
+                    <span className="font-medium text-xs sm:text-sm">
                       {message.content.location?.name || 'Ubicación'}
                     </span>
                   </div>
@@ -233,7 +229,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               </div>
             )}
 
-            {/* Timestamp */}
+            {/* Timestamp - Optimizado para móvil */}
             <div className={`text-xs mt-1 ${
               isOwnMessage ? 'text-blue-100' : 'text-gray-500'
             }`}>
@@ -249,11 +245,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white rounded-r-2xl shadow-md">
-      {/* Header del chat */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-white rounded-none md:rounded-r-2xl shadow-md">
+      {/* Header del chat - Optimizado para móvil */}
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-100">
+        <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0">
             {participants?.[0]?.avatar ? (
               <img 
                 src={participants[0].avatar} 
@@ -261,30 +257,30 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 className="w-full h-full object-cover" 
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm">
-                {participants?.[0]?.username[0].toUpperCase() || 'U'}
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
+                {participants?.[0]?.username?.[0]?.toUpperCase() || 'U'}
               </div>
             )}
           </div>
-          <div>
-            <h3 className="font-semibold text-gray-900">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
               {conversationName || participants?.map(p => p.username).join(', ')}
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs sm:text-sm text-gray-500">
               {participants?.length || 0} participantes
             </p>
           </div>
         </div>
         
-        <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+        <button className="p-2 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0">
           <MoreIcon />
         </button>
       </div>
 
-      {/* Área de mensajes */}
+      {/* Área de mensajes - Optimizada para móvil */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto p-4 bg-gray-50"
+        className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gray-50"
       >
         {loading ? (
           <div className="space-y-3">
@@ -294,14 +290,14 @@ export default function ChatWindow({ conversationId, conversationName, participa
           </div>
         ) : messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center p-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
-              <h3 className="text-gray-600 font-medium mb-2">No hay mensajes aún</h3>
-              <p className="text-gray-400 text-sm">¡Sé el primero en enviar un mensaje!</p>
+              <h3 className="text-gray-600 font-medium mb-2 text-sm sm:text-base">No hay mensajes aún</h3>
+              <p className="text-gray-400 text-xs sm:text-sm">¡Sé el primero en enviar un mensaje!</p>
             </div>
           </div>
         ) : (
@@ -310,7 +306,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               <div className="text-center mb-4">
                 <button
                   onClick={handleLoadMore}
-                  className="text-blue-500 text-sm hover:text-blue-700 transition-colors"
+                  className="text-blue-500 text-xs sm:text-sm hover:text-blue-700 transition-colors"
                 >
                   Cargar mensajes anteriores
                 </button>
@@ -328,17 +324,17 @@ export default function ChatWindow({ conversationId, conversationName, participa
         )}
       </div>
 
-      {/* Formulario de envío */}
-      <div className="p-4 border-t border-gray-100 bg-white rounded-b-2xl">
-        <form onSubmit={handleSend} className="flex items-end space-x-3">
+      {/* Formulario de envío - Optimizado para móvil */}
+      <div className="p-3 sm:p-4 border-t border-gray-100 bg-white rounded-none md:rounded-b-2xl">
+        <form onSubmit={handleSend} className="flex items-end space-x-2 sm:space-x-3">
           {/* Botones de adjuntos */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <button
               type="button"
               onClick={() => setShowAttachments(!showAttachments)}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors"
             >
-              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
             </button>
@@ -349,7 +345,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2 space-y-2"
+                  className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2 space-y-2 z-10"
                 >
                   <button type="button" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors">
                     <ImageIcon />
@@ -369,21 +365,21 @@ export default function ChatWindow({ conversationId, conversationName, participa
           </div>
 
           {/* Input de texto */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
               rows={1}
               disabled={sending}
-              style={{ minHeight: '44px', maxHeight: '120px' }}
+              style={{ minHeight: '40px', maxHeight: '120px' }}
             />
           </div>
 
           {/* Botones de acción */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             <button
               type="button"
               className="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -394,7 +390,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
             <button
               type="submit"
               disabled={sending || !text.trim()}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-3 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-2.5 sm:p-3 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
             >
               <SendIcon />
             </button>

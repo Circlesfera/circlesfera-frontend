@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserProfile, updateUserProfile, User } from '@/services/userService';
@@ -58,11 +59,11 @@ const ArrowIcon = () => (
   </svg>
 );
 
-const SaveIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-  </svg>
-);
+// const SaveIcon = () => (
+//   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+//   </svg>
+// );
 
 export default function SettingsPage() {
   const { user, logout } = useAuth();
@@ -399,20 +400,22 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-4">
                           <div className="flex-shrink-0">
                             {profile.avatar ? (
-                              <img 
+                              <Image 
                                 src={profile.avatar} 
                                 alt="avatar" 
+                                width={80}
+                                height={80}
                                 className="w-20 h-20 rounded-full object-cover" 
                               />
                             ) : (
                               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl font-bold">
-                                {profile.username[0].toUpperCase()}
+                                {profile.username?.[0]?.toUpperCase() || 'U'}
                               </div>
                             )}
                           </div>
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900">{profile.username}</h3>
-                            <p className="text-gray-600">{profile.email}</p>
+                            <h3 className="text-lg font-semibold text-gray-900">{profile.username || 'Usuario'}</h3>
+                            <p className="text-gray-600">{profile.email || 'email@ejemplo.com'}</p>
                           </div>
                         </div>
                         
