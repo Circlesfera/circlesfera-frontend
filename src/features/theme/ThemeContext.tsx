@@ -100,6 +100,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
     }
+    
+    return undefined;
   }, [theme]);
 
   // Función para cambiar el tema

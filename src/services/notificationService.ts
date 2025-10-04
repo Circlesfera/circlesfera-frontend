@@ -1,5 +1,5 @@
 import api from './axios';
-import type { ApiResponse, Notification } from '@/types';
+import type { Notification } from '@/types';
 
 export const getNotifications = async (): Promise<Notification[]> => {
   try {

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
-import { getStory, addReaction, addReply, deleteStory, createStory, createTextStory, Story } from '@/services/storyService';
+import { deleteStory, Story } from '@/services/storyService';
 
 // Iconos SVG modernos estilo Instagram
 const CloseIcon = () => (
@@ -67,7 +67,7 @@ interface StoryViewerProps {
   onStoryDeleted?: (storyId: string) => void;
 }
 
-export default function StoryViewer({ story: initialStory, userId, username, onClose, onStoryDeleted }: StoryViewerProps) {
+export default function StoryViewer({ story: initialStory, userId: _userId, username: _username, onClose, onStoryDeleted }: StoryViewerProps) {
   // Solo loggear en desarrollo (comentado temporalmente para evitar spam)
   // if (process.env.NODE_ENV === 'development') {
   //   console.log('🎬 StoryViewer renderizado con onClose:', typeof onClose, 'onStoryDeleted:', typeof onStoryDeleted);
@@ -84,7 +84,6 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
   const [progress, setProgress] = useState(0);
   const [showReactionFeedback, setShowReactionFeedback] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [shouldClose, setShouldClose] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
@@ -327,7 +326,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (_event: MouseEvent) => {
       if (showMoreMenu) {
         setShowMoreMenu(false);
       }
@@ -337,20 +336,10 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       document.addEventListener('click', handleClickOutside);
       return () => document.removeEventListener('click', handleClickOutside);
     }
+    
+    return undefined;
   }, [showMoreMenu]);
 
-  // Cerrar story cuando shouldClose sea true
-  useEffect(() => {
-    if (shouldClose) {
-      console.log('🚪 Cerrando story por shouldClose');
-      // Limpiar intervalos
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-      // Llamar a onClose
-      onClose();
-    }
-  }, [shouldClose, onClose]);
 
   if (loading) {
     return (
