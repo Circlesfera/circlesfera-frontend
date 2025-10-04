@@ -73,13 +73,13 @@ export interface UserProfile {
 }
 
 export const getUserProfile = async (): Promise<User> => {
-  const res = await api.get('/auth/profile');
+  const res = await api.get('/api/auth/profile');
   return res.data.user;
 };
 
 export const updateUserProfile = async (userData: Partial<User>): Promise<User> => {
   try {
-    const res = await api.put('/auth/profile', userData);
+    const res = await api.put('/api/auth/profile', userData);
     return res.data.user;
   } catch (error: unknown) {
     console.error('Error en updateUserProfile:', (error as Error)?.message || 'Error desconocido');
@@ -114,7 +114,7 @@ export const unfollowUser = async (userId: string) => {
 };
 
 export const editProfile = async (formData: FormData) => {
-  const res = await api.put('/auth/profile', formData, {
+  const res = await api.put('/api/auth/profile', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -176,7 +176,7 @@ export const unrestrictUser = async (userId: string) => {
 };
 
 export const changePassword = async (currentPassword: string, newPassword: string) => {
-  const res = await api.put('/auth/change-password', {
+  const res = await api.put('/api/auth/change-password', {
     currentPassword,
     newPassword
   });
@@ -184,6 +184,6 @@ export const changePassword = async (currentPassword: string, newPassword: strin
 };
 
 export const checkUsernameAvailability = async (username: string): Promise<{ available: boolean; username: string }> => {
-  const res = await api.get(`/auth/check-username/${encodeURIComponent(username)}`);
+  const res = await api.get(`/api/auth/check-username/${encodeURIComponent(username)}`);
   return res.data;
 };
