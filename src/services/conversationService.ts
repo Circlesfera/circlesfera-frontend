@@ -77,77 +77,64 @@ export interface ConversationResponse {
 }
 
 // Obtener conversaciones del usuario
-export const getConversations = async (token: string, page = 1, limit = 20): Promise<ConversationsResponse> => {
+export const getConversations = async (page = 1, limit = 20): Promise<ConversationsResponse> => {
   const res = await api.get('/api/conversations', {
-    headers: { Authorization: `Bearer ${token}` },
     params: { page, limit }
   });
   return res.data;
 };
 
 // Obtener una conversación específica
-export const getConversation = async (conversationId: string, token: string): Promise<ConversationResponse> => {
-  const res = await api.get(`/api/conversations/${conversationId}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const getConversation = async (conversationId: string): Promise<ConversationResponse> => {
+  const res = await api.get(`/api/conversations/${conversationId}`);
   return res.data;
 };
 
 // Crear conversación directa
-export const createDirectConversation = async (participantId: string, token: string): Promise<ConversationResponse> => {
+export const createDirectConversation = async (participantId: string): Promise<ConversationResponse> => {
   const res = await api.post('/api/conversations/direct', {
     participantId
-  }, {
-    headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
 };
 
 // Crear conversación grupal
-export const createGroupConversation = async (name: string, participantIds: string[], token: string, description?: string): Promise<ConversationResponse> => {
+export const createGroupConversation = async (name: string, participantIds: string[], description?: string): Promise<ConversationResponse> => {
   const res = await api.post('/api/conversations/group', {
     name,
     participantIds,
     description
-  }, {
-    headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
 };
 
 // Agregar participante a conversación grupal
-export const addParticipant = async (conversationId: string, participantId: string, token: string): Promise<ConversationResponse> => {
+export const addParticipant = async (conversationId: string, participantId: string): Promise<ConversationResponse> => {
   const res = await api.post(`/api/conversations/${conversationId}/participants`, {
     participantId
-  }, {
-    headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
 };
 
 // Remover participante de conversación grupal
-export const removeParticipant = async (conversationId: string, participantId: string, token: string): Promise<ConversationResponse> => {
+export const removeParticipant = async (conversationId: string, participantId: string): Promise<ConversationResponse> => {
   const res = await api.delete(`/api/conversations/${conversationId}/participants`, {
-    headers: { Authorization: `Bearer ${token}` },
     data: { participantId }
   });
   return res.data;
 };
 
 // Agregar administrador
-export const addAdmin = async (conversationId: string, adminId: string, token: string): Promise<ConversationResponse> => {
+export const addAdmin = async (conversationId: string, adminId: string): Promise<ConversationResponse> => {
   const res = await api.post(`/api/conversations/${conversationId}/admins`, {
     adminId
-  }, {
-    headers: { Authorization: `Bearer ${token}` }
   });
   return res.data;
 };
 
 // Remover administrador
-export const removeAdmin = async (conversationId: string, adminId: string, token: string): Promise<ConversationResponse> => {
+export const removeAdmin = async (conversationId: string, adminId: string): Promise<ConversationResponse> => {
   const res = await api.delete(`/api/conversations/${conversationId}/admins`, {
-    headers: { Authorization: `Bearer ${token}` },
     data: { adminId }
   });
   return res.data;
@@ -158,41 +145,31 @@ export const updateConversation = async (conversationId: string, updates: {
   name?: string;
   description?: string;
   avatar?: string;
-}, token: string): Promise<ConversationResponse> => {
-  const res = await api.put(`/api/conversations/${conversationId}`, updates, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+}): Promise<ConversationResponse> => {
+  const res = await api.put(`/api/conversations/${conversationId}`, updates);
   return res.data;
 };
 
 // Archivar conversación
-export const archiveConversation = async (conversationId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.post(`/api/conversations/${conversationId}/archive`, {}, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const archiveConversation = async (conversationId: string): Promise<{ success: boolean; message: string }> => {
+  const res = await api.post(`/api/conversations/${conversationId}/archive`, {});
   return res.data;
 };
 
 // Desarchivar conversación
-export const unarchiveConversation = async (conversationId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.post(`/api/conversations/${conversationId}/unarchive`, {}, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const unarchiveConversation = async (conversationId: string): Promise<{ success: boolean; message: string }> => {
+  const res = await api.post(`/api/conversations/${conversationId}/unarchive`, {});
   return res.data;
 };
 
 // Eliminar conversación
-export const deleteConversation = async (conversationId: string, token: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/api/conversations/${conversationId}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const deleteConversation = async (conversationId: string): Promise<{ success: boolean; message: string }> => {
+  const res = await api.delete(`/api/conversations/${conversationId}`);
   return res.data;
 };
 
 // Obtener estadísticas de conversaciones
-export const getConversationStats = async (token: string): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
-  const res = await api.get('/api/conversations/stats', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const getConversationStats = async (): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
+  const res = await api.get('/api/conversations/stats');
   return res.data;
 }; 

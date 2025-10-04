@@ -47,7 +47,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     
     try {
       setLoading(true);
-      const response = await getConversations(token);
+      const response = await getConversations();
       if (response && response.conversations) {
         setConversations(response.conversations);
       } else {
