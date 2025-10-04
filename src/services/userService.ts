@@ -95,7 +95,7 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
 
 export const getUserProfileByUsername = async (username: string): Promise<UserProfile> => {
   console.log('🔍 userService - getUserProfileByUsername llamada:', { username });
-  const res = await api.get(`/users/profile/${username}`);
+  const res = await api.get(`/api/users/profile/${username}`);
   console.log('🔍 userService - getUserProfileByUsername respuesta completa:', {
     username,
     response: res.data,
@@ -106,11 +106,11 @@ export const getUserProfileByUsername = async (username: string): Promise<UserPr
 };
 
 export const followUser = async (userId: string) => {
-  await api.post(`/users/${userId}/follow`, {});
+  await api.post(`/api/users/${userId}/follow`, {});
 };
 
 export const unfollowUser = async (userId: string) => {
-  await api.delete(`/users/${userId}/follow`);
+  await api.delete(`/api/users/${userId}/follow`);
 };
 
 export const editProfile = async (formData: FormData) => {
@@ -132,47 +132,47 @@ export interface UserSuggestion {
 }
 
 export const getSuggestions = async (): Promise<UserSuggestion[]> => {
-  const res = await api.get('/users/suggestions');
+  const res = await api.get('/api/users/suggestions');
   return res.data.suggestions;
 };
 
 export const getFollowers = async (userId: string): Promise<UserSuggestion[]> => {
-  const res = await api.get(`/users/${userId}/followers`);
+  const res = await api.get(`/api/users/${userId}/followers`);
   return res.data.followers;
 };
 
 export const getFollowing = async (userId: string): Promise<UserSuggestion[]> => {
-  const res = await api.get(`/users/${userId}/following`);
+  const res = await api.get(`/api/users/${userId}/following`);
   return res.data.following;
 };
 
 export const searchUsers = async (query: string): Promise<UserSuggestion[]> => {
-  const res = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
+  const res = await api.get(`/api/users/search?q=${encodeURIComponent(query)}`);
   return res.data.users;
 };
 
 export const blockUser = async (userId: string) => {
-  await api.post(`/users/${userId}/block`, {});
+  await api.post(`/api/users/${userId}/block`, {});
 };
 
 export const unblockUser = async (userId: string) => {
-  await api.post(`/users/${userId}/unblock`, {});
+  await api.post(`/api/users/${userId}/unblock`, {});
 };
 
 export const muteUser = async (userId: string) => {
-  await api.post(`/users/${userId}/mute`, {});
+  await api.post(`/api/users/${userId}/mute`, {});
 };
 
 export const unmuteUser = async (userId: string) => {
-  await api.delete(`/users/${userId}/mute`);
+  await api.delete(`/api/users/${userId}/mute`);
 };
 
 export const restrictUser = async (userId: string) => {
-  await api.post(`/users/${userId}/restrict`, {});
+  await api.post(`/api/users/${userId}/restrict`, {});
 };
 
 export const unrestrictUser = async (userId: string) => {
-  await api.delete(`/users/${userId}/restrict`);
+  await api.delete(`/api/users/${userId}/restrict`);
 };
 
 export const changePassword = async (currentPassword: string, newPassword: string) => {
