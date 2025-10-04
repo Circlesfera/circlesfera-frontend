@@ -2,7 +2,7 @@
 
 export const config = {
   // API Configuration
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'https://dev-api.circlesfera.com',
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'https://dev-api.circlesfera.com/api',
   appUrl: process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'https://dev.circlesfera.com'),
   
   // App Configuration

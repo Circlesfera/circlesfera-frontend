@@ -80,11 +80,11 @@ export interface ConversationResponse {
 export const getConversations = async (page = 1, limit = 20): Promise<ConversationsResponse> => {
   console.log('🔍 conversationService - getConversations llamada:', { page, limit });
   console.log('🔍 conversationService - baseURL actual:', api.defaults.baseURL);
-  console.log('🔍 conversationService - URL completa será:', `${api.defaults.baseURL}/conversations`);
+  console.log('🔍 conversationService - URL completa será:', `${api.defaults.baseURL}/api/conversations`);
   console.log('🔍 conversationService - config.apiUrl:', process.env.NEXT_PUBLIC_API_URL);
   
   try {
-    const res = await api.get('/conversations', {
+    const res = await api.get('/api/conversations', {
       params: { page, limit }
     });
     console.log('✅ conversationService - getConversations respuesta:', res.data);
@@ -97,13 +97,13 @@ export const getConversations = async (page = 1, limit = 20): Promise<Conversati
 
 // Obtener una conversación específica
 export const getConversation = async (conversationId: string): Promise<ConversationResponse> => {
-  const res = await api.get(`/conversations/${conversationId}`);
+  const res = await api.get(`/api/conversations/${conversationId}`);
   return res.data;
 };
 
 // Crear conversación directa
 export const createDirectConversation = async (participantId: string): Promise<ConversationResponse> => {
-  const res = await api.post('/conversations/direct', {
+  const res = await api.post('/api/conversations/direct', {
     participantId
   });
   return res.data;
@@ -111,7 +111,7 @@ export const createDirectConversation = async (participantId: string): Promise<C
 
 // Crear conversación grupal
 export const createGroupConversation = async (name: string, participantIds: string[], description?: string): Promise<ConversationResponse> => {
-  const res = await api.post('/conversations/group', {
+  const res = await api.post('/api/conversations/group', {
     name,
     participantIds,
     description
@@ -121,7 +121,7 @@ export const createGroupConversation = async (name: string, participantIds: stri
 
 // Agregar participante a conversación grupal
 export const addParticipant = async (conversationId: string, participantId: string): Promise<ConversationResponse> => {
-  const res = await api.post(`/conversations/${conversationId}/participants`, {
+  const res = await api.post(`/api/conversations/${conversationId}/participants`, {
     participantId
   });
   return res.data;
@@ -129,7 +129,7 @@ export const addParticipant = async (conversationId: string, participantId: stri
 
 // Remover participante de conversación grupal
 export const removeParticipant = async (conversationId: string, participantId: string): Promise<ConversationResponse> => {
-  const res = await api.delete(`/conversations/${conversationId}/participants`, {
+  const res = await api.delete(`/api/conversations/${conversationId}/participants`, {
     data: { participantId }
   });
   return res.data;
@@ -137,7 +137,7 @@ export const removeParticipant = async (conversationId: string, participantId: s
 
 // Agregar administrador
 export const addAdmin = async (conversationId: string, adminId: string): Promise<ConversationResponse> => {
-  const res = await api.post(`/conversations/${conversationId}/admins`, {
+  const res = await api.post(`/api/conversations/${conversationId}/admins`, {
     adminId
   });
   return res.data;
@@ -145,7 +145,7 @@ export const addAdmin = async (conversationId: string, adminId: string): Promise
 
 // Remover administrador
 export const removeAdmin = async (conversationId: string, adminId: string): Promise<ConversationResponse> => {
-  const res = await api.delete(`/conversations/${conversationId}/admins`, {
+  const res = await api.delete(`/api/conversations/${conversationId}/admins`, {
     data: { adminId }
   });
   return res.data;
@@ -157,30 +157,30 @@ export const updateConversation = async (conversationId: string, updates: {
   description?: string;
   avatar?: string;
 }): Promise<ConversationResponse> => {
-  const res = await api.put(`/conversations/${conversationId}`, updates);
+  const res = await api.put(`/api/conversations/${conversationId}`, updates);
   return res.data;
 };
 
 // Archivar conversación
 export const archiveConversation = async (conversationId: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.post(`/conversations/${conversationId}/archive`, {});
+  const res = await api.post(`/api/conversations/${conversationId}/archive`, {});
   return res.data;
 };
 
 // Desarchivar conversación
 export const unarchiveConversation = async (conversationId: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.post(`/conversations/${conversationId}/unarchive`, {});
+  const res = await api.post(`/api/conversations/${conversationId}/unarchive`, {});
   return res.data;
 };
 
 // Eliminar conversación
 export const deleteConversation = async (conversationId: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/conversations/${conversationId}`);
+  const res = await api.delete(`/api/conversations/${conversationId}`);
   return res.data;
 };
 
 // Obtener estadísticas de conversaciones
 export const getConversationStats = async (): Promise<{ success: boolean; stats: Record<string, unknown> }> => {
-  const res = await api.get('/conversations/stats');
+  const res = await api.get('/api/conversations/stats');
   return res.data;
 }; 
