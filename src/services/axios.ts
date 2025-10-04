@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { config } from '@/config/env';
 
 const api = axios.create({
-  baseURL: `${config.apiUrl}/api`,
+  baseURL: config.apiUrl,
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'),
   withCredentials: false,
   headers: {
@@ -12,7 +12,7 @@ const api = axios.create({
 
 // Log de inicialización para debug - SIEMPRE mostrar en desarrollo
 console.log('🔧 Axios API inicializada:', {
-  baseURL: `${config.apiUrl}/api`,
+  baseURL: config.apiUrl,
   configApiUrl: config.apiUrl,
   envApiUrl: process.env.NEXT_PUBLIC_API_URL,
   nodeEnv: process.env.NODE_ENV,
