@@ -10,10 +10,17 @@ export default function ExploreGrid() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getRecentPosts().then(data => {
-      setPosts(data);
-      setLoading(false);
-    });
+    console.log('🔍 ExploreGrid - Iniciando carga de posts recientes');
+    getRecentPosts()
+      .then(data => {
+        console.log('✅ ExploreGrid - Posts cargados exitosamente:', data);
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('❌ ExploreGrid - Error cargando posts recientes:', error);
+        setLoading(false);
+      });
   }, []);
 
   return (
