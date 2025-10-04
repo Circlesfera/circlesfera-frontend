@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 import { Button } from '@/design-system/Button';
@@ -60,12 +60,44 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createType, setCreateType] = useState<'post' | 'story' | 'reel' | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
   const unreadNotifications = useUnreadNotifications();
+
+  // Rutas que requieren autenticación
+  const protectedRoutes = ['/explore', '/messages', '/notifications', '/profile'];
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+
+  // Marcar como hidratado después del primer render
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Redirigir a login si no está autenticado y accede a una ruta protegida
+  useEffect(() => {
+    if (!loading && !user && isProtectedRoute && isHydrated) {
+      router.replace('/login');
+    }
+  }, [loading, user, isProtectedRoute, router, isHydrated]);
+
+  // Solo mostrar loading en el cliente durante la hidratación
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Cargando...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const navigation: NavigationItem[] = [
     { name: 'Inicio', href: '/', icon: HomeIcon },

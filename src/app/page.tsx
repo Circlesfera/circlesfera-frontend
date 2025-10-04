@@ -7,10 +7,11 @@ import { getFeedPosts, Post } from '@/services/postService';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import CommentsModal from '@/components/CommentsModal';
 import ShareModal from '@/components/ShareModal';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [stories, setStories] = useState<UserWithStories[]>([]);
@@ -22,7 +23,7 @@ export default function HomePage() {
   // Cargar datos iniciales
   useEffect(() => {
     const loadInitialData = async () => {
-      if (!user) return;
+      if (authLoading || !user) return;
       
       try {
         setLoading(true);
@@ -46,7 +47,7 @@ export default function HomePage() {
     };
 
     loadInitialData();
-  }, [user]);
+  }, [user, authLoading]);
 
   const handleLike = (postId: string) => {
     setPosts(prevPosts =>
@@ -129,8 +130,49 @@ export default function HomePage() {
     );
   }
 
+  // Mostrar loading mientras se verifica la autenticación
+  if (authLoading) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6 px-4">
+        {/* Stories Loading */}
+        <Card className="p-6">
+          <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
+            {/* Loading skeletons */}
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
+                <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse p-2"></div>
+                <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            ))}
+          </div>
+        </Card>
+        
+        {/* Posts Loading */}
+        <div className="space-y-6">
+          {[...Array(3)].map((_, index) => (
+            <Card key={index} className="p-6">
+              <div className="animate-pulse">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/6"></div>
+                  </div>
+                </div>
+                <div className="h-64 bg-gray-200 rounded mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6 px-4">
+    <ProtectedRoute>
+      <div className="max-w-2xl mx-auto space-y-6 px-4">
       {/* Stories Section */}
       <Card className="p-6">
         <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
@@ -310,6 +352,7 @@ export default function HomePage() {
         postUrl={shareModal.postUrl}
         postCaption={shareModal.postCaption}
       />
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
