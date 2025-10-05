@@ -30,15 +30,40 @@ const ExploreIcon = () => (
   </svg>
 );
 
-const NotificationIcon = () => (
+const ReelsIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4a2 2 0 00-1.18 3.25L6 10l-2.8 2.8A2 2 0 004 15.19V19a2 2 0 002 2h12a2 2 0 002-2v-3.81a2 2 0 00-.2-2.39L18 10l2.8-2.8A2 2 0 0019.81 4H4.19z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4l-2 16h14l-2-16M10 11v6M14 11v6" />
+  </svg>
+);
+
+const StoriesIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
 const SearchIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const SettingsIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+const FeedIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+  </svg>
+);
+
+const NotificationIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4a2 2 0 00-1.18 3.25L6 10l-2.8 2.8A2 2 0 004 15.19V19a2 2 0 002 2h12a2 2 0 002-2v-3.81a2 2 0 00-.2-2.39L18 10l2.8-2.8A2 2 0 0019.81 4H4.19z" />
   </svg>
 );
 
@@ -218,6 +243,31 @@ export default function Header() {
               <span className="sr-only">Explorar</span>
             </Link>
             
+            <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <ReelsIcon />
+              <span className="sr-only">Reels</span>
+            </Link>
+            
+            <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <StoriesIcon />
+              <span className="sr-only">Stories</span>
+            </Link>
+            
+            <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <SearchIcon />
+              <span className="sr-only">Buscar</span>
+            </Link>
+            
+            <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <FeedIcon />
+              <span className="sr-only">Feed</span>
+            </Link>
+            
+            <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <SettingsIcon />
+              <span className="sr-only">Configuración</span>
+            </Link>
+            
             <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <NotificationIcon />
               {unread > 0 && (
@@ -365,6 +415,31 @@ export default function Header() {
             <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <ExploreIcon />
               <span>Explorar</span>
+            </Link>
+            
+            <Link href="/reels" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <ReelsIcon />
+              <span>Reels</span>
+            </Link>
+            
+            <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <StoriesIcon />
+              <span>Stories</span>
+            </Link>
+            
+            <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <SearchIcon />
+              <span>Buscar</span>
+            </Link>
+            
+            <Link href="/feed" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <FeedIcon />
+              <span>Feed</span>
+            </Link>
+            
+            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <SettingsIcon />
+              <span>Configuración</span>
             </Link>
 
             {/* Botón de crear contenido en móvil */}

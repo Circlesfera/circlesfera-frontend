@@ -8,6 +8,7 @@ import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import CommentsModal from '@/components/CommentsModal';
 import ShareModal from '@/components/ShareModal';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import UserSuggestions from '@/components/UserSuggestions';
 import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
@@ -170,9 +171,12 @@ export default function HomePage() {
     );
   }
 
-  return (
-    <ProtectedRoute>
-      <div className="max-w-2xl mx-auto space-y-6 px-4">
+      return (
+        <ProtectedRoute>
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-6">
       {/* Stories Section */}
       <Card className="p-6">
         <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
@@ -336,23 +340,30 @@ export default function HomePage() {
         </Card>
       )}
 
-      {/* Modals */}
-      <CommentsModal
-        isOpen={commentsModal.isOpen}
-        onClose={() => setCommentsModal({ isOpen: false, postId: '', postAuthor: '' })}
-        postId={commentsModal.postId}
-        postAuthor={commentsModal.postAuthor}
-        postImage={commentsModal.postImage}
-      />
+                {/* Modals */}
+                <CommentsModal
+                  isOpen={commentsModal.isOpen}
+                  onClose={() => setCommentsModal({ isOpen: false, postId: '', postAuthor: '' })}
+                  postId={commentsModal.postId}
+                  postAuthor={commentsModal.postAuthor}
+                  postImage={commentsModal.postImage}
+                />
 
-      <ShareModal
-        isOpen={shareModal.isOpen}
-        onClose={() => setShareModal({ isOpen: false, postId: '', postUrl: '', postCaption: '' })}
-        postId={shareModal.postId}
-        postUrl={shareModal.postUrl}
-        postCaption={shareModal.postCaption}
-      />
-      </div>
-    </ProtectedRoute>
-  );
-}
+                <ShareModal
+                  isOpen={shareModal.isOpen}
+                  onClose={() => setShareModal({ isOpen: false, postId: '', postUrl: '', postCaption: '' })}
+                  postId={shareModal.postId}
+                  postUrl={shareModal.postUrl}
+                  postCaption={shareModal.postCaption}
+                />
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1 space-y-6">
+                <UserSuggestions />
+              </div>
+            </div>
+          </div>
+        </ProtectedRoute>
+      );
+    }

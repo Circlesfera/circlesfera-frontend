@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { getMessages, sendTextMessage, Message } from '@/services/messageService';
+import { getMessages, sendTextMessage, sendImageMessage, sendVideoMessage, sendLocationMessage, Message } from '@/services/messageService';
 import { useAuth } from '@/features/auth/useAuth';
 import MessageSkeleton from './MessageSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -132,6 +132,67 @@ export default function ChatWindow({ conversationId, conversationName, participa
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend(e as React.FormEvent);
+    }
+  };
+
+  // Funciones para envío multimedia
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !token) return;
+
+    setSending(true);
+    try {
+      await sendImageMessage(conversationId, file, token, text.trim() || undefined);
+      setText('');
+      setShowAttachments(false);
+      // Recargar mensajes para mostrar el nuevo
+      fetchMessages(1, false);
+    } catch (error) {
+      console.error('Error sending image:', error);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !token) return;
+
+    setSending(true);
+    try {
+      await sendVideoMessage(conversationId, file, token, text.trim() || undefined);
+      setText('');
+      setShowAttachments(false);
+      // Recargar mensajes para mostrar el nuevo
+      fetchMessages(1, false);
+    } catch (error) {
+      console.error('Error sending video:', error);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleLocationShare = async () => {
+    if (!navigator.geolocation || !token) return;
+
+    setSending(true);
+    try {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          await sendLocationMessage(conversationId, latitude, longitude, token);
+          setShowAttachments(false);
+          // Recargar mensajes para mostrar el nuevo
+          fetchMessages(1, false);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+        }
+      );
+    } catch (error) {
+      console.error('Error sending location:', error);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -347,15 +408,38 @@ export default function ChatWindow({ conversationId, conversationName, participa
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2 space-y-2 z-10"
                 >
-                  <button type="button" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors">
+                  {/* Input oculto para imágenes */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label htmlFor="image-upload" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors cursor-pointer">
                     <ImageIcon />
                     <span className="text-sm">Imagen</span>
-                  </button>
-                  <button type="button" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors">
+                  </label>
+
+                  {/* Input oculto para videos */}
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    className="hidden"
+                    id="video-upload"
+                  />
+                  <label htmlFor="video-upload" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors cursor-pointer">
                     <VideoIcon />
                     <span className="text-sm">Video</span>
-                  </button>
-                  <button type="button" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors">
+                  </label>
+
+                  <button 
+                    type="button" 
+                    onClick={handleLocationShare}
+                    disabled={sending}
+                    className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  >
                     <LocationIcon />
                     <span className="text-sm">Ubicación</span>
                   </button>

@@ -3,10 +3,49 @@
 import ProtectedRoute from '@/components/ProtectedRoute';
 import UserSearch from '@/components/UserSearch';
 import ExploreGrid from '@/components/ExploreGrid';
-import { useState } from 'react';
+import { Card, Button } from '@/design-system';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getTrendingReels, Reel } from '@/services/reelService';
+import { getUsersWithStories, UserWithStories } from '@/services/storyService';
+import { getTrendingPosts, Post } from '@/services/postService';
+import { Video, Clock, TrendingUp, Users } from 'lucide-react';
 
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [trendingReels, setTrendingReels] = useState<Reel[]>([]);
+  const [recentStories, setRecentStories] = useState<UserWithStories[]>([]);
+  const [trendingPosts, setTrendingPosts] = useState<Post[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const loadExploreContent = async () => {
+      try {
+        
+        // Cargar reels trending
+        const reelsResponse = await getTrendingReels('week', 6);
+        if (reelsResponse.success) {
+          setTrendingReels(reelsResponse.reels || []);
+        }
+        
+        // Cargar posts trending
+        const postsResponse = await getTrendingPosts(8);
+        if (postsResponse.success) {
+          setTrendingPosts(postsResponse.posts || []);
+        }
+        
+        // Cargar stories recientes
+        const storiesResponse = await getUsersWithStories();
+        if (storiesResponse.success) {
+          setRecentStories(storiesResponse.users?.slice(0, 8) || []);
+        }
+      } catch (error) {
+        console.error('Error cargando contenido de explore:', error);
+      }
+    };
+
+    loadExploreContent();
+  }, []);
 
   return (
     <ProtectedRoute>
@@ -22,7 +61,234 @@ export default function ExplorePage() {
             onResultClick={() => setSearchQuery('')} 
           />
         </div>
+
+        {/* Sección de Reels Trending */}
+        {trendingReels.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <TrendingUp className="w-6 h-6 text-blue-600 mr-3" />
+                <h2 className="text-2xl font-bold text-gray-900">Reels Trending</h2>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push('/reels')}
+                className="text-blue-600 hover:text-blue-700"
+              >
+                Ver todos
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {trendingReels.map((reel) => (
+                <Card
+                  key={reel._id}
+                  className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => router.push(`/reels/${reel._id}`)}
+                >
+                  <div className="aspect-[9/16] relative">
+                    <video
+                      className="w-full h-full object-cover"
+                      src={reel.video.url}
+                      poster={reel.video.thumbnail}
+                      muted
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-2 left-2 right-2">
+                      <p className="text-white text-sm font-medium truncate">
+                        @{reel.user.username}
+                      </p>
+                      <div className="flex items-center text-white text-xs mt-1">
+                        <Video className="w-3 h-3 mr-1" />
+                        <span>{reel.likes.length} likes</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Sección de Posts Trending */}
+        {trendingPosts.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <TrendingUp className="w-6 h-6 text-green-600 mr-3" />
+                <h2 className="text-2xl font-bold text-gray-900">Posts Trending</h2>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push('/feed')}
+                className="text-green-600 hover:text-green-700"
+              >
+                Ver todos
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {trendingPosts.map((post) => (
+                <Card
+                  key={post._id}
+                  className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => router.push(`/post/${post._id}`)}
+                >
+                  <div className="aspect-square relative">
+                    {post.content.images && post.content.images[0] ? (
+                      <img
+                        className="w-full h-full object-cover"
+                        src={post.content.images[0].url}
+                        alt={post.caption || 'Post trending'}
+                      />
+                    ) : post.content.video ? (
+                      <video
+                        className="w-full h-full object-cover"
+                        src={post.content.video.url}
+                        poster={post.content.video.thumbnail}
+                        muted
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">Sin contenido</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-2 left-2 right-2">
+                      <p className="text-white text-sm font-medium truncate">
+                        @{post.user.username}
+                      </p>
+                      <div className="flex items-center text-white text-xs mt-1">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        <span>{post.likes.length} likes</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Sección de Stories Recientes */}
+        {recentStories.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <Clock className="w-6 h-6 text-purple-600 mr-3" />
+                <h2 className="text-2xl font-bold text-gray-900">Stories Recientes</h2>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push('/stories')}
+                className="text-purple-600 hover:text-purple-700"
+              >
+                Ver todas
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
+              {recentStories.map((user) => (
+                <Card
+                  key={user._id}
+                  className="p-3 text-center cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => router.push(`/stories?user=${user.username}`)}
+                >
+                  <div className="relative w-16 h-16 mx-auto mb-2">
+                    <div className="w-full h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-600 p-0.5">
+                      <div className="w-full h-full rounded-full bg-white p-0.5">
+                        <img
+                          src={user.avatar || '/default-avatar.png'}
+                          alt={user.username}
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-xs text-white font-bold">
+                        {user.storiesCount}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-700 truncate">
+                    {user.username}
+                  </p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Sección de Descubrimiento */}
+        <div className="mb-8">
+          <div className="flex items-center mb-6">
+            <Users className="w-6 h-6 text-green-600 mr-3" />
+            <h2 className="text-2xl font-bold text-gray-900">Descubrir Personas</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Video className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Explorar Reels</h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Descubre videos cortos increíbles de la comunidad
+              </p>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => router.push('/reels')}
+                className="w-full"
+              >
+                Ver Reels
+              </Button>
+            </Card>
+            
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Ver Stories</h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Mantente al día con las historias de tus amigos
+              </p>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => router.push('/stories')}
+                className="w-full"
+              >
+                Ver Stories
+              </Button>
+            </Card>
+            
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Buscar Personas</h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Encuentra nuevos amigos y personas interesantes
+              </p>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setSearchQuery('')}
+                className="w-full"
+              >
+                Buscar
+              </Button>
+            </Card>
+          </div>
+        </div>
         
+        {/* Grid de contenido tradicional */}
         <ExploreGrid />
       </div>
     </ProtectedRoute>
