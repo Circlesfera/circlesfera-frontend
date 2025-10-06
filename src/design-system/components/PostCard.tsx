@@ -30,6 +30,7 @@ export interface PostCardProps {
   onShare?: (postId: string) => void;
   onUserClick?: (userId: string) => void;
   onDelete?: (postId: string) => void;
+  onPostClick?: (postId: string, username: string) => void;
   className?: string;
 }
 
@@ -40,6 +41,7 @@ const PostCard: React.FC<PostCardProps> = ({
   onShare,
   onUserClick,
   onDelete,
+  onPostClick,
   className,
 }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
@@ -205,7 +207,10 @@ const PostCard: React.FC<PostCardProps> = ({
       </div>
 
       {/* Content */}
-      <div className="relative">
+      <div
+        className="relative cursor-pointer"
+        onClick={() => onPostClick?.(post.id, post.user.username)}
+      >
         {post.content.type === 'image' && post.content.url && (
           <img
             src={post.content.url}

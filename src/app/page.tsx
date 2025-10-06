@@ -104,6 +104,10 @@ export default function HomePage() {
     removePost(postId);
   }, [removePost]);
 
+  const handlePostClick = useCallback((postId: string, username: string) => {
+    router.push(`/${username}/post/${postId}`);
+  }, [router]);
+
   const PlusIcon = () => (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -282,7 +286,7 @@ export default function HomePage() {
               if (!posts || !Array.isArray(posts)) return;
               const post = posts.find(p => p._id === postId);
               if (post) {
-                handleShare(postId, `${window.location.origin}/post/${postId}`, post.caption);
+                handleShare(postId, `${window.location.origin}/${post.user.username}/post/${postId}`, post.caption);
               }
             }}
             onUserClick={(userId) => {
@@ -295,6 +299,7 @@ export default function HomePage() {
             onDelete={(postId) => {
               handlePostDeleted(postId);
             }}
+            onPostClick={handlePostClick}
             className="animate-fade-in"
           />
         ))}
