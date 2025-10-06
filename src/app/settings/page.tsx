@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
@@ -8,6 +8,13 @@ import { getUserProfile, updateUserProfile, User } from '@/services/userService'
 import { getUserSettings, updatePrivacySettings, updateNotificationSettings, updateSecuritySettings, changePassword, toggleTwoFactor, PrivacySettings, NotificationSettings, SecuritySettings } from '@/services/settingsService';
 import EditProfileForm from '@/components/EditProfileForm';
 import Link from 'next/link';
+import { useFormValidation } from '@/hooks/useFormValidation';
+import {
+  changePasswordSchema,
+  privacySettingsSchema,
+  notificationSettingsSchema,
+  securitySettingsSchema
+} from '@/schemas/settingsSchema';
 
 // Iconos SVG
 const SettingsIcon = () => (
@@ -164,65 +171,93 @@ export default function SettingsPage() {
     setTimeout(() => setMessage(null), 3000);
   };
 
-  // Handlers para guardar configuraciones
-  const handleSavePrivacy = async () => {
+  // Validaciones con Zod para configuraciones
+  const privacyValidation = useFormValidation({
+    schema: privacySettingsSchema,
+    onSubmit: async (data) => {
+      await updatePrivacySettings(data);
+      showMessage('success', 'Configuración de privacidad guardada');
+    }
+  });
+
+  const notificationValidation = useFormValidation({
+    schema: notificationSettingsSchema,
+    onSubmit: async (data) => {
+      await updateNotificationSettings(data);
+      showMessage('success', 'Configuración de notificaciones guardada');
+    }
+  });
+
+  const securityValidation = useFormValidation({
+    schema: securitySettingsSchema,
+    onSubmit: async (data) => {
+      await updateSecuritySettings(data);
+      showMessage('success', 'Configuración de seguridad guardada');
+    }
+  });
+
+  // Handlers para guardar configuraciones con validación
+  const handleSavePrivacy = useCallback(async () => {
     try {
       setSaving(true);
-      await updatePrivacySettings(privacySettings);
-      showMessage('success', 'Configuración de privacidad guardada');
+      await privacyValidation.handleSubmit(privacySettings);
     } catch (error) {
       console.error('Error saving privacy settings:', error);
       showMessage('error', 'Error al guardar la configuración de privacidad');
     } finally {
       setSaving(false);
     }
-  };
+  }, [privacySettings, privacyValidation, setSaving]);
 
-  const handleSaveNotifications = async () => {
+  const handleSaveNotifications = useCallback(async () => {
     try {
       setSaving(true);
-      await updateNotificationSettings(notificationSettings);
-      showMessage('success', 'Configuración de notificaciones guardada');
+      await notificationValidation.handleSubmit(notificationSettings);
     } catch (error) {
       console.error('Error saving notification settings:', error);
       showMessage('error', 'Error al guardar la configuración de notificaciones');
     } finally {
       setSaving(false);
     }
-  };
+  }, [notificationSettings, notificationValidation, setSaving]);
 
-  const handleSaveSecurity = async () => {
+  const handleSaveSecurity = useCallback(async () => {
     try {
       setSaving(true);
-      await updateSecuritySettings(securitySettings);
-      showMessage('success', 'Configuración de seguridad guardada');
+      await securityValidation.handleSubmit(securitySettings);
     } catch (error) {
       console.error('Error saving security settings:', error);
       showMessage('error', 'Error al guardar la configuración de seguridad');
     } finally {
       setSaving(false);
     }
-  };
+  }, [securitySettings, securityValidation, setSaving]);
 
-  const handleChangePassword = async () => {
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      showMessage('error', 'Las contraseñas no coinciden');
-      return;
-    }
-
-    try {
-      setSaving(true);
-      await changePassword(passwordForm.currentPassword, passwordForm.newPassword);
+  // Validación de cambio de contraseña con Zod
+  const passwordValidation = useFormValidation({
+    schema: changePasswordSchema,
+    onSubmit: async (data) => {
+      await changePassword(data.currentPassword, data.newPassword);
       showMessage('success', 'Contraseña cambiada correctamente');
       setShowPasswordForm(false);
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    }
+  });
+
+  const handleChangePassword = useCallback(async () => {
+    try {
+      setSaving(true);
+      await passwordValidation.handleSubmit(passwordForm);
     } catch (error) {
-      console.error('Error changing password:', error);
-      showMessage('error', 'Error al cambiar la contraseña');
+      if (error instanceof Error) {
+        showMessage('error', error.message || 'Error al cambiar la contraseña');
+      } else {
+        showMessage('error', 'Error al cambiar la contraseña');
+      }
     } finally {
       setSaving(false);
     }
-  };
+  }, [passwordForm, passwordValidation, setSaving]);
 
   const handleToggleTwoFactor = async (enabled: boolean) => {
     try {
@@ -285,8 +320,8 @@ export default function SettingsPage() {
           {/* Mensaje de estado */}
           {message && (
             <div className={`mb-6 p-4 rounded-lg ${
-              message.type === 'success' 
-                ? 'bg-green-50 text-green-800 border border-green-200' 
+              message.type === 'success'
+                ? 'bg-green-50 text-green-800 border border-green-200'
                 : 'bg-red-50 text-red-800 border border-red-200'
             }`}>
               {message.text}
@@ -400,12 +435,12 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-4">
                           <div className="flex-shrink-0">
                             {profile.avatar ? (
-                              <Image 
-                                src={profile.avatar} 
-                                alt="avatar" 
+                              <Image
+                                src={profile.avatar}
+                                alt="avatar"
                                 width={80}
                                 height={80}
-                                className="w-20 h-20 rounded-full object-cover" 
+                                className="w-20 h-20 rounded-full object-cover"
                               />
                             ) : (
                               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl font-bold">
@@ -418,7 +453,7 @@ export default function SettingsPage() {
                             <p className="text-gray-600">{profile.email || 'email@ejemplo.com'}</p>
                           </div>
                         </div>
-                        
+
                         <button
                           onClick={() => setShowEditForm(true)}
                           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -437,14 +472,14 @@ export default function SettingsPage() {
                       <div className="p-4 border border-gray-200 rounded-lg">
                         <h3 className="font-semibold text-gray-900 mb-2">Cambiar contraseña</h3>
                         <p className="text-gray-600 mb-4">Actualiza tu contraseña para mantener tu cuenta segura</p>
-                        <button 
+                        <button
                           onClick={() => setShowPasswordForm(true)}
                           className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                           Cambiar contraseña
                         </button>
                       </div>
-                      
+
                       <div className="p-4 border border-gray-200 rounded-lg">
                         <h3 className="font-semibold text-gray-900 mb-2">Autenticación de dos factores</h3>
                         <p className="text-gray-600 mb-4">Añade una capa extra de seguridad a tu cuenta</p>
@@ -452,7 +487,7 @@ export default function SettingsPage() {
                           <span className="text-sm text-gray-600">
                             {securitySettings.twoFactorEnabled ? 'Habilitado' : 'Deshabilitado'}
                           </span>
-                          <button 
+                          <button
                             onClick={() => handleToggleTwoFactor(!securitySettings.twoFactorEnabled)}
                             disabled={saving}
                             className={`px-4 py-2 rounded-lg transition-colors ${
@@ -472,24 +507,24 @@ export default function SettingsPage() {
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
                             <span>Notificaciones de inicio de sesión</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={securitySettings.loginNotifications}
                               onChange={(e) => setSecuritySettings(prev => ({ ...prev, loginNotifications: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Alertas de actividad sospechosa</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={securitySettings.suspiciousActivityAlerts}
                               onChange={(e) => setSecuritySettings(prev => ({ ...prev, suspiciousActivityAlerts: e.target.checked }))}
                             />
                           </label>
                         </div>
-                        <button 
+                        <button
                           onClick={handleSaveSecurity}
                           disabled={saving}
                           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
@@ -510,20 +545,20 @@ export default function SettingsPage() {
                         <p className="text-gray-600 mb-4">Controla quién puede ver tu perfil</p>
                         <div className="flex items-center gap-4">
                           <label className="flex items-center">
-                            <input 
-                              type="radio" 
-                              name="profile" 
-                              className="mr-2" 
+                            <input
+                              type="radio"
+                              name="profile"
+                              className="mr-2"
                               checked={!privacySettings.isPrivate}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, isPrivate: false }))}
                             />
                             <span>Público</span>
                           </label>
                           <label className="flex items-center">
-                            <input 
-                              type="radio" 
-                              name="profile" 
-                              className="mr-2" 
+                            <input
+                              type="radio"
+                              name="profile"
+                              className="mr-2"
                               checked={privacySettings.isPrivate}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, isPrivate: true }))}
                             />
@@ -531,36 +566,36 @@ export default function SettingsPage() {
                           </label>
                         </div>
                       </div>
-                      
+
                       <div className="p-4 border border-gray-200 rounded-lg">
                         <h3 className="font-semibold text-gray-900 mb-2">Mensajes directos</h3>
                         <p className="text-gray-600 mb-4">Controla quién puede enviarte mensajes</p>
                         <div className="flex items-center gap-4">
                           <label className="flex items-center">
-                            <input 
-                              type="radio" 
-                              name="messages" 
-                              className="mr-2" 
+                            <input
+                              type="radio"
+                              name="messages"
+                              className="mr-2"
                               checked={privacySettings.allowMessages === 'all'}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, allowMessages: 'all' }))}
                             />
                             <span>Todos</span>
                           </label>
                           <label className="flex items-center">
-                            <input 
-                              type="radio" 
-                              name="messages" 
-                              className="mr-2" 
+                            <input
+                              type="radio"
+                              name="messages"
+                              className="mr-2"
                               checked={privacySettings.allowMessages === 'followers'}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, allowMessages: 'followers' }))}
                             />
                             <span>Solo seguidores</span>
                           </label>
                           <label className="flex items-center">
-                            <input 
-                              type="radio" 
-                              name="messages" 
-                              className="mr-2" 
+                            <input
+                              type="radio"
+                              name="messages"
+                              className="mr-2"
                               checked={privacySettings.allowMessages === 'none'}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, allowMessages: 'none' }))}
                             />
@@ -575,27 +610,27 @@ export default function SettingsPage() {
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
                             <span>Mostrar email</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={privacySettings.showEmail}
                               onChange={(e) => setPrivacySettings(prev => ({ ...prev, showEmail: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Mostrar teléfono</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={privacySettings.showPhone}
                               onChange={(e) => setPrivacySettings(prev => ({ ...prev, showPhone: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Mostrar fecha de nacimiento</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={privacySettings.showBirthDate}
                               onChange={(e) => setPrivacySettings(prev => ({ ...prev, showBirthDate: e.target.checked }))}
                             />
@@ -603,7 +638,7 @@ export default function SettingsPage() {
                         </div>
                       </div>
 
-                      <button 
+                      <button
                         onClick={handleSavePrivacy}
                         disabled={saving}
                         className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
@@ -624,58 +659,58 @@ export default function SettingsPage() {
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
                             <span>Nuevos seguidores</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={notificationSettings.follows}
                               onChange={(e) => setNotificationSettings(prev => ({ ...prev, follows: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Me gusta y comentarios</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={notificationSettings.likes && notificationSettings.comments}
-                              onChange={(e) => setNotificationSettings(prev => ({ 
-                                ...prev, 
-                                likes: e.target.checked, 
-                                comments: e.target.checked 
+                              onChange={(e) => setNotificationSettings(prev => ({
+                                ...prev,
+                                likes: e.target.checked,
+                                comments: e.target.checked
                               }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Mensajes directos</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={notificationSettings.messages}
                               onChange={(e) => setNotificationSettings(prev => ({ ...prev, messages: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Menciones</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={notificationSettings.mentions}
                               onChange={(e) => setNotificationSettings(prev => ({ ...prev, mentions: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Nuevas historias</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={notificationSettings.stories}
                               onChange={(e) => setNotificationSettings(prev => ({ ...prev, stories: e.target.checked }))}
                             />
                           </label>
                           <label className="flex items-center justify-between">
                             <span>Nuevas publicaciones</span>
-                            <input 
-                              type="checkbox" 
-                              className="rounded" 
+                            <input
+                              type="checkbox"
+                              className="rounded"
                               checked={notificationSettings.posts}
                               onChange={(e) => setNotificationSettings(prev => ({ ...prev, posts: e.target.checked }))}
                             />
@@ -683,7 +718,7 @@ export default function SettingsPage() {
                         </div>
                       </div>
 
-                      <button 
+                      <button
                         onClick={handleSaveNotifications}
                         disabled={saving}
                         className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
@@ -705,7 +740,7 @@ export default function SettingsPage() {
                           Ver ayuda
                         </button>
                       </div>
-                      
+
                       <div className="p-4 border border-gray-200 rounded-lg">
                         <h3 className="font-semibold text-gray-900 mb-2">Contactar soporte</h3>
                         <p className="text-gray-600 mb-4">¿Necesitas ayuda? Contáctanos</p>
@@ -725,8 +760,8 @@ export default function SettingsPage() {
         {showEditForm && profile && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <EditProfileForm 
-                profile={profile} 
+              <EditProfileForm
+                profile={profile}
                 onSave={handleProfileUpdate}
                 onCancel={() => setShowEditForm(false)}
               />
@@ -801,4 +836,4 @@ export default function SettingsPage() {
       </div>
     </ProtectedRoute>
   );
-} 
+}
