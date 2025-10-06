@@ -506,7 +506,7 @@ export default function SettingsPage() {
                         <p className="text-gray-600 mb-4">Recibe alertas sobre actividad sospechosa</p>
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
-                            <span>Notificaciones de inicio de sesión</span>
+                            <span className="text-gray-700">Notificaciones de inicio de sesión</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -515,7 +515,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Alertas de actividad sospechosa</span>
+                            <span className="text-gray-700">Alertas de actividad sospechosa</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -552,7 +552,7 @@ export default function SettingsPage() {
                               checked={!privacySettings.isPrivate}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, isPrivate: false }))}
                             />
-                            <span>Público</span>
+                            <span className="text-gray-700">Público</span>
                           </label>
                           <label className="flex items-center">
                             <input
@@ -562,7 +562,7 @@ export default function SettingsPage() {
                               checked={privacySettings.isPrivate}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, isPrivate: true }))}
                             />
-                            <span>Privado</span>
+                            <span className="text-gray-700">Privado</span>
                           </label>
                         </div>
                       </div>
@@ -579,7 +579,7 @@ export default function SettingsPage() {
                               checked={privacySettings.allowMessages === 'all'}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, allowMessages: 'all' }))}
                             />
-                            <span>Todos</span>
+                            <span className="text-gray-700">Todos</span>
                           </label>
                           <label className="flex items-center">
                             <input
@@ -589,7 +589,7 @@ export default function SettingsPage() {
                               checked={privacySettings.allowMessages === 'followers'}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, allowMessages: 'followers' }))}
                             />
-                            <span>Solo seguidores</span>
+                            <span className="text-gray-700">Solo seguidores</span>
                           </label>
                           <label className="flex items-center">
                             <input
@@ -599,7 +599,7 @@ export default function SettingsPage() {
                               checked={privacySettings.allowMessages === 'none'}
                               onChange={() => setPrivacySettings(prev => ({ ...prev, allowMessages: 'none' }))}
                             />
-                            <span>Nadie</span>
+                            <span className="text-gray-700">Nadie</span>
                           </label>
                         </div>
                       </div>
@@ -609,7 +609,7 @@ export default function SettingsPage() {
                         <p className="text-gray-600 mb-4">Controla qué información personal es visible</p>
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
-                            <span>Mostrar email</span>
+                            <span className="text-gray-700">Mostrar email</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -618,7 +618,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Mostrar teléfono</span>
+                            <span className="text-gray-700">Mostrar teléfono</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -627,7 +627,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Mostrar fecha de nacimiento</span>
+                            <span className="text-gray-700">Mostrar fecha de nacimiento</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -658,7 +658,7 @@ export default function SettingsPage() {
                         <p className="text-gray-600 mb-4">Recibe notificaciones en tiempo real</p>
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
-                            <span>Nuevos seguidores</span>
+                            <span className="text-gray-700">Nuevos seguidores</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -667,7 +667,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Me gusta y comentarios</span>
+                            <span className="text-gray-700">Me gusta y comentarios</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -680,7 +680,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Mensajes directos</span>
+                            <span className="text-gray-700">Mensajes directos</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -689,7 +689,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Menciones</span>
+                            <span className="text-gray-700">Menciones</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -698,7 +698,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Nuevas historias</span>
+                            <span className="text-gray-700">Nuevas historias</span>
                             <input
                               type="checkbox"
                               className="rounded"
@@ -707,7 +707,7 @@ export default function SettingsPage() {
                             />
                           </label>
                           <label className="flex items-center justify-between">
-                            <span>Nuevas publicaciones</span>
+                            <span className="text-gray-700">Nuevas publicaciones</span>
                             <input
                               type="checkbox"
                               className="rounded"
