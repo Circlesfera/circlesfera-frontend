@@ -32,20 +32,20 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
     allowDuets: true,
     allowStitches: true
   });
-  
+
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Manejar cambios en el formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({
@@ -108,7 +108,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
   // Crear el reel
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!videoFile) {
       setError('Por favor selecciona un video');
       return;
@@ -147,7 +147,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
       }, 200);
 
       const response = await createReel(formDataToSend);
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
 
@@ -208,7 +208,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
             <label className="block text-sm font-medium text-gray-700">
               Video (Proporción 9:16 recomendada)
             </label>
-            
+
             {!videoPreview ? (
               <div
                 className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
@@ -277,7 +277,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               rows={3}
               maxLength={2200}
               placeholder="Cuenta tu historia..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900"
             />
             <p className="mt-1 text-xs text-gray-500 text-right">
               {formData.caption.length}/2200
@@ -296,7 +296,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               value={formData.hashtags}
               onChange={handleInputChange}
               placeholder="hashtag1, hashtag2, hashtag3..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
             />
             <p className="mt-1 text-xs text-gray-500">
               Separa los hashtags con comas
@@ -315,7 +315,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               value={formData.location}
               onChange={handleInputChange}
               placeholder="¿Dónde estás?"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
             />
           </div>
 
@@ -332,7 +332,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 value={formData.audioTitle}
                 onChange={handleInputChange}
                 placeholder="Nombre de la canción"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               />
             </div>
             <div>
@@ -346,7 +346,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 value={formData.audioArtist}
                 onChange={handleInputChange}
                 placeholder="Nombre del artista"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               />
             </div>
           </div>
@@ -356,7 +356,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
             <label className="block text-sm font-medium text-gray-700">
               Configuraciones
             </label>
-            
+
             <div className="space-y-2">
               <label className="flex items-center">
                 <input
@@ -368,7 +368,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 />
                 <span className="ml-2 text-sm text-gray-700">Permitir comentarios</span>
               </label>
-              
+
               <label className="flex items-center">
                 <input
                   type="checkbox"
@@ -379,7 +379,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 />
                 <span className="ml-2 text-sm text-gray-700">Permitir duets</span>
               </label>
-              
+
               <label className="flex items-center">
                 <input
                   type="checkbox"
