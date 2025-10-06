@@ -48,17 +48,6 @@ const StoriesIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const SearchIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-);
-
-const FeedIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-  </svg>
-);
 
 const SettingsIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,17 +119,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
     );
   }
 
-  const navigation: NavigationItem[] = [
+  // Navegación organizada por secciones
+  const mainNavigation: NavigationItem[] = [
     { name: 'Inicio', href: '/', icon: HomeIcon },
-    { name: 'Feed', href: '/feed', icon: FeedIcon },
     { name: 'Explorar', href: '/explore', icon: ExploreIcon },
     { name: 'Reels', href: '/reels', icon: ReelsIcon },
+  ];
+
+  const contentNavigation: NavigationItem[] = [
     { name: 'Stories', href: '/stories', icon: StoriesIcon },
     { name: 'Mensajes', href: '/messages', icon: MessageIcon },
-    { name: 'Búsqueda', href: '/search', icon: SearchIcon },
     { name: 'Notificaciones', href: '/notifications', icon: NotificationIcon, badge: unreadNotifications > 0 ? unreadNotifications : undefined },
-    { name: 'Configuración', href: '/settings', icon: SettingsIcon },
+  ];
+
+  const userNavigation: NavigationItem[] = [
     { name: 'Perfil', href: `/profile`, icon: ProfileIcon },
+    { name: 'Configuración', href: '/settings', icon: SettingsIcon },
   ];
 
   const isActive = (href: string) => {
@@ -180,55 +174,127 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {/* Navigation */}
           <nav className="flex flex-1 flex-col">
-            <ul role="list" className="flex flex-1 flex-col gap-y-2">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
-                      isActive(item.href)
-                        ? "bg-blue-50 text-blue-700 shadow-sm"
-                        : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                    )}
-                  >
-                    <item.icon
+            {/* Navegación Principal */}
+            <div className="mb-6">
+              <ul role="list" className="space-y-1">
+                {mainNavigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
                       className={cn(
-                        "h-6 w-6 shrink-0 transition-colors duration-200",
+                        "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "text-blue-700"
-                          : "text-gray-400 group-hover:text-gray-600"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                       )}
-                    />
-                    <span className="truncate">{item.name}</span>
-                    {item.badge && (
-                      <span className="ml-auto inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-5 w-5 shrink-0 transition-colors duration-200",
+                          isActive(item.href)
+                            ? "text-blue-700"
+                            : "text-gray-400 group-hover:text-gray-600"
+                        )}
+                      />
+                      <span className="truncate">{item.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Separador */}
+            <div className="mx-3 mb-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+            </div>
+
+            {/* Navegación de Contenido */}
+            <div className="mb-6">
+              <ul role="list" className="space-y-1">
+                {contentNavigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                        isActive(item.href)
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      )}
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-5 w-5 shrink-0 transition-colors duration-200",
+                          isActive(item.href)
+                            ? "text-blue-700"
+                            : "text-gray-400 group-hover:text-gray-600"
+                        )}
+                      />
+                      <span className="truncate">{item.name}</span>
+                      {item.badge && (
+                        <span className="ml-auto inline-flex items-center rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white min-w-[20px] justify-center">
+                          {item.badge > 9 ? '9+' : item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             {/* Create Button */}
-            <div className="mt-6">
+            <div className="mt-auto mb-6">
               <Button
                 variant="gradient"
                 size="lg"
                 fullWidth
                 leftIcon={<PlusIcon className="h-5 w-5" />}
                 onClick={() => setShowCreateModal(true)}
+                className="shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Crear Contenido
               </Button>
             </div>
 
+            {/* Separador */}
+            <div className="mx-3 mb-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+            </div>
+
+            {/* Navegación de Usuario */}
+            <div className="mb-6">
+              <ul role="list" className="space-y-1">
+                {userNavigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                        isActive(item.href)
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      )}
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-5 w-5 shrink-0 transition-colors duration-200",
+                          isActive(item.href)
+                            ? "text-blue-700"
+                            : "text-gray-400 group-hover:text-gray-600"
+                        )}
+                      />
+                      <span className="truncate">{item.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {/* User Profile */}
             {user && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+              <div className="mt-auto pt-6 border-t border-gray-100">
+                <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200">
                     <span className="text-white font-semibold text-sm">
                       {user.username?.[0]?.toUpperCase()}
                     </span>
@@ -284,17 +350,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 lg:hidden">
-        <div className="flex justify-around items-center py-2">
-          {navigation.map((item) => (
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg">
+        <div className="flex justify-around items-center py-3">
+          {[...mainNavigation, ...contentNavigation, ...userNavigation].slice(0, 5).map((item) => (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                "flex flex-col items-center p-2 rounded-lg transition-colors duration-200",
+                "flex flex-col items-center p-2 rounded-xl transition-all duration-200",
                 isActive(item.href)
-                  ? "text-blue-600 bg-blue-50"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "text-blue-600 bg-blue-50 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               )}
             >
               <div className="relative">

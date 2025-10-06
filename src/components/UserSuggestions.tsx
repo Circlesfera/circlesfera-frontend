@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import { getSuggestions, UserSuggestion } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
+import { Card } from '@/design-system';
 import FollowButton from './FollowButton';
 
 // Iconos SVG simples
 const UsersIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
   </svg>
 );
@@ -42,11 +43,13 @@ export default function UserSuggestions() {
   if (!user) return null;
 
   return (
-    <div className="card p-4 space-y-4">
+    <Card variant="default" padding="sm" className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <UsersIcon />
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <UsersIcon />
+          </div>
           <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
         </div>
         <button className="text-blue-600 font-semibold text-xs hover:text-blue-700 transition-colors">
@@ -131,33 +134,33 @@ export default function UserSuggestions() {
         </div>
       )}
       {/* Footer con enlaces */}
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <div className="text-gray-400 text-xs space-y-3">
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <div className="text-gray-400 text-xs space-y-4">
           {/* Enlaces principales */}
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="grid grid-cols-2 gap-1 text-center">
             {[
               'Sobre nosotros', 'Ayuda', 'Prensa', 'API', 
-              'Empleos', 'Privacidad', 'Términos', 'Ubicaciones', 'Idioma'
-            ].map((link, idx) => (
-              <React.Fragment key={link}>
-                <a 
-                  href="#" 
-                  className="hover:text-gray-600 hover:underline transition-colors"
-                >
-                  {link}
-                </a>
-                {idx < 8 && <span className="text-gray-300">•</span>}
-              </React.Fragment>
+              'Empleos', 'Privacidad', 'Términos', 'Ubicaciones'
+            ].map((link) => (
+              <a 
+                key={link}
+                href="#" 
+                className="hover:text-gray-600 hover:underline transition-colors"
+              >
+                {link}
+              </a>
             ))}
           </div>
           {/* Copyright */}
-          <div className="flex items-center justify-center space-x-2">
-            <span>© 2024</span>
-            <span className="font-semibold text-gray-600">CircleSfera</span>
-            <span>desde España</span>
+          <div className="text-center pt-2 border-t border-gray-50">
+            <div className="flex items-center justify-center space-x-2">
+              <span>© 2024</span>
+              <span className="font-semibold text-gray-600">CircleSfera</span>
+              <span>desde España</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
