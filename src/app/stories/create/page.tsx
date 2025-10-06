@@ -4,8 +4,8 @@ import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Input } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
+import { createStory } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
-// import CreateStoryForm from '@/components/CreateStoryForm';
 import { ArrowLeft, Camera, Image, Type, MapPin } from 'lucide-react';
 
 export default function CreateStoryPage() {
@@ -99,17 +99,12 @@ export default function CreateStoryPage() {
         submitFormData.append('textStyle', formData.textStyle);
       }
 
-      // TODO: Implementar createStory service call
-      console.log('Creating story with:', {
-        type: storyType,
-        caption: formData.caption,
-        location: formData.location,
-        textContent: formData.textContent,
-        textStyle: formData.textStyle
-      });
-
-      // Simular creación exitosa
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Crear la story usando el servicio
+      const response = await createStory(submitFormData);
+      
+      if (!response.success) {
+        throw new Error(response.message || 'Error al crear la story');
+      }
 
       // Limpiar estado
       setSelectedFile(null);

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/useAuth';
-import { getFeed } from '@/services/postService';
-import { Post } from '@/services/postService';
+import { getFeed, likePost, unlikePost, Post } from '@/services/postService';
 import FeedCard from '@/components/feed/FeedCard';
 import { Card } from '@/design-system/Card';
 import { Button } from '@/design-system/Button';
@@ -22,6 +22,7 @@ const PlusIcon = ({ className }: { className?: string }) => (
 );
 
 export default function FeedPage() {
+  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,19 +94,84 @@ export default function FeedPage() {
     fetchFeed(1, false);
   }, [fetchFeed]);
 
-  const handlePostLike = useCallback((postId: string) => {
-    // Implementar lógica de like
-    console.log('Like post:', postId);
-  }, []);
+  const handlePostLike = useCallback(async (postId: string) => {
+    try {
+      const post = posts.find(p => p._id === postId);
+      if (!post) return;
+
+      const isLiked = post.likes.includes(user?._id || '');
+      
+      // Actualizar estado optimista
+      setPosts(prevPosts =>
+        prevPosts.map(p => {
+          if (p._id === postId) {
+            if (isLiked) {
+              // Quitar like
+              return {
+                ...p,
+                likes: p.likes.filter(id => id !== user?._id),
+                isLiked: false
+              };
+            } else {
+              // Agregar like
+              return {
+                ...p,
+                likes: [...p.likes, user?._id || ''],
+                isLiked: true
+              };
+            }
+          }
+          return p;
+        })
+      );
+
+      // Llamar al servicio
+      const response = isLiked ? await unlikePost(postId) : await likePost(postId);
+      if (!response.success) {
+        // Revertir cambio si falla
+        setPosts(prevPosts =>
+          prevPosts.map(p => {
+            if (p._id === postId) {
+              return post; // Revertir al estado original
+            }
+            return p;
+          })
+        );
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  }, [posts, user]);
 
   const handlePostComment = useCallback((postId: string) => {
-    // Implementar lógica de comentario
-    console.log('Comment on post:', postId);
+    // Redirigir a la página del post individual donde se pueden ver los comentarios
+    router.push(`/post/${postId}`);
   }, []);
 
-  const handlePostShare = useCallback((postId: string) => {
-    // Implementar lógica de compartir
-    console.log('Share post:', postId);
+  const handlePostShare = useCallback(async (postId: string) => {
+    try {
+      const postUrl = `${window.location.origin}/post/${postId}`;
+      
+      if (navigator.share) {
+        // Usar Web Share API si está disponible
+        await navigator.share({
+          title: 'Mira este post en CircleSfera',
+          text: 'Echa un vistazo a este post',
+          url: postUrl,
+        });
+      } else {
+        // Fallback: copiar al portapapeles
+        await navigator.clipboard.writeText(postUrl);
+        alert('¡Enlace copiado al portapapeles!');
+      }
+    } catch (error) {
+      console.error('Error sharing post:', error);
+      // Fallback final: copiar manualmente
+      const postUrl = `${window.location.origin}/post/${postId}`;
+      navigator.clipboard.writeText(postUrl).then(() => {
+        alert('¡Enlace copiado al portapapeles!');
+      });
+    }
   }, []);
 
   const handlePostDelete = useCallback((postId: string) => {

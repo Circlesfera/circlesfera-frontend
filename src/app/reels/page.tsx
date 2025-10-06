@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Avatar } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
-import { getReelsForFeed, Reel } from '@/services/reelService';
+import { getReelsForFeed, likeReel, unlikeReel, Reel } from '@/services/reelService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useRouter } from 'next/navigation';
 import { Video, Heart, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
@@ -50,22 +50,91 @@ export default function ReelsPage() {
 
   const handleLike = async (reelId: string) => {
     try {
-      // Aquí implementarías la lógica de like
-      console.log('Liking reel:', reelId);
-      // TODO: Implementar likeReel service call
+      const reel = reels.find(r => r._id === reelId);
+      if (!reel) return;
+
+      const isLiked = reel.likes.some(like => like.user === user?._id);
+      
+      // Actualizar estado optimista
+      setReels(prevReels =>
+        prevReels.map(r => {
+          if (r._id === reelId) {
+            if (isLiked) {
+              // Quitar like
+              return {
+                ...r,
+                likes: r.likes.filter(like => like.user !== user?._id)
+              };
+            } else {
+              // Agregar like
+              return {
+                ...r,
+                likes: [...r.likes, { user: user?._id || '', createdAt: new Date() }]
+              };
+            }
+          }
+          return r;
+        })
+      );
+
+      // Llamar al servicio correcto según el estado
+      const response = isLiked ? await unlikeReel(reelId) : await likeReel(reelId);
+      if (!response.success) {
+        // Revertir cambio si falla
+        setReels(prevReels =>
+          prevReels.map(r => {
+            if (r._id === reelId) {
+              // Revertir al estado original
+              return reel;
+            }
+            return r;
+          })
+        );
+      }
     } catch (error) {
       console.error('Error liking reel:', error);
+      // Revertir cambios en caso de error
+      setReels(prevReels =>
+        prevReels.map(r => {
+          if (r._id === reelId) {
+            const originalReel = reels.find(original => original._id === reelId);
+            return originalReel || r;
+          }
+          return r;
+        })
+      );
     }
   };
 
   const handleComment = (reelId: string) => {
-    // TODO: Abrir modal de comentarios
-    console.log('Opening comments for reel:', reelId);
+    // Redirigir a la página del reel individual donde se pueden ver los comentarios
+    router.push(`/reels/${reelId}`);
   };
 
-  const handleShare = (reelId: string) => {
-    // TODO: Implementar compartir
-    console.log('Sharing reel:', reelId);
+  const handleShare = async (reelId: string) => {
+    try {
+      const reelUrl = `${window.location.origin}/reels/${reelId}`;
+      
+      if (navigator.share) {
+        // Usar Web Share API si está disponible
+        await navigator.share({
+          title: 'Mira este reel en CircleSfera',
+          text: 'Echa un vistazo a este reel',
+          url: reelUrl,
+        });
+      } else {
+        // Fallback: copiar al portapapeles
+        await navigator.clipboard.writeText(reelUrl);
+        alert('¡Enlace copiado al portapapeles!');
+      }
+    } catch (error) {
+      console.error('Error sharing reel:', error);
+      // Fallback final: copiar manualmente
+      const reelUrl = `${window.location.origin}/reels/${reelId}`;
+      navigator.clipboard.writeText(reelUrl).then(() => {
+        alert('¡Enlace copiado al portapapeles!');
+      });
+    }
   };
 
   const handleUserClick = (userId: string) => {
@@ -231,10 +300,15 @@ export default function ReelsPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white"
+                className={`w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white ${
+                  currentReel.likes.some(like => like.user === user?._id) ? 'text-red-500' : ''
+                }`}
                 onClick={() => handleLike(currentReel._id)}
               >
-                <Heart className="w-6 h-6" fill="currentColor" />
+                <Heart 
+                  className="w-6 h-6" 
+                  fill={currentReel.likes.some(like => like.user === user?._id) ? "currentColor" : "none"} 
+                />
               </Button>
               <span className="text-white text-sm mt-1">
                 {currentReel.likes.length}

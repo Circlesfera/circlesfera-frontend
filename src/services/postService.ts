@@ -291,3 +291,33 @@ export const getUserComments = async (username: string, page = 1, limit = 10): P
   });
   return res.data;
 };
+
+// Dar like a un post
+export const likePost = async (postId: string): Promise<{
+  success: boolean;
+  message: string;
+  likesCount: number;
+}> => {
+  const res = await api.post(`/api/posts/${postId}/like`);
+  return res.data;
+};
+
+// Quitar like de un post
+export const unlikePost = async (postId: string): Promise<{
+  success: boolean;
+  message: string;
+  likesCount: number;
+}> => {
+  const res = await api.delete(`/api/posts/${postId}/like`);
+  return res.data;
+};
+
+// Comentar un post
+export const commentPost = async (postId: string, content: string): Promise<{
+  success: boolean;
+  message: string;
+  comment: Comment;
+}> => {
+  const res = await api.post(`/api/posts/${postId}/comment`, { content });
+  return res.data;
+};
