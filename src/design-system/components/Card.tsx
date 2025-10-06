@@ -25,9 +25,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     `;
 
     const variants = {
-      default: 'bg-white border border-gray-100',
-      elevated: 'bg-white shadow-lg border border-gray-100',
-      outlined: 'bg-white border-2 border-gray-200',
+      default: 'bg-white border border-gray-200',
+      elevated: 'bg-white shadow-lg border border-gray-200',
+      outlined: 'bg-white border-2 border-gray-300',
       glass: 'bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg',
     };
 
