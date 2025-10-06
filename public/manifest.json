@@ -11,6 +11,7 @@
   "lang": "es",
   "dir": "ltr",
   "categories": ["social", "entertainment", "lifestyle"],
+  "features": ["offline_support", "push_notifications", "media_sharing"],
   "icons": [
     {
       "src": "/icons/icon-72x72.svg",
