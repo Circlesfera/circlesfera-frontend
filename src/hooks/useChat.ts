@@ -34,7 +34,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Configurar WebSocket para mensajes en tiempo real
-  const { isConnected, lastMessage } = useWebSocket({
+  useWebSocket({
     onMessage: (wsMessage) => {
       if (wsMessage.type === 'new_message' && wsMessage.data.conversation === conversationId) {
         setMessages(prev => [...prev, wsMessage.data]);
