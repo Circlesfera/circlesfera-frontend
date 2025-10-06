@@ -57,12 +57,12 @@ interface PostCardProps {
   onUserClick?: (userId: string) => void;
 }
 
-export default function PostCard({ 
-  post, 
-  onPostDeleted, 
+export default function PostCard({
+  post,
+  onPostDeleted,
   onComment,
   onShare,
-  onUserClick 
+  onUserClick
 }: PostCardProps) {
   const { user } = useAuth();
   const likedByUser = post.likes.includes(user?._id || '');
@@ -80,7 +80,7 @@ export default function PostCard({
   const [showReportModal, setShowReportModal] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
-  
+
   // Animaciones
   const { ref, isInView } = useInViewAnimation();
   const cardAnimation = useCardAnimation();
@@ -89,7 +89,7 @@ export default function PostCard({
     const now = new Date();
     const postDate = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) return 'ahora';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
@@ -182,7 +182,7 @@ export default function PostCard({
     try {
       setIsDeleting(true);
       setError(null);
-      
+
       // Debug: verificar token
       const token = localStorage.getItem('token');
       console.log('Token disponible:', !!token);
@@ -191,13 +191,13 @@ export default function PostCard({
       console.log('User ID del post:', post.user._id);
       console.log('Usuario actual:', user?._id);
       console.log('¿Son iguales?', post.user._id === user?._id);
-      
+
       const response = await deletePost(post._id);
       if (response.success) {
         // El post se eliminará del feed automáticamente
         setShowDeleteConfirm(false);
         setShowMore(false);
-        
+
         // Notificar al componente padre que el post fue eliminado
         if (onPostDeleted) {
           onPostDeleted(post._id);
@@ -218,10 +218,10 @@ export default function PostCard({
           return (
             <div className="relative overflow-hidden">
               <div className="relative">
-                <LazyImage 
-                  src={post.content.images[currentImageIndex]?.url || ''} 
-                  alt={post.content.images[currentImageIndex]?.alt || "post"} 
-                  className="w-full h-auto object-cover" 
+                <LazyImage
+                  src={post.content.images[currentImageIndex]?.url || ''}
+                  alt={post.content.images[currentImageIndex]?.alt || "post"}
+                  className="w-full h-auto object-cover"
                 />
                 {/* Indicadores de imagen */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -262,10 +262,10 @@ export default function PostCard({
         } else {
           return (
             <div className="relative overflow-hidden">
-              <LazyImage 
-                src={post.content.images?.[0]?.url || ''} 
-                alt={post.content.images?.[0]?.alt || "post"} 
-                className="w-full h-auto object-cover" 
+              <LazyImage
+                src={post.content.images?.[0]?.url || ''}
+                alt={post.content.images?.[0]?.alt || "post"}
+                className="w-full h-auto object-cover"
               />
             </div>
           );
@@ -274,9 +274,9 @@ export default function PostCard({
       case 'video':
         return (
           <div className="relative overflow-hidden">
-            <video 
+            <video
               ref={videoRef}
-              src={post.content.video?.url} 
+              src={post.content.video?.url}
               poster={post.content.video?.thumbnail}
               className="w-full h-auto object-cover"
               preload="metadata"
@@ -316,7 +316,7 @@ export default function PostCard({
   };
 
   return (
-    <motion.div 
+    <motion.div
       ref={ref}
       initial={fadeInUp.initial}
       animate={isInView ? fadeInUp.animate : fadeInUp.initial}
@@ -327,14 +327,14 @@ export default function PostCard({
       {/* Header del usuario */}
       <div className="flex items-center justify-between px-6 py-1">
         <div className="flex items-center space-x-3">
-          <button 
+          <button
             onClick={() => onUserClick?.(post.user._id)}
             className="group"
           >
             {post.user.avatar ? (
-              <LazyImage 
-                src={post.user.avatar || ''} 
-                alt="avatar" 
+              <LazyImage
+                src={post.user.avatar || ''}
+                alt="avatar"
                 className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
               />
             ) : (
@@ -345,7 +345,7 @@ export default function PostCard({
           </button>
           <div className="flex flex-col">
             <div className="flex items-center space-x-2">
-              <button 
+              <button
                 onClick={() => onUserClick?.(post.user._id)}
                 className="font-semibold text-gray-900 text-sm hover:text-blue-600 transition-colors"
               >
@@ -362,15 +362,15 @@ export default function PostCard({
             </div>
           </div>
         </div>
-        
+
         <div className="relative" ref={moreMenuRef}>
-          <button 
+          <button
             onClick={() => setShowMore(!showMore)}
             className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200"
           >
             <MoreIcon />
           </button>
-          
+
                     {/* Menú desplegable */}
           {showMore && (
             <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
@@ -391,7 +391,7 @@ export default function PostCard({
                       </svg>
                       <span>Editar post</span>
                     </button>
-                    
+
                     {/* Fijar post */}
                     <button
                       onClick={() => {
@@ -405,10 +405,10 @@ export default function PostCard({
                       </svg>
                       <span>{isPinned ? 'Desfijar post' : 'Fijar post'}</span>
                     </button>
-                    
+
                     {/* Separador */}
                     <div className="border-t border-gray-100 my-1"></div>
-                    
+
                     {/* Eliminar post */}
                     <button
                       onClick={() => {
@@ -424,7 +424,7 @@ export default function PostCard({
                     </button>
                   </>
                 )}
-                
+
                 {/* Opciones para todos los usuarios */}
                 <button
                   onClick={() => {
@@ -452,23 +452,23 @@ export default function PostCard({
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-4">
             <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
-            
-            <button 
+
+            <button
               onClick={() => onComment?.(post._id, post.user.username, post.content?.images?.[0]?.url)}
               className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105"
             >
               <CommentIcon />
             </button>
-            
-            <button 
-              onClick={() => onShare?.(post._id, `${window.location.origin}/post/${post._id}`, post.caption)}
+
+            <button
+              onClick={() => onShare?.(post._id, `${window.location.origin}/${post.user.username}/post/${post._id}`, post.caption)}
               className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105"
             >
               <ShareIcon />
             </button>
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setIsSaved(!isSaved)}
             className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group hover:scale-105"
           >
@@ -489,7 +489,7 @@ export default function PostCard({
                 {post.caption.length > 80 ? (
                   <>
                     {post.caption.substring(0, 80)}...
-                    <button 
+                    <button
                       onClick={() => setShowFullCaption(!showFullCaption)}
                       className="text-gray-500 hover:text-gray-700 ml-1 font-medium"
                     >
@@ -501,7 +501,7 @@ export default function PostCard({
                 )}
               </span>
             )}
-            
+
             {/* Formulario de edición */}
             {isEditing && (
               <div className="mt-2">
@@ -540,7 +540,7 @@ export default function PostCard({
             <TagIcon />
             <div className="flex flex-wrap gap-1">
               {post.tags.slice(0, 3).map((tag, index) => (
-                <span 
+                <span
                   key={index}
                   className="text-blue-600 text-xs font-medium hover:text-blue-700 cursor-pointer"
                 >

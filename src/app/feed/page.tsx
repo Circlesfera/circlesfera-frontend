@@ -31,13 +31,13 @@ export default function FeedPage() {
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  
+
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostRef = useRef<HTMLDivElement | null>(null);
 
   const fetchFeed = useCallback(async (pageNum: number = 1, append: boolean = false) => {
     if (!user) return;
-    
+
     try {
       if (!append) {
         setLoading(true);
@@ -47,13 +47,13 @@ export default function FeedPage() {
       }
 
       const response = await getFeed(pageNum, 10);
-      
+
       if (append) {
         setPosts(prev => [...prev, ...response.posts]);
       } else {
         setPosts(response.posts);
       }
-      
+
       setHasMore(response.hasMore || false);
       setPage(pageNum);
     } catch (err) {
@@ -76,16 +76,16 @@ export default function FeedPage() {
   // Intersection Observer para carga infinita
   useEffect(() => {
     if (!hasMore || loading || fetchingMore || !user) return;
-    
+
     if (observer.current) observer.current.disconnect();
-    
+
     observer.current = new window.IntersectionObserver(entries => {
       if (entries[0]?.isIntersecting && hasMore) {
         setFetchingMore(true);
         fetchFeed(page + 1, true);
       }
     });
-    
+
     if (lastPostRef.current) observer.current.observe(lastPostRef.current);
   }, [hasMore, loading, fetchingMore, page, fetchFeed, user]);
 
@@ -100,7 +100,7 @@ export default function FeedPage() {
       if (!post) return;
 
       const isLiked = post.likes.includes(user?._id || '');
-      
+
       // Actualizar estado optimista
       setPosts(prevPosts =>
         prevPosts.map(p => {
@@ -143,15 +143,15 @@ export default function FeedPage() {
     }
   }, [posts, user]);
 
-  const handlePostComment = useCallback((postId: string) => {
+  const handlePostComment = useCallback((postId: string, username: string) => {
     // Redirigir a la página del post individual donde se pueden ver los comentarios
-    router.push(`/post/${postId}`);
+    router.push(`/${username}/post/${postId}`);
   }, []);
 
-  const handlePostShare = useCallback(async (postId: string) => {
+  const handlePostShare = useCallback(async (postId: string, username: string) => {
     try {
-      const postUrl = `${window.location.origin}/post/${postId}`;
-      
+      const postUrl = `${window.location.origin}/${username}/post/${postId}`;
+
       if (navigator.share) {
         // Usar Web Share API si está disponible
         await navigator.share({

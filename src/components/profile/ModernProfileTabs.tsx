@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels } from '@/services/reelService';
 import { getUserStories } from '@/services/storyService';
@@ -24,6 +26,7 @@ interface TabData {
 }
 
 export default function ModernProfileTabs({ username, isOwnProfile }: ModernProfileTabsProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('posts');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -191,7 +194,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-3">Error al cargar contenido</h3>
           <p className="text-gray-600 mb-6">{error}</p>
-          <button 
+          <button
             onClick={() => loadContent(activeTab)}
             className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
@@ -208,15 +211,64 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     const safeCurrentContent = Array.isArray(currentContent) ? currentContent : [];
 
     if (safeCurrentContent.length === 0) {
-      return <ModernEmptyState tabType={activeTab} isOwnProfile={isOwnProfile} />;
+      return <ModernEmptyState tabType={activeTab} isOwnProfile={isOwnProfile} router={router} />;
     }
 
     return (
       <div className="p-4 sm:p-6">
-        <ModernContentGrid content={safeCurrentContent} type={activeTab} />
+        {/* Header con navegación rápida */}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">
+            {activeTab === 'posts' ? 'Publicaciones' : activeTab === 'reels' ? 'Reels' : 'Stories'}
+          </h3>
+          <div className="flex items-center gap-3">
+            {safeCurrentContent.length > 0 && (
+              <button
+                onClick={() => {
+                  switch (activeTab) {
+                    case 'posts':
+                      router.push(`/${username}?tab=posts`);
+                      break;
+                    case 'reels':
+                      router.push(`/${username}?tab=reels`);
+                      break;
+                    case 'stories':
+                      router.push(`/${username}?tab=stories`);
+                      break;
+                  }
+                }}
+                className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+              >
+                Ver todos
+              </button>
+            )}
+            {isOwnProfile && (
+              <button
+                onClick={() => {
+                  switch (activeTab) {
+                    case 'posts':
+                      router.push('/create/post');
+                      break;
+                    case 'reels':
+                      router.push('/create/reel');
+                      break;
+                    case 'stories':
+                      router.push('/create/story');
+                      break;
+                  }
+                }}
+                className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-medium rounded-full hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105"
+              >
+                + Crear
+              </button>
+            )}
+          </div>
+        </div>
+
+        <ModernContentGrid content={safeCurrentContent} type={activeTab} username={username} />
         {hasMore && (
           <div className="text-center mt-6">
-            <button 
+            <button
               onClick={handleLoadMore}
               disabled={loading}
               className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-lg hover:from-gray-200 hover:to-gray-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium text-sm"
@@ -240,7 +292,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     <div className="relative">
       {/* Background - Simplified */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/5 to-purple-50/5 rounded-xl"></div>
-      
+
       <div className="relative bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100/50 overflow-hidden">
         {/* Pestañas mejoradas */}
         <div className="border-b border-gray-200/50">
@@ -265,11 +317,29 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
                 <span className="sm:hidden">
                   {tab.id === 'posts' ? 'Posts' : tab.id === 'reels' ? 'Reels' : 'Stories'}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-bold transition-all duration-300 ${
-                  activeTab === tab.id 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (tab.count > 0) {
+                      switch (tab.id) {
+                        case 'posts':
+                          router.push(`/${username}?tab=posts`);
+                          break;
+                        case 'reels':
+                          router.push(`/${username}?tab=reels`);
+                          break;
+                        case 'stories':
+                          router.push(`/${username}?tab=stories`);
+                          break;
+                      }
+                    }
+                  }}
+                  className={`px-2 py-1 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer hover:scale-105 ${
+                    activeTab === tab.id
+                      ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  } ${tab.count > 0 ? 'hover:shadow-md' : 'cursor-default'}`}
+                >
                   {formatNumber(tab.count)}
                 </span>
               </button>
@@ -285,7 +355,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
 }
 
 // Componente para el estado vacío mejorado
-function ModernEmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnProfile: boolean }) {
+function ModernEmptyState({ tabType, isOwnProfile, router }: { tabType: TabType; isOwnProfile: boolean; router: AppRouterInstance }) {
   const getEmptyMessage = () => {
     if (isOwnProfile) {
       switch (tabType) {
@@ -349,7 +419,22 @@ function ModernEmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnPr
       <p className="text-gray-600 mb-6 max-w-sm mx-auto leading-relaxed text-sm">{message.subtitle}</p>
       {isOwnProfile && (
         <div className="flex justify-center gap-4">
-          <button className={`px-6 py-3 bg-gradient-to-r ${message.color} text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 font-medium text-sm`}>
+          <button
+            onClick={() => {
+              switch (tabType) {
+                case 'posts':
+                  router.push('/create/post');
+                  break;
+                case 'reels':
+                  router.push('/create/reel');
+                  break;
+                case 'stories':
+                  router.push('/create/story');
+                  break;
+              }
+            }}
+            className={`px-6 py-3 bg-gradient-to-r ${message.color} text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 font-medium text-sm`}
+          >
             Crear {tabType === 'posts' ? 'Publicación' : tabType === 'reels' ? 'Reel' : 'Story'}
           </button>
         </div>
@@ -359,17 +444,37 @@ function ModernEmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnPr
 }
 
 // Componente para la cuadrícula de contenido mejorada
-function ModernContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type: TabType }) {
+function ModernContentGrid({ content, type, username }: { content: (Post | Reel | Story)[]; type: TabType; username: string }) {
+  const router = useRouter();
+
   // Asegurar que content siempre sea un array
   const safeContent = Array.isArray(content) ? content : [];
+
+  const handleContentClick = (itemId: string) => {
+    switch (type) {
+      case 'posts':
+        router.push(`/${username}/post/${itemId}`);
+        break;
+      case 'reels':
+        router.push(`/${username}/reel/${itemId}`);
+        break;
+      case 'stories':
+        router.push(`/${username}/story/${itemId}`);
+        break;
+    }
+  };
 
   if (type === 'stories') {
     return (
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 lg:gap-4">
         {safeContent.map((story) => (
-          <div key={story._id} className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <img 
-              src={(story as Story).content?.image?.url || ''} 
+          <div
+            key={story._id}
+            onClick={() => handleContentClick(story._id)}
+            className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <img
+              src={(story as Story).content?.image?.url || ''}
               alt="Story"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
@@ -384,15 +489,19 @@ function ModernContentGrid({ content, type }: { content: (Post | Reel | Story)[]
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 lg:gap-4">
       {safeContent.map((item) => (
-        <div key={item._id} className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div
+          key={item._id}
+          onClick={() => handleContentClick(item._id)}
+          className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+        >
           {type === 'posts' ? (
-            <img 
-              src={(item as Post).content?.images?.[0]?.url || ''} 
+            <img
+              src={(item as Post).content?.images?.[0]?.url || ''}
               alt="Post"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
           ) : (
-            <video 
+            <video
               src={(item as Reel).video?.url || ''}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               muted
@@ -400,7 +509,7 @@ function ModernContentGrid({ content, type }: { content: (Post | Reel | Story)[]
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl lg:rounded-3xl transition-all duration-300" />
-          
+
           {/* Video play icon for reels */}
           {type === 'reels' && (
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

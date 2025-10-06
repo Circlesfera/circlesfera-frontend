@@ -10,8 +10,8 @@ import { cn } from '@/utils/cn';
 interface FeedCardProps {
   post: Post;
   onLike?: (postId: string) => void;
-  onComment?: (postId: string) => void;
-  onShare?: (postId: string) => void;
+  onComment?: (postId: string, username: string) => void;
+  onShare?: (postId: string, username: string) => void;
   onDelete?: (postId: string) => void;
   isOwnPost?: boolean;
 }
@@ -47,13 +47,13 @@ const DeleteIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default function FeedCard({ 
-  post, 
-  onLike, 
-  onComment, 
-  onShare, 
-  onDelete, 
-  isOwnPost = false 
+export default function FeedCard({
+  post,
+  onLike,
+  onComment,
+  onShare,
+  onDelete,
+  isOwnPost = false
 }: FeedCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -65,11 +65,11 @@ export default function FeedCard({
   };
 
   const handleComment = () => {
-    onComment?.(post._id);
+    onComment?.(post._id, post.user.username);
   };
 
   const handleShare = () => {
-    onShare?.(post._id);
+    onShare?.(post._id, post.user.username);
   };
 
   const handleDelete = () => {
@@ -96,7 +96,7 @@ export default function FeedCard({
             </p>
           </div>
         </div>
-        
+
         <div className="relative">
           <Button
             variant="ghost"
@@ -105,7 +105,7 @@ export default function FeedCard({
           >
             <MoreIcon className="h-5 w-5" />
           </Button>
-          
+
           {showMore && (
             <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
               {isOwnPost && (
@@ -159,9 +159,9 @@ export default function FeedCard({
               isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"
             )}
           >
-            <HeartIcon 
-              filled={isLiked} 
-              className="h-5 w-5" 
+            <HeartIcon
+              filled={isLiked}
+              className="h-5 w-5"
             />
             <span className="text-sm font-medium">
               {formatNumber(post.likes.length)}
