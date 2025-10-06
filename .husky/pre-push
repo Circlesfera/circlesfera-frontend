@@ -1,6 +1,6 @@
-echo "🔍 Ejecutando verificaciones pre-commit..."
+echo "🧪 Ejecutando verificaciones antes de push..."
 
-# Ejecutar linting
+# Verificar linting
 echo "✨ Verificando código con ESLint..."
 npm run lint
 
@@ -12,4 +12,5 @@ npm run format:check
 echo "📝 Verificando tipos con TypeScript..."
 npm run type-check
 
-echo "✅ Pre-commit checks completados exitosamente!"
+echo "✅ Pre-push checks completados exitosamente!"
+
