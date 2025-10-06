@@ -16,10 +16,22 @@ export default function CommentsSection({ postId }: { postId: string }) {
     setLoading(true);
     setError('');
     getComments(postId).then(data => {
-      if (data && data.comments) {
-        setComments(data.comments);
+      console.log('Respuesta de getComments:', data);
+
+      // Verificar si la respuesta es válida
+      if (data && typeof data === 'object') {
+        if (data.success && Array.isArray(data.comments)) {
+          setComments(data.comments);
+        } else if (Array.isArray(data)) {
+          // Si devuelve directamente un array de comentarios
+          setComments(data);
+        } else {
+          console.error('getComments no devolvió datos válidos:', data);
+          setError('Error al cargar comentarios');
+          setComments([]);
+        }
       } else {
-        console.error('getComments no devolvió datos válidos:', data);
+        console.error('getComments devolvió datos inválidos:', data);
         setError('Error al cargar comentarios');
         setComments([]);
       }
@@ -87,15 +99,15 @@ export default function CommentsSection({ postId }: { postId: string }) {
           disabled={sending}
           maxLength={500}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={`text-blue-500 font-semibold text-base hover:opacity-70 transition-opacity px-3 py-2 ${!text.trim() || sending ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={sending || !text.trim()}
         >
           {sending ? '...' : 'Publicar'}
         </button>
       </form>
-      
+
       {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
     </div>
   );
