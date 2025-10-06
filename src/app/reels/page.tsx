@@ -1,174 +1,83 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Button, Avatar } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
-import { getReelsForFeed, likeReel, unlikeReel, Reel } from '@/services/reelService';
+import { likeReel, unlikeReel } from '@/services/reelService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useRouter } from 'next/navigation';
 import { Video, Heart, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
+import { useReels } from '@/hooks/useReels';
+import VideoPlayer from '@/components/VideoPlayer';
 
 export default function ReelsPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [reels, setReels] = useState<Reel[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [, setLoadingMore] = useState(false);
-  const [currentReelIndex, setCurrentReelIndex] = useState(0);
-  const [currentReel, setCurrentReel] = useState<Reel | null>(null);
+  const {
+    currentReel,
+    loading,
+    goToNext,
+    goToPrevious,
+    currentIndex,
+    reels,
+    updateReel
+  } = useReels();
 
-  // Cargar reels iniciales
-  useEffect(() => {
-    const loadReels = async () => {
-      if (authLoading || !user) return;
-      
-      try {
-        setLoading(true);
-        const response = await getReelsForFeed(1, 20);
-        if (response.success) {
-          setReels(response.reels || []);
-          if (response.reels && response.reels.length > 0) {
-            setCurrentReel(response.reels[0] || null);
-          }
-        }
-      } catch (error) {
-        console.error('Error cargando reels:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleLike = useCallback(async (reelId: string) => {
+    if (!currentReel) return;
 
-    loadReels();
-  }, [user, authLoading]);
-
-  // Actualizar reel actual cuando cambia el índice
-  useEffect(() => {
-    if (reels.length > 0 && currentReelIndex < reels.length) {
-      setCurrentReel(reels[currentReelIndex] || null);
-    }
-  }, [currentReelIndex, reels]);
-
-  const handleLike = async (reelId: string) => {
     try {
-      const reel = reels.find(r => r._id === reelId);
-      if (!reel) return;
+      const isLiked = currentReel.likes.some(like => like.user === user?._id);
 
-      const isLiked = reel.likes.some(like => like.user === user?._id);
-      
       // Actualizar estado optimista
-      setReels(prevReels =>
-        prevReels.map(r => {
-          if (r._id === reelId) {
-            if (isLiked) {
-              // Quitar like
-              return {
-                ...r,
-                likes: r.likes.filter(like => like.user !== user?._id)
-              };
-            } else {
-              // Agregar like
-              return {
-                ...r,
-                likes: [...r.likes, { user: user?._id || '', createdAt: new Date() }]
-              };
-            }
-          }
-          return r;
-        })
-      );
+      const updatedLikes = isLiked
+        ? currentReel.likes.filter(like => like.user !== user?._id)
+        : [...currentReel.likes, { user: user?._id || '', createdAt: new Date() }];
 
-      // Llamar al servicio correcto según el estado
+      updateReel(reelId, { likes: updatedLikes });
+
+      // Llamar al servicio
       const response = isLiked ? await unlikeReel(reelId) : await likeReel(reelId);
+
       if (!response.success) {
-        // Revertir cambio si falla
-        setReels(prevReels =>
-          prevReels.map(r => {
-            if (r._id === reelId) {
-              // Revertir al estado original
-              return reel;
-            }
-            return r;
-          })
-        );
+        // Revertir si falla
+        updateReel(reelId, { likes: currentReel.likes });
       }
     } catch (error) {
       console.error('Error liking reel:', error);
-      // Revertir cambios en caso de error
-      setReels(prevReels =>
-        prevReels.map(r => {
-          if (r._id === reelId) {
-            const originalReel = reels.find(original => original._id === reelId);
-            return originalReel || r;
-          }
-          return r;
-        })
-      );
+      // Revertir en caso de error
+      if (currentReel) {
+        updateReel(reelId, { likes: currentReel.likes });
+      }
     }
-  };
+  }, [currentReel, user, updateReel]);
 
-  const handleComment = (reelId: string) => {
-    // Redirigir a la página del reel individual donde se pueden ver los comentarios
+  const handleComment = useCallback((reelId: string) => {
     router.push(`/reels/${reelId}`);
-  };
+  }, [router]);
 
-  const handleShare = async (reelId: string) => {
+  const handleShare = useCallback(async (reelId: string) => {
     try {
       const reelUrl = `${window.location.origin}/reels/${reelId}`;
-      
+
       if (navigator.share) {
-        // Usar Web Share API si está disponible
         await navigator.share({
           title: 'Mira este reel en CircleSfera',
           text: 'Echa un vistazo a este reel',
           url: reelUrl,
         });
       } else {
-        // Fallback: copiar al portapapeles
         await navigator.clipboard.writeText(reelUrl);
         alert('¡Enlace copiado al portapapeles!');
       }
     } catch (error) {
       console.error('Error sharing reel:', error);
-      // Fallback final: copiar manualmente
-      const reelUrl = `${window.location.origin}/reels/${reelId}`;
-      navigator.clipboard.writeText(reelUrl).then(() => {
-        alert('¡Enlace copiado al portapapeles!');
-      });
     }
-  };
+  }, []);
 
-  const handleUserClick = (userId: string) => {
+  const handleUserClick = useCallback((userId: string) => {
     router.push(`/${userId}`);
-  };
-
-  const loadMoreReels = async () => {
-    try {
-      setLoadingMore(true);
-      const response = await getReelsForFeed(Math.floor(reels.length / 20) + 1, 20);
-      if (response.success && response.reels) {
-        setReels(prev => [...prev, ...response.reels]);
-      }
-    } catch (error) {
-      console.error('Error cargando más reels:', error);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
-  const nextReel = () => {
-    if (currentReelIndex < reels.length - 1) {
-      setCurrentReelIndex(prev => prev + 1);
-    } else {
-      // Cargar más reels si estamos al final
-      loadMoreReels();
-    }
-  };
-
-  const prevReel = () => {
-    if (currentReelIndex > 0) {
-      setCurrentReelIndex(prev => prev - 1);
-    }
-  };
+  }, [router]);
 
   if (loading || authLoading) {
     return (
@@ -208,23 +117,26 @@ export default function ReelsPage() {
     );
   }
 
+  // Configurar props del video player
+  const videoPlayerProps = {
+    src: currentReel.video.url,
+    autoPlay: true,
+    loop: true,
+    muted: true,
+    isActive: true,
+    className: "w-full h-full",
+    ...(currentReel.video.thumbnail && { poster: currentReel.video.thumbnail })
+  };
+
   return (
     <ProtectedRoute>
       <div className="h-screen bg-black relative overflow-hidden">
-        {/* Reel Video */}
+        {/* Reel Video con VideoPlayer optimizado */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <video
-            className="w-full h-full object-cover"
-            src={currentReel.video.url}
-            poster={currentReel.video.thumbnail}
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-          
+          <VideoPlayer {...videoPlayerProps} />
+
           {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Reel Content */}
@@ -305,9 +217,9 @@ export default function ReelsPage() {
                 }`}
                 onClick={() => handleLike(currentReel._id)}
               >
-                <Heart 
-                  className="w-6 h-6" 
-                  fill={currentReel.likes.some(like => like.user === user?._id) ? "currentColor" : "none"} 
+                <Heart
+                  className="w-6 h-6"
+                  fill={currentReel.likes.some(like => like.user === user?._id) ? "currentColor" : "none"}
                 />
               </Button>
               <span className="text-white text-sm mt-1">
@@ -374,9 +286,9 @@ export default function ReelsPage() {
           <Button
             variant="ghost"
             size="lg"
-            className="w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white"
-            onClick={prevReel}
-            disabled={currentReelIndex === 0}
+            className="w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white disabled:opacity-50"
+            onClick={goToPrevious}
+            disabled={currentIndex === 0}
           >
             ↑
           </Button>
@@ -387,7 +299,7 @@ export default function ReelsPage() {
             variant="ghost"
             size="lg"
             className="w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white"
-            onClick={nextReel}
+            onClick={goToNext}
           >
             ↓
           </Button>
@@ -396,11 +308,11 @@ export default function ReelsPage() {
         {/* Progress indicator */}
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
           <div className="flex space-x-1">
-            {reels.slice(0, 10).map((_, index) => (
+            {reels.slice(0, Math.min(10, reels.length)).map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-1 rounded-full ${
-                  index === currentReelIndex ? 'bg-white' : 'bg-white/30'
+                className={`w-1 h-1 rounded-full transition-colors ${
+                  index === currentIndex ? 'bg-white' : 'bg-white/30'
                 }`}
               />
             ))}
