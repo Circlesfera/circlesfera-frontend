@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { checkUsernameAvailability, editProfile } from '@/services/userService';
+import { useAuth } from '@/features/auth/useAuth';
 
 interface User {
   _id: string;
@@ -25,6 +26,7 @@ interface EditProfileFormProps {
 }
 
 export default function EditProfileForm({ profile, onSave, onCancel }: EditProfileFormProps) {
+  const { refreshUser } = useAuth();
   const [formData, setFormData] = useState({
     username: profile.username || '',
     fullName: profile.fullName || '',
@@ -158,6 +160,9 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       // Actualizar el perfil local
       setAvatarFile(null);
       setAvatarPreview(null);
+      
+      // Actualizar el usuario en el contexto de autenticación
+      await refreshUser();
       
       // Notificar al componente padre sobre la actualización del avatar
       if (response.user && response.user.avatar) {

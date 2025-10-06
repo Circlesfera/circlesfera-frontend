@@ -299,6 +299,12 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                       await updateUserProfile(updatedData);
                       // Actualizar el estado local
                       setProfileData(prev => ({ ...prev, ...updatedData }));
+                      
+                      // Si se actualizó el avatar, actualizar también el usuario en el contexto de autenticación
+                      if (updatedData.avatar && user) {
+                        await refreshUser();
+                      }
+                      
                       // Cerrar el modal
                       setShowEdit(false); 
                       // Recargar el perfil desde el servidor
