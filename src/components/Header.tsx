@@ -209,9 +209,10 @@ export default function Header() {
                   setShowSearch(true);
                 }}
                 onBlur={() => setSearchFocused(false)}
-                className={`w-full px-12 py-2 bg-gray-50 border border-gray-200 rounded-xl text-center text-sm text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 ${
-                  searchFocused ? 'border-blue-400 bg-white shadow-lg text-gray-900' : 'hover:border-gray-300'
+                className={`w-full px-12 py-2 bg-gray-50 border border-gray-200 rounded-xl text-center text-sm !text-gray-900 !placeholder-gray-500 focus:outline-none transition-all duration-200 ${
+                  searchFocused ? 'border-blue-400 bg-white shadow-lg !text-gray-900' : 'hover:border-gray-300'
                 }`}
+                style={{ color: '#111827', '--tw-placeholder-opacity': '1' } as React.CSSProperties}
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <SearchIcon />
