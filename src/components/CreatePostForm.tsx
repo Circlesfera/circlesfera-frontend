@@ -56,12 +56,12 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       // Validar tipo de archivo
       const isImage = selectedFile.type.startsWith('image/');
       const isVideo = selectedFile.type.startsWith('video/');
-      
+
       if (postType === 'image' && !isImage) {
         setError('Por favor selecciona una imagen válida');
         return;
       }
-      
+
       if (postType === 'video' && !isVideo) {
         setError('Por favor selecciona un video válido');
         return;
@@ -99,7 +99,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) {
       handleFileSelect(droppedFile);
@@ -121,7 +121,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
 
       // Combinar texto y caption
       const fullCaption = text.trim() ? `${text.trim()}\n\n${caption}` : caption;
-      
+
       if (postType === 'image') {
         await createImagePost([file], fullCaption);
       } else {
@@ -134,7 +134,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       setFile(null);
       setPreview(null);
       setPostType('image');
-      
+
       onPostCreated();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
@@ -164,7 +164,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               {user?.username?.[0]?.toUpperCase()}
             </div>
           )}
-          
+
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900">Crear publicación</h3>
             <p className="text-sm text-gray-500">Comparte fotos y videos con tus amigos</p>
@@ -177,21 +177,21 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             type="button"
             onClick={() => setPostType('image')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-              postType === 'image' 
-                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300' 
+              postType === 'image'
+                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             <ImageIcon />
             <span className="font-medium">Foto</span>
           </button>
-          
+
           <button
             type="button"
             onClick={() => setPostType('video')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-              postType === 'video' 
-                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300' 
+              postType === 'video'
+                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -206,8 +206,8 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             {!preview ? (
               <div
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                  isDragOver 
-                    ? 'border-blue-400 bg-blue-50' 
+                  isDragOver
+                    ? 'border-blue-400 bg-blue-50'
                     : 'border-gray-300 hover:border-gray-400'
                 }`}
                 onDragOver={handleDragOver}
@@ -226,8 +226,8 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                   Seleccionar {postType === 'image' ? 'imagen' : 'video'}
                 </button>
                 <p className="text-sm text-gray-500 mt-2">
-                  {postType === 'image' 
-                    ? 'PNG, JPG, GIF, WebP hasta 5MB' 
+                  {postType === 'image'
+                    ? 'PNG, JPG, GIF, WebP hasta 5MB'
                     : 'MP4, AVI, MOV, WebM hasta 100MB'
                   }
                 </p>
@@ -237,9 +237,9 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 {postType === 'image' ? (
                   <img src={preview} alt="preview" className="w-full h-64 object-cover rounded-lg" />
                 ) : (
-                  <video 
-                    src={preview} 
-                    controls 
+                  <video
+                    src={preview}
+                    controls
                     className="w-full h-64 object-cover rounded-lg"
                   />
                 )}
@@ -255,7 +255,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 </button>
               </div>
             )}
-            
+
             <input
               ref={fileInputRef}
               type="file"
@@ -280,7 +280,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Escribe tu mensaje aquí..."
-              className="w-full p-4 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+              className="w-full p-4 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-gray-900"
               rows={3}
               maxLength={5000}
             />
@@ -295,7 +295,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Añade una descripción adicional (opcional)"
-              className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+              className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-gray-900"
               rows={2}
               maxLength={2200}
             />

@@ -205,7 +205,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
                 placeholder="Escribe tu story..."
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
                 rows={6}
                 maxLength={500}
               />
@@ -252,8 +252,8 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                       {storyType === 'image' ? 'Sube una imagen' : 'Sube un video'}
                     </p>
                     <p className="text-gray-400 text-sm mt-1">
-                      {storyType === 'image' 
-                        ? 'JPG, PNG hasta 10MB' 
+                      {storyType === 'image'
+                        ? 'JPG, PNG hasta 10MB'
                         : 'MP4 hasta 50MB'
                       }
                     </p>
@@ -286,7 +286,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Añade una descripción..."
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
               rows={3}
               maxLength={200}
             />
@@ -302,14 +302,14 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
             </label>
             <div className="relative">
               <LocationIcon />
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="¿Dónde estás?"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                maxLength={100}
-              />
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="¿Dónde estás?"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  maxLength={100}
+                />
             </div>
           </div>
 

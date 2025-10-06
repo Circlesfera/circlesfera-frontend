@@ -50,12 +50,12 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
     if (selectedFile) {
       const isImage = selectedFile.type.startsWith('image/');
       const isVideo = selectedFile.type.startsWith('video/');
-      
+
       if (postType === 'image' && !isImage) {
         setError('Por favor selecciona una imagen válida');
         return;
       }
-      
+
       if (postType === 'video' && !isVideo) {
         setError('Por favor selecciona un video válido');
         return;
@@ -91,7 +91,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) {
       handleFileSelect(droppedFile);
@@ -110,7 +110,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
         setError(`Por favor selecciona un ${postType === 'image' ? 'imagen' : 'video'}`);
         return;
       }
-      
+
       if (postType === 'image') {
         await createImagePost([file], caption);
       } else {
@@ -121,7 +121,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
       setFile(null);
       setPreview(null);
       setPostType('image');
-      
+
       onPostCreated();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
@@ -148,22 +148,22 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
           onClick={() => setPostType('image')}
           className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-            postType === 'image' 
-              ? 'bg-blue-100 text-blue-700 border border-blue-300' 
+            postType === 'image'
+              ? 'bg-blue-100 text-blue-700 border border-blue-300'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
           )}
         >
           <ImageIcon className="w-4 h-4" />
           Foto
         </button>
-        
+
         <button
           type="button"
           onClick={() => setPostType('video')}
           className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-            postType === 'video' 
-              ? 'bg-blue-100 text-blue-700 border border-blue-300' 
+            postType === 'video'
+              ? 'bg-blue-100 text-blue-700 border border-blue-300'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
           )}
         >
@@ -178,8 +178,8 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
           <div
             className={cn(
               "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
-              isDragOver 
-                ? 'border-blue-400 bg-blue-50' 
+              isDragOver
+                ? 'border-blue-400 bg-blue-50'
                 : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
             )}
             onDragOver={handleDragOver}
@@ -200,9 +200,9 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
             {postType === 'image' ? (
               <img src={preview} alt="preview" className="w-full h-48 object-cover rounded-lg" />
             ) : (
-              <video 
-                src={preview} 
-                controls 
+              <video
+                src={preview}
+                controls
                 className="w-full h-48 object-cover rounded-lg"
               />
             )}
@@ -218,7 +218,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
             </button>
           </div>
         )}
-        
+
         <input
           ref={fileInputRef}
           type="file"
@@ -239,7 +239,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Escribe una descripción..."
-          className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
+          className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900"
           rows={2}
           maxLength={2200}
         />
