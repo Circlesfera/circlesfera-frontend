@@ -1,90 +1,103 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card, PostCard, Button, Avatar } from '@/design-system';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, PostCard, Avatar, Button } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
-import { getFeedPosts, Post } from '@/services/postService';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import CommentsModal from '@/components/CommentsModal';
 import ShareModal from '@/components/ShareModal';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import UserSuggestions from '@/components/UserSuggestions';
 import { useRouter } from 'next/navigation';
+import { useFeed } from '@/hooks/useFeed';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [stories, setStories] = useState<UserWithStories[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [commentsModal, setCommentsModal] = useState<{ isOpen: boolean; postId: string; postAuthor: string; postImage?: string | undefined }>({ isOpen: false, postId: '', postAuthor: '' });
-  const [shareModal, setShareModal] = useState<{ isOpen: boolean; postId: string; postUrl?: string | undefined; postCaption?: string | undefined }>({ isOpen: false, postId: '', postUrl: '', postCaption: '' });
+  const {
+    posts,
+    loading,
+    loadingMore,
+    hasMore,
+    loadMore,
+    updatePost,
+    removePost
+  } = useFeed();
 
-  // Cargar datos iniciales
+  const [stories, setStories] = useState<UserWithStories[]>([]);
+  const [commentsModal, setCommentsModal] = useState<{
+    isOpen: boolean;
+    postId: string;
+    postAuthor: string;
+    postImage?: string;
+  }>({ isOpen: false, postId: '', postAuthor: '' });
+  const [shareModal, setShareModal] = useState<{
+    isOpen: boolean;
+    postId: string;
+    postUrl?: string;
+    postCaption?: string;
+  }>({ isOpen: false, postId: '', postUrl: '', postCaption: '' });
+
+  // Configurar infinite scroll
+  const observerRef = useInfiniteScroll({
+    loading: loadingMore,
+    hasMore,
+    onLoadMore: loadMore,
+    threshold: 0.5
+  });
+
+  // Cargar stories
   useEffect(() => {
-    const loadInitialData = async () => {
+    const loadStories = async () => {
       if (authLoading || !user) return;
-      
+
       try {
-        setLoading(true);
-        
-        // Cargar posts del feed
-        const postsResponse = await getFeedPosts();
-        if (postsResponse.success) {
-          setPosts(postsResponse.posts || []);
-        }
-        
-        // Cargar stories
         const storiesResponse = await getUsersWithStories();
         if (storiesResponse.success) {
           setStories(storiesResponse.users || []);
         }
       } catch (error) {
-        console.error('Error cargando datos iniciales:', error);
-      } finally {
-        setLoading(false);
+        console.error('Error cargando stories:', error);
       }
     };
 
-    loadInitialData();
+    loadStories();
   }, [user, authLoading]);
 
-  const handleLike = (postId: string) => {
-    setPosts(prevPosts =>
-      prevPosts.map((post: Post) =>
-        post._id === postId
-          ? {
-              ...post,
-              isLiked: !post.isLiked,
-              likes: post.isLiked ? post.likes.filter(id => id !== user?._id) : [...post.likes, user?._id || ''],
-            }
-          : post
-      )
-    );
-  };
+  const handleLike = useCallback((postId: string) => {
+    const post = posts.find(p => p._id === postId);
+    if (!post) return;
 
-  const handleComment = (postId: string, postAuthor: string, postImage?: string) => {
+    updatePost(postId, {
+      isLiked: !post.isLiked,
+      likes: post.isLiked
+        ? post.likes.filter(id => id !== user?._id)
+        : [...post.likes, user?._id || '']
+    });
+  }, [posts, user, updatePost]);
+
+  const handleComment = useCallback((postId: string, postAuthor: string, postImage?: string) => {
     setCommentsModal({
       isOpen: true,
       postId,
       postAuthor,
-      postImage
+      ...(postImage && { postImage })
     });
-  };
+  }, []);
 
-  const handleShare = (postId: string, postUrl?: string, postCaption?: string) => {
+  const handleShare = useCallback((postId: string, postUrl?: string, postCaption?: string) => {
     setShareModal({
       isOpen: true,
       postId,
-      postUrl,
-      postCaption
+      ...(postUrl && { postUrl }),
+      ...(postCaption && { postCaption })
     });
-  };
+  }, []);
 
-  const handleUserClick = (userId: string) => {
+  const handleUserClick = useCallback((userId: string) => {
     router.push(`/${userId}`);
-  };
+  }, [router]);
 
   const PlusIcon = () => (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +120,7 @@ export default function HomePage() {
             ))}
           </div>
         </Card>
-        
+
         {/* Posts Loading */}
         <div className="space-y-6">
           {[...Array(3)].map((_, index) => (
@@ -147,7 +160,7 @@ export default function HomePage() {
             ))}
           </div>
         </Card>
-        
+
         {/* Posts Loading */}
         <div className="space-y-6">
           {[...Array(3)].map((_, index) => (
@@ -276,30 +289,20 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Load More Button */}
+      {/* Infinite Scroll Trigger */}
       {posts.length > 0 && (
-        <div className="flex justify-center pt-6">
-          <Button
-            variant="ghost"
-            size="lg"
-            onClick={async () => {
-              try {
-                setLoadingMore(true);
-                const response = await getFeedPosts({ offset: posts.length });
-                if (response.success && response.posts) {
-                  setPosts(prev => [...prev, ...response.posts]);
-                }
-              } catch (error) {
-                console.error('Error cargando más posts:', error);
-              } finally {
-                setLoadingMore(false);
-              }
-            }}
-            loading={loadingMore}
-            className="px-8"
-          >
-            {loadingMore ? 'Cargando...' : 'Cargar más publicaciones'}
-          </Button>
+        <div ref={observerRef} className="flex justify-center pt-6">
+          {loadingMore && (
+            <div className="flex items-center gap-2 text-gray-600">
+              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              <span>Cargando más publicaciones...</span>
+            </div>
+          )}
+          {!hasMore && !loadingMore && (
+            <p className="text-gray-500 text-sm">
+              Has visto todos los posts disponibles
+            </p>
+          )}
         </div>
       )}
 
