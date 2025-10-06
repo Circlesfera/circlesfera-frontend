@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: process.env.NEXT_PUBLIC_IMAGE_DOMAINS
       ? process.env.NEXT_PUBLIC_IMAGE_DOMAINS.split(',')
-      : ['localhost', 'res.cloudinary.com'],
+      : ['localhost', 'res.cloudinary.com', 'dev-api.circlesfera.com'],
     formats: ['image/webp', 'image/avif'],
   },
 };
