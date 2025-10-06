@@ -196,7 +196,7 @@ export const useLiveStreamViewers = (streamId: string | null) => {
 
   const addViewer = useCallback(async () => {
     if (!streamId) return;
-    
+
     try {
       const result = await liveStreamService.addViewer(streamId);
       setViewers({
@@ -211,7 +211,7 @@ export const useLiveStreamViewers = (streamId: string | null) => {
 
   const removeViewer = useCallback(async () => {
     if (!streamId) return;
-    
+
     try {
       const result = await liveStreamService.removeViewer(streamId);
       setViewers({
