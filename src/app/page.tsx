@@ -66,6 +66,7 @@ export default function HomePage() {
   }, [user, authLoading]);
 
   const handleLike = useCallback((postId: string) => {
+    if (!posts || !Array.isArray(posts)) return;
     const post = posts.find(p => p._id === postId);
     if (!post) return;
 
@@ -98,6 +99,10 @@ export default function HomePage() {
   const handleUserClick = useCallback((userId: string) => {
     router.push(`/${userId}`);
   }, [router]);
+
+  const handlePostDeleted = useCallback((postId: string) => {
+    removePost(postId);
+  }, [removePost]);
 
   const PlusIcon = () => (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,7 +248,7 @@ export default function HomePage() {
 
       {/* Posts Feed */}
       <div className="space-y-6">
-        {posts.map((post) => (
+        {posts && posts.length > 0 && posts.map((post) => (
           <PostCard
             key={post._id}
             post={{
@@ -267,22 +272,28 @@ export default function HomePage() {
             }}
             onLike={handleLike}
             onComment={(postId) => {
+              if (!posts || !Array.isArray(posts)) return;
               const post = posts.find(p => p._id === postId);
               if (post) {
                 handleComment(postId, post.user.username, post.content?.images?.[0]?.url);
               }
             }}
             onShare={(postId) => {
+              if (!posts || !Array.isArray(posts)) return;
               const post = posts.find(p => p._id === postId);
               if (post) {
                 handleShare(postId, `${window.location.origin}/post/${postId}`, post.caption);
               }
             }}
             onUserClick={(userId) => {
+              if (!posts || !Array.isArray(posts)) return;
               const post = posts.find(p => p.user._id === userId);
               if (post) {
                 handleUserClick(post.user._id);
               }
+            }}
+            onDelete={(postId) => {
+              handlePostDeleted(postId);
             }}
             className="animate-fade-in"
           />
@@ -290,7 +301,7 @@ export default function HomePage() {
       </div>
 
       {/* Infinite Scroll Trigger */}
-      {posts.length > 0 && (
+      {posts && posts.length > 0 && (
         <div ref={observerRef} className="flex justify-center pt-6">
           {loadingMore && (
             <div className="flex items-center gap-2 text-gray-600">
@@ -307,7 +318,7 @@ export default function HomePage() {
       )}
 
       {/* Empty State para cuando no hay posts */}
-      {posts.length === 0 && (
+      {(!posts || posts.length === 0) && !loading && (
         <Card className="p-12 text-center">
           <div className="max-w-sm mx-auto">
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">

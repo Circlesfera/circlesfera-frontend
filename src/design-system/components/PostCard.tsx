@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/utils/cn';
 import Avatar from './Avatar';
 import Button from './Button';
@@ -29,6 +29,7 @@ export interface PostCardProps {
   onComment?: (postId: string) => void;
   onShare?: (postId: string) => void;
   onUserClick?: (userId: string) => void;
+  onDelete?: (postId: string) => void;
   className?: string;
 }
 
@@ -38,10 +39,13 @@ const PostCard: React.FC<PostCardProps> = ({
   onComment,
   onShare,
   onUserClick,
+  onDelete,
   className,
 }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likes);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleLike = () => {
     const newLikedState = !isLiked;
@@ -49,6 +53,34 @@ const PostCard: React.FC<PostCardProps> = ({
     setLikesCount(prev => newLikedState ? prev + 1 : prev - 1);
     onLike?.(post.id);
   };
+
+  const handleMenuToggle = () => {
+    setShowMenu(!showMenu);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
+      onDelete?.(post.id);
+      setShowMenu(false);
+    }
+  };
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -127,7 +159,7 @@ const PostCard: React.FC<PostCardProps> = ({
     <div className={cn("bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm", className)}>
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <div 
+        <div
           className="flex items-center space-x-3 cursor-pointer"
           onClick={() => onUserClick?.(post.user.id)}
         >
@@ -147,10 +179,29 @@ const PostCard: React.FC<PostCardProps> = ({
             </p>
           </div>
         </div>
-        
-        <button className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200">
-          <MoreIcon />
-        </button>
+
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={handleMenuToggle}
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+          >
+            <MoreIcon />
+          </button>
+
+          {showMenu && (
+            <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-32">
+              <button
+                onClick={handleDelete}
+                className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Eliminar
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Content */}
@@ -162,7 +213,7 @@ const PostCard: React.FC<PostCardProps> = ({
             className="w-full h-auto max-h-96 object-cover"
           />
         )}
-        
+
         {post.content.type === 'video' && post.content.url && (
           <video
             src={post.content.url}
@@ -170,7 +221,7 @@ const PostCard: React.FC<PostCardProps> = ({
             controls
           />
         )}
-        
+
         {post.content.type === 'text' && (
           <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50">
             <p className="text-gray-800 text-base leading-relaxed">
@@ -193,14 +244,14 @@ const PostCard: React.FC<PostCardProps> = ({
             >
               <LikeIcon filled={isLiked} />
             </button>
-            
+
             <button
               onClick={() => onComment?.(post.id)}
               className="p-1 rounded-full hover:bg-gray-100 transition-colors duration-200"
             >
               <CommentIcon />
             </button>
-            
+
             <button
               onClick={() => onShare?.(post.id)}
               className="p-1 rounded-full hover:bg-gray-100 transition-colors duration-200"
