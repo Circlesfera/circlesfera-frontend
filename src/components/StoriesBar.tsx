@@ -39,21 +39,15 @@ export default function StoriesBar() {
     if (!user) {
       return;
     }
-    
+
     try {
-      console.log('🔄 fetchUsersWithStories ejecutándose...');
       setLoading(true);
       const response = await getUsersWithStories();
-      console.log('📡 Respuesta de getUsersWithStories:', response);
       if (response.success) {
-        console.log('✅ Usuarios con stories obtenidos:', response.users.length);
-        console.log('👥 Usuarios:', response.users.map(u => ({ username: u.username, storiesCount: u.storiesCount })));
         setUsersWithStories(response.users);
-      } else {
-        console.log('❌ Error en respuesta:', response.message);
       }
     } catch (error) {
-      console.error('❌ Error fetching users with stories:', error);
+      console.error('Error fetching users with stories:', error);
     } finally {
       setLoading(false);
     }
@@ -63,44 +57,40 @@ export default function StoriesBar() {
     fetchUsersWithStories();
   }, [fetchUsersWithStories]);
 
-  const openViewer = (userWithStories: UserWithStories) => {
+  const openViewer = useCallback((userWithStories: UserWithStories) => {
     setSelectedUser(userWithStories);
     setViewerOpen(true);
-  };
+  }, []);
 
-  const closeViewer = () => {
-    console.log('🚪 closeViewer ejecutándose en StoriesBar');
+  const closeViewer = useCallback(() => {
     setViewerOpen(false);
     setSelectedUser(null);
-  };
+  }, []);
 
-  const handleCreateStory = () => {
+  const handleCreateStory = useCallback(() => {
     setShowCreateForm(true);
-  };
+  }, []);
 
-  const handleStoryCreated = () => {
+  const handleStoryCreated = useCallback(() => {
     // Recargar la lista de usuarios con stories
     fetchUsersWithStories();
     setShowCreateForm(false);
-  };
+  }, [fetchUsersWithStories]);
 
-  const handleStoryDeleted = (storyId: string) => {
-    console.log('🗑️ Story eliminada, actualizando lista:', storyId);
-    console.log('🔄 Llamando a fetchUsersWithStories...');
+  const handleStoryDeleted = useCallback(() => {
     // Recargar la lista de usuarios con stories
     fetchUsersWithStories();
-    console.log('✅ fetchUsersWithStories llamado');
-  };
+  }, [fetchUsersWithStories]);
 
-  const handleCloseCreateForm = () => {
+  const handleCloseCreateForm = useCallback(() => {
     setShowCreateForm(false);
-  };
+  }, []);
 
   const formatTimeAgo = (date: string) => {
     const now = new Date();
     const storyDate = new Date(date);
     const diffInHours = Math.floor((now.getTime() - storyDate.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'ahora';
     if (diffInHours < 24) return `${diffInHours}h`;
     return storyDate.toLocaleDateString('es-ES', { hour: '2-digit', minute: '2-digit' });
@@ -119,7 +109,7 @@ export default function StoriesBar() {
             <p className="text-gray-500 text-xs">Momentos que duran 24 horas</p>
           </div>
         </div>
-        
+
         <button
           onClick={handleCreateStory}
           className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 group"
@@ -127,7 +117,7 @@ export default function StoriesBar() {
           <CameraIcon />
         </button>
       </div>
-      
+
       {/* Contenedor de stories con scroll horizontal - Optimizado para móvil */}
       <div className="relative">
         <div className="flex gap-3 sm:gap-4 overflow-x-auto py-4 sm:py-6 px-4 sm:px-6 scrollbar-hide">
@@ -135,18 +125,18 @@ export default function StoriesBar() {
           {(() => {
             const currentUserStory = usersWithStories.find(user => user._id === user?._id);
             return currentUserStory ? (
-              <button 
-                className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group" 
+              <button
+                className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group"
                 onClick={() => openViewer(currentUserStory)}
               >
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                   <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
                     <div className="w-full h-full rounded-full bg-white p-0.5">
                       {user?.avatar ? (
-                        <img 
-                          src={user.avatar} 
-                          alt="avatar" 
-                          className="w-full h-full object-cover rounded-full" 
+                        <img
+                          src={user.avatar}
+                          alt="avatar"
+                          className="w-full h-full object-cover rounded-full"
                         />
                       ) : (
                         <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
@@ -175,10 +165,10 @@ export default function StoriesBar() {
                   <div className="w-full h-full rounded-full border-2 border-gray-300 bg-white p-0.5">
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
                       {user?.avatar ? (
-                        <img 
-                          src={user.avatar} 
-                          alt="avatar" 
-                          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover" 
+                        <img
+                          src={user.avatar}
+                          alt="avatar"
+                          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
                         />
                       ) : (
                         <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
@@ -231,18 +221,18 @@ export default function StoriesBar() {
               usersWithStories
                 .filter(userWithStories => userWithStories._id !== user?._id) // Excluir al usuario actual ya que se muestra arriba
                 .map((userWithStories) => (
-                  <button 
+                  <button
                     key={userWithStories._id}
-                    className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group" 
+                    className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group"
                     onClick={() => openViewer(userWithStories)}
                   >
                     <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                       <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
                         <div className="w-full h-full rounded-full bg-white p-0.5">
-                          <img 
-                            src={userWithStories.avatar || '/default-avatar.png'} 
-                            alt="avatar" 
-                            className="w-full h-full object-cover rounded-full" 
+                          <img
+                            src={userWithStories.avatar || '/default-avatar.png'}
+                            alt="avatar"
+                            className="w-full h-full object-cover rounded-full"
                           />
                         </div>
                       </div>
@@ -263,7 +253,7 @@ export default function StoriesBar() {
                 ))
               )}
         </div>
-        
+
         {/* Indicadores de scroll */}
         <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
