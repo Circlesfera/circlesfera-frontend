@@ -10,10 +10,74 @@ import OfflineIndicator from '@/components/OfflineIndicator';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'CircleSfera - Red Social',
-  description: 'Una red social moderna para compartir momentos',
-  keywords: ['red social', 'instagram', 'tiktok', 'videos', 'fotos', 'stories'],
+  title: {
+    default: 'CircleSfera - Red Social Moderna',
+    template: '%s | CircleSfera'
+  },
+  description: 'Red social moderna para compartir videos cortos, reels, historias y conectar con amigos. Crea contenido increíble y descubre momentos únicos.',
+  keywords: [
+    'red social',
+    'videos cortos',
+    'reels',
+    'stories',
+    'historias',
+    'mensajería',
+    'compartir fotos',
+    'compartir videos',
+    'instagram alternativa',
+    'tiktok alternativa',
+    'circlesfera'
+  ],
   authors: [{ name: 'CircleSfera Team' }],
+  creator: 'CircleSfera',
+  publisher: 'CircleSfera',
+  applicationName: 'CircleSfera',
+  generator: 'Next.js',
+
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    url: 'https://circlesfera.com',
+    siteName: 'CircleSfera',
+    title: 'CircleSfera - Red Social Moderna',
+    description: 'Red social moderna para compartir videos cortos, reels, historias y conectar con amigos',
+    images: [
+      {
+        url: '/icons/icon-512x512.svg',
+        width: 512,
+        height: 512,
+        alt: 'CircleSfera Logo'
+      }
+    ]
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CircleSfera - Red Social Moderna',
+    description: 'Red social moderna para compartir videos cortos, reels, historias y conectar con amigos',
+    creator: '@circlesfera',
+    images: ['/icons/icon-512x512.svg']
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  },
+
+  icons: {
+    icon: '/icons/icon-192x192.svg',
+    shortcut: '/icons/icon-192x192.svg',
+    apple: '/icons/icon-192x192.svg'
+  },
+
+  manifest: '/manifest.json'
 };
 
 export const viewport: Viewport = {
