@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/useAuth';
 import { getFollowers, getFollowing, UserProfile, UserSuggestion, updateUserProfile } from '@/services/userService';
+import { createDirectConversation } from '@/services/conversationService';
 import { User } from '@/types';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
@@ -65,6 +67,7 @@ const convertToUser = (profile: UserProfile): User => {
 
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
   const { user, refreshUser } = useAuth();
+  const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [profileData, setProfileData] = useState(profile);
   const isOwnProfile = user && user.username === profile?.username;
@@ -75,6 +78,25 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   const [followersList, setFollowersList] = useState<UserSuggestion[]>([]);
   const [followingList, setFollowingList] = useState<UserSuggestion[]>([]);
   const [isFollowingProfile, setIsFollowingProfile] = useState(false);
+
+  // Función para enviar mensaje directo
+  const handleSendMessage = useCallback(async () => {
+    if (!profile || isOwnProfile) return;
+    
+    try {
+      // Crear conversación directa
+      const response = await createDirectConversation(profile._id);
+      
+      if (response.success) {
+        // Redirigir a la página de mensajes con la conversación seleccionada
+        router.push(`/messages?conversation=${response.conversation._id}`);
+      }
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      // Si falla, redirigir a la página de mensajes para que el usuario pueda crear la conversación manualmente
+      router.push('/messages');
+    }
+  }, [profile, isOwnProfile, router]);
 
   // Estadísticas calculadas desde el backend
   const stats = {
@@ -240,6 +262,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           onEditClick={() => setShowEdit(v => !v)}
           onFollowersClick={handleShowFollowers}
           onFollowingClick={handleShowFollowing}
+          onMessageClick={handleSendMessage}
           followButton={!isOwnProfile ? (
             <div className="flex flex-col gap-2">
               <ProfileFollowButton 

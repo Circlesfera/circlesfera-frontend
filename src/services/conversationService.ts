@@ -109,6 +109,30 @@ export const createDirectConversation = async (participantId: string): Promise<C
   return res.data;
 };
 
+// Crear conversación (directa o grupal)
+export const createConversation = async (data: {
+  participants: string[];
+  type: 'direct' | 'group';
+  name?: string;
+  description?: string;
+}): Promise<ConversationResponse> => {
+  if (data.type === 'direct') {
+    // Para conversación directa, usar el primer participante
+    const participantId = data.participants[0];
+    if (!participantId) {
+      throw new Error('Se requiere al menos un participante para crear una conversación directa');
+    }
+    return createDirectConversation(participantId);
+  } else {
+    // Para conversación grupal
+    return createGroupConversation(
+      data.name || 'Nuevo grupo',
+      data.participants,
+      data.description
+    );
+  }
+};
+
 // Crear conversación grupal
 export const createGroupConversation = async (name: string, participantIds: string[], description?: string): Promise<ConversationResponse> => {
   const res = await api.post('/api/conversations/group', {

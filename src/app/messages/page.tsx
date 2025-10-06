@@ -4,11 +4,15 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import ConversationsList from '@/components/ConversationsList';
 import ChatWindow from '@/components/ChatWindow';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Conversation } from '@/services/conversationService';
+import CreateConversationModal from '@/components/CreateConversationModal';
 
 export default function MessagesPage() {
+  const searchParams = useSearchParams();
   const [selected, setSelected] = useState<string | null>(null);
   const [showChat, setShowChat] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   
   const handleSelectConversation = (conversation: Conversation) => {
     setSelected(conversation._id);
@@ -19,6 +23,23 @@ export default function MessagesPage() {
     setShowChat(false);
     setSelected(null);
   };
+
+  const handleCreateNew = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setShowCreateModal(false);
+  };
+
+  // Verificar si hay una conversación específica en la URL
+  useEffect(() => {
+    const conversationId = searchParams.get('conversation');
+    if (conversationId) {
+      setSelected(conversationId);
+      setShowChat(true);
+    }
+  }, [searchParams]);
 
   // En móvil, ocultar el chat por defecto
   useEffect(() => {
@@ -84,7 +105,11 @@ export default function MessagesPage() {
             <div className="flex h-full">
               {/* Sidebar de conversaciones - Oculto en móvil cuando se muestra el chat */}
               <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200 bg-gray-50`}>
-                <ConversationsList onSelect={handleSelectConversation} selectedId={selected} />
+                <ConversationsList 
+                  onSelect={handleSelectConversation} 
+                  selectedId={selected} 
+                  onCreateNew={handleCreateNew}
+                />
               </div>
 
               {/* Área de chat - Oculto en móvil cuando no hay conversación seleccionada */}
@@ -113,6 +138,12 @@ export default function MessagesPage() {
                           <span>Mensajes seguros</span>
                         </div>
                       </div>
+                      <button
+                        onClick={handleCreateNew}
+                        className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                      >
+                        Crear nueva conversación
+                      </button>
                     </div>
                   </div>
                 )}
@@ -120,6 +151,18 @@ export default function MessagesPage() {
             </div>
           </div>
         </div>
+
+        {/* Modal para crear nueva conversación */}
+        {showCreateModal && (
+          <CreateConversationModal
+            isOpen={showCreateModal}
+            onClose={handleCloseCreateModal}
+            onConversationCreated={(conversation: Conversation) => {
+              handleSelectConversation(conversation);
+              setShowCreateModal(false);
+            }}
+          />
+        )}
       </div>
     </ProtectedRoute>
   );

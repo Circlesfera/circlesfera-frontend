@@ -20,6 +20,7 @@ interface ModernProfileHeaderProps {
   onEditClick: () => void;
   onFollowersClick: () => void;
   onFollowingClick: () => void;
+  onMessageClick?: () => void;
   followButton?: React.ReactNode;
 }
 
@@ -30,6 +31,7 @@ export default function ModernProfileHeader({
   onEditClick,
   onFollowersClick,
   onFollowingClick,
+  onMessageClick,
   followButton
 }: ModernProfileHeaderProps) {
   const [imageError, setImageError] = useState(false);
@@ -99,7 +101,22 @@ export default function ModernProfileHeader({
               </div>
               
               <div className="flex items-center justify-center sm:justify-start gap-2">
-                {!isOwnProfile && followButton}
+                {!isOwnProfile && (
+                  <>
+                    {followButton}
+                    {onMessageClick && (
+                      <button 
+                        onClick={onMessageClick}
+                        className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-1.5 text-sm"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        Mensaje
+                      </button>
+                    )}
+                  </>
+                )}
                 
                 {isOwnProfile && (
                   <>
