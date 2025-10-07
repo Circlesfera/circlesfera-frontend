@@ -350,6 +350,7 @@ export default function HomePage() {
                 size="lg"
                 leftIcon={<PlusIcon />}
                 className="w-full"
+                onClick={() => router.push('/create/post')}
               >
                 Crear primera publicación
               </Button>
@@ -357,6 +358,7 @@ export default function HomePage() {
                 variant="ghost"
                 size="lg"
                 className="w-full"
+                onClick={() => router.push('/explore')}
               >
                 Explorar personas
               </Button>
