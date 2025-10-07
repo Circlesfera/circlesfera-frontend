@@ -193,7 +193,7 @@ export default function HomePage() {
     );
   }
 
-      return (
+  return (
         <ProtectedRoute>
           <div className="max-w-6xl mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -350,7 +350,7 @@ export default function HomePage() {
                 size="lg"
                 leftIcon={<PlusIcon />}
                 className="w-full"
-                onClick={() => router.push('/create/post')}
+                onClick={() => router.push('/post/create')}
               >
                 Crear primera publicación
               </Button>
@@ -393,4 +393,4 @@ export default function HomePage() {
           </div>
         </ProtectedRoute>
       );
-    }
+}
