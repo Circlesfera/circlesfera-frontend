@@ -29,9 +29,14 @@ export default function ExplorePage() {
         }
 
         // Cargar posts trending
+        console.log('🔍 ExplorePage - Cargando posts trending');
         const postsResponse = await getTrendingPosts(8);
+        console.log('📊 ExplorePage - Respuesta getTrendingPosts:', postsResponse);
         if (postsResponse.success) {
           setTrendingPosts(postsResponse.posts || []);
+          console.log('✅ ExplorePage - Posts trending establecidos:', postsResponse.posts?.length || 0);
+        } else {
+          console.warn('⚠️ ExplorePage - getTrendingPosts falló:', postsResponse);
         }
 
         // Cargar stories recientes

@@ -86,10 +86,13 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
 
       switch (type) {
         case 'posts':
+          console.log('🔍 ModernProfileTabs - Cargando posts para:', username);
           const postsData = await getUserPosts(username, page, 12);
+          console.log('📊 ModernProfileTabs - Respuesta getUserPosts:', postsData);
           newContent = Array.isArray(postsData?.posts) ? postsData.posts : [];
           hasMore = postsData?.hasMore || false;
           setContentCounts(prev => ({ ...prev, posts: postsData?.pagination?.total || newContent.length }));
+          console.log('✅ ModernProfileTabs - Posts procesados:', newContent.length);
           break;
         case 'reels':
           const reelsData = await getUserReels(username, page, 12);
