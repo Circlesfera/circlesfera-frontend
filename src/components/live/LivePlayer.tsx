@@ -313,7 +313,6 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
         {showChat && stream.allowComments && (
           <LiveChat
             streamId={stream._id}
-            viewers={viewers}
             allowComments={stream.allowComments}
             currentUser={currentUser}
             canModerate={isOwner}
