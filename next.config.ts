@@ -15,7 +15,15 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
           },
         ],
       },
@@ -42,7 +50,7 @@ const pwaConfig = {
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
+  disable: true, // Temporalmente deshabilitado para evitar cache
   buildExcludes: [/middleware-manifest\.json$/],
   // Forzar actualización del service worker
   sw: 'sw.js',
