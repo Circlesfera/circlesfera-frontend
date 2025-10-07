@@ -129,14 +129,14 @@ export default function ExplorePage() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {trendingPosts.map((post) => (
                 <Card
                   key={post._id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => router.push(`/${post.user.username}/post/${post._id}`)}
                 >
-                  <div className="aspect-video relative">
+                  <div className="aspect-[9/16] relative">
                     {post.content.images && post.content.images[0] ? (
                       <img
                         className="absolute inset-0 w-full h-full object-cover"

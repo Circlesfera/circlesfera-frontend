@@ -4,11 +4,11 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import { notFound } from 'next/navigation'
 
 interface Props {
-  params: Promise<{ username: string; id: string }>
+  params: { username: string; id: string }
 }
 
 export default async function UserPostDetailPage({ params }: Props) {
-  const { id } = await params
+  const { id } = params
   let post = null
   try {
     const response = await getPostById(id)

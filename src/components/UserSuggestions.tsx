@@ -67,11 +67,11 @@ export default function UserSuggestions() {
           <p className="text-gray-500 text-xs">No hay sugerencias por ahora</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {suggestions.map((suggestion) => (
             <div
               key={suggestion._id}
-              className="flex items-center space-x-3"
+              className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
               {/* Avatar */}
               <div className="relative">
@@ -79,10 +79,10 @@ export default function UserSuggestions() {
                   <img
                     src={suggestion.avatar}
                     alt="avatar"
-                    className="w-8 h-8 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-xs">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-sm">
                     {suggestion?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                 )}
