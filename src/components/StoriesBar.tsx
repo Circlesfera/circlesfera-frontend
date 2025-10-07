@@ -134,7 +134,7 @@ export default function StoriesBar() {
                     <div className="w-full h-full rounded-full bg-white p-0.5">
                       {user?.avatar ? (
                         <img
-                          src={user.avatar}
+                          src={`${user.avatar}?v=${user?.updatedAt || ''}`}
                           alt="avatar"
                           className="w-full h-full object-cover rounded-full"
                         />
@@ -166,7 +166,7 @@ export default function StoriesBar() {
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
                       {user?.avatar ? (
                         <img
-                          src={user.avatar}
+                          src={`${user.avatar}?v=${user?.updatedAt || ''}`}
                           alt="avatar"
                           className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
                         />
@@ -230,7 +230,7 @@ export default function StoriesBar() {
                       <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
                         <div className="w-full h-full rounded-full bg-white p-0.5">
                           <img
-                            src={userWithStories.avatar || '/default-avatar.png'}
+                            src={`${userWithStories.avatar || '/default-avatar.png'}?v=${userWithStories.updatedAt || ''}`}
                             alt="avatar"
                             className="w-full h-full object-cover rounded-full"
                           />

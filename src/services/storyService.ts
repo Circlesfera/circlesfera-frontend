@@ -78,6 +78,7 @@ export interface UserWithStories {
   username: string;
   avatar?: string;
   fullName?: string;
+  updatedAt?: string;
   latestStory: Story;
   storiesCount: number;
 }
@@ -123,7 +124,7 @@ export const createImageStory = async (file: File, caption?: string, location?: 
   formData.append('image', file);
   if (caption) formData.append('caption', caption);
   if (location) formData.append('location', location);
-  
+
   const res = await api.post('/api/stories', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -139,7 +140,7 @@ export const createVideoStory = async (file: File, caption?: string, location?: 
   formData.append('video', file);
   if (caption) formData.append('caption', caption);
   if (location) formData.append('location', location);
-  
+
   const res = await api.post('/api/stories', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -155,7 +156,7 @@ export const createTextStory = async (content: string, caption?: string, locatio
   formData.append('textContent', content);
   if (caption) formData.append('caption', caption);
   if (location) formData.append('location', location);
-  
+
   // Crear objeto textStyle
   const textStyle = {
     backgroundColor: backgroundColor || '#000000',
@@ -163,9 +164,9 @@ export const createTextStory = async (content: string, caption?: string, locatio
     fontSize: fontSize || 24,
     fontFamily: fontFamily || 'Arial'
   };
-  
+
   formData.append('textStyle', JSON.stringify(textStyle));
-  
+
   const res = await api.post('/api/stories', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

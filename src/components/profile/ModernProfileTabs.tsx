@@ -494,7 +494,7 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
         <div
           key={item._id}
           onClick={() => handleContentClick(item._id)}
-          className="aspect-video rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          className="aspect-[9/16] rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
         >
           <div className="absolute inset-0">
             {type === 'posts' ? (
