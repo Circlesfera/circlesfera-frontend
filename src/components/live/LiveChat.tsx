@@ -2,17 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, MessageCircle, Eye } from 'lucide-react';
+import { Send, MessageCircle, Eye, Wifi, WifiOff } from 'lucide-react';
 import { LiveComment } from './LiveComment';
-import { useLiveComments, useCreateLiveComment } from '@/hooks/useLiveComments';
+import { useLiveSocket } from '@/hooks/useLiveSocket';
 
 interface LiveChatProps {
   streamId: string;
-  viewers: {
-    current: number;
-    total: number;
-    peak: number;
-  };
   allowComments: boolean;
   currentUser?: {
     id: string;
@@ -23,7 +18,6 @@ interface LiveChatProps {
 
 export function LiveChat({
   streamId,
-  viewers,
   allowComments,
   currentUser,
   canModerate = false,
@@ -42,14 +36,23 @@ export function LiveChat({
     comments,
     loading,
     error,
-    pagination,
-    loadMoreComments,
-  } = useLiveComments(streamId, {
-    limit: 50,
-    sortByPinned: true,
+    isConnected,
+    connectionStatus,
+    viewerCount,
+    sendComment,
+    reactToComment,
+    moderateComment,
+    startTyping,
+    stopTyping,
+    clearError,
+  } = useLiveSocket({
+    streamId,
+    autoJoin: true,
+    onError: (error) => {
+      console.error('Live Chat Error:', error);
+    },
   });
 
-  const { createComment, loading: creating } = useCreateLiveComment();
 
   // Auto-scroll to bottom when new comments arrive
   useEffect(() => {
@@ -66,27 +69,21 @@ export function LiveChat({
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!message.trim() || !currentUser || !allowComments) return;
+    if (!message.trim() || !currentUser || !allowComments || !isConnected) return;
 
-    const commentData = {
-      content: message.trim(),
-      type: 'comment' as const,
-      ...(replyTo && { replyTo: replyTo.commentId }),
-      timestamp: Math.floor(Date.now() / 1000),
-      clientId: `${currentUser.id}-${Date.now()}`,
-    };
-
-    const result = await createComment(streamId, commentData);
-
-    if (result) {
+    try {
+      await sendComment(message.trim(), replyTo?.commentId);
       setMessage('');
       setReplyTo(null);
+      stopTyping();
+    } catch (error) {
+      console.error('Error sending comment:', error);
     }
   };
 
   const handleReact = async (commentId: string, reactionType: 'like' | 'love' | 'laugh' | 'wow' | 'angry') => {
-    // TODO: Implement reaction functionality
-    console.log('React to comment:', commentId, reactionType);
+    if (!isConnected) return;
+    reactToComment(commentId, reactionType);
   };
 
   const handleReply = (commentId: string, username: string) => {
@@ -94,12 +91,23 @@ export function LiveChat({
   };
 
   const handleModerate = async (commentId: string, action: 'hide' | 'delete' | 'pin' | 'unpin') => {
-    // TODO: Implement moderation functionality
-    console.log('Moderate comment:', commentId, action);
+    if (!isConnected || !canModerate) return;
+    moderateComment(commentId, action);
   };
 
   const cancelReply = () => {
     setReplyTo(null);
+  };
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+
+    // Manejar typing indicator
+    if (e.target.value.trim()) {
+      startTyping();
+    } else {
+      stopTyping();
+    }
   };
 
   const formatViewerCount = (count: number) => {
@@ -143,7 +151,27 @@ export function LiveChat({
           </div>
           <div className="flex items-center space-x-1 text-gray-600">
             <Eye className="w-4 h-4" />
-            <span className="text-sm">{formatViewerCount(viewers.current)}</span>
+            <span className="text-sm">{formatViewerCount(viewerCount)}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            {connectionStatus === 'connected' && (
+              <>
+                <Wifi className="w-4 h-4 text-green-500" />
+                <span className="text-xs text-green-600 font-medium">Conectado</span>
+              </>
+            )}
+            {connectionStatus === 'connecting' && (
+              <>
+                <div className="w-4 h-4 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-xs text-yellow-600 font-medium">Conectando...</span>
+              </>
+            )}
+            {connectionStatus === 'disconnected' && (
+              <>
+                <WifiOff className="w-4 h-4 text-red-500" />
+                <span className="text-xs text-red-600 font-medium">Desconectado</span>
+              </>
+            )}
           </div>
         </div>
 
@@ -160,6 +188,24 @@ export function LiveChat({
       </div>
 
       {/* Comments */}
+      {/* Connection Error */}
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-3 mx-3 mt-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <WifiOff className="w-4 h-4 text-red-400 mr-2" />
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+            <button
+              onClick={clearError}
+              className="text-red-400 hover:text-red-600"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {loading && comments.length === 0 ? (
           <div className="flex items-center justify-center h-full">
@@ -179,7 +225,7 @@ export function LiveChat({
           </div>
         ) : (
           <>
-            {comments.map((comment) => (
+            {comments.map((comment: any) => (
               <LiveComment
                 key={comment._id}
                 comment={comment}
@@ -191,17 +237,6 @@ export function LiveChat({
               />
             ))}
 
-            {pagination && pagination.page * pagination.limit < pagination.total && (
-              <div className="flex justify-center py-2">
-                <button
-                  onClick={loadMoreComments}
-                  disabled={loading}
-                  className="text-xs text-blue-500 hover:text-blue-700 disabled:opacity-50"
-                >
-                  {loading ? 'Cargando...' : 'Cargar más comentarios'}
-                </button>
-              </div>
-            )}
           </>
         )}
         <div ref={messagesEndRef} />
@@ -247,14 +282,14 @@ export function LiveChat({
               ref={inputRef}
               type="text"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={handleMessageChange}
               placeholder={replyTo ? `Responder a ${replyTo.username}...` : 'Escribe un comentario...'}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               maxLength={500}
             />
             <button
               type="submit"
-              disabled={!message.trim() || creating}
+              disabled={!message.trim() || loading}
               className="bg-red-600 text-white rounded-full p-2 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <Send className="w-4 h-4" />

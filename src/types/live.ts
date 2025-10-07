@@ -51,6 +51,20 @@ export interface CoHost {
   joinedAt?: string;
 }
 
+export interface LiveStreamViewer {
+  _id: string;
+  user: {
+    _id: string;
+    username: string;
+    avatar: string;
+    fullName: string;
+    isVerified: boolean;
+  };
+  joinedAt: string;
+  isActive: boolean;
+  lastSeen: string;
+}
+
 export interface LiveComment {
   _id: string;
   liveStream: string;
@@ -77,6 +91,8 @@ export interface LiveComment {
   };
   reactions: LiveReaction[];
   reactionCount: number;
+  replies?: LiveComment[];
+  repliesCount?: number;
   isPinned: boolean;
   isVisible: boolean;
   moderation: {
