@@ -4,7 +4,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import UserSearch from '@/components/UserSearch';
 import ExploreGrid from '@/components/ExploreGrid';
 import { Card, Button } from '@/design-system';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getTrendingReels, Reel } from '@/services/reelService';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
@@ -18,39 +18,63 @@ export default function ExplorePage() {
   const [trendingPosts, setTrendingPosts] = useState<Post[]>([]);
   const router = useRouter();
 
+  const loadExploreContent = useCallback(async () => {
+    try {
+
+      // Cargar reels trending
+      const reelsResponse = await getTrendingReels('week', 6);
+      if (reelsResponse.success) {
+        setTrendingReels(reelsResponse.reels || []);
+      }
+
+      // Cargar posts trending
+      console.log('🔍 ExplorePage - Cargando posts trending');
+      const postsResponse = await getTrendingPosts(8);
+      console.log('📊 ExplorePage - Respuesta getTrendingPosts:', postsResponse);
+      if (postsResponse.success) {
+        setTrendingPosts(postsResponse.posts || []);
+        console.log('✅ ExplorePage - Posts trending establecidos:', postsResponse.posts?.length || 0);
+      } else {
+        console.warn('⚠️ ExplorePage - getTrendingPosts falló:', postsResponse);
+      }
+
+      // Cargar stories recientes
+      const storiesResponse = await getUsersWithStories();
+      if (storiesResponse.success) {
+        setRecentStories(storiesResponse.users?.slice(0, 8) || []);
+      }
+    } catch (error) {
+      console.error('Error cargando contenido de explore:', error);
+    }
+  }, []);
+
   useEffect(() => {
-    const loadExploreContent = async () => {
-      try {
+    loadExploreContent();
+  }, [loadExploreContent]);
 
-        // Cargar reels trending
-        const reelsResponse = await getTrendingReels('week', 6);
-        if (reelsResponse.success) {
-          setTrendingReels(reelsResponse.reels || []);
-        }
-
-        // Cargar posts trending
-        console.log('🔍 ExplorePage - Cargando posts trending');
-        const postsResponse = await getTrendingPosts(8);
-        console.log('📊 ExplorePage - Respuesta getTrendingPosts:', postsResponse);
-        if (postsResponse.success) {
-          setTrendingPosts(postsResponse.posts || []);
-          console.log('✅ ExplorePage - Posts trending establecidos:', postsResponse.posts?.length || 0);
-        } else {
-          console.warn('⚠️ ExplorePage - getTrendingPosts falló:', postsResponse);
-        }
-
-        // Cargar stories recientes
-        const storiesResponse = await getUsersWithStories();
-        if (storiesResponse.success) {
-          setRecentStories(storiesResponse.users?.slice(0, 8) || []);
-        }
-      } catch (error) {
-        console.error('Error cargando contenido de explore:', error);
+  // Refrescar contenido cuando el usuario regresa de crear un post
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('🔄 Explore visible, refrescando contenido...');
+        loadExploreContent();
       }
     };
 
-    loadExploreContent();
-  }, []);
+    const handleFocus = () => {
+      console.log('🔄 Explore enfocado, refrescando contenido...');
+      loadExploreContent();
+    };
+
+    // Escuchar cambios de visibilidad y focus
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [loadExploreContent]);
 
   return (
     <ProtectedRoute>

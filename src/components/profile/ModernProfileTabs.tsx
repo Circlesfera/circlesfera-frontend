@@ -144,6 +144,32 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     }
   }, [activeTab, loadContent]);
 
+  // Refrescar contenido cuando el usuario regresa de crear un post
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && activeTab) {
+        console.log('🔄 Perfil visible, refrescando contenido...', activeTab);
+        loadContent(activeTab);
+      }
+    };
+
+    const handleFocus = () => {
+      if (activeTab) {
+        console.log('🔄 Perfil enfocado, refrescando contenido...', activeTab);
+        loadContent(activeTab);
+      }
+    };
+
+    // Escuchar cambios de visibilidad y focus
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [activeTab, loadContent]);
+
   // Cargar más contenido
   const handleLoadMore = useCallback(async () => {
     if (loading) return;

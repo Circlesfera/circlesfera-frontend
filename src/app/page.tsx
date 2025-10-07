@@ -21,6 +21,7 @@ export default function HomePage() {
     loadingMore,
     hasMore,
     loadMore,
+    refresh,
     updatePost,
     removePost
   } = useFeed({ isAuthenticated: !!user && !authLoading });
@@ -64,6 +65,32 @@ export default function HomePage() {
 
     loadStories();
   }, [user, authLoading]);
+
+  // Refrescar feed cuando el usuario regresa de crear un post
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && user && !authLoading) {
+        console.log('🔄 Página visible, refrescando feed...');
+        refresh();
+      }
+    };
+
+    const handleFocus = () => {
+      if (user && !authLoading) {
+        console.log('🔄 Ventana enfocada, refrescando feed...');
+        refresh();
+      }
+    };
+
+    // Escuchar cambios de visibilidad y focus
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [user, authLoading, refresh]);
 
   const handleLike = useCallback((postId: string) => {
     if (!posts || !Array.isArray(posts)) return;
