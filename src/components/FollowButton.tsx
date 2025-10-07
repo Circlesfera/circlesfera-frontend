@@ -9,11 +9,11 @@ import Button from '@/design-system/components/Button';
 export default function FollowButton({
   userId,
   initialFollowing,
-  onChange
+  onChangeAction
 }: {
   userId: string;
   initialFollowing: boolean;
-  onChange?: (following: boolean) => void;
+  onChangeAction?: (following: boolean) => void;
 }) {
   const { user } = useAuth();
   const { success, error: showError } = useNotifications();
@@ -51,25 +51,25 @@ export default function FollowButton({
 
   const handleClick = async () => {
     if (loading || !user) return;
-    
+
     // Verificar autenticación antes de proceder
     if (!user) {
       console.error('Usuario no autenticado');
       return;
     }
-    
+
     // Si ya está siguiendo, mostrar menú desplegable
     if (following) {
       setShowMenu(!showMenu);
       return;
     }
-    
+
     // Si no está siguiendo, seguir al usuario
     setLoading(true);
     try {
       await followUser(userId);
       setFollowing(true);
-      onChange?.(true);
+      onChangeAction?.(true);
       success('¡Usuario seguido!', 'Ahora verás sus publicaciones en tu feed');
     } catch (error: unknown) {
       console.error('Error al seguir usuario:', error);
@@ -81,14 +81,14 @@ export default function FollowButton({
 
   const handleUnfollow = async () => {
     if (loading || !user) return;
-    
+
     setLoading(true);
     setShowMenu(false);
-    
+
     try {
       await unfollowUser(userId);
       setFollowing(false);
-      onChange?.(false);
+      onChangeAction?.(false);
       success('Usuario dejado de seguir', 'Ya no verás sus publicaciones en tu feed');
     } catch (error: unknown) {
       console.error('Error al dejar de seguir usuario:', error);
@@ -162,7 +162,7 @@ export default function FollowButton({
       {following ? (
         <Button
           variant="secondary"
-          size="md"
+          size="sm"
           onClick={handleClick}
           loading={loading}
           rightIcon={<ChevronDownIcon />}
@@ -173,7 +173,7 @@ export default function FollowButton({
       ) : (
         <Button
           variant="primary"
-          size="md"
+          size="sm"
           gradient
           onClick={handleClick}
           loading={loading}
@@ -194,7 +194,7 @@ export default function FollowButton({
             <UnfollowIcon />
             <span className="font-medium">Dejar de seguir</span>
           </button>
-          
+
           <button
             onClick={handleMute}
             className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-all duration-200"
@@ -202,7 +202,7 @@ export default function FollowButton({
             <MuteIcon />
             <span className="font-medium">Silenciar</span>
           </button>
-          
+
           <button
             onClick={handleRestrict}
             className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-all duration-200"

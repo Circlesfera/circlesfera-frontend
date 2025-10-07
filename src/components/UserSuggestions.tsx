@@ -8,7 +8,7 @@ import FollowButton from './FollowButton';
 
 // Iconos SVG simples
 const UsersIcon = () => (
-  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
   </svg>
 );
@@ -45,9 +45,9 @@ export default function UserSuggestions() {
   return (
     <Card variant="default" padding="sm" className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2">
+          <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
             <UsersIcon />
           </div>
           <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
@@ -88,20 +88,20 @@ export default function UserSuggestions() {
       ) : (
         <div className="space-y-3">
           {suggestions.map((suggestion) => (
-            <div 
-              key={suggestion._id} 
+            <div
+              key={suggestion._id}
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
               {/* Avatar */}
               <div className="relative">
                 {suggestion.avatar ? (
-                  <img 
-                    src={suggestion.avatar} 
-                    alt="avatar" 
-                    className="w-10 h-10 rounded-full object-cover border border-gray-200" 
+                  <img
+                    src={suggestion.avatar}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-sm border border-gray-200">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-xs border border-gray-200">
                     {suggestion?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                 )}
@@ -112,21 +112,21 @@ export default function UserSuggestions() {
                   {suggestion.username}
                 </div>
                 {suggestion.bio && (
-                  <div className="text-gray-500 text-xs truncate mt-1">
+                  <div className="text-gray-500 text-xs truncate">
                     {suggestion.bio}
                   </div>
                 )}
-                <div className="flex items-center space-x-1 mt-1">
+                <div className="flex items-center space-x-1">
                   <span className="text-gray-400 text-xs">Seguido por</span>
                   <span className="text-gray-600 text-xs font-medium">usuario_común</span>
                 </div>
               </div>
               {/* Botón de seguir */}
               <div className="flex-shrink-0">
-                <FollowButton 
-                  userId={suggestion._id} 
-                  initialFollowing={false} 
-                  onChange={() => setSuggestions(suggestions.filter(u => u._id !== suggestion._id))} 
+                <FollowButton
+                  userId={suggestion._id}
+                  initialFollowing={false}
+                  onChangeAction={() => setSuggestions(suggestions.filter(u => u._id !== suggestion._id))}
                 />
               </div>
             </div>
@@ -139,12 +139,12 @@ export default function UserSuggestions() {
           {/* Enlaces principales */}
           <div className="grid grid-cols-2 gap-1 text-center">
             {[
-              'Sobre nosotros', 'Ayuda', 'Prensa', 'API', 
+              'Sobre nosotros', 'Ayuda', 'Prensa', 'API',
               'Empleos', 'Privacidad', 'Términos', 'Ubicaciones'
             ].map((link) => (
-              <a 
+              <a
                 key={link}
-                href="#" 
+                href="#"
                 className="hover:text-gray-600 hover:underline transition-colors"
               >
                 {link}
