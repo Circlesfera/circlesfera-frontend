@@ -143,14 +143,14 @@ export default function FeedPage() {
     }
   }, [posts, user]);
 
-  const handlePostComment = useCallback((postId: string) => {
+  const handlePostComment = useCallback((postId: string, username: string) => {
     // Redirigir a la página del post individual donde se pueden ver los comentarios
-    router.push(`/post/${postId}`);
+    router.push(`/${username}/post/${postId}`);
   }, [router]);
 
-  const handlePostShare = useCallback(async (postId: string) => {
+  const handlePostShare = useCallback(async (postId: string, username: string) => {
     try {
-      const postUrl = `${window.location.origin}/post/${postId}`;
+      const postUrl = `${window.location.origin}/${username}/post/${postId}`;
 
       if (navigator.share) {
         // Usar Web Share API si está disponible
@@ -167,7 +167,7 @@ export default function FeedPage() {
     } catch (error) {
       console.error('Error sharing post:', error);
       // Fallback final: copiar manualmente
-      const postUrl = `${window.location.origin}/post/${postId}`;
+      const postUrl = `${window.location.origin}/${username}/post/${postId}`;
       navigator.clipboard.writeText(postUrl).then(() => {
         alert('¡Enlace copiado al portapapeles!');
       });

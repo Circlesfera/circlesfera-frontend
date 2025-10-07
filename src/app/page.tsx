@@ -104,8 +104,8 @@ export default function HomePage() {
     removePost(postId);
   }, [removePost]);
 
-  const handlePostClick = useCallback((postId: string) => {
-    router.push(`/post/${postId}`);
+  const handlePostClick = useCallback((postId: string, username: string) => {
+    router.push(`/${username}/post/${postId}`);
   }, [router]);
 
   const PlusIcon = () => (
@@ -299,7 +299,13 @@ export default function HomePage() {
             onDelete={(postId) => {
               handlePostDeleted(postId);
             }}
-            onPostClick={(postId) => handlePostClick(postId)}
+            onPostClick={(postId) => {
+              if (!posts || !Array.isArray(posts)) return;
+              const post = posts.find(p => p._id === postId);
+              if (post) {
+                handlePostClick(postId, post.user.username);
+              }
+            }}
             className="animate-fade-in"
           />
         ))}
