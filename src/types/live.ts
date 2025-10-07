@@ -31,7 +31,7 @@ export interface LiveStream {
   rtmpUrl?: string;
   playbackUrl?: string;
   scheduledAt?: string;
-  igtvVideo?: {
+  cstvVideo?: {
     _id: string;
     url: string;
   };

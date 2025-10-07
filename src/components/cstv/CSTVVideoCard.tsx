@@ -14,7 +14,7 @@ interface CSTVVideoCardProps {
   currentUser?: {
     id: string;
     username: string;
-  };
+  } | undefined;
   showUserInfo?: boolean;
   size?: 'small' | 'medium' | 'large';
 }

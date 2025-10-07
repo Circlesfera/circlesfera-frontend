@@ -12,7 +12,7 @@ interface LivePlayerProps {
   currentUser?: {
     id: string;
     username: string;
-  };
+  } | undefined;
   isOwner?: boolean;
 }
 
