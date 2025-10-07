@@ -36,13 +36,15 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
   // Configurar WebSocket para mensajes en tiempo real
   useWebSocket({
     onMessage: (wsMessage) => {
-      if (wsMessage.type === 'new_message' && wsMessage.data.conversation === conversationId) {
-        setMessages(prev => [...prev, wsMessage.data]);
+      if (wsMessage.type === 'new_message' && wsMessage.data && typeof wsMessage.data === 'object' && 'conversation' in wsMessage.data && (wsMessage.data as { conversation: string }).conversation === conversationId) {
+        const messageData = wsMessage.data as Message;
+        setMessages(prev => [...prev, messageData]);
         scrollToBottom();
-      } else if (wsMessage.type === 'message_read' && wsMessage.data.conversation === conversationId) {
+      } else if (wsMessage.type === 'message_read' && wsMessage.data && typeof wsMessage.data === 'object' && 'conversation' in wsMessage.data && (wsMessage.data as { conversation: string }).conversation === conversationId) {
+        const readData = wsMessage.data as { messageId: string; conversation: string };
         setMessages(prev =>
           prev.map(msg =>
-            msg._id === wsMessage.data.messageId
+            msg._id === readData.messageId
               ? { ...msg, read: true }
               : msg
           )

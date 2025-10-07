@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 import { Play, TrendingUp, Clock, Search, Filter } from 'lucide-react';
 import { useCSTVVideos, useTrendingVideos, useCSTVSearch } from '@/hooks/useCSTV';
 import { CSTVVideoCard } from '@/components/cstv/CSTVVideoCard';
-import { CSTV_CATEGORIES } from '@/types/cstv';
+import { CSTV_CATEGORIES, type CSTVCategory } from '@/types/cstv';
 import { useAuthContext } from '@/features/auth/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function CSTVPage() {
   const [activeTab, setActiveTab] = useState<'trending' | 'recent' | 'search'>('trending');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<CSTVCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'views' | 'likes' | 'trending'>('trending');
 
   const { user } = useAuthContext();
@@ -38,7 +38,7 @@ export default function CSTVPage() {
     page: 1,
     limit: 20,
     sortBy,
-    ...(selectedCategory !== 'all' && { category: selectedCategory as string }),
+    ...(selectedCategory !== 'all' && { category: selectedCategory as CSTVCategory }),
   });
 
   // Search videos
@@ -81,7 +81,7 @@ export default function CSTVPage() {
   };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+    setSelectedCategory(category as CSTVCategory | 'all');
     if (activeTab === 'recent') {
       refreshRecent();
     }
@@ -259,7 +259,7 @@ export default function CSTVPage() {
               {/* Sort Filter */}
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as string)}
+                onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'views' | 'likes' | 'trending')}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
               >
                 <option value="trending">Trending</option>

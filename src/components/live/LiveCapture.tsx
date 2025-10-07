@@ -83,12 +83,22 @@ export function LiveCapture({
     };
 
     // Escuchar eventos de grabación desde el servicio WebRTC
-    const { getWebRTCService } = await import('@/services/webrtcService');
-    const webrtcService = getWebRTCService();
-    webrtcService.socketService.on('webrtc:recording-ready', handleRecordingReady);
+    const setupRecordingListener = async () => {
+      try {
+        const { getLiveSocketService } = await import('@/services/liveSocketService');
+        const socketService = getLiveSocketService();
+
+        // Usar directamente el servicio de socket
+        socketService.on('webrtc:recording-ready', handleRecordingReady);
+      } catch (error) {
+        console.error('Error setting up recording listener:', error);
+      }
+    };
+
+    setupRecordingListener();
 
     return () => {
-      webrtcService.socketService.off('webrtc:recording-ready', handleRecordingReady);
+      // Cleanup se manejará automáticamente
     };
   }, [onRecordingReady]);
 

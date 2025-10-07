@@ -52,13 +52,16 @@ export const trackEvent = (
     };
 
     // Enviar a Google Analytics si está configurado
-    if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
-      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', event, {
-        event_category: eventData.category,
-        event_label: eventData.label,
-        value: eventData.value,
-        ...eventData.metadata
-      });
+    if (typeof window !== 'undefined') {
+      const windowWithGtag = window as Window & { gtag?: (...args: unknown[]) => void };
+      if (windowWithGtag.gtag) {
+        windowWithGtag.gtag('event', event, {
+          event_category: eventData.category,
+          event_label: eventData.label,
+          value: eventData.value,
+          ...eventData.metadata
+        });
+      }
     }
 
     // Enviar a backend para analytics propias

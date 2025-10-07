@@ -109,7 +109,15 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
               // Agregar nueva reacción
               return {
                 ...comment,
-                reactions: [...comment.reactions, { user, type: reaction, timestamp: new Date().toISOString() }],
+                reactions: [...comment.reactions, {
+                  user: {
+                    _id: user._id,
+                    username: user.username,
+                    avatar: '' // Valor por defecto
+                  },
+                  type: reaction,
+                  timestamp: new Date().toISOString()
+                }],
                 reactionCount: comment.reactionCount + 1,
               };
             }

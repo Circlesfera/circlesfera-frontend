@@ -1,7 +1,7 @@
 'use client';
 
 import { io, Socket } from 'socket.io-client';
-import type { LiveComment, LiveStreamViewer } from '@/types/live';
+import type { LiveComment, LiveStreamViewer, LiveStream } from '@/types/live';
 
 interface LiveSocketEvents {
   // Comentarios

@@ -170,9 +170,10 @@ export const saveWithSync = async (
 
   // Si está offline, marcar para sincronizar después
   if (!isOnline()) {
-    const pendingSync = await getFromIndexedDB<Array<{ store: string; data: unknown; timestamp: number }>>('userData', 'pendingSync') || [];
-    pendingSync.push({ store, data, timestamp: Date.now() });
-    await saveToIndexedDB('userData', { key: 'pendingSync', value: pendingSync });
+    const pendingSyncData = await getFromIndexedDB<{ key: string; value: Array<{ store: string; data: unknown; timestamp: number }> }>('userData', 'pendingSync');
+    const pendingSync = Array.isArray(pendingSyncData) ? [] : (pendingSyncData?.value || []);
+    const updatedPendingSync = [...pendingSync, { store, data, timestamp: Date.now() }];
+    await saveToIndexedDB('userData', { key: 'pendingSync', value: updatedPendingSync });
   }
 };
 
@@ -183,13 +184,14 @@ export const syncPendingData = async (): Promise<void> => {
   if (!isOnline()) return;
 
   try {
-    const pendingSync = await getFromIndexedDB<{ key: string; value: Array<{ store: string; data: unknown; timestamp: number }> }>('userData', 'pendingSync');
-    if (!pendingSync || !pendingSync.value || pendingSync.value.length === 0) {
+    const pendingSyncData = await getFromIndexedDB<{ key: string; value: Array<{ store: string; data: unknown; timestamp: number }> }>('userData', 'pendingSync');
+    const pendingSync = Array.isArray(pendingSyncData) ? [] : (pendingSyncData?.value || []);
+    if (pendingSync.length === 0) {
       return;
     }
 
     // Aquí se debería implementar la lógica de sincronización con el servidor
-    console.log('Sincronizando datos pendientes:', pendingSync.value.length);
+    console.log('Sincronizando datos pendientes:', pendingSync.length);
 
     // Limpiar datos sincronizados
     await deleteFromIndexedDB('userData', 'pendingSync');
