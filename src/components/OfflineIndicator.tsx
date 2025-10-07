@@ -20,6 +20,7 @@ export default function OfflineIndicator() {
       }, 3000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [isOnline]);
 
   return (
@@ -42,10 +43,11 @@ export default function OfflineIndicator() {
       ) : showOnlineNotification ? (
         <motion.div
           initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          animate={{ y: 0, opacity: 0 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="fixed top-0 left-0 right-0 z-50 bg-green-500 text-white px-4 py-3 shadow-lg"
+          style={{ display: 'none' }}
         >
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
             <Wifi className="w-5 h-5" />
