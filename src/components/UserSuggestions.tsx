@@ -3,15 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getSuggestions, UserSuggestion } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
-import { Card } from '@/design-system';
 import FollowButton from './FollowButton';
-
-// Iconos SVG simples
-const UsersIcon = () => (
-  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-  </svg>
-);
 
 export default function UserSuggestions() {
   const { user } = useAuth();
@@ -43,54 +35,43 @@ export default function UserSuggestions() {
   if (!user) return null;
 
   return (
-    <Card variant="default" padding="sm" className="space-y-4">
+    <div className="bg-white rounded-lg border border-gray-200 p-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <UsersIcon />
-          </div>
-          <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
-        </div>
-        <button className="text-blue-600 font-semibold text-xs hover:text-blue-700 transition-colors">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
+        <button className="text-xs font-semibold text-gray-600 hover:text-gray-900 transition-colors">
           Ver todo
         </button>
       </div>
+
       {/* Contenido */}
       {loading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex items-center space-x-3 animate-pulse">
-              <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-3 bg-gray-200 rounded w-24"></div>
-                <div className="h-2 bg-gray-200 rounded w-32"></div>
+              <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div className="flex-1 space-y-1">
+                <div className="h-3 bg-gray-200 rounded w-20"></div>
+                <div className="h-2 bg-gray-200 rounded w-24"></div>
               </div>
-              <div className="w-16 h-6 bg-gray-200 rounded"></div>
+              <div className="w-12 h-6 bg-gray-200 rounded"></div>
             </div>
           ))}
         </div>
       ) : error ? (
-        <div className="text-center py-6">
-          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <UsersIcon />
-          </div>
-          <p className="text-red-500 text-sm">{error}</p>
+        <div className="text-center py-4">
+          <p className="text-red-500 text-xs">{error}</p>
         </div>
       ) : suggestions.length === 0 ? (
-        <div className="text-center py-6">
-          <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <UsersIcon />
-          </div>
-          <p className="text-gray-500 text-sm">No hay sugerencias por ahora</p>
-          <p className="text-gray-400 text-xs">Vuelve más tarde</p>
+        <div className="text-center py-4">
+          <p className="text-gray-500 text-xs">No hay sugerencias por ahora</p>
         </div>
       ) : (
         <div className="space-y-3">
           {suggestions.map((suggestion) => (
             <div
               key={suggestion._id}
-              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center space-x-3"
             >
               {/* Avatar */}
               <div className="relative">
@@ -98,29 +79,25 @@ export default function UserSuggestions() {
                   <img
                     src={suggestion.avatar}
                     alt="avatar"
-                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                    className="w-8 h-8 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-xs border border-gray-200">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center font-bold text-white text-xs">
                     {suggestion?.username?.[0]?.toUpperCase() || '?'}
                   </div>
                 )}
               </div>
+
               {/* Información del usuario */}
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-gray-900 text-sm truncate hover:text-blue-700 cursor-pointer">
+                <div className="font-semibold text-gray-900 text-sm truncate">
                   {suggestion.username}
                 </div>
-                {suggestion.bio && (
-                  <div className="text-gray-500 text-xs truncate">
-                    {suggestion.bio}
-                  </div>
-                )}
-                <div className="flex items-center space-x-1">
-                  <span className="text-gray-400 text-xs">Seguido por</span>
-                  <span className="text-gray-600 text-xs font-medium">usuario_común</span>
+                <div className="text-gray-500 text-xs truncate">
+                  {suggestion.bio || 'Sugerido para ti'}
                 </div>
               </div>
+
               {/* Botón de seguir */}
               <div className="flex-shrink-0">
                 <FollowButton
@@ -133,11 +110,12 @@ export default function UserSuggestions() {
           ))}
         </div>
       )}
+
       {/* Footer con enlaces */}
       <div className="mt-6 pt-4 border-t border-gray-100">
-        <div className="text-gray-400 text-xs space-y-4">
+        <div className="text-gray-400 text-xs">
           {/* Enlaces principales */}
-          <div className="grid grid-cols-2 gap-1 text-center">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
             {[
               'Sobre nosotros', 'Ayuda', 'Prensa', 'API',
               'Empleos', 'Privacidad', 'Términos', 'Ubicaciones'
@@ -145,22 +123,21 @@ export default function UserSuggestions() {
               <a
                 key={link}
                 href="#"
-                className="hover:text-gray-600 hover:underline transition-colors"
+                className="hover:text-gray-600 transition-colors"
               >
                 {link}
               </a>
             ))}
           </div>
+
           {/* Copyright */}
-          <div className="text-center pt-2 border-t border-gray-50">
-            <div className="flex items-center justify-center space-x-2">
-              <span>© 2024</span>
-              <span className="font-semibold text-gray-600">CircleSfera</span>
-              <span>desde España</span>
-            </div>
+          <div className="text-center mt-3">
+            <span>© 2024 </span>
+            <span className="font-semibold text-gray-600">CircleSfera</span>
+            <span> desde España</span>
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

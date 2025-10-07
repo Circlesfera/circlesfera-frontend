@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { followUser, unfollowUser, muteUser, restrictUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
-import Button from '@/design-system/components/Button';
 
 export default function FollowButton({
   userId,
@@ -120,23 +119,6 @@ export default function FollowButton({
     }
   };
 
-  const CheckIcon = () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
-  );
-
-  const ChevronDownIcon = () => (
-    <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  );
-
-  const PlusIcon = () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-    </svg>
-  );
 
   const UnfollowIcon = () => (
     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,27 +142,21 @@ export default function FollowButton({
   return (
     <div className="relative" ref={menuRef}>
       {following ? (
-        <Button
-          variant="secondary"
-          size="sm"
+        <button
           onClick={handleClick}
-          loading={loading}
-          rightIcon={<ChevronDownIcon />}
-          leftIcon={<CheckIcon />}
+          disabled={loading}
+          className="text-xs font-semibold text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50"
         >
-          Siguiendo
-        </Button>
+          {loading ? '...' : 'Siguiendo'}
+        </button>
       ) : (
-        <Button
-          variant="primary"
-          size="sm"
-          gradient
+        <button
           onClick={handleClick}
-          loading={loading}
-          leftIcon={<PlusIcon />}
+          disabled={loading}
+          className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50"
         >
-          Seguir
-        </Button>
+          {loading ? '...' : 'Seguir'}
+        </button>
       )}
 
       {/* Menú desplegable moderno */}
