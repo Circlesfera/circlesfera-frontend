@@ -85,7 +85,7 @@ export default function ExplorePage() {
                 <Card
                   key={reel._id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/reels/${reel._id}`)}
+                  onClick={() => router.push(`/${reel.user.username}/reel/${reel._id}`)}
                 >
                   <div className="aspect-[9/16] relative">
                     <video
@@ -134,18 +134,18 @@ export default function ExplorePage() {
                 <Card
                   key={post._id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/post/${post._id}`)}
+                  onClick={() => router.push(`/${post.user.username}/post/${post._id}`)}
                 >
-                  <div className="aspect-square relative">
+                  <div className="aspect-video relative">
                     {post.content.images && post.content.images[0] ? (
                       <img
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                         src={post.content.images[0].url}
                         alt={post.caption || 'Post trending'}
                       />
                     ) : post.content.video ? (
                       <video
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                         src={post.content.video.url}
                         poster={post.content.video.thumbnail}
                         muted

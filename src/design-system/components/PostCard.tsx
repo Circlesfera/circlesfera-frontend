@@ -211,29 +211,31 @@ const PostCard: React.FC<PostCardProps> = ({
         className="relative cursor-pointer"
         onClick={() => onPostClick?.(post.id, post.user.username)}
       >
-        {post.content.type === 'image' && post.content.url && (
-          <img
-            src={post.content.url}
-            alt={post.caption || 'Post image'}
-            className="w-full h-auto max-h-96 object-cover"
-          />
-        )}
+        <div className="relative w-full aspect-video overflow-hidden bg-black">
+          {post.content.type === 'image' && post.content.url && (
+            <img
+              src={post.content.url}
+              alt={post.caption || 'Post image'}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
 
-        {post.content.type === 'video' && post.content.url && (
-          <video
-            src={post.content.url}
-            className="w-full h-auto max-h-96 object-cover"
-            controls
-          />
-        )}
+          {post.content.type === 'video' && post.content.url && (
+            <video
+              src={post.content.url}
+              className="absolute inset-0 w-full h-full object-cover"
+              controls
+            />
+          )}
 
-        {post.content.type === 'text' && (
-          <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50">
-            <p className="text-gray-800 text-base leading-relaxed">
-              {post.content.text}
-            </p>
-          </div>
-        )}
+          {post.content.type === 'text' && (
+            <div className="absolute inset-0 flex items-center justify-center p-6 bg-gradient-to-br from-blue-50 to-purple-50">
+              <p className="text-gray-800 text-base leading-relaxed text-center">
+                {post.content.text}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Actions */}

@@ -471,13 +471,15 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
           <div
             key={story._id}
             onClick={() => handleContentClick(story._id)}
-            className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            className="aspect-video rounded-2xl lg:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
           >
-            <img
-              src={(story as Story).content?.image?.url || ''}
-              alt="Story"
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-            />
+            <div className="absolute inset-0">
+              <img
+                src={(story as Story).content?.image?.url || ''}
+                alt="Story"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl lg:rounded-3xl transition-all duration-300" />
           </div>
@@ -492,21 +494,23 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
         <div
           key={item._id}
           onClick={() => handleContentClick(item._id)}
-          className="aspect-square rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          className="aspect-video rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
         >
-          {type === 'posts' ? (
-            <img
-              src={(item as Post).content?.images?.[0]?.url || ''}
-              alt="Post"
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-            />
-          ) : (
-            <video
-              src={(item as Reel).video?.url || ''}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              muted
-            />
-          )}
+          <div className="absolute inset-0">
+            {type === 'posts' ? (
+              <img
+                src={(item as Post).content?.images?.[0]?.url || ''}
+                alt="Post"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            ) : (
+              <video
+                src={(item as Reel).video?.url || ''}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                muted
+              />
+            )}
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl lg:rounded-3xl transition-all duration-300" />
 
