@@ -453,13 +453,13 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
   const handleContentClick = (itemId: string) => {
     switch (type) {
       case 'posts':
-        router.push(`/${username}/post/${itemId}`);
+        router.push(`/post/${itemId}`);
         break;
       case 'reels':
-        router.push(`/${username}/reel/${itemId}`);
+        router.push(`/reels/${itemId}`);
         break;
       case 'stories':
-        router.push(`/${username}/story/${itemId}`);
+        router.push(`/stories/${itemId}`);
         break;
     }
   };

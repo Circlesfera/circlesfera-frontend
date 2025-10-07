@@ -143,14 +143,14 @@ export default function FeedPage() {
     }
   }, [posts, user]);
 
-  const handlePostComment = useCallback((postId: string, username: string) => {
+  const handlePostComment = useCallback((postId: string) => {
     // Redirigir a la página del post individual donde se pueden ver los comentarios
-    router.push(`/${username}/post/${postId}`);
-  }, []);
+    router.push(`/post/${postId}`);
+  }, [router]);
 
-  const handlePostShare = useCallback(async (postId: string, username: string) => {
+  const handlePostShare = useCallback(async (postId: string) => {
     try {
-      const postUrl = `${window.location.origin}/${username}/post/${postId}`;
+      const postUrl = `${window.location.origin}/post/${postId}`;
 
       if (navigator.share) {
         // Usar Web Share API si está disponible

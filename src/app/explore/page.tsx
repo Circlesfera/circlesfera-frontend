@@ -85,7 +85,7 @@ export default function ExplorePage() {
                 <Card
                   key={reel._id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/${reel.user.username}/reel/${reel._id}`)}
+                  onClick={() => router.push(`/reels/${reel._id}`)}
                 >
                   <div className="aspect-[9/16] relative">
                     <video
@@ -134,7 +134,7 @@ export default function ExplorePage() {
                 <Card
                   key={post._id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/${post.user.username}/post/${post._id}`)}
+                  onClick={() => router.push(`/post/${post._id}`)}
                 >
                   <div className="aspect-square relative">
                     {post.content.images && post.content.images[0] ? (

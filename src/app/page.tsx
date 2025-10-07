@@ -104,8 +104,8 @@ export default function HomePage() {
     removePost(postId);
   }, [removePost]);
 
-  const handlePostClick = useCallback((postId: string, username: string) => {
-    router.push(`/${username}/post/${postId}`);
+  const handlePostClick = useCallback((postId: string) => {
+    router.push(`/post/${postId}`);
   }, [router]);
 
   const PlusIcon = () => (
@@ -299,7 +299,7 @@ export default function HomePage() {
             onDelete={(postId) => {
               handlePostDeleted(postId);
             }}
-            onPostClick={handlePostClick}
+            onPostClick={(postId) => handlePostClick(postId)}
             className="animate-fade-in"
           />
         ))}
