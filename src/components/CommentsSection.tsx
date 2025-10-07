@@ -15,6 +15,15 @@ export default function CommentsSection({ postId }: { postId: string }) {
   const fetchComments = () => {
     setLoading(true);
     setError('');
+
+    // Validar que postId existe y no está vacío
+    if (!postId || postId.trim() === '') {
+      console.warn('CommentsSection - postId inválido:', postId);
+      setError('ID de publicación inválido');
+      setLoading(false);
+      return;
+    }
+
     getComments(postId).then(data => {
       console.log('Respuesta de getComments:', data);
 
@@ -53,6 +62,13 @@ export default function CommentsSection({ postId }: { postId: string }) {
     e.preventDefault();
     setError('');
     if (!text.trim()) return;
+
+    // Validar que postId existe y no está vacío
+    if (!postId || postId.trim() === '') {
+      setError('ID de publicación inválido');
+      return;
+    }
+
     setSending(true);
     try {
       await createComment(postId, text);

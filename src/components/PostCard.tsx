@@ -556,7 +556,9 @@ export default function PostCard({
 
         {/* Comentarios */}
         <div className="mt-0.5">
-          <CommentsSection postId={post._id} />
+          {post._id && (
+            <CommentsSection postId={post._id} />
+          )}
         </div>
       </div>
 
