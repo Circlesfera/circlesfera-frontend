@@ -32,6 +32,21 @@ const pwaConfig = {
   buildExcludes: [/middleware-manifest\.json$/],
   runtimeCaching: [
     {
+      urlPattern: /^https?:\/\/dev-api\.circlesfera\.com\/uploads\/.*\.(?:png|jpg|jpeg|webp|gif)(?:\?.*)?$/i,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'avatar-images',
+        networkTimeoutSeconds: 3,
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 5 * 60, // 5 minutos
+        },
+        cacheableResponse: {
+          statuses: [0, 200],
+        },
+      },
+    },
+    {
       urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
       handler: 'CacheFirst',
       options: {
