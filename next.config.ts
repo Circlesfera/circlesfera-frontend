@@ -7,6 +7,20 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // Temporalmente deshabilitado para despliegue
   },
+  // Headers para forzar recarga en móvil
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
   turbopack: {
     rules: {
       '*.svg': {
@@ -30,6 +44,9 @@ const pwaConfig = {
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
   buildExcludes: [/middleware-manifest\.json$/],
+  // Forzar actualización del service worker
+  sw: 'sw.js',
+  swVersion: '2.0.0',
   runtimeCaching: [
     {
       urlPattern: /^https?:\/\/dev-api\.circlesfera\.com\/uploads\/.*\.(?:png|jpg|jpeg|webp|gif)(?:\?.*)?$/i,
