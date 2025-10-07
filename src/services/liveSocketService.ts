@@ -27,6 +27,13 @@ interface LiveSocketEvents {
   // Notificaciones
   'notification:new': (notification: any) => void;
 
+  // WebRTC
+  'webrtc:offer': (data: { streamId: string; offer: RTCSessionDescriptionInit; from: string }) => void;
+  'webrtc:answer': (data: { streamId: string; answer: RTCSessionDescriptionInit; from: string }) => void;
+  'webrtc:ice-candidate': (data: { streamId: string; candidate: RTCIceCandidateInit; from: string }) => void;
+  'webrtc:disconnect': (data: { streamId: string; from: string }) => void;
+  'webrtc:recording-ready': (data: { blob: Blob; size: number; type: string }) => void;
+
   // Errores
   'error': (error: string) => void;
   'connect_error': (error: any) => void;
@@ -175,6 +182,13 @@ class LiveSocketService {
       } else {
         this.socket.off(event as string);
       }
+    }
+  }
+
+  // Emitir eventos
+  emit<K extends keyof LiveSocketEvents>(event: K, data: any) {
+    if (this.socket && this.isConnected) {
+      this.socket.emit(event as string, data);
     }
   }
 

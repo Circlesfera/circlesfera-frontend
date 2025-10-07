@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Maximize, Users, Heart, Share2, MoreVertical } from 'lucide-react';
 import { LiveChat } from './LiveChat';
+import { LiveCapture } from './LiveCapture';
 import { useLiveStreamViewers } from '@/hooks/useLiveStream';
 import type { LiveStream } from '@/types/live';
 
@@ -23,6 +24,7 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
   const [, setIsFullscreen] = useState(false);
   const [showChat, setShowChat] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(stream.status === 'live');
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
@@ -56,6 +58,29 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
       document.exitFullscreen();
       setIsFullscreen(false);
     }
+  };
+
+  // Handle recording ready (para CSTV)
+  const handleRecordingReady = async (blob: Blob) => {
+    // Aquí podrías subir automáticamente el archivo para crear un CSTV
+    console.log('📹 Grabación lista para CSTV:', {
+      size: blob.size,
+      type: blob.type,
+    });
+
+    // TODO: Implementar subida automática a CSTV
+  };
+
+  // Handle stream start
+  const handleStreamStart = () => {
+    setIsStreaming(true);
+    console.log('🚀 Stream iniciado');
+  };
+
+  // Handle stream stop
+  const handleStreamStop = () => {
+    setIsStreaming(false);
+    console.log('🛑 Stream detenido');
   };
 
   // Handle play/pause
@@ -155,20 +180,31 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setShowControls(false)}
       >
-        {/* Video Element */}
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          src={stream.playbackUrl}
-          poster={stream.thumbnailUrl}
-          autoPlay
-          muted={isMuted}
-          loop={false}
-          playsInline
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onLoadedData={() => setIsPlaying(true)}
-        />
+        {/* Video Element - LiveCapture para streamers, video normal para viewers */}
+        {isOwner && stream.status === 'live' ? (
+          <LiveCapture
+            streamId={stream._id}
+            isStreaming={isStreaming}
+            onStreamStart={handleStreamStart}
+            onStreamStop={handleStreamStop}
+            onRecordingReady={handleRecordingReady}
+            className="w-full h-full"
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            src={stream.playbackUrl}
+            poster={stream.thumbnailUrl}
+            autoPlay
+            muted={isMuted}
+            loop={false}
+            playsInline
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onLoadedData={() => setIsPlaying(true)}
+          />
+        )}
 
         {/* Live Badge */}
         <div className="absolute top-4 left-4 z-10">
