@@ -123,7 +123,7 @@ export default function StoriesBar() {
         <div className="flex gap-3 sm:gap-4 overflow-x-auto py-4 sm:py-6 px-4 sm:px-6 scrollbar-hide">
           {/* Tu historia actual (si existe) */}
           {(() => {
-            const currentUserStory = usersWithStories.find(user => user._id === user?._id);
+            const currentUserStory = usersWithStories.find(userWithStory => userWithStory._id === user?._id);
             return currentUserStory ? (
               <button
                 className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group"
