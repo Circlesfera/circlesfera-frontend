@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { searchUsers } from '@/services/userService';
-import { searchReelsByHashtag } from '@/services/reelService';
+import { searchUsers, UserSuggestion } from '@/services/userService';
+import { searchReelsByHashtag, Reel } from '@/services/reelService';
 import { useDebounce } from './useDebounce';
 
 export type SearchType = 'users' | 'reels' | 'all';
@@ -18,8 +18,8 @@ interface UseSearchReturn {
   filters: SearchFilters;
   setFilters: (filters: SearchFilters) => void;
   results: {
-    users: any[];
-    reels: any[];
+    users: UserSuggestion[];
+    reels: Reel[];
   };
   loading: boolean;
   hasSearched: boolean;
@@ -34,7 +34,7 @@ interface UseSearchReturn {
 export function useSearch(): UseSearchReturn {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<SearchFilters>({ type: 'all' });
-  const [results, setResults] = useState<{ users: any[]; reels: any[] }>({
+  const [results, setResults] = useState<{ users: UserSuggestion[]; reels: Reel[] }>({
     users: [],
     reels: []
   });
@@ -55,7 +55,7 @@ export function useSearch(): UseSearchReturn {
       setLoading(true);
       setHasSearched(true);
 
-      const newResults: { users: any[]; reels: any[] } = {
+      const newResults: { users: UserSuggestion[]; reels: Reel[] } = {
         users: [],
         reels: []
       };
@@ -64,9 +64,7 @@ export function useSearch(): UseSearchReturn {
       if (filters.type === 'users' || filters.type === 'all') {
         try {
           const usersResponse = await searchUsers(debouncedQuery);
-          if (usersResponse.success) {
-            newResults.users = usersResponse.users || [];
-          }
+          newResults.users = usersResponse || [];
         } catch (error) {
           console.error('Error searching users:', error);
         }

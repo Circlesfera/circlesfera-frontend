@@ -165,7 +165,7 @@ export const useEndLiveStream = () => {
   const endStream = useCallback(async (
     streamId: string,
     data: EndLiveStreamData = {}
-  ): Promise<{ liveStream: LiveStream; cstvVideo?: any } | null> => {
+  ): Promise<{ liveStream: LiveStream; cstvVideo?: CSTVVideo } | null> => {
     try {
       setLoading(true);
       setError(null);

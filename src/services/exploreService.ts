@@ -8,16 +8,16 @@ export interface UserSearchResult {
 }
 
 export const searchUsers = async (query: string): Promise<UserSearchResult[]> => {
-  const res = await api.get(`/api/users/search?q=${encodeURIComponent(query)}`);
+  const res = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
   return res.data;
 };
 
 export const getRecentPosts = async (): Promise<Post[]> => {
   console.log('🔍 exploreService - getRecentPosts llamada');
   console.log('🔍 exploreService - baseURL configurado:', api.defaults.baseURL);
-  console.log('🔍 exploreService - URL completa será:', `${api.defaults.baseURL}/api/posts/recent`);
+  console.log('🔍 exploreService - URL completa será:', `${api.defaults.baseURL}/posts/recent`);
   try {
-    const res = await api.get('/api/posts/recent');
+    const res = await api.get('/posts/recent');
     console.log('✅ exploreService - getRecentPosts respuesta:', res.data);
     return res.data.posts;
   } catch (error) {

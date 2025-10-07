@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { config } from '@/config/env';
 
 const api = axios.create({
-  baseURL: config.apiUrl,
+  baseURL: '/api', // Usar ruta relativa para aprovechar el proxy de Next.js
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'),
   withCredentials: false,
   headers: {
@@ -12,7 +12,7 @@ const api = axios.create({
 
 // Log de inicialización para debug - SIEMPRE mostrar en desarrollo
 console.log('🔧 Axios API inicializada:', {
-  baseURL: config.apiUrl,
+  baseURL: '/api', // Usando proxy de Next.js
   configApiUrl: config.apiUrl,
   envApiUrl: process.env.NEXT_PUBLIC_API_URL,
   nodeEnv: process.env.NODE_ENV,
@@ -36,7 +36,11 @@ const getToken = () => {
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
-    
+
+    // Rutas que no requieren token de autorización
+    const publicRoutes = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password'];
+    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route));
+
     // Log de interceptor - SIEMPRE mostrar para debug
     console.log('🔐 Axios interceptor - Configuración completa:', {
       url: config.url,
@@ -45,21 +49,24 @@ api.interceptors.request.use(
       method: config.method,
       headers: config.headers,
       token: token ? `Bearer ${token.substring(0, 20)}...` : 'No hay token',
+      isPublicRoute,
       nodeEnv: process.env.NODE_ENV,
       isClient: typeof window !== 'undefined'
     });
-    
-    if (token) {
+
+    if (token && !isPublicRoute) {
       config.headers.Authorization = `Bearer ${token}`;
-      
+
       // Log de token enviado
       console.log('Axios interceptor - Token enviado:', `Bearer ${token.substring(0, 20)}...`);
       console.log('Axios interceptor - URL:', config.url);
       console.log('Axios interceptor - Método:', config.method);
+    } else if (isPublicRoute) {
+      console.log('Axios interceptor - Ruta pública, no se agrega token');
     } else {
       console.log('Axios interceptor - No hay token disponible');
     }
-    
+
     // Verificar que el header se configuró correctamente DESPUÉS de configurarlo
     const authHeader = config.headers.Authorization;
     if (authHeader && typeof authHeader === 'string') {
@@ -67,7 +74,7 @@ api.interceptors.request.use(
     } else {
       console.log('❌ Header Authorization NO configurado - Token:', token ? 'Presente' : 'Ausente');
     }
-    
+
     return config;
   },
   (error) => {
@@ -86,7 +93,7 @@ api.interceptors.response.use(
       console.error('Error inesperado en interceptor de axios:', error);
       return Promise.reject(error);
     }
-    
+
     const status = error.response?.status;
     const message = error.response?.data?.message || error.message || 'Error desconocido';
 
@@ -113,37 +120,37 @@ api.interceptors.response.use(
             status,
           });
         }
-        
+
         if (typeof window !== 'undefined') {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          
+
           if (!window.location.pathname.includes('/login')) {
             window.location.href = '/login';
           }
         }
         break;
-      
+
       case 403:
         // Error de autorización
         console.warn('Acceso denegado:', message);
         break;
-      
+
       case 404:
         // Recurso no encontrado
         console.warn('Recurso no encontrado:', message);
         break;
-      
+
       case 429:
         // Rate limit excedido
         console.warn('Demasiadas solicitudes:', message);
         break;
-      
+
       case 500:
         // Error interno del servidor
         console.error('Error interno del servidor:', message);
         break;
-      
+
       default:
         if (status && status >= 500) {
           console.error('Error del servidor:', message);
@@ -151,7 +158,7 @@ api.interceptors.response.use(
           console.warn('Error del cliente:', message);
         }
     }
-    
+
     return Promise.reject(error);
   }
 );

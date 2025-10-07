@@ -3,7 +3,7 @@ import type { Notification } from '@/types';
 
 export const getNotifications = async (): Promise<Notification[]> => {
   try {
-    const res = await api.get('/api/notifications');
+    const res = await api.get('/notifications');
     
     // El backend devuelve { success: true, notifications: [...] }
     if (res.data.success && Array.isArray(res.data.notifications)) {
@@ -29,7 +29,7 @@ export const getNotifications = async (): Promise<Notification[]> => {
 
 export const getUnreadCount = async (): Promise<number> => {
   try {
-    const res = await api.get('/api/notifications/unread/count');
+    const res = await api.get('/notifications/unread/count');
     
     if (res.data.success && typeof res.data.count === 'number') {
       return res.data.count;
@@ -45,7 +45,7 @@ export const getUnreadCount = async (): Promise<number> => {
 
 export const markNotificationAsRead = async (id: string) => {
   try {
-    await api.put(`/api/notifications/${id}/read`, {});
+    await api.put(`/notifications/${id}/read`, {});
   } catch (error) {
     console.error('Error al marcar notificación como leída:', error);
     throw error;
@@ -54,7 +54,7 @@ export const markNotificationAsRead = async (id: string) => {
 
 export const markAllNotificationsAsRead = async () => {
   try {
-    await api.put('/api/notifications/read/all', {});
+    await api.put('/notifications/read/all', {});
   } catch (error) {
     console.error('Error al marcar todas las notificaciones como leídas:', error);
     throw error;

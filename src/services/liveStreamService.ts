@@ -59,7 +59,7 @@ export const liveStreamService = {
   async endLiveStream(
     streamId: string,
     data: EndLiveStreamData = {}
-  ): Promise<{ liveStream: LiveStream; cstvVideo?: any }> {
+  ): Promise<{ liveStream: LiveStream; cstvVideo?: CSTVVideo }> {
     const response = await api.put(`/live-streams/${streamId}/end`, data);
     return response.data.data;
   },
@@ -167,7 +167,7 @@ export const liveCommentService = {
     commentId: string,
     action: 'hide' | 'delete' | 'pin' | 'unpin',
     reason?: string
-  ): Promise<any> {
+  ): Promise<{ success: boolean; data?: unknown; message?: string }> {
     const response = await api.put(
       `/live-streams/${streamId}/comments/${commentId}/moderate`,
       { action, reason }
@@ -179,5 +179,24 @@ export const liveCommentService = {
   async getCommentStats(streamId: string): Promise<LiveStreamStats> {
     const response = await api.get(`/live-streams/${streamId}/comments/stats`);
     return response.data.data;
+  },
+
+  // Obtener transmisiones en vivo de un usuario específico
+  async getUserLiveStreams(username: string, page = 1, limit = 20, status?: string): Promise<{
+    data: LiveStream[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      pages: number;
+    };
+  }> {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    if (status) params.append('status', status);
+
+    const response = await api.get(`/${username}/live?${params.toString()}`);
+    return response.data;
   },
 };

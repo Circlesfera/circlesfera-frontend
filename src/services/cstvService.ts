@@ -124,4 +124,14 @@ export const cstvService = {
       return this.saveVideo(videoId);
     }
   },
+
+  // Obtener videos CSTV de un usuario específico
+  async getUserVideos(username: string, page = 1, limit = 20): Promise<CSTVResponse> {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+
+    const response = await api.get(`/${username}/cstv?${params.toString()}`);
+    return response.data;
+  },
 };

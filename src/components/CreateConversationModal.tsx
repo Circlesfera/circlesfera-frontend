@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { searchUsers, UserSuggestion } from '@/services/userService';
-import { createConversation } from '@/services/conversationService';
+import { createConversation, Conversation as ServiceConversation } from '@/services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface User extends UserSuggestion {
-  // Extendemos UserSuggestion que ya tiene los campos necesarios
-}
+type User = UserSuggestion;
 
 interface CreateConversationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConversationCreated: (conversation: any) => void;
+  onConversationCreated: (conversation: ServiceConversation) => void;
 }
 
-export default function CreateConversationModal({ 
-  isOpen, 
-  onClose, 
-  onConversationCreated 
+export default function CreateConversationModal({
+  isOpen,
+  onClose,
+  onConversationCreated
 }: CreateConversationModalProps) {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,7 +69,7 @@ export default function CreateConversationModal({
     try {
       setCreating(true);
       const participantIds = selectedUsers.map(u => u._id);
-      
+
       const response = await createConversation({
         participants: participantIds,
         type: 'direct'
@@ -224,8 +222,8 @@ export default function CreateConversationModal({
                           key={user._id}
                           onClick={() => handleUserSelect(user)}
                           className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                            isSelected 
-                              ? 'bg-blue-50 border border-blue-200' 
+                            isSelected
+                              ? 'bg-blue-50 border border-blue-200'
                               : 'hover:bg-gray-50'
                           }`}
                         >

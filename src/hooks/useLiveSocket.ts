@@ -91,7 +91,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
       });
     };
 
-    const handleCommentReaction = (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: any) => {
+    const handleCommentReaction = (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: { _id: string; username: string }) => {
       setState(prev => {
         const updatedComments = prev.comments.map(comment => {
           if (comment._id === commentId) {
@@ -249,7 +249,8 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     setLoading(true);
     try {
       socketService.sendComment(streamId, content.trim(), parentId);
-    } catch (err) {
+    } catch (error) {
+      console.error('Error sending comment:', error);
       setError('Error al enviar comentario');
     } finally {
       setLoading(false);

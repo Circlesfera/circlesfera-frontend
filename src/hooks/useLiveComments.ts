@@ -227,7 +227,7 @@ export const useLiveCommentModeration = () => {
     commentId: string,
     action: 'hide' | 'delete' | 'pin' | 'unpin',
     reason?: string
-  ): Promise<any> => {
+  ): Promise<{ success: boolean; data?: unknown; message?: string }> => {
     try {
       setLoading(true);
       setError(null);

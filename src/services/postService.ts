@@ -93,7 +93,7 @@ export interface LikeResponse {
 
 // Obtener el feed de publicaciones
 export const getFeed = async (page = 1, limit = 10): Promise<FeedResponse> => {
-  const res = await api.get('/api/posts/feed', {
+  const res = await api.get('/posts/feed', {
     params: { page, limit },
   });
   return res.data;
@@ -108,7 +108,7 @@ export const getFeedPosts = async (options?: { offset?: number; limit?: number }
 
 // Obtener posts trending
 export const getTrendingPosts = async (limit = 10): Promise<{ success: boolean; posts: Post[] }> => {
-  const res = await api.get('/api/posts/trending', {
+  const res = await api.get('/posts/trending', {
     params: { limit },
   });
   return res.data;
@@ -116,7 +116,7 @@ export const getTrendingPosts = async (limit = 10): Promise<{ success: boolean; 
 
 // Obtener posts de un usuario específico
 export const getUserPosts = async (username: string, page = 1, limit = 10): Promise<FeedResponse> => {
-  const res = await api.get(`/api/posts/user/${username}`, {
+  const res = await api.get(`/${username}/posts`, {
     params: { page, limit },
   });
   return res.data;
@@ -124,13 +124,13 @@ export const getUserPosts = async (username: string, page = 1, limit = 10): Prom
 
 // Obtener un post específico
 export const getPostById = async (id: string): Promise<PostResponse> => {
-  const res = await api.get(`/api/posts/${id}`);
+  const res = await api.get(`/posts/${id}`);
   return res.data;
 };
 
 // Crear una nueva publicación
 export const createPost = async (formData: FormData): Promise<PostResponse> => {
-  const res = await api.post('/api/posts', formData, {
+  const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -146,8 +146,8 @@ export const createImagePost = async (files: File[], caption: string): Promise<P
     formData.append('images', file);
   });
   formData.append('caption', caption);
-  
-  const res = await api.post('/api/posts/media', formData, {
+
+  const res = await api.post('/posts/media', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -161,8 +161,8 @@ export const createVideoPost = async (file: File, caption: string): Promise<Post
   formData.append('type', 'video');
   formData.append('video', file);
   formData.append('caption', caption);
-  
-  const res = await api.post('/api/posts/media', formData, {
+
+  const res = await api.post('/posts/media', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -178,8 +178,8 @@ export const createTextPost = async (text: string, caption?: string, location?: 
   if (caption) formData.append('caption', caption);
   if (location) formData.append('location', location);
   if (tags) formData.append('tags', tags);
-  
-  const res = await api.post('/api/posts', formData, {
+
+  const res = await api.post('/posts', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -189,31 +189,31 @@ export const createTextPost = async (text: string, caption?: string, location?: 
 
 // Dar/quitar like a un post
 export const toggleLike = async (postId: string): Promise<LikeResponse> => {
-  const res = await api.post(`/api/posts/${postId}/like`, {});
+  const res = await api.post(`/posts/${postId}/like`, {});
   return res.data;
 };
 
 // Obtener likes de un post
 export const getPostLikes = async (postId: string): Promise<{ success: boolean; likes: UserProfile[] }> => {
-  const res = await api.get(`/api/posts/${postId}/likes`);
+  const res = await api.get(`/posts/${postId}/likes`);
   return res.data;
 };
 
 // Actualizar un post
 export const updatePost = async (postId: string, data: { caption?: string; location?: string; tags?: string }): Promise<PostResponse> => {
-  const res = await api.put(`/api/posts/${postId}`, data);
+  const res = await api.put(`/posts/${postId}`, data);
   return res.data;
 };
 
 // Eliminar un post
 export const deletePost = async (postId: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/api/posts/${postId}`);
+  const res = await api.delete(`/posts/${postId}`);
   return res.data;
 };
 
 // Fijar/desfijar post
 export const togglePinPost = async (postId: string): Promise<{ success: boolean; message: string; isPinned: boolean }> => {
-  const res = await api.patch(`/api/posts/${postId}/pin`);
+  const res = await api.patch(`/posts/${postId}/pin`);
   return res.data;
 };
 
@@ -228,7 +228,7 @@ export const getComments = async (postId: string, page = 1, limit = 10): Promise
     pages: number;
   };
 }> => {
-  const res = await api.get(`/api/comments/post/${postId}`, {
+  const res = await api.get(`/comments/post/${postId}`, {
     params: { page, limit },
   });
   return res.data;
@@ -245,7 +245,7 @@ export const getCommentReplies = async (commentId: string, page = 1, limit = 5):
     pages: number;
   };
 }> => {
-  const res = await api.get(`/api/comments/${commentId}/replies`, {
+  const res = await api.get(`/comments/${commentId}/replies`, {
     params: { page, limit },
   });
   return res.data;
@@ -253,25 +253,25 @@ export const getCommentReplies = async (commentId: string, page = 1, limit = 5):
 
 // Crear un comentario
 export const createComment = async (postId: string, content: string, parentComment?: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
-  const res = await api.post(`/api/comments/post/${postId}`, { content, parentComment });
+  const res = await api.post(`/comments/post/${postId}`, { content, parentComment });
   return res.data;
 };
 
 // Actualizar un comentario
 export const updateComment = async (commentId: string, content: string): Promise<{ success: boolean; comment: Comment; message: string }> => {
-  const res = await api.put(`/api/comments/${commentId}`, { content });
+  const res = await api.put(`/comments/${commentId}`, { content });
   return res.data;
 };
 
 // Dar/quitar like a un comentario
 export const toggleCommentLike = async (commentId: string): Promise<LikeResponse> => {
-  const res = await api.post(`/api/comments/${commentId}/like`, {});
+  const res = await api.post(`/comments/${commentId}/like`, {});
   return res.data;
 };
 
 // Eliminar un comentario
 export const deleteComment = async (commentId: string): Promise<{ success: boolean; message: string }> => {
-  const res = await api.delete(`/api/comments/${commentId}`);
+  const res = await api.delete(`/comments/${commentId}`);
   return res.data;
 };
 
@@ -286,7 +286,7 @@ export const getUserComments = async (username: string, page = 1, limit = 10): P
     pages: number;
   };
 }> => {
-  const res = await api.get(`/api/comments/user/${username}`, {
+  const res = await api.get(`/comments/user/${username}`, {
     params: { page, limit },
   });
   return res.data;
@@ -298,7 +298,7 @@ export const likePost = async (postId: string): Promise<{
   message: string;
   likesCount: number;
 }> => {
-  const res = await api.post(`/api/posts/${postId}/like`);
+  const res = await api.post(`/posts/${postId}/like`);
   return res.data;
 };
 
@@ -308,7 +308,7 @@ export const unlikePost = async (postId: string): Promise<{
   message: string;
   likesCount: number;
 }> => {
-  const res = await api.delete(`/api/posts/${postId}/like`);
+  const res = await api.delete(`/posts/${postId}/like`);
   return res.data;
 };
 
@@ -318,6 +318,6 @@ export const commentPost = async (postId: string, content: string): Promise<{
   message: string;
   comment: Comment;
 }> => {
-  const res = await api.post(`/api/posts/${postId}/comment`, { content });
+  const res = await api.post(`/posts/${postId}/comment`, { content });
   return res.data;
 };

@@ -21,11 +21,11 @@ const getStoredAuthData = () => {
   if (typeof window === 'undefined') {
     return { token: null, user: null };
   }
-  
+
   try {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    
+
     if (storedToken && storedUser) {
       return {
         token: storedToken,
@@ -35,7 +35,7 @@ const getStoredAuthData = () => {
   } catch (error) {
     console.error('Error reading from localStorage:', error);
   }
-  
+
   return { token: null, user: null };
 };
 
@@ -79,20 +79,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     try {
       console.log('🔐 Intentando login con:', { email, apiUrl: process.env.NEXT_PUBLIC_API_URL });
-      
-      const res = await api.post<LoginResponse>('/api/auth/login', { email, password });
-      
-      console.log('✅ Respuesta del login:', { 
-        success: res.data.success, 
-        hasToken: !!res.data.token, 
+
+      const res = await api.post<LoginResponse>('/auth/login', { email, password });
+
+      console.log('✅ Respuesta del login:', {
+        success: res.data.success,
+        hasToken: !!res.data.token,
         hasUser: !!res.data.user,
-        message: res.data.message 
+        message: res.data.message
       });
-      
+
       if (res.data.success && res.data.token && res.data.user) {
         setToken(res.data.token);
         setUser(res.data.user);
-        
+
         // Guardar en localStorage de forma segura
         if (typeof window !== 'undefined') {
           try {
@@ -109,19 +109,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.error('❌ Error en login:', error);
-      console.error('❌ Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        response: error && typeof error === 'object' && 'response' in error ? (error as any).response?.data : 'No response',
-        status: error && typeof error === 'object' && 'response' in error ? (error as any).response?.status : 'No status'
-      });
-      
-      // Si hay error de autenticación, limpiar tokens
+
+      // Manejo detallado de errores de Axios
       if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response?: { status?: number } };
+        const axiosError = error as { response?: { status?: number; statusText?: string; data?: unknown }; config?: { url?: string; method?: string; baseURL?: string } };
+        console.error('❌ Axios Error Details:', {
+          status: axiosError.response?.status,
+          statusText: axiosError.response?.statusText,
+          data: axiosError.response?.data,
+          url: axiosError.config?.url,
+          method: axiosError.config?.method,
+          baseURL: axiosError.config?.baseURL
+        });
+
+        // Si hay error de autenticación, limpiar tokens
         if (axiosError.response?.status === 401) {
           clearInvalidTokens();
         }
+      } else {
+        console.error('❌ Error no relacionado con Axios:', error);
       }
+
       throw error;
     } finally {
       setLoading(false);
@@ -131,7 +139,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const register = async (username: string, email: string, password: string) => {
     setLoading(true);
     try {
-      await api.post('/api/auth/register', { username, email, password });
+      await api.post('/auth/register', { username, email, password });
       // Login automático tras registro
       await login(email, password);
     } catch (error) {
@@ -150,9 +158,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshUser = async () => {
     if (!token) return;
-    
+
     try {
-      const res = await api.get<ApiResponse<User>>('/api/auth/profile');
+      const res = await api.get<ApiResponse<User>>('/auth/profile');
       if (res.data.success && res.data.data) {
         setUser(res.data.data);
         if (typeof window !== 'undefined') {

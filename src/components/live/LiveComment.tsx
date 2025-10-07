@@ -241,7 +241,7 @@ export function LiveComment({
             {Object.entries(REACTION_EMOJIS).map(([type, emoji]) => (
               <button
                 key={type}
-                onClick={() => handleReaction(type as any)}
+                onClick={() => handleReaction(type as 'like' | 'love' | 'laugh' | 'wow' | 'angry')}
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors text-lg"
                 title={type}
               >

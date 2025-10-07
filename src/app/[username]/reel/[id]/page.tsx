@@ -13,8 +13,8 @@ interface Props {
 }
 
 export default function UserReelPage({ params }: Props) {
-  const [reel, setReel] = useState<any>(null);
-  const [user, setUser] = useState<any>(null);
+  const [reel, setReel] = useState<Reel | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user: currentUser } = useAuth();

@@ -50,7 +50,7 @@ const openDB = (): Promise<IDBDatabase> => {
  */
 export const saveToIndexedDB = async (
   store: keyof typeof STORES,
-  data: any
+  data: unknown
 ): Promise<void> => {
   try {
     const db = await openDB();
@@ -163,14 +163,14 @@ export const isOnline = (): boolean => {
  */
 export const saveWithSync = async (
   store: keyof typeof STORES,
-  data: any
+  data: unknown
 ): Promise<void> => {
   // Guardar localmente
   await saveToIndexedDB(store, data);
 
   // Si está offline, marcar para sincronizar después
   if (!isOnline()) {
-    const pendingSync = await getFromIndexedDB<any[]>('userData', 'pendingSync') || [];
+    const pendingSync = await getFromIndexedDB<Array<{ store: string; data: unknown; timestamp: number }>>('userData', 'pendingSync') || [];
     pendingSync.push({ store, data, timestamp: Date.now() });
     await saveToIndexedDB('userData', { key: 'pendingSync', value: pendingSync });
   }
@@ -183,7 +183,7 @@ export const syncPendingData = async (): Promise<void> => {
   if (!isOnline()) return;
 
   try {
-    const pendingSync = await getFromIndexedDB<any>('userData', 'pendingSync');
+    const pendingSync = await getFromIndexedDB<{ key: string; value: Array<{ store: string; data: unknown; timestamp: number }> }>('userData', 'pendingSync');
     if (!pendingSync || !pendingSync.value || pendingSync.value.length === 0) {
       return;
     }

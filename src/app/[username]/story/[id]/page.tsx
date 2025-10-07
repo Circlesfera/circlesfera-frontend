@@ -12,8 +12,8 @@ interface Props {
 }
 
 export default function UserStoryPage({ params }: Props) {
-  const [story, setStory] = useState<any>(null);
-  const [user, setUser] = useState<any>(null);
+  const [story, setStory] = useState<Story | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user: _currentUser } = useAuth();

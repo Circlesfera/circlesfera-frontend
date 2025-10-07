@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { getComments, createComment, Comment } from '@/services/postService';
-import { useAuth } from '@/features/auth/useAuth';
+// import { useAuth } from '@/features/auth/useAuth'; // TODO: Usar para autenticación de comentarios
 
 export default function CommentsSection({ postId }: { postId: string }) {
-  const { token: _token, user: _user } = useAuth(); // Mantenidos para futuras funcionalidades
+  // const { token, user } = useAuth(); // TODO: Usar para autenticación de comentarios
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);

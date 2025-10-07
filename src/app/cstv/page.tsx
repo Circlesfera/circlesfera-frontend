@@ -38,7 +38,7 @@ export default function CSTVPage() {
     page: 1,
     limit: 20,
     sortBy,
-    ...(selectedCategory !== 'all' && { category: selectedCategory as any }),
+    ...(selectedCategory !== 'all' && { category: selectedCategory as string }),
   });
 
   // Search videos
@@ -259,7 +259,7 @@ export default function CSTVPage() {
               {/* Sort Filter */}
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => setSortBy(e.target.value as string)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
               >
                 <option value="trending">Trending</option>

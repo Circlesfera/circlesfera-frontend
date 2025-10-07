@@ -25,7 +25,7 @@ interface AnalyticsEventData {
   action: string;
   label?: string;
   value?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -52,8 +52,8 @@ export const trackEvent = (
     };
 
     // Enviar a Google Analytics si está configurado
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', event, {
+    if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', event, {
         event_category: eventData.category,
         event_label: eventData.label,
         value: eventData.value,

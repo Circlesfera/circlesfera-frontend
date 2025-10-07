@@ -3,7 +3,7 @@ import { useAuth } from '@/features/auth/useAuth';
 
 interface WebSocketMessage {
   type: string;
-  data: any;
+  data: unknown;
 }
 
 interface UseWebSocketOptions {
@@ -16,7 +16,7 @@ interface UseWebSocketOptions {
 
 interface UseWebSocketReturn {
   isConnected: boolean;
-  sendMessage: (type: string, data: any) => void;
+  sendMessage: (type: string, data: unknown) => void;
   lastMessage: WebSocketMessage | null;
 }
 
@@ -100,7 +100,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
     }
   }, [token, onConnect, onDisconnect, onMessage, reconnectInterval, maxReconnectAttempts]);
 
-  const sendMessage = useCallback((type: string, data: any) => {
+  const sendMessage = useCallback((type: string, data: unknown) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       const message: WebSocketMessage = { type, data };
       wsRef.current.send(JSON.stringify(message));

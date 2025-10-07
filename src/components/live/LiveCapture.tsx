@@ -76,14 +76,15 @@ export function LiveCapture({
 
   // Configurar eventos de grabación
   useEffect(() => {
-    const handleRecordingReady = (event: any) => {
+    const handleRecordingReady = (event: { blob: Blob; size: number; type: string }) => {
       if (onRecordingReady && event.blob) {
         onRecordingReady(event.blob);
       }
     };
 
     // Escuchar eventos de grabación desde el servicio WebRTC
-    const webrtcService = require('@/services/webrtcService').getWebRTCService();
+    const { getWebRTCService } = await import('@/services/webrtcService');
+    const webrtcService = getWebRTCService();
     webrtcService.socketService.on('webrtc:recording-ready', handleRecordingReady);
 
     return () => {

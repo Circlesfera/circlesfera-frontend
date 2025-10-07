@@ -126,7 +126,7 @@ export const generatePostStructuredData = (post: {
   likesCount?: number;
   commentsCount?: number;
 }) => {
-  const baseData: any = {
+  const baseData: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': post.video ? 'VideoObject' : 'ImageObject',
     headline: post.caption,

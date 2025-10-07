@@ -13,11 +13,17 @@ interface UseFeedReturn {
   removePost: (postId: string) => void
 }
 
+interface UseFeedOptions {
+  isAuthenticated?: boolean
+}
+
 /**
  * Hook personalizado para gestionar el feed de posts
+ * @param options - Opciones del hook, incluyendo estado de autenticación
  * @returns Estado y funciones para gestionar el feed
  */
-export function useFeed(): UseFeedReturn {
+export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
+  const { isAuthenticated = true } = options
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -102,10 +108,14 @@ export function useFeed(): UseFeedReturn {
     setPosts(prev => prev.filter(post => post._id !== postId))
   }, [])
 
-  // Cargar posts iniciales al montar
+  // Cargar posts iniciales solo si está autenticado
   useEffect(() => {
-    loadInitialPosts()
-  }, [loadInitialPosts])
+    if (isAuthenticated) {
+      loadInitialPosts()
+    } else {
+      setLoading(false)
+    }
+  }, [loadInitialPosts, isAuthenticated])
 
   return {
     posts,

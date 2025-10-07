@@ -6,7 +6,7 @@ import type { LiveComment, LiveStreamViewer } from '@/types/live';
 interface LiveSocketEvents {
   // Comentarios
   'comment:new': (comment: LiveComment) => void;
-  'comment:reaction': (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: any) => void;
+  'comment:reaction': (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: { _id: string; username: string }) => void;
   'comment:reply': (parentId: string, comment: LiveComment) => void;
   'comment:moderate': (commentId: string, action: string) => void;
 
@@ -16,16 +16,16 @@ interface LiveSocketEvents {
   'viewer:count': (count: number) => void;
 
   // Stream status
-  'stream:start': (stream: any) => void;
+  'stream:start': (stream: LiveStream) => void;
   'stream:end': (streamId: string) => void;
-  'stream:update': (stream: any) => void;
+  'stream:update': (stream: Partial<LiveStream>) => void;
 
   // Reacciones del stream
-  'stream:like': (streamId: string, user: any) => void;
-  'stream:share': (streamId: string, user: any) => void;
+  'stream:like': (streamId: string, user: { _id: string; username: string }) => void;
+  'stream:share': (streamId: string, user: { _id: string; username: string }) => void;
 
   // Notificaciones
-  'notification:new': (notification: any) => void;
+  'notification:new': (notification: { _id: string; type: string; content: string }) => void;
 
   // WebRTC
   'webrtc:offer': (data: { streamId: string; offer: RTCSessionDescriptionInit; from: string }) => void;
@@ -36,7 +36,7 @@ interface LiveSocketEvents {
 
   // Errores
   'error': (error: string) => void;
-  'connect_error': (error: any) => void;
+  'connect_error': (error: Error) => void;
 }
 
 class LiveSocketService {
@@ -84,12 +84,12 @@ class LiveSocketService {
       }
     });
 
-    this.socket.on('connect_error', (error: any) => {
+    this.socket.on('connect_error', (error: Error) => {
       console.error('❌ Error de conexión:', error);
       this.handleReconnect();
     });
 
-    this.socket.on('error', (error: any) => {
+    this.socket.on('error', (error: Error) => {
       console.error('❌ Error del socket:', error);
     });
   }
@@ -171,14 +171,14 @@ class LiveSocketService {
   // Métodos para listeners de eventos
   on<K extends keyof LiveSocketEvents>(event: K, callback: LiveSocketEvents[K]) {
     if (this.socket) {
-      this.socket.on(event as string, callback as any);
+      this.socket.on(event as string, callback as (...args: unknown[]) => void);
     }
   }
 
   off<K extends keyof LiveSocketEvents>(event: K, callback?: LiveSocketEvents[K]) {
     if (this.socket) {
       if (callback) {
-        this.socket.off(event as string, callback as any);
+        this.socket.off(event as string, callback as (...args: unknown[]) => void);
       } else {
         this.socket.off(event as string);
       }
@@ -186,7 +186,7 @@ class LiveSocketService {
   }
 
   // Emitir eventos
-  emit<K extends keyof LiveSocketEvents>(event: K, data: any) {
+  emit<K extends keyof LiveSocketEvents>(event: K, data: Parameters<LiveSocketEvents[K]>[0]) {
     if (this.socket && this.isConnected) {
       this.socket.emit(event as string, data);
     }

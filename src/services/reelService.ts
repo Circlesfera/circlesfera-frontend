@@ -106,7 +106,7 @@ export interface DeleteReelResponse {
 // Crear un nuevo reel
 export const createReel = async (formData: FormData): Promise<CreateReelResponse> => {
   try {
-    const response = await api.post('/api/reels', formData, {
+    const response = await api.post('/reels', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -121,7 +121,7 @@ export const createReel = async (formData: FormData): Promise<CreateReelResponse
 // Obtener reels para el feed
 export const getReelsForFeed = async (page: number = 1, limit: number = 10): Promise<GetReelsResponse> => {
   try {
-    const response = await api.get(`/api/reels/feed?page=${page}&limit=${limit}`);
+    const response = await api.get(`/reels/feed?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error fetching reels for feed:', error);
@@ -133,7 +133,7 @@ export const getReelsForFeed = async (page: number = 1, limit: number = 10): Pro
 // Obtener reels de un usuario específico
 export const getUserReels = async (username: string, page: number = 1, limit: number = 10): Promise<GetReelsResponse> => {
   try {
-    const url = `/api/reels/user/${username}?page=${page}&limit=${limit}`;
+    const url = `/${username}/reels?page=${page}&limit=${limit}`;
     const response = await api.get(url);
     return response.data;
   } catch (error: unknown) {
@@ -145,7 +145,7 @@ export const getUserReels = async (username: string, page: number = 1, limit: nu
 // Obtener un reel específico
 export const getReel = async (reelId: string): Promise<GetReelResponse> => {
   try {
-    const response = await api.get(`/api/reels/${reelId}`);
+    const response = await api.get(`/reels/${reelId}`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error fetching reel:', error);
@@ -156,7 +156,7 @@ export const getReel = async (reelId: string): Promise<GetReelResponse> => {
 // Dar like a un reel
 export const likeReel = async (reelId: string): Promise<LikeReelResponse> => {
   try {
-    const response = await api.post(`/api/reels/${reelId}/like`);
+    const response = await api.post(`/reels/${reelId}/like`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error liking reel:', error);
@@ -167,7 +167,7 @@ export const likeReel = async (reelId: string): Promise<LikeReelResponse> => {
 // Quitar like de un reel
 export const unlikeReel = async (reelId: string): Promise<LikeReelResponse> => {
   try {
-    const response = await api.delete(`/api/reels/${reelId}/like`);
+    const response = await api.delete(`/reels/${reelId}/like`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error unliking reel:', error);
@@ -178,7 +178,7 @@ export const unlikeReel = async (reelId: string): Promise<LikeReelResponse> => {
 // Comentar un reel
 export const commentReel = async (reelId: string, content: string): Promise<CommentReelResponse> => {
   try {
-    const response = await api.post(`/api/reels/${reelId}/comment`, { content });
+    const response = await api.post(`/reels/${reelId}/comment`, { content });
     return response.data;
   } catch (error: unknown) {
     console.error('Error commenting reel:', error);
@@ -189,7 +189,7 @@ export const commentReel = async (reelId: string, content: string): Promise<Comm
 // Eliminar un reel
 export const deleteReel = async (reelId: string): Promise<DeleteReelResponse> => {
   try {
-    const response = await api.delete(`/api/reels/${reelId}`);
+    const response = await api.delete(`/reels/${reelId}`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error deleting reel:', error);
@@ -200,7 +200,7 @@ export const deleteReel = async (reelId: string): Promise<DeleteReelResponse> =>
 // Buscar reels por hashtag
 export const searchReelsByHashtag = async (hashtag: string, page: number = 1, limit: number = 10): Promise<GetReelsResponse> => {
   try {
-    const response = await api.get(`/api/reels/search/hashtag/${hashtag}?page=${page}&limit=${limit}`);
+    const response = await api.get(`/reels/search/hashtag/${hashtag}?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error searching reels by hashtag:', error);
@@ -211,7 +211,7 @@ export const searchReelsByHashtag = async (hashtag: string, page: number = 1, li
 // Obtener reels trending
 export const getTrendingReels = async (timeFrame: 'week' | 'month' = 'week', limit: number = 20): Promise<GetReelsResponse> => {
   try {
-    const response = await api.get(`/api/reels/trending?timeFrame=${timeFrame}&limit=${limit}`);
+    const response = await api.get(`/reels/trending?timeFrame=${timeFrame}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
     console.error('Error fetching trending reels:', error);

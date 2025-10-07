@@ -48,7 +48,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
     }
   };
 
-  const handleInputChange = (field: keyof CreateLiveStreamData, value: any) => {
+  const handleInputChange = (field: keyof CreateLiveStreamData, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,

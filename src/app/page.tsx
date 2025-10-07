@@ -23,7 +23,7 @@ export default function HomePage() {
     loadMore,
     updatePost,
     removePost
-  } = useFeed();
+  } = useFeed({ isAuthenticated: !!user && !authLoading });
 
   const [stories, setStories] = useState<UserWithStories[]>([]);
   const [commentsModal, setCommentsModal] = useState<{
