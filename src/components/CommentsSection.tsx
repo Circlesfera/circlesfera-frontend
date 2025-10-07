@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { getComments, createComment, Comment } from '@/services/postService';
-// import { useAuth } from '@/features/auth/useAuth'; // TODO: Usar para autenticación de comentarios
+import { useAuth } from '@/features/auth/useAuth';
 
 export default function CommentsSection({ postId }: { postId: string }) {
-  // const { token, user } = useAuth(); // TODO: Usar para autenticación de comentarios
+  const { user, token, loading: authLoading } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,13 @@ export default function CommentsSection({ postId }: { postId: string }) {
     if (!postId || postId.trim() === '') {
       console.warn('CommentsSection - postId inválido:', postId);
       setError('ID de publicación inválido');
+      setLoading(false);
+      return;
+    }
+
+    // Solo cargar comentarios si el usuario está autenticado
+    if (!user || !token || authLoading) {
+      console.log('CommentsSection - Usuario no autenticado, omitiendo carga de comentarios');
       setLoading(false);
       return;
     }
@@ -54,9 +61,12 @@ export default function CommentsSection({ postId }: { postId: string }) {
   };
 
   useEffect(() => {
-    fetchComments();
+    // Solo cargar comentarios cuando el usuario esté autenticado
+    if (user && token && !authLoading) {
+      fetchComments();
+    }
     // eslint-disable-next-line
-  }, [postId]);
+  }, [postId, user, token, authLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +76,12 @@ export default function CommentsSection({ postId }: { postId: string }) {
     // Validar que postId existe y no está vacío
     if (!postId || postId.trim() === '') {
       setError('ID de publicación inválido');
+      return;
+    }
+
+    // Solo permitir comentar si el usuario está autenticado
+    if (!user || !token) {
+      setError('Debes iniciar sesión para comentar');
       return;
     }
 
