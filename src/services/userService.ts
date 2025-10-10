@@ -95,7 +95,7 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
 
 export const getUserProfileByUsername = async (username: string): Promise<UserProfile> => {
   console.log('🔍 userService - getUserProfileByUsername llamada:', { username });
-  const res = await api.get(`/api/users/profile/${username}`);
+  const res = await api.get(`/users/profile/${username}`);
   console.log('🔍 userService - getUserProfileByUsername respuesta completa:', {
     username,
     response: res.data,
