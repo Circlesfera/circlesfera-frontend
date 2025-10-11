@@ -245,11 +245,11 @@ export default function PostCard({
         if (post.content.images && post.content.images.length > 1) {
           return (
             <div className="relative overflow-hidden">
-              <div className={`relative ${aspectRatioClass}`}>
+              <div className={`relative ${aspectRatioClass} bg-black`}>
                 <LazyImage
                   src={post.content.images[currentImageIndex]?.url || ''}
                   alt={post.content.images[currentImageIndex]?.alt || "post"}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 {/* Indicadores de imagen */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -288,11 +288,11 @@ export default function PostCard({
           );
         } else {
           return (
-            <div className={`relative overflow-hidden ${aspectRatioClass}`}>
+            <div className={`relative overflow-hidden ${aspectRatioClass} bg-black`}>
               <LazyImage
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           );
@@ -300,12 +300,12 @@ export default function PostCard({
 
       case 'video':
         return (
-          <div className={`relative overflow-hidden ${aspectRatioClass}`}>
+          <div className={`relative overflow-hidden ${aspectRatioClass} bg-black`}>
             <video
               ref={videoRef}
               src={post.content.video?.url}
               poster={post.content.video?.thumbnail}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               preload="metadata"
               onPlay={() => setIsVideoPlaying(true)}
               onPause={() => setIsVideoPlaying(false)}

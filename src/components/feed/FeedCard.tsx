@@ -138,13 +138,13 @@ export default function FeedCard({
 
       {/* Media */}
       {post.content.images && post.content.images.length > 0 && post.content.images[0] && !imageError && (
-        <div className="relative w-full">
+        <div className="relative w-full bg-black">
           <Image
             src={post.content.images[0].url}
             alt={post.caption || post.content.images[0].alt || "Contenido del post"}
             width={600}
             height={384}
-            className="w-full h-auto max-h-96 object-cover"
+            className="w-full h-auto max-h-96 object-contain"
             onError={() => setImageError(true)}
           />
         </div>

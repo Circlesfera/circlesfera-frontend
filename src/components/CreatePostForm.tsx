@@ -336,21 +336,23 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             ) : (
               <div className="relative">
                 {postType === 'image' ? (
-                  <div className={`relative mx-auto ${aspectRatio === '1:1' ? 'aspect-square max-w-md' : 'aspect-[4/5] max-w-sm'}`}>
+                  <div className={`relative mx-auto ${aspectRatio === '1:1' ? 'aspect-square max-w-md' : 'aspect-[4/5] max-w-sm'} bg-black rounded-lg overflow-hidden`}>
                     <Image
                       src={preview}
                       alt="Vista previa de la publicación"
                       width={600}
                       height={aspectRatio === '1:1' ? 600 : 750}
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 ) : (
-                  <video
-                    src={preview}
-                    controls
-                    className="w-full max-h-96 object-contain rounded-lg"
-                  />
+                  <div className="relative mx-auto max-w-md bg-black rounded-lg overflow-hidden">
+                    <video
+                      src={preview}
+                      controls
+                      className="w-full max-h-96 object-contain"
+                    />
+                  </div>
                 )}
                 <button
                   type="button"
