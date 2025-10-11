@@ -7,6 +7,7 @@ import type {
   EndLiveStreamData,
   LiveStreamFilters,
 } from '@/types/live';
+import type { CSTVVideo } from '@/types/cstv';
 import logger from '@/utils/logger';
 
 export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
