@@ -24,8 +24,10 @@ export default function UserSuggestions() {
         setSuggestions([]);
       }
       setLoading(false);
-    }).catch(error => {
-
+    }).catch(loadError => {
+      logger.error('Error loading user suggestions:', {
+        error: loadError instanceof Error ? loadError.message : 'Unknown error'
+      });
       setError('Error al cargar sugerencias');
       setSuggestions([]);
       setLoading(false);

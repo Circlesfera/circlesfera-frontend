@@ -49,8 +49,11 @@ export function LiveChat({
   } = useLiveSocket({
     streamId,
     autoJoin: true,
-    onError: (error) => {
-
+    onError: (streamError) => {
+      logger.error('LiveChat comment error:', {
+        error: streamError,
+        streamId
+      });
     },
   });
 

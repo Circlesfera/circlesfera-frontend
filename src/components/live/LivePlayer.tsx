@@ -63,8 +63,15 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
   // Handle recording ready (para CSTV)
   const handleRecordingReady = async (blob: Blob) => {
     // Aquí podrías subir automáticamente el archivo para crear un CSTV
-
+    logger.info('Recording ready for CSTV upload:', {
+      size: blob.size,
+      type: blob.type,
+      streamId
+    });
     // TODO: Implementar subida automática a CSTV
+    // const formData = new FormData();
+    // formData.append('video', blob);
+    // await uploadCSTVVideo(formData);
   };
 
   // Handle stream start

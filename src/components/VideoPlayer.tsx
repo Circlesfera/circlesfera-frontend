@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import logger from '@/utils/logger';
 
 interface VideoPlayerProps {
   src: string;
@@ -40,8 +41,10 @@ export default function VideoPlayer({
     if (!video) return;
 
     if (isActive && autoPlay) {
-      video.play().catch(err => {
-
+      video.play().catch(playError => {
+        logger.warn('Video autoplay failed (expected behavior):', {
+          error: playError instanceof Error ? playError.message : 'Unknown error'
+        });
       });
       setIsPlaying(true);
     } else {
@@ -75,8 +78,10 @@ export default function VideoPlayer({
       video.pause();
       setIsPlaying(false);
     } else {
-      video.play().catch(err => {
-
+      video.play().catch(playError => {
+        logger.error('Video play failed:', {
+          error: playError instanceof Error ? playError.message : 'Unknown error'
+        });
       });
       setIsPlaying(true);
     }
