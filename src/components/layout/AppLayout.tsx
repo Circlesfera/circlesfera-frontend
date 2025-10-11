@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/utils/cn';
 import { Button } from '@/design-system/Button';
 import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
@@ -301,12 +302,25 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {/* User Profile */}
             {user && (
               <div className="mt-auto pt-6 border-t border-gray-100">
-                <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200">
-                    <span className="text-white font-semibold text-sm">
-                      {user.username?.[0]?.toUpperCase()}
-                    </span>
-                  </div>
+                <Link
+                  href={`/${user.username}`}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group cursor-pointer"
+                >
+                  {user.avatar ? (
+                    <Image
+                      src={user.avatar}
+                      alt={`Avatar de ${user.username}`}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200">
+                      <span className="text-white font-semibold text-sm">
+                        {user.username?.[0]?.toUpperCase()}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">
                       {user.fullName || user.username}
@@ -315,7 +329,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       @{user.username}
                     </p>
                   </div>
-                </div>
+                </Link>
               </div>
             )}
           </nav>
