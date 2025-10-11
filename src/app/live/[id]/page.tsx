@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Users, Heart, Share2, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -9,13 +9,13 @@ import { LivePlayer } from '@/components/live/LivePlayer';
 import { useAuthContext } from '@/features/auth/AuthContext';
 
 interface LiveStreamPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function LiveStreamPage({ params }: LiveStreamPageProps) {
-  const { id } = params;
+  const { id } = use(params);
   const router = useRouter();
   const { user } = useAuthContext();
 

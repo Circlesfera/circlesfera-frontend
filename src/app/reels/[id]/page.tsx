@@ -8,11 +8,12 @@ import { getReel, Reel } from '@/services/reelService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import CommentsModal from '@/components/CommentsModal';
 import { Video, Heart, MessageCircle, Share2, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import logger from '@/utils/logger';
 
 export default function ReelPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { loading: authLoading } = useAuth();
+  const { loading: authLoading, user } = useAuth();
   const [reel, setReel] = useState<Reel | null>(null);
   const [loading, setLoading] = useState(true);
   const [commentsModal, setCommentsModal] = useState<{ isOpen: boolean; reelId: string }>({
@@ -31,8 +32,11 @@ export default function ReelPage() {
         if (response.success) {
           setReel(response.reel);
         }
-      } catch (error) {
-
+      } catch (loadReelError) {
+        logger.error('Error loading reel in reels/[id]/page:', {
+          error: loadReelError instanceof Error ? loadReelError.message : 'Unknown error',
+          reelId: id
+        });
         router.push('/reels');
       } finally {
         setLoading(false);

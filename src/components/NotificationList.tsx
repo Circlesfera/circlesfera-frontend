@@ -50,7 +50,7 @@ export default function NotificationList() {
 
   useEffect(() => {
     fetchNotifications();
-    // eslint-disable-next-line
+     
   }, []);
 
   const handleMarkAsRead = async (id: string) => {

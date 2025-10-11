@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Bookmark, Share2, Eye, Clock, User, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -8,13 +8,13 @@ import { useCSTVVideo, useCSTVLikes, useCSTVSaves } from '@/hooks/useCSTV';
 import { useAuthContext } from '@/features/auth/AuthContext';
 
 interface CSTVVideoPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
-  const { id } = params;
+  const { id } = use(params);
   const router = useRouter();
   const { user } = useAuthContext();
   const isAuthenticated = !!user;
