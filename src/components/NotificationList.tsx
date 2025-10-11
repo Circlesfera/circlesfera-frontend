@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getNotifications, markNotificationAsRead } from '@/services/notificationService';
 import type { Notification } from '@/types';
 import logger from '@/utils/logger';
@@ -50,7 +51,7 @@ export default function NotificationList() {
 
   useEffect(() => {
     fetchNotifications();
-     
+
   }, []);
 
   const handleMarkAsRead = async (id: string) => {
@@ -104,13 +105,18 @@ export default function NotificationList() {
         ) : (
           <ul className="flex flex-col gap-4">
             {notifications.map(n => (
-              <li key={n._id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
-                n.isRead
+              <li key={n._id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${n.isRead
                   ? 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                   : 'bg-blue-50 border-blue-200 shadow-sm hover:bg-blue-100'
-              }`}>
+                }`}>
                 {n.from?.avatar ? (
-                  <img src={n.from.avatar} alt="avatar" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0" />
+                  <Image
+                    src={n.from.avatar}
+                    alt={`Avatar de ${n.from.username}`}
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0"
+                  />
                 ) : (
                   <span className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-sm flex-shrink-0">
                     {n.from?.username?.[0]?.toUpperCase()}

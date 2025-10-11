@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getSuggestions, UserSuggestion } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import FollowButton from './FollowButton';
@@ -79,9 +80,11 @@ export default function UserSuggestions() {
               {/* Avatar */}
               <div className="relative">
                 {suggestion.avatar ? (
-                  <img
+                  <Image
                     src={suggestion.avatar}
-                    alt="avatar"
+                    alt={`Avatar de ${suggestion.username}`}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (

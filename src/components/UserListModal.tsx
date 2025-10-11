@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import FollowButton from './FollowButton';
 
@@ -132,9 +133,11 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                       onClick={() => handleUserClick(user.username)}
                     >
                       {user.avatar ? (
-                        <img
+                        <Image
                           src={user.avatar}
                           alt={`Avatar de ${user.username}`}
+                          width={48}
+                          height={48}
                           className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200"
                         />
                       ) : (

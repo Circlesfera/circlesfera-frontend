@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { getConversations, Conversation } from '../services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
 import ConversationSkeleton from './ConversationSkeleton';
@@ -240,9 +241,11 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                       <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden ring-2 ${selectedId === conversation._id ? 'ring-blue-400' : 'ring-gray-200 group-hover:ring-gray-300'
                         } transition-all`}>
                         {getConversationAvatar(conversation) ? (
-                          <img
-                            src={getConversationAvatar(conversation)}
-                            alt="avatar"
+                          <Image
+                            src={getConversationAvatar(conversation) || '/default-avatar.png'}
+                            alt={`Avatar de ${getConversationName(conversation)}`}
+                            width={56}
+                            height={56}
                             className="w-full h-full object-cover"
                           />
                         ) : (

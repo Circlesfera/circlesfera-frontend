@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import logger from '@/utils/logger';
 import { searchUsers } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -97,9 +98,11 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
             className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
           >
             {user.avatar ? (
-              <img
+              <Image
                 src={user.avatar}
-                alt="avatar"
+                alt={`Avatar de ${user.username}`}
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-full object-cover"
               />
             ) : (

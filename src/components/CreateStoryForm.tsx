@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { createImageStory, createVideoStory, createTextStory, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 
@@ -181,11 +182,10 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 key={type}
                 type="button"
                 onClick={() => handleTypeChange(type)}
-                className={`p-4 rounded-xl border-2 transition-all ${
-                  storyType === type
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
+                className={`p-4 rounded-xl border-2 transition-all ${storyType === type
+                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 hover:border-gray-300'
+                  }`}
               >
                 <Icon />
                 <span className="block text-sm font-medium mt-2">{label}</span>
@@ -222,9 +222,11 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 {preview ? (
                   <div className="space-y-4">
                     {storyType === 'image' ? (
-                      <img
+                      <Image
                         src={preview}
-                        alt="Preview"
+                        alt="Vista previa de la story"
+                        width={400}
+                        height={192}
                         className="w-full h-48 object-cover rounded-lg mx-auto"
                       />
                     ) : (
@@ -302,14 +304,14 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
             </label>
             <div className="relative">
               <LocationIcon />
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="¿Dónde estás?"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                  maxLength={100}
-                />
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="¿Dónde estás?"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                maxLength={100}
+              />
             </div>
           </div>
 

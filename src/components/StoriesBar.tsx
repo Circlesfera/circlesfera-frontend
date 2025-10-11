@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 import StoryViewer from './StoryViewer';
@@ -135,12 +136,14 @@ export default function StoriesBar() {
               >
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                   <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
-                    <div className="w-full h-full rounded-full bg-white p-0.5">
+                    <div className="w-full h-full rounded-full bg-white p-0.5 relative">
                       {user?.avatar ? (
-                        <img
+                        <Image
                           src={`${user.avatar.startsWith('http') ? user.avatar : `https://dev-api.circlesfera.com${user.avatar}`}?v=${user?.updatedAt || ''}`}
-                          alt="avatar"
-                          className="w-full h-full object-cover rounded-full"
+                          alt={`Historia de ${user.username}`}
+                          fill
+                          className="object-cover rounded-full"
+                          sizes="64px"
                         />
                       ) : (
                         <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
@@ -167,11 +170,13 @@ export default function StoriesBar() {
               <div className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0">
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                   <div className="w-full h-full rounded-full border-2 border-gray-300 bg-white p-0.5">
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center relative">
                       {user?.avatar ? (
-                        <img
+                        <Image
                           src={`${user.avatar.startsWith('http') ? user.avatar : `https://dev-api.circlesfera.com${user.avatar}`}?v=${user?.updatedAt || ''}`}
-                          alt="avatar"
+                          alt={`Crear historia de ${user.username}`}
+                          width={56}
+                          height={56}
                           className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
                         />
                       ) : (
@@ -207,59 +212,61 @@ export default function StoriesBar() {
             </>
           ) : usersWithStories.length === 0 ? (
             <div className="flex items-center justify-center w-full py-8 sm:py-12">
-                <div className="text-center px-4">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                    <StoryIcon />
-                  </div>
-                  <h3 className="text-gray-700 font-medium mb-2 text-sm sm:text-base">No hay historias aún</h3>
-                  <p className="text-gray-500 text-xs sm:text-sm mb-3 sm:mb-4">¡Sé el primero en crear una historia!</p>
-                  <button
-                    onClick={handleCreateStory}
-                    className="px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 text-xs sm:text-sm font-medium"
-                  >
-                    Crear mi primera historia
-                  </button>
+              <div className="text-center px-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <StoryIcon />
                 </div>
+                <h3 className="text-gray-700 font-medium mb-2 text-sm sm:text-base">No hay historias aún</h3>
+                <p className="text-gray-500 text-xs sm:text-sm mb-3 sm:mb-4">¡Sé el primero en crear una historia!</p>
+                <button
+                  onClick={handleCreateStory}
+                  className="px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 text-xs sm:text-sm font-medium"
+                >
+                  Crear mi primera historia
+                </button>
               </div>
-            ) : (
-              usersWithStories
-                .filter(userWithStories => userWithStories._id !== user?._id) // Excluir al usuario actual ya que se muestra arriba
-                .map((userWithStories) => (
-                  <button
-                    key={userWithStories._id}
-                    className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group"
-                    onClick={() => openViewer(userWithStories)}
-                  >
-                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
-                      <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
-                        <div className="w-full h-full rounded-full bg-white p-0.5">
-                          <img
-                            src={`${(userWithStories.avatar && userWithStories.avatar.startsWith('http'))
-                              ? userWithStories.avatar
-                              : userWithStories.avatar
-                                ? `https://dev-api.circlesfera.com${userWithStories.avatar}`
-                                : '/default-avatar.png'}?v=${userWithStories.updatedAt || ''}`}
-                            alt="avatar"
-                            className="w-full h-full object-cover rounded-full"
-                          />
-                        </div>
-                      </div>
-                      {/* Indicador de tiempo */}
-                      <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
+            </div>
+          ) : (
+            usersWithStories
+              .filter(userWithStories => userWithStories._id !== user?._id) // Excluir al usuario actual ya que se muestra arriba
+              .map((userWithStories) => (
+                <button
+                  key={userWithStories._id}
+                  className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0 focus:outline-none group"
+                  onClick={() => openViewer(userWithStories)}
+                >
+                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
+                    <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
+                      <div className="w-full h-full rounded-full bg-white p-0.5 relative">
+                        <Image
+                          src={`${(userWithStories.avatar && userWithStories.avatar.startsWith('http'))
+                            ? userWithStories.avatar
+                            : userWithStories.avatar
+                              ? `https://dev-api.circlesfera.com${userWithStories.avatar}`
+                              : '/default-avatar.png'}?v=${userWithStories.updatedAt || ''}`}
+                          alt={`Historia de ${userWithStories.username}`}
+                          fill
+                          className="object-cover rounded-full"
+                          sizes="64px"
+                        />
                       </div>
                     </div>
-                    <div className="text-center">
-                      <span className="text-xs font-medium text-gray-900 truncate max-w-[56px] sm:max-w-[64px] block">
-                        {userWithStories.username}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {formatTimeAgo(userWithStories.latestStory.createdAt)}
-                      </span>
+                    {/* Indicador de tiempo */}
+                    <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                     </div>
-                  </button>
-                ))
-              )}
+                  </div>
+                  <div className="text-center">
+                    <span className="text-xs font-medium text-gray-900 truncate max-w-[56px] sm:max-w-[64px] block">
+                      {userWithStories.username}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {formatTimeAgo(userWithStories.latestStory.createdAt)}
+                    </span>
+                  </div>
+                </button>
+              ))
+          )}
         </div>
 
         {/* Indicadores de scroll */}
