@@ -1,6 +1,7 @@
 'use client';
 
 import { io, Socket } from 'socket.io-client';
+import logger from '@/utils/logger';
 import type { LiveComment, LiveStreamViewer, LiveStream } from '@/types/live';
 
 interface LiveSocketEvents {
@@ -99,7 +100,7 @@ class LiveSocketService {
       this.reconnectAttempts++;
       const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
 
-      console.log(`🔄 Reintentando conexión en ${delay}ms (intento ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+      logger.info(`Reintentando conexión en ${delay}ms (intento ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
 
       setTimeout(() => {
         this.connect();

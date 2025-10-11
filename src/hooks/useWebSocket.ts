@@ -52,7 +52,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
       const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
 
       if (!wsUrl) {
-        console.error('NEXT_PUBLIC_WS_URL no está configurado');
+        logger.error('NEXT_PUBLIC_WS_URL no está configurado');
         return;
       }
 
@@ -84,7 +84,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
       };
 
       ws.onerror = () => {
-        console.error('WebSocket error:', {
+        logger.error('WebSocket error:', {
           url: wsUrl,
           readyState: ws.readyState,
           timestamp: new Date().toISOString()
@@ -105,7 +105,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
             onMessage(message);
           }
         } catch (parseError) {
-          console.error('Error parsing WebSocket message:', {
+          logger.error('Error parsing WebSocket message:', {
             error: parseError instanceof Error ? parseError.message : 'Unknown error',
             data: event.data
           });
@@ -114,7 +114,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
 
       wsRef.current = ws;
     } catch (connectionError) {
-      console.error('Error connecting to WebSocket:', {
+      logger.error('Error connecting to WebSocket:', {
         error: connectionError instanceof Error ? connectionError.message : 'Unknown error',
         url: wsUrl
       });
@@ -135,14 +135,14 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
         const message: WebSocketMessage = { type, data };
         wsRef.current.send(JSON.stringify(message));
       } catch (sendError) {
-        console.error('Error sending WebSocket message:', {
+        logger.error('Error sending WebSocket message:', {
           error: sendError instanceof Error ? sendError.message : 'Unknown error',
           type,
           data
         });
       }
     } else {
-      console.warn('Cannot send message: WebSocket is not connected', {
+      logger.warn('Cannot send message: WebSocket is not connected', {
         type,
         readyState: wsRef.current?.readyState,
         expectedState: WebSocket.OPEN

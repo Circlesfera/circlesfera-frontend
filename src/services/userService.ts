@@ -1,5 +1,6 @@
 import api from './axios';
 import { Post } from './postService';
+import logger from '@/utils/logger';
 import type { Story } from '@/types';
 
 export interface User {
@@ -82,7 +83,7 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
     const res = await api.put('/auth/profile', userData);
     return res.data.user;
   } catch (error: unknown) {
-    console.error('Error en updateUserProfile:', (error as Error)?.message || 'Error desconocido');
+    logger.error('Error en updateUserProfile:', (error as Error)?.message || 'Error desconocido');
     if (error && typeof error === 'object' && 'response' in error) {
       const apiError = error as { response?: { data?: { errors?: string[] } } };
       if (apiError.response?.data?.errors) {

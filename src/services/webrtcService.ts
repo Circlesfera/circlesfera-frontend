@@ -1,6 +1,7 @@
 'use client';
 
 import { getLiveSocketService } from './liveSocketService';
+import logger from '@/utils/logger';
 
 interface WebRTCConfig {
   video: boolean | MediaTrackConstraints;
@@ -81,7 +82,7 @@ class WebRTCService {
       // Configurar grabación para CSTV
       this.setupRecording();
 
-      console.log('🎥 Captura de medios iniciada:', {
+      logger.info('Captura de medios iniciada:', {
         videoTracks: this.localStream.getVideoTracks().length,
         audioTracks: this.localStream.getAudioTracks().length,
       });
