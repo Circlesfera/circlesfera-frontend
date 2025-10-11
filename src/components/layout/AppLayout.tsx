@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
-import { Button } from '@/design-system/Button';
 import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
@@ -43,17 +42,6 @@ const ReelsIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const CSTVIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h18M3 12h18M3 16h18M10 9l5 3-5 3V9z" />
-  </svg>
-);
-
-const LiveIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-  </svg>
-);
 
 const StoriesIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +73,6 @@ interface NavigationItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | undefined;
-  specialBadge?: 'live' | 'new' | 'hot';
 }
 
 interface AppLayoutProps {
@@ -141,18 +128,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
     return <>{children}</>;
   }
 
-  // Navegación organizada por secciones
-  const mainNavigation: NavigationItem[] = [
+  // Navegación minimalista organizada por secciones
+  const primaryNavigation: NavigationItem[] = [
     { name: 'Inicio', href: '/', icon: HomeIcon },
     { name: 'Explorar', href: '/explore', icon: ExploreIcon },
-    { name: 'Reels', href: '/reels', icon: ReelsIcon, specialBadge: 'hot' },
-    { name: 'Stories', href: '/stories', icon: StoriesIcon },
-    { name: 'CSTV', href: '/cstv', icon: CSTVIcon, specialBadge: 'new' },
-    { name: 'En Vivo', href: '/live', icon: LiveIcon, specialBadge: 'live' },
+    { name: 'Mensajes', href: '/messages', icon: MessageIcon, badge: 2 }, // Hardcoded por ahora
   ];
 
   const contentNavigation: NavigationItem[] = [
-    { name: 'Mensajes', href: '/messages', icon: MessageIcon },
+    { name: 'Reels', href: '/reels', icon: ReelsIcon },
+    { name: 'Stories', href: '/stories', icon: StoriesIcon },
+  ];
+
+  const notificationsNavigation: NavigationItem[] = [
     { name: 'Notificaciones', href: '/notifications', icon: NotificationIcon, badge: unreadNotifications > 0 ? unreadNotifications : undefined },
   ];
 
@@ -199,9 +187,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Navigation */}
           <nav className="flex flex-1 flex-col">
             {/* Navegación Principal */}
-            <div className="mb-6">
+            <div className="mb-4">
               <ul role="list" className="space-y-1">
-                {mainNavigation.map((item) => (
+                {primaryNavigation.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
@@ -221,21 +209,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         )}
                       />
                       <span className="truncate">{item.name}</span>
-                      {/* Special Badges */}
-                      {item.specialBadge === 'live' && (
-                        <span className="ml-auto flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded uppercase animate-pulse">
-                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
-                          LIVE
-                        </span>
-                      )}
-                      {item.specialBadge === 'hot' && (
-                        <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold rounded uppercase">
-                          🔥 HOT
-                        </span>
-                      )}
-                      {item.specialBadge === 'new' && (
-                        <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold rounded uppercase">
-                          ✨ NUEVO
+                      {/* Badge para notificaciones */}
+                      {item.badge && (
+                        <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                          {item.badge > 9 ? '9+' : item.badge}
                         </span>
                       )}
                     </Link>
@@ -245,12 +222,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
 
             {/* Separador */}
-            <div className="mx-3 mb-6">
+            <div className="mx-3 mb-4">
               <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
             </div>
 
             {/* Navegación de Contenido */}
-            <div className="mb-6">
+            <div className="mb-4">
+              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Contenido</h3>
               <ul role="list" className="space-y-1">
                 {contentNavigation.map((item) => (
                   <li key={item.name}>
@@ -283,18 +261,55 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </ul>
             </div>
 
+            {/* Separador */}
+            <div className="mx-3 mb-4">
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+            </div>
+
+            {/* Navegación de Notificaciones */}
+            <div className="mb-6">
+              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Social</h3>
+              <ul role="list" className="space-y-1">
+                {notificationsNavigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                        isActive(item.href)
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      )}
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-5 w-5 shrink-0 transition-colors duration-200",
+                          isActive(item.href)
+                            ? "text-blue-700"
+                            : "text-gray-400 group-hover:text-gray-600"
+                        )}
+                      />
+                      <span className="truncate">{item.name}</span>
+                      {/* Badge para notificaciones */}
+                      {item.badge && (
+                        <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                          {item.badge > 9 ? '9+' : item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {/* Create Button */}
             <div className="mt-auto mb-6">
-              <Button
-                variant="gradient"
-                size="lg"
-                fullWidth
-                leftIcon={<PlusIcon className="h-5 w-5" />}
+              <button
                 onClick={() => setShowCreateModal(true)}
-                className="shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
               >
-                Crear Contenido
-              </Button>
+                <PlusIcon className="h-6 w-6" />
+              </button>
             </div>
 
             {/* Separador */}
@@ -406,7 +421,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Mobile Bottom Navigation - Expandido con scroll */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg overflow-x-auto">
         <div className="flex items-center justify-start gap-2 px-2 py-3 min-w-max">
-          {[...mainNavigation, ...contentNavigation].map((item) => (
+          {[...primaryNavigation, ...contentNavigation, ...notificationsNavigation].map((item) => (
             <Link
               key={item.name}
               href={item.href}
@@ -424,18 +439,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
                     {item.badge > 9 ? '9+' : item.badge}
                   </span>
-                )}
-                {/* Badge especial LIVE */}
-                {item.specialBadge === 'live' && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-white"></span>
-                )}
-                {/* Badge especial NEW */}
-                {item.specialBadge === 'new' && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full border border-white"></span>
-                )}
-                {/* Badge especial HOT */}
-                {item.specialBadge === 'hot' && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full border border-white"></span>
                 )}
               </div>
               <span className="text-xs mt-1 font-medium truncate max-w-[60px]">{item.name}</span>
