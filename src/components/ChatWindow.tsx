@@ -67,20 +67,25 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
   const fetchMessages = useCallback(async (pageNum = 1, append = false) => {
     if (!token) return;
-    
+
     try {
       const response = await getMessages(conversationId, token, pageNum);
-      
+
       if (append) {
         setMessages(prev => [...response.messages, ...prev]);
       } else {
         setMessages(response.messages);
       }
-      
+
       setHasMore(pageNum < response.pagination.pages);
       setPage(pageNum);
-    } catch (error) {
-
+      logger.debug('Chat messages fetched:', { conversationId, page: pageNum, count: response.messages.length });
+    } catch (fetchError) {
+      logger.error('Error fetching messages:', {
+        error: fetchError instanceof Error ? fetchError.message : 'Unknown error',
+        conversationId,
+        page: pageNum
+      });
     } finally {
       setLoading(false);
     }
@@ -93,7 +98,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim() || !token) return;
-    
+
     setSending(true);
     try {
       await sendTextMessage(conversationId, text.trim(), token);
@@ -120,9 +125,13 @@ export default function ChatWindow({ conversationId, conversationName, participa
         updatedAt: new Date().toISOString()
       };
       setMessages(prev => [...prev, newMessage]);
+      logger.debug('Message sent:', { conversationId, messageId: response._id });
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-
+      logger.error('Error sending message:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        conversationId
+      });
     } finally {
       setSending(false);
     }
@@ -189,8 +198,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
         }
       );
-    } catch (error) {
-
+      logger.info('File sent successfully:', { conversationId });
+    } catch (fileError) {
+      logger.error('Error sending file:', {
+        error: fileError instanceof Error ? fileError.message : 'Unknown error',
+        conversationId
+      });
     } finally {
       setSending(false);
     }
@@ -223,10 +236,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
             <div className="flex items-end mb-1">
               <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden mr-2">
                 {message.sender.avatar ? (
-                  <img 
-                    src={message.sender.avatar} 
-                    alt="avatar" 
-                    className="w-full h-full object-cover" 
+                  <img
+                    src={message.sender.avatar}
+                    alt="avatar"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
@@ -239,19 +252,19 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
           {/* Contenido del mensaje - Optimizado para móvil */}
           <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${
-            isOwnMessage 
-              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' 
+            isOwnMessage
+              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
               : 'bg-white border border-gray-200'
           }`}>
             {isTextMessage && (
               <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content.text}</div>
             )}
-            
+
             {isImageMessage && (
               <div className="space-y-2">
-                <img 
-                  src={message.content.image?.url} 
-                  alt={message.content.image?.alt || "imagen"} 
+                <img
+                  src={message.content.image?.url}
+                  alt={message.content.image?.alt || "imagen"}
                   className="rounded-lg max-w-full h-auto"
                 />
                 {message.content.image?.alt && (
@@ -259,10 +272,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 )}
               </div>
             )}
-            
+
             {isVideoMessage && (
               <div className="space-y-2">
-                <video 
+                <video
                   src={message.content.video?.url}
                   poster={message.content.video?.thumbnail}
                   controls
@@ -270,7 +283,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 />
               </div>
             )}
-            
+
             {isLocationMessage && (
               <div className="space-y-2">
                 <div className="bg-gray-100 rounded-lg p-2 sm:p-3">
@@ -293,9 +306,9 @@ export default function ChatWindow({ conversationId, conversationName, participa
             <div className={`text-xs mt-1 ${
               isOwnMessage ? 'text-blue-100' : 'text-gray-500'
             }`}>
-              {new Date(message.createdAt).toLocaleTimeString('es-ES', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+              {new Date(message.createdAt).toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
               })}
             </div>
           </div>
@@ -311,10 +324,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0">
             {participants?.[0]?.avatar ? (
-              <img 
-                src={participants[0].avatar} 
-                alt="avatar" 
-                className="w-full h-full object-cover" 
+              <img
+                src={participants[0].avatar}
+                alt="avatar"
+                className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
@@ -331,14 +344,14 @@ export default function ChatWindow({ conversationId, conversationName, participa
             </p>
           </div>
         </div>
-        
+
         <button className="p-2 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0">
           <MoreIcon />
         </button>
       </div>
 
       {/* Área de mensajes - Optimizada para móvil */}
-      <div 
+      <div
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gray-50"
       >
@@ -372,13 +385,13 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 </button>
               </div>
             )}
-            
+
             <ul className="space-y-1">
               <AnimatePresence>
                 {messages.map(renderMessage)}
               </AnimatePresence>
             </ul>
-            
+
             <div ref={messagesEndRef} />
           </>
         )}
@@ -398,7 +411,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
             </button>
-            
+
             <AnimatePresence>
               {showAttachments && (
                 <motion.div
@@ -433,8 +446,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     <span className="text-sm">Video</span>
                   </label>
 
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={handleLocationShare}
                     disabled={sending}
                     className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
@@ -469,7 +482,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
             >
               <EmojiIcon />
             </button>
-            
+
             <button
               type="submit"
               disabled={sending || !text.trim()}

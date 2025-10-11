@@ -38,8 +38,12 @@ export default function CreateConversationModal({
         // Filtrar el usuario actual
         const filteredUsers = users.filter((u: User) => u._id !== user?._id);
         setUsers(filteredUsers);
-      } catch (error) {
-
+        logger.debug('Users searched:', { query, count: filteredUsers.length });
+      } catch (searchError) {
+        logger.error('Error searching users:', {
+          error: searchError instanceof Error ? searchError.message : 'Unknown error',
+          query
+        });
         setUsers([]);
       } finally {
         setLoading(false);
@@ -78,9 +82,13 @@ export default function CreateConversationModal({
       if (response.success) {
         onConversationCreated(response.conversation);
         handleClose();
+        logger.info('Conversation created:', { conversationId: response.conversation._id });
       }
-    } catch (error) {
-
+    } catch (createError) {
+      logger.error('Error creating conversation:', {
+        error: createError instanceof Error ? createError.message : 'Unknown error',
+        selectedUserId
+      });
     } finally {
       setCreating(false);
     }
