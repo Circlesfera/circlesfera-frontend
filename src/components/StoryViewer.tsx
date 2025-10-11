@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { deleteStory, Story } from '@/services/storyService';
+import logger from '@/utils/logger';
 
 // Iconos SVG modernos estilo Instagram
 const CloseIcon = () => (
@@ -139,8 +140,12 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
 
   // Loggear información de la story en desarrollo
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development' && story) {
-      console.log(`StoryViewer: Mostrando story ${story._id} del usuario ${username} (${userId})`);
+    if (story) {
+      logger.debug('StoryViewer: Showing story', {
+        storyId: story._id,
+        username,
+        userId
+      });
     }
   }, [story, userId, username]);
 
@@ -240,8 +245,11 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       setIsDeleting(true);
 
       // Llamada real a la API para eliminar la story
-
-      console.log('🔐 Token actual:', localStorage.getItem('token') ? 'Presente' : 'Ausente');
+      const token = localStorage.getItem('token');
+      logger.debug('Deleting story', {
+        storyId: story._id,
+        hasToken: !!token
+      });
 
       const result = await deleteStory(story._id);
 

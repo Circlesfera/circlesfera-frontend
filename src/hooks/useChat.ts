@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { getMessages, sendTextMessage, Message } from '@/services/messageService';
 import { useAuth } from '@/features/auth/useAuth';
 import { useWebSocket } from './useWebSocket';
+import logger from '@/utils/logger'
 
 interface UseChatOptions {
   conversationId: string;

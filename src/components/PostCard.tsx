@@ -184,8 +184,10 @@ export default function PostCard({
 
       // Debug: verificar token
       const token = localStorage.getItem('token');
-
-      console.log('Token:', token ? token.substring(0, 20) + '...' : 'No hay token');
+      logger.debug('Deleting post', {
+        postId: post._id,
+        hasToken: !!token
+      });
 
       const response = await deletePost(post._id);
       if (response.success) {
