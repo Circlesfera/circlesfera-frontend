@@ -335,7 +335,7 @@ export default function Header() {
                       priority
                     />
                   ) : (
-                    <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs lg:text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
+                    <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs lg:text-sm shadow-lg">
                       {user?.username?.[0]?.toUpperCase() || 'U'}
                     </div>
                   )}
@@ -353,7 +353,13 @@ export default function Header() {
                           {user?.username?.[0]?.toUpperCase() || 'U'}
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{user?.username || 'Usuario'}</div>
+                          <Link
+                            href={`/${user?.username}`}
+                            className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            {user?.username || 'Usuario'}
+                          </Link>
                           <div className="text-sm text-gray-500">Ver perfil</div>
                         </div>
                       </Link>
