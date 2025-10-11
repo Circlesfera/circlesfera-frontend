@@ -128,11 +128,25 @@ export default function ChatWindow({ conversationId, conversationName, participa
       setMessages(prev => [...prev, newMessage]);
       logger.debug('Message sent:', { conversationId });
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
+      // Logging detallado para debug
       logger.error('Error sending message:', {
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        type: typeof error,
+        isAxiosError: error && typeof error === 'object' && 'isAxiosError' in error,
+        response: error && typeof error === 'object' && 'response' in error ? {
+          status: (error as { response?: { status?: number } }).response?.status,
+          data: (error as { response?: { data?: unknown } }).response?.data
+        } : undefined,
         conversationId
       });
+
+      // Mostrar mensaje al usuario
+      const errorMessage = error && typeof error === 'object' && 'response' in error
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al enviar mensaje'
+        : error instanceof Error ? error.message : 'Error al enviar mensaje';
+
+      // TODO: Mostrar toast/notification con errorMessage
+      console.error('Error visible al usuario:', errorMessage);
     } finally {
       setSending(false);
     }
@@ -262,11 +276,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
           )}
 
           {/* Contenido del mensaje - Optimizado para móvil */}
-          <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${
-            isOwnMessage
+          <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${isOwnMessage
               ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
               : 'bg-white border border-gray-200'
-          }`}>
+            }`}>
             {isTextMessage && (
               <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content.text}</div>
             )}
@@ -314,9 +327,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
             )}
 
             {/* Timestamp - Optimizado para móvil */}
-            <div className={`text-xs mt-1 ${
-              isOwnMessage ? 'text-blue-100' : 'text-gray-500'
-            }`}>
+            <div className={`text-xs mt-1 ${isOwnMessage ? 'text-blue-100' : 'text-gray-500'
+              }`}>
               {new Date(message.createdAt).toLocaleTimeString('es-ES', {
                 hour: '2-digit',
                 minute: '2-digit'
