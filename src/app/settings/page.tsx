@@ -15,6 +15,7 @@ import {
   notificationSettingsSchema,
   securitySettingsSchema
 } from '@/schemas/settingsSchema';
+import logger from '@/utils/logger';
 
 // Iconos SVG
 const SettingsIcon = () => (
@@ -126,8 +127,10 @@ export default function SettingsPage() {
       setLoading(true);
       const profileData = await getUserProfile();
       setProfile(profileData);
-    } catch (error) {
-
+    } catch (loadProfileError) {
+      logger.error('Error loading user profile in settings:', {
+        error: loadProfileError instanceof Error ? loadProfileError.message : 'Unknown error'
+      });
     } finally {
       setLoading(false);
     }
@@ -152,8 +155,10 @@ export default function SettingsPage() {
       setProfile(updatedProfile);
       setShowEditForm(false);
       showMessage('success', 'Perfil actualizado correctamente');
-    } catch (error) {
-
+    } catch (updateProfileError) {
+      logger.error('Error updating user profile:', {
+        error: updateProfileError instanceof Error ? updateProfileError.message : 'Unknown error'
+      });
       showMessage('error', 'Error al actualizar el perfil');
     }
   };
@@ -161,8 +166,11 @@ export default function SettingsPage() {
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (error) {
-
+      logger.info('User deleted account and logged out');
+    } catch (deleteAccountError) {
+      logger.error('Error deleting account:', {
+        error: deleteAccountError instanceof Error ? deleteAccountError.message : 'Unknown error'
+      });
     }
   };
 
@@ -201,8 +209,10 @@ export default function SettingsPage() {
     try {
       setSaving(true);
       await privacyValidation.handleSubmit(privacySettings);
-    } catch (error) {
-
+    } catch (savePrivacyError) {
+      logger.error('Error saving privacy settings:', {
+        error: savePrivacyError instanceof Error ? savePrivacyError.message : 'Unknown error'
+      });
       showMessage('error', 'Error al guardar la configuración de privacidad');
     } finally {
       setSaving(false);
@@ -213,8 +223,10 @@ export default function SettingsPage() {
     try {
       setSaving(true);
       await notificationValidation.handleSubmit(notificationSettings);
-    } catch (error) {
-
+    } catch (saveNotificationError) {
+      logger.error('Error saving notification settings:', {
+        error: saveNotificationError instanceof Error ? saveNotificationError.message : 'Unknown error'
+      });
       showMessage('error', 'Error al guardar la configuración de notificaciones');
     } finally {
       setSaving(false);
@@ -225,8 +237,10 @@ export default function SettingsPage() {
     try {
       setSaving(true);
       await securityValidation.handleSubmit(securitySettings);
-    } catch (error) {
-
+    } catch (saveSecurityError) {
+      logger.error('Error saving security settings:', {
+        error: saveSecurityError instanceof Error ? saveSecurityError.message : 'Unknown error'
+      });
       showMessage('error', 'Error al guardar la configuración de seguridad');
     } finally {
       setSaving(false);
@@ -265,8 +279,11 @@ export default function SettingsPage() {
       await toggleTwoFactor(enabled);
       setSecuritySettings(prev => ({ ...prev, twoFactorEnabled: enabled }));
       showMessage('success', enabled ? '2FA habilitado' : '2FA deshabilitado');
-    } catch (error) {
-
+    } catch (toggle2FAError) {
+      logger.error('Error toggling 2FA:', {
+        error: toggle2FAError instanceof Error ? toggle2FAError.message : 'Unknown error',
+        enabled
+      });
       showMessage('error', 'Error al configurar 2FA');
     } finally {
       setSaving(false);
