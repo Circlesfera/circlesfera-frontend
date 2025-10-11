@@ -7,6 +7,7 @@ import { getUserProfileByUsername } from '@/services/userService';
 import VideoPlayer from '@/components/VideoPlayer';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
+import type { Reel, User } from '@/types';
 
 interface Props {
   params: Promise<{ username: string; id: string }>;

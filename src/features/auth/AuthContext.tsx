@@ -111,18 +111,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         error: loginError instanceof Error ? loginError.message : 'Unknown error'
       });
       // Manejo detallado de errores de Axios
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response?: { status?: number; statusText?: string; data?: unknown }; config?: { url?: string; method?: string; baseURL?: string } };
+      if (loginError && typeof loginError === 'object' && 'response' in loginError) {
+        const axiosError = loginError as { response?: { status?: number; statusText?: string; data?: unknown }; config?: { url?: string; method?: string; baseURL?: string } };
 
         // Si hay error de autenticación, limpiar tokens
         if (axiosError.response?.status === 401) {
           clearInvalidTokens();
         }
-      } else {
-
       }
 
-      throw error;
+      throw loginError;
     } finally {
       setLoading(false);
     }
