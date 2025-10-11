@@ -64,6 +64,8 @@ const LazyImage: React.FC<LazyImageProps> = ({
     observer.observe(imgRef.current);
 
     return () => observer.disconnect();
+    // isInView is intentionally not in deps - we only want to observe once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
 
   const handleLoad = () => {

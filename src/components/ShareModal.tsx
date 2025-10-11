@@ -12,12 +12,12 @@ interface ShareModalProps {
   postCaption?: string | undefined;
 }
 
-export default function ShareModal({ 
-  isOpen, 
-  onClose, 
-  postId, 
+export default function ShareModal({
+  isOpen,
+  onClose,
+  postId,
   postUrl,
-  postCaption 
+  postCaption
 }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
   const [shareMethod, setShareMethod] = useState<'copy' | 'whatsapp' | 'twitter' | 'facebook' | 'telegram'>('copy');
@@ -30,8 +30,7 @@ export default function ShareModal({
       await navigator.clipboard.writeText(currentUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-
+    } catch (_error) {
       // Fallback para navegadores que no soportan clipboard API
       const textArea = document.createElement('textarea');
       textArea.value = currentUrl;
@@ -101,7 +100,7 @@ export default function ShareModal({
           className="absolute inset-0 bg-black bg-opacity-50"
           onClick={onClose}
         />
-        
+
         {/* Modal */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}

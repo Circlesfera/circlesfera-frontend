@@ -25,7 +25,7 @@ const REPORT_REASONS = [
 export default function ReportModal({
   isOpen,
   onClose,
-  postId,
+  postId: _postId,
   onReport
 }: ReportModalProps) {
   const [selectedReason, setSelectedReason] = useState<string>('');

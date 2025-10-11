@@ -52,7 +52,7 @@ export default function CreateStoryPage() {
         alert('Por favor selecciona una imagen válida');
         return;
       }
-      
+
       if (storyType === 'video' && !file.type.startsWith('video/')) {
         alert('Por favor selecciona un video válido');
         return;
@@ -65,7 +65,7 @@ export default function CreateStoryPage() {
       }
 
       setSelectedFile(file);
-      
+
       // Crear preview
       const fileUrl = URL.createObjectURL(file);
       setPreview(fileUrl);
@@ -85,15 +85,15 @@ export default function CreateStoryPage() {
 
       // Preparar FormData
       const submitFormData = new FormData();
-      
+
       if (storyType !== 'text' && selectedFile) {
         submitFormData.append(storyType, selectedFile);
       }
-      
+
       submitFormData.append('type', storyType);
       submitFormData.append('caption', formData.caption);
       submitFormData.append('location', formData.location);
-      
+
       if (storyType === 'text') {
         submitFormData.append('textContent', formData.textContent);
         submitFormData.append('textStyle', formData.textStyle);
@@ -101,7 +101,7 @@ export default function CreateStoryPage() {
 
       // Crear la story usando el servicio
       const response = await createStory(submitFormData);
-      
+
       if (!response.success) {
         throw new Error(response.message || 'Error al crear la story');
       }
@@ -118,7 +118,7 @@ export default function CreateStoryPage() {
 
       // Redirigir a stories
       router.push('/stories');
-    } catch (error) {
+    } catch (_error) {
 
       alert('Error al crear la story. Inténtalo de nuevo.');
     } finally {
@@ -172,7 +172,7 @@ export default function CreateStoryPage() {
                   Crear Story
                 </h1>
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <Button
                   variant="ghost"
@@ -258,7 +258,7 @@ export default function CreateStoryPage() {
                     <h3 className="font-semibold text-gray-900 mb-4">
                       {storyType === 'image' ? 'Subir imagen' : 'Subir video'}
                     </h3>
-                    
+
                     {!preview ? (
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                         <input
@@ -268,7 +268,7 @@ export default function CreateStoryPage() {
                           onChange={handleFileSelect}
                           className="hidden"
                         />
-                        
+
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                           {storyType === 'image' ? (
                             <Image className="w-8 h-8 text-gray-400" />
@@ -276,14 +276,14 @@ export default function CreateStoryPage() {
                             <Camera className="w-8 h-8 text-gray-400" />
                           )}
                         </div>
-                        
+
                         <p className="text-gray-600 mb-4">
-                          {storyType === 'image' 
-                            ? 'Toca para seleccionar una imagen' 
+                          {storyType === 'image'
+                            ? 'Toca para seleccionar una imagen'
                             : 'Toca para seleccionar un video'
                           }
                         </p>
-                        
+
                         <Button
                           variant="primary"
                           size="sm"
@@ -326,7 +326,7 @@ export default function CreateStoryPage() {
             <div>
               <Card className="p-6">
                 <h3 className="font-semibold text-gray-900 mb-6">Detalles de la story</h3>
-                
+
                 <div className="space-y-6">
                   {/* Caption */}
                   <div>

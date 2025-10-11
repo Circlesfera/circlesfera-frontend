@@ -50,7 +50,7 @@ export default function ReelPage() {
     if (!reel) return;
     try {
       const { likeReel, unlikeReel } = await import('@/services/reelService');
-      const isCurrentlyLiked = reel.likes.includes(user?._id || '');
+      const isCurrentlyLiked = reel.likes.some(like => like.user === user?._id);
 
       if (isCurrentlyLiked) {
         await unlikeReel(reelId);
@@ -64,8 +64,8 @@ export default function ReelPage() {
         return {
           ...prev,
           likes: isCurrentlyLiked
-            ? prev.likes.filter(id => id !== user?._id)
-            : [...prev.likes, user?._id || '']
+            ? prev.likes.filter(like => like.user !== user?._id)
+            : [...prev.likes, { user: user?._id || '', createdAt: new Date() }]
         };
       });
 

@@ -232,7 +232,7 @@ export function LiveChat({
           </div>
         ) : (
           <>
-            {comments.map((comment: LiveComment) => (
+              {comments.map((comment) => (
               <LiveComment
                 key={comment._id}
                 comment={comment}

@@ -120,8 +120,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
           setStories(newContent as Story[]);
         }
       }
-    } catch (err) {
-
+    } catch (_err) {
       setError(`Error al cargar ${type}`);
     } finally {
       setLoading(false);
@@ -188,7 +187,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Error al cargar contenido</h3>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={() => loadContent(activeTab)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
           >
@@ -213,7 +212,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         <ContentGrid content={safeCurrentContent} type={activeTab} />
         {hasMore && (
           <div className="text-center mt-6 sm:mt-8">
-            <button 
+            <button
               onClick={handleLoadMore}
               disabled={loading}
               className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
@@ -336,8 +335,8 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
         {safeContent.map((story) => (
           <div key={story._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer">
-            <img 
-              src={(story as Story).content?.image?.url || ''} 
+            <img
+              src={(story as Story).content?.image?.url || ''}
               alt="Story"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             />
@@ -353,13 +352,13 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
       {safeContent.map((item) => (
         <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
           {type === 'posts' ? (
-            <img 
-              src={(item as Post).content?.images?.[0]?.url || ''} 
+            <img
+              src={(item as Post).content?.images?.[0]?.url || ''}
               alt="Post"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             />
           ) : (
-            <video 
+            <video
               src={(item as Reel).video?.url || ''}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               muted

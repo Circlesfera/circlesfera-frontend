@@ -85,13 +85,13 @@ class LiveSocketService {
       }
     });
 
-    this.socket.on('connect_error', (error: Error) => {
-
+    this.socket.on('connect_error', (connectionError: Error) => {
+      console.error('Live socket connection error:', connectionError.message);
       this.handleReconnect();
     });
 
-    this.socket.on('error', (error: Error) => {
-
+    this.socket.on('error', (socketError: Error) => {
+      console.error('Live socket error:', socketError.message);
     });
   }
 

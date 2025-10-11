@@ -66,8 +66,11 @@ export function useSearch(): UseSearchReturn {
         try {
           const usersResponse = await searchUsers(debouncedQuery);
           newResults.users = usersResponse || [];
-        } catch (error) {
-
+        } catch (searchError) {
+          logger.error('Error searching users:', {
+            error: searchError instanceof Error ? searchError.message : 'Unknown error',
+            query: debouncedQuery
+          });
         }
       }
 
@@ -83,14 +86,21 @@ export function useSearch(): UseSearchReturn {
           if (reelsResponse.success) {
             newResults.reels = reelsResponse.reels || [];
           }
-        } catch (error) {
-
+        } catch (reelsError) {
+          logger.error('Error searching reels:', {
+            error: reelsError instanceof Error ? reelsError.message : 'Unknown error',
+            query: debouncedQuery
+          });
         }
       }
 
       setResults(newResults);
-    } catch (error) {
-
+    } catch (generalError) {
+      logger.error('Error in search:', {
+        error: generalError instanceof Error ? generalError.message : 'Unknown error',
+        query: debouncedQuery,
+        filters
+      });
     } finally {
       setLoading(false);
     }

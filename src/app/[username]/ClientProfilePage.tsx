@@ -90,8 +90,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         // Redirigir a la página de mensajes con la conversación seleccionada
         router.push(`/messages?conversation=${response.conversation._id}`);
       }
-    } catch (error) {
-
+    } catch (_error) {
       // Si falla, redirigir a la página de mensajes para que el usuario pueda crear la conversación manualmente
       router.push('/messages');
     }
@@ -184,7 +183,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
     // Recargar los datos del perfil para actualizar contadores
     await reloadProfile();
-  }, [reloadProfile, user, refreshUser, profileData?.username, isFollowingProfile]);
+  }, [reloadProfile, user, refreshUser]);
 
   // Handlers para abrir modales
   const handleShowFollowers = async () => {
@@ -291,8 +290,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                       setShowEdit(false);
                       // Recargar el perfil desde el servidor
                       await reloadProfile();
-                    } catch (error) {
-
+                    } catch (_error) {
                       // Mostrar error al usuario
                       alert('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
                     }

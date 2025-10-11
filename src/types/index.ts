@@ -177,6 +177,7 @@ export interface Reel {
   };
   video: MediaFile;
   caption?: string;
+  hashtags?: string[];
   music?: {
     title: string;
     artist: string;

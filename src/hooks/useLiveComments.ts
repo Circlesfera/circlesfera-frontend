@@ -264,7 +264,7 @@ export const useLiveCommentModeration = () => {
       const errorMessage = err instanceof Error ? err.message : 'Error moderando comentario';
       setError(errorMessage);
       logger.error('Error moderating live comment:', { error: err instanceof Error ? err.message : 'Unknown error', streamId, commentId, action });
-      return null;
+      return { success: false, message: errorMessage };
     } finally {
       setLoading(false);
     }

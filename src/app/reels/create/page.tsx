@@ -42,7 +42,7 @@ export default function CreateReelPage() {
       }
 
       setSelectedFile(file);
-      
+
       // Crear preview del video
       const videoUrl = URL.createObjectURL(file);
       setVideoPreview(videoUrl);
@@ -102,8 +102,7 @@ export default function CreateReelPage() {
       } else {
         alert('Error al crear el reel. Inténtalo de nuevo.');
       }
-    } catch (error) {
-
+    } catch (_error) {
       alert('Error al crear el reel. Inténtalo de nuevo.');
     } finally {
       setUploading(false);
@@ -151,7 +150,7 @@ export default function CreateReelPage() {
                   Crear Reel
                 </h1>
               </div>
-              
+
               {step === 'edit' && (
                 <div className="flex items-center space-x-3">
                   <Button
@@ -185,13 +184,13 @@ export default function CreateReelPage() {
                 <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Video className="w-12 h-12 text-white" />
                 </div>
-                
+
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
                   Sube tu video
                 </h2>
-                
+
                 <p className="text-gray-600 mb-8">
-                  Selecciona un video de tu dispositivo para crear un reel. 
+                  Selecciona un video de tu dispositivo para crear un reel.
                   Los videos pueden tener hasta 100MB.
                 </p>
 
@@ -203,7 +202,7 @@ export default function CreateReelPage() {
                     onChange={handleFileSelect}
                     className="hidden"
                   />
-                  
+
                   <Button
                     variant="primary"
                     gradient
@@ -214,7 +213,7 @@ export default function CreateReelPage() {
                   >
                     Seleccionar Video
                   </Button>
-                  
+
                   <p className="text-sm text-gray-500">
                     Formatos soportados: MP4, WebM, MOV
                   </p>
@@ -232,7 +231,7 @@ export default function CreateReelPage() {
                     Los reels funcionan mejor con videos de 15-60 segundos
                   </p>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-purple-600 font-bold">#</span>
@@ -242,7 +241,7 @@ export default function CreateReelPage() {
                     Usa hashtags relevantes para llegar a más personas
                   </p>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-green-600 font-bold">✓</span>
@@ -277,7 +276,7 @@ export default function CreateReelPage() {
               <div>
                 <Card className="p-6">
                   <h3 className="font-semibold text-gray-900 mb-6">Detalles del reel</h3>
-                  
+
                   <div className="space-y-6">
                     {/* Caption */}
                     <div>
@@ -337,7 +336,7 @@ export default function CreateReelPage() {
                             Permitir comentarios
                           </span>
                         </label>
-                        
+
                         <label className="flex items-center">
                           <input
                             type="checkbox"
@@ -349,7 +348,7 @@ export default function CreateReelPage() {
                             Permitir duets
                           </span>
                         </label>
-                        
+
                         <label className="flex items-center">
                           <input
                             type="checkbox"

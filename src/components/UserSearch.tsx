@@ -35,8 +35,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
       try {
         const searchResults = await searchUsers(query);
         setResults(searchResults);
-      } catch (err) {
-
+      } catch (_err) {
         setError('Error al buscar usuarios');
       } finally {
         setLoading(false);
@@ -93,10 +92,10 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
             className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
           >
             {user.avatar ? (
-              <img 
-                src={user.avatar} 
-                alt="avatar" 
-                className="w-10 h-10 rounded-full object-cover" 
+              <img
+                src={user.avatar}
+                alt="avatar"
+                className="w-10 h-10 rounded-full object-cover"
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
@@ -128,7 +127,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
           </Link>
         ))}
       </div>
-      
+
       {results.length > 0 && (
         <div className="border-t border-gray-200 mt-2 pt-2">
           <Link

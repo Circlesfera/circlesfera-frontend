@@ -212,7 +212,7 @@ export default function PostCard({
           onPostDeleted(post._id);
         }
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Error al eliminar el post');
 
     } finally {

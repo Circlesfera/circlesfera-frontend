@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { notFound, useRouter } from 'next/navigation';
-import { getReel } from '@/services/reelService';
-import { getUserProfileByUsername } from '@/services/userService';
+import { getReel, type Reel as ReelService } from '@/services/reelService';
+import { getUserProfileByUsername, type UserProfile } from '@/services/userService';
 import VideoPlayer from '@/components/VideoPlayer';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
-import type { Reel, User } from '@/types';
+import logger from '@/utils/logger';
 
 interface Props {
   params: Promise<{ username: string; id: string }>;
 }
 
 export default function UserReelPage({ params }: Props) {
-  const [reel, setReel] = useState<Reel | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [reel, setReel] = useState<ReelService | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user: currentUser } = useAuth();
@@ -47,8 +47,10 @@ export default function UserReelPage({ params }: Props) {
         } else {
           setError(true);
         }
-      } catch (err) {
-
+      } catch (loadError) {
+        logger.error('Error loading reel page:', {
+          error: loadError instanceof Error ? loadError.message : 'Unknown error'
+        });
         setError(true);
       } finally {
         setLoading(false);
@@ -145,7 +147,7 @@ export default function UserReelPage({ params }: Props) {
           <div className="relative">
             <VideoPlayer
               src={reel.video.url}
-              poster={reel.video.thumbnail}
+              {...(reel.video.thumbnail && { poster: reel.video.thumbnail })}
               autoPlay={true}
               loop={true}
               muted={false}
@@ -161,12 +163,12 @@ export default function UserReelPage({ params }: Props) {
                 <button
                   onClick={handleLike}
                   className={`flex items-center space-x-2 transition-colors ${
-                    reel.likes.includes(currentUser?._id || '')
+                    reel.likes.some(like => like.user === currentUser?._id)
                       ? 'text-red-500'
                       : 'text-gray-600 hover:text-red-500'
                   }`}
                 >
-                  <svg className="w-6 h-6" fill={reel.likes.includes(currentUser?._id || '') ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill={reel.likes.some(like => like.user === currentUser?._id) ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                   <span className="text-sm font-medium">{reel.likes.length}</span>
@@ -179,7 +181,7 @@ export default function UserReelPage({ params }: Props) {
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
-                  <span className="text-sm font-medium">{reel.shares}</span>
+                  <span className="text-sm font-medium">{reel.shares.length}</span>
                 </button>
               </div>
             </div>

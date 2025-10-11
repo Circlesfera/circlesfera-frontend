@@ -144,8 +144,8 @@ export default function SettingsPage() {
         setNotificationSettings(response.settings.notifications);
         setSecuritySettings(response.settings.security);
       }
-    } catch (error) {
-
+    } catch (_error) {
+      // Error loading profile settings
     }
   };
 

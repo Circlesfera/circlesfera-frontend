@@ -28,8 +28,8 @@ export default function UserStoryPage({ params }: Props) {
     try {
       // Registrar visualización de la story (implementar cuando esté disponible)
 
-    } catch (error) {
-
+    } catch (_error) {
+      // Error handling al registrar visualización
     }
   }, [story, currentUser]);
 
@@ -59,8 +59,7 @@ export default function UserStoryPage({ params }: Props) {
         } else {
           setError(true);
         }
-      } catch (err) {
-
+      } catch (_err) {
         setError(true);
       } finally {
         setLoading(false);
@@ -115,8 +114,8 @@ export default function UserStoryPage({ params }: Props) {
         await navigator.clipboard.writeText(window.location.href);
 
       }
-    } catch (error) {
-
+    } catch (_error) {
+      // Error handling al cerrar story
     }
   };
 

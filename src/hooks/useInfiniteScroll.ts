@@ -24,7 +24,7 @@ export function useInfiniteScroll({
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries
-      if (entry.isIntersecting && hasMore && !loading) {
+      if (entry && entry.isIntersecting && hasMore && !loading) {
         onLoadMore()
       }
     },
