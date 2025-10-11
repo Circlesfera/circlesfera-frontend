@@ -14,6 +14,7 @@ import logger from '@/utils/logger';
 export default function ReelsPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const {
     currentReel,
     loading,
@@ -72,7 +73,7 @@ export default function ReelsPage() {
         });
       } else {
         await navigator.clipboard.writeText(reelUrl);
-        showToast('success', '¡Enlace copiado al portapapeles!');
+        toast.success('¡Enlace copiado al portapapeles!');
       }
     } catch (shareReelError) {
       logger.warn('Error sharing reel:', {

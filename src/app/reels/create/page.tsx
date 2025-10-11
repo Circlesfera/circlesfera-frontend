@@ -14,7 +14,7 @@ import { useToast } from '@/components/Toast';
 export default function CreateReelPage() {
   const router = useRouter();
   const { loading: authLoading } = useAuth();
-  const { showToast } = useToast();
+  const toast = useToast();
   const [step, setStep] = useState<'upload' | 'edit'>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -34,13 +34,13 @@ export default function CreateReelPage() {
     if (file) {
       // Validar que sea un video
       if (!file.type.startsWith('video/')) {
-        showToast('error', 'Por favor selecciona un archivo de video válido');
+        toast.error('Por favor selecciona un archivo de video válido');
         return;
       }
 
       // Validar tamaño (máximo 100MB)
       if (file.size > 100 * 1024 * 1024) {
-        showToast('error', 'El archivo es demasiado grande. Máximo 100MB');
+        toast.error('El archivo es demasiado grande. Máximo 100MB');
         return;
       }
 
@@ -62,7 +62,7 @@ export default function CreateReelPage() {
 
   const handleSubmit = async () => {
     if (!selectedFile) {
-      showToast('error', 'Por favor selecciona un video');
+      toast.error('Por favor selecciona un video');
       return;
     }
 
@@ -103,7 +103,7 @@ export default function CreateReelPage() {
           router.push('/reels');
         }
       } else {
-        showToast('error', 'Error al crear el reel. Inténtalo de nuevo.');
+        toast.error('Error al crear el reel. Inténtalo de nuevo.');
       }
     } catch (error) {
       logger.error('Error creating reel:', {
@@ -111,7 +111,7 @@ export default function CreateReelPage() {
         hasVideo: !!selectedFile,
         hasCaption: !!formData.caption
       });
-      showToast('error', 'Error al crear el reel. Inténtalo de nuevo.');
+      toast.error('Error al crear el reel. Inténtalo de nuevo.');
     } finally {
       setUploading(false);
     }

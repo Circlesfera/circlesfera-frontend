@@ -13,7 +13,7 @@ import { useToast } from '@/components/Toast';
 export default function CreateStoryPage() {
   const router = useRouter();
   const { loading: authLoading } = useAuth();
-  const { showToast } = useToast();
+  const toast = useToast();
   const [storyType, setStoryType] = useState<'image' | 'video' | 'text'>('image');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -52,18 +52,18 @@ export default function CreateStoryPage() {
     if (file) {
       // Validar tipo de archivo según el tipo de story
       if (storyType === 'image' && !file.type.startsWith('image/')) {
-        showToast('error', 'Por favor selecciona una imagen válida');
+        toast.error('Por favor selecciona una imagen válida');
         return;
       }
 
       if (storyType === 'video' && !file.type.startsWith('video/')) {
-        showToast('error', 'Por favor selecciona un video válido');
+        toast.error('Por favor selecciona un video válido');
         return;
       }
 
       // Validar tamaño (máximo 50MB para stories)
       if (file.size > 50 * 1024 * 1024) {
-        showToast('error', 'El archivo es demasiado grande. Máximo 50MB para stories');
+        toast.error('El archivo es demasiado grande. Máximo 50MB para stories');
         return;
       }
 
@@ -128,7 +128,7 @@ export default function CreateStoryPage() {
         hasMedia: !!preview
       });
 
-      showToast('error', 'Error al crear la story. Inténtalo de nuevo.');
+      toast.error('Error al crear la story. Inténtalo de nuevo.');
     } finally {
       setUploading(false);
     }

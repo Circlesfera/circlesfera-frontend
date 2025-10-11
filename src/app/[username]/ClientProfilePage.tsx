@@ -69,7 +69,7 @@ const convertToUser = (profile: UserProfile): User => {
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
   const { user, refreshUser } = useAuth();
   const router = useRouter();
-  const { showToast } = useToast();
+  const toast = useToast();
   const [showEdit, setShowEdit] = useState(false);
   const [profileData, setProfileData] = useState(profile);
   const isOwnProfile = user && user.username === profile?.username;
@@ -303,7 +303,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                         username: profileData?.username
                       });
                       // Mostrar error al usuario
-                      showToast('error', 'Error al guardar el perfil. Por favor, inténtalo de nuevo.');
+                      toast.error('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
                     }
                   }}
                   onCancel={() => setShowEdit(false)}

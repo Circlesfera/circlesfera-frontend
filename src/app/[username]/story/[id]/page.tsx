@@ -22,7 +22,7 @@ export default function UserStoryPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user: currentUser } = useAuth();
-  const { showToast } = useToast();
+  const toast = useToast();
   const router = useRouter();
 
   const handleView = useCallback(async () => {
@@ -130,7 +130,7 @@ export default function UserStoryPage({ params }: Props) {
         storyId: story?._id
       });
       // Fallback: mostrar mensaje de error al usuario
-      showToast('error', 'Error al compartir la story');
+      toast.error('Error al compartir la story');
     }
   };
 
