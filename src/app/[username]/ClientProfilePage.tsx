@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/useAuth';
+import logger from '@/utils/logger';
 import { getFollowers, getFollowing, UserProfile, UserSuggestion, updateUserProfile } from '@/services/userService';
 import { createDirectConversation } from '@/services/conversationService';
 import { User } from '@/types';
@@ -90,7 +91,11 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         // Redirigir a la página de mensajes con la conversación seleccionada
         router.push(`/messages?conversation=${response.conversation._id}`);
       }
-    } catch (_error) {
+    } catch (error) {
+      logger.error('Error creating conversation:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        profileId: profile._id
+      });
       // Si falla, redirigir a la página de mensajes para que el usuario pueda crear la conversación manualmente
       router.push('/messages');
     }
@@ -290,7 +295,11 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                       setShowEdit(false);
                       // Recargar el perfil desde el servidor
                       await reloadProfile();
-                    } catch (_error) {
+                    } catch (error) {
+                      logger.error('Error saving profile:', {
+                        error: error instanceof Error ? error.message : 'Unknown error',
+                        username: profileData?.username
+                      });
                       // Mostrar error al usuario
                       alert('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
                     }

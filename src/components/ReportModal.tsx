@@ -28,6 +28,8 @@ export default function ReportModal({
   postId: _postId,
   onReport
 }: ReportModalProps) {
+  // postId is available in props but not used in component
+  // Parent component handles the actual report logic with the ID
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import logger from '@/utils/logger';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels } from '@/services/reelService';
 import { getUserStories } from '@/services/storyService';
@@ -120,7 +121,13 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
           setStories(newContent as Story[]);
         }
       }
-    } catch (_err) {
+    } catch (err) {
+      logger.error('Error loading profile content:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        contentType: type,
+        username,
+        page
+      });
       setError(`Error al cargar ${type}`);
     } finally {
       setLoading(false);

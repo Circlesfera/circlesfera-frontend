@@ -9,6 +9,7 @@ import type { Story } from '@/services/storyService';
 import type { UserProfile } from '@/services/userService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
+import logger from '@/utils/logger';
 
 interface Props {
   params: Promise<{ username: string; id: string }>;
@@ -27,9 +28,13 @@ export default function UserStoryPage({ params }: Props) {
 
     try {
       // Registrar visualización de la story (implementar cuando esté disponible)
-
-    } catch (_error) {
-      // Error handling al registrar visualización
+      // Aquí se implementará la llamada al servicio cuando esté listo
+    } catch (error) {
+      logger.error('Error registering story view:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        storyId: story._id,
+        userId: currentUser._id
+      });
     }
   }, [story, currentUser]);
 
@@ -59,7 +64,10 @@ export default function UserStoryPage({ params }: Props) {
         } else {
           setError(true);
         }
-      } catch (_err) {
+      } catch (err) {
+        logger.error('Error loading story data:', {
+          error: err instanceof Error ? err.message : 'Unknown error'
+        });
         setError(true);
       } finally {
         setLoading(false);
@@ -114,8 +122,13 @@ export default function UserStoryPage({ params }: Props) {
         await navigator.clipboard.writeText(window.location.href);
 
       }
-    } catch (_error) {
-      // Error handling al cerrar story
+    } catch (shareError) {
+      logger.error('Error sharing story:', {
+        error: shareError instanceof Error ? shareError.message : 'Unknown error',
+        storyId: story?._id
+      });
+      // Fallback: mostrar mensaje de error al usuario
+      alert('Error al compartir la story');
     }
   };
 

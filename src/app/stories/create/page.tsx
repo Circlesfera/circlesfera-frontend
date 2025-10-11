@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { createStory } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { ArrowLeft, Camera, Image, Type, MapPin } from 'lucide-react';
+import logger from '@/utils/logger';
 
 export default function CreateStoryPage() {
   const router = useRouter();
@@ -118,7 +119,12 @@ export default function CreateStoryPage() {
 
       // Redirigir a stories
       router.push('/stories');
-    } catch (_error) {
+    } catch (error) {
+      logger.error('Error in story creation process:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        storyType,
+        hasMedia: !!preview
+      });
 
       alert('Error al crear la story. Inténtalo de nuevo.');
     } finally {

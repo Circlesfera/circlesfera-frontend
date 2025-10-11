@@ -144,8 +144,12 @@ export default function SettingsPage() {
         setNotificationSettings(response.settings.notifications);
         setSecuritySettings(response.settings.security);
       }
-    } catch (_error) {
-      // Error loading profile settings
+    } catch (error) {
+      logger.error('Error loading user settings:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        userId: user?._id
+      });
+      showMessage('error', 'Error al cargar la configuración');
     }
   };
 

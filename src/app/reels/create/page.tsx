@@ -8,6 +8,7 @@ import { createReel } from '@/services/reelService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 // import CreateReelForm from '@/components/CreateReelForm';
 import { ArrowLeft, Video, Upload } from 'lucide-react';
+import logger from '@/utils/logger';
 
 export default function CreateReelPage() {
   const router = useRouter();
@@ -102,7 +103,12 @@ export default function CreateReelPage() {
       } else {
         alert('Error al crear el reel. Inténtalo de nuevo.');
       }
-    } catch (_error) {
+    } catch (error) {
+      logger.error('Error creating reel:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        hasVideo: !!selectedFile,
+        hasCaption: !!formData.caption
+      });
       alert('Error al crear el reel. Inténtalo de nuevo.');
     } finally {
       setUploading(false);

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import logger from '@/utils/logger';
 import { searchUsers } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 
@@ -35,7 +36,11 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
       try {
         const searchResults = await searchUsers(query);
         setResults(searchResults);
-      } catch (_err) {
+      } catch (err) {
+        logger.error('Error searching users:', {
+          error: err instanceof Error ? err.message : 'Unknown error',
+          query
+        });
         setError('Error al buscar usuarios');
       } finally {
         setLoading(false);

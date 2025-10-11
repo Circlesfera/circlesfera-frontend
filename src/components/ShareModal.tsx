@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/design-system';
+import logger from '@/utils/logger';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -30,7 +31,10 @@ export default function ShareModal({
       await navigator.clipboard.writeText(currentUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (_error) {
+    } catch (error) {
+      logger.warn('Clipboard API not available, using fallback:', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       // Fallback para navegadores que no soportan clipboard API
       const textArea = document.createElement('textarea');
       textArea.value = currentUrl;
