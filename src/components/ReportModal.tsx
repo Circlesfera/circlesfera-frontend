@@ -25,11 +25,10 @@ const REPORT_REASONS = [
 export default function ReportModal({
   isOpen,
   onClose,
-  postId: _postId,
+  // postId no se destructura porque no se usa en el componente
+  // El padre maneja la lógica de reporte con el ID
   onReport
 }: ReportModalProps) {
-  // postId is available in props but not used in component
-  // Parent component handles the actual report logic with the ID
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -49,7 +48,7 @@ export default function ReportModal({
       // Reset form
       setSelectedReason('');
       setDescription('');
-    } catch (err) {
+    } catch {
 
       setError('Error al enviar el reporte. Inténtalo de nuevo.');
     } finally {
@@ -117,18 +116,16 @@ export default function ReportModal({
                     key={reason.id}
                     type="button"
                     onClick={() => setSelectedReason(reason.id)}
-                    className={`w-full text-left p-3 rounded-lg border-2 transition-colors ${
-                      selectedReason === reason.id
-                        ? 'border-red-200 bg-red-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
+                    className={`w-full text-left p-3 rounded-lg border-2 transition-colors ${selectedReason === reason.id
+                      ? 'border-red-200 bg-red-50'
+                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
                   >
                     <div className="flex items-start space-x-3">
-                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5 ${
-                        selectedReason === reason.id
-                          ? 'border-red-500 bg-red-500'
-                          : 'border-gray-300'
-                      }`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5 ${selectedReason === reason.id
+                        ? 'border-red-500 bg-red-500'
+                        : 'border-gray-300'
+                        }`}>
                         {selectedReason === reason.id && (
                           <div className="w-2 h-2 bg-white rounded-full" />
                         )}

@@ -30,9 +30,11 @@ const waitFor = async (callback: () => void, timeout = 3000) => {
 
 // Helper para crear wrapper con AuthProvider
 const createWrapper = () => {
-  return ({ children }: { children: ReactNode }) => (
+  const Wrapper = ({ children }: { children: ReactNode }) => (
     <AuthProvider>{children}</AuthProvider>
   )
+  Wrapper.displayName = 'AuthTestWrapper'
+  return Wrapper
 }
 
 // Mock data sin hardcode

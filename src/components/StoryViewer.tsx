@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/features/auth/useAuth';
 import { deleteStory, Story } from '@/services/storyService';
 import logger from '@/utils/logger';
@@ -152,12 +153,12 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
   }, [story, userId, username]);
 
   // Pausar/reanudar story
-  const togglePause = () => {
+  const togglePause = useCallback(() => {
 
-    setIsPaused(!isPaused);
+    setIsPaused(prev => !prev);
 
     if (videoRef.current) {
-      if (isPaused) {
+      if (videoRef.current.paused) {
 
         videoRef.current.play();
       } else {
@@ -166,7 +167,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       }
     }
 
-  };
+  }, []);
 
   // Manejar reacción
   const handleReaction = async (reactionType: 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry') => {
@@ -288,11 +289,11 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       try {
         onClose();
 
-      } catch (err) {
-
+      } catch {
+        // Ignorar errores al cerrar
       }
 
-    } catch (err) {
+    } catch {
 
       toast.error('Error al eliminar la story. Inténtalo de nuevo.');
     } finally {
@@ -301,12 +302,12 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
   };
 
   // Cerrar story
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (progressInterval.current) {
       clearInterval(progressInterval.current);
     }
     onClose();
-  };
+  }, [onClose]);
 
   // Manejar teclas
   useEffect(() => {
@@ -334,7 +335,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleClose, showMoreMenu]);
+  }, [handleClose, showMoreMenu, togglePause]);
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -392,11 +393,13 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       {/* Header con información del usuario - Estilo Instagram */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-white/30">
-            <img
+          <div className="w-8 h-8 rounded-full overflow-hidden border border-white/30 relative">
+            <Image
               src={story.user.avatar || '/default-avatar.png'}
-              alt={story.user.username}
-              className="w-full h-full object-cover"
+              alt={`Avatar de ${story.user.username}`}
+              fill
+              className="object-cover"
+              sizes="32px"
             />
           </div>
           <div className="text-white">
@@ -423,11 +426,14 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
         style={{ cursor: 'pointer' }}
       >
         {story.type === 'image' && story.content.image && (
-          <img
+          <Image
             src={story.content.image.url}
-            alt={story.content.image.alt}
-            className="max-w-full max-h-full object-cover"
+            alt={story.content.image.alt || 'Story'}
+            fill
+            className="object-cover"
+            sizes="100vw"
             draggable={false}
+            priority
           />
         )}
 

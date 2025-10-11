@@ -29,7 +29,7 @@ export function useNotifications() {
 
       setNotifications(notificationsData);
       setUnreadCount(unreadCountData);
-    } catch (err) {
+    } catch {
 
       setError('Error al cargar notificaciones');
       setNotifications([]);
@@ -54,7 +54,7 @@ export function useNotifications() {
 
       // Actualizar el conteo
       setUnreadCount(prev => Math.max(0, prev - 1));
-    } catch (err) {
+    } catch {
 
       setError('Error al marcar notificación como leída');
     }
@@ -70,7 +70,7 @@ export function useNotifications() {
       );
 
       setUnreadCount(0);
-    } catch (err) {
+    } catch {
 
       setError('Error al marcar todas las notificaciones como leídas');
     }
@@ -89,7 +89,8 @@ export function useNotifications() {
     const interval = setInterval(fetchNotifications, 60000);
 
     return () => clearInterval(interval);
-  }, [user?._id]); // Solo depende del ID del usuario
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?._id]); // Solo depende del ID del usuario para evitar recrear interval
 
   return {
     notifications,

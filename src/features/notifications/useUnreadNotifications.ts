@@ -32,7 +32,7 @@ export function useUnreadNotifications() {
     fetchUnread();
     const interval = setInterval(fetchUnread, 60000); // Reducir frecuencia a 60s
     return () => clearInterval(interval);
-  }, [user?._id]); // Solo depende del ID del usuario, no de fetchUnread
+  }, [user, fetchUnread]); // Incluir todas las dependencias
 
   return unread;
 }

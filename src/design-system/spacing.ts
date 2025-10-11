@@ -198,7 +198,7 @@ export const SHADOW = {
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
 } as const;
 
-export default {
+const spacingConfig = {
   SPACING,
   RADIUS,
   FONT_SIZE,
@@ -212,4 +212,6 @@ export default {
   TIMING,
   SHADOW,
 };
+
+export default spacingConfig;
 

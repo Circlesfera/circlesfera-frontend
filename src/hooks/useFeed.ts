@@ -46,7 +46,7 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
         setHasMore(response.hasMore ?? (response.posts?.length === POSTS_PER_PAGE))
         setPage(1)
       }
-    } catch (err) {
+    } catch {
       setError('Error al cargar el feed')
 
     } finally {
@@ -79,7 +79,7 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
         setHasMore(response.hasMore ?? (response.posts.length === POSTS_PER_PAGE))
         setPage(nextPage)
       }
-    } catch (err) {
+    } catch {
       setError('Error al cargar más posts')
 
     } finally {
@@ -115,7 +115,8 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
     } else {
       setLoading(false)
     }
-  }, [isAuthenticated]) // Remover loadInitialPosts de dependencias para evitar bucle
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]) // Omitir loadInitialPosts intencionalmente para evitar bucle infinito
 
   return {
     posts,

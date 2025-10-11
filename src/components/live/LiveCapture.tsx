@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWebRTC } from '@/hooks/useWebRTC';
 import { Camera, CameraOff, Mic, MicOff, Monitor, Phone, PhoneOff } from 'lucide-react';
@@ -67,7 +67,7 @@ export function LiveCapture({
   }, [localStream]);
 
   // Definir handlers ANTES de los useEffect que los usan
-  const handleStartStream = async () => {
+  const handleStartStream = useCallback(async () => {
     try {
       clearError();
 
@@ -96,9 +96,9 @@ export function LiveCapture({
         error: startError instanceof Error ? startError.message : 'Unknown error'
       });
     }
-  };
+  }, [isCapturing, startCapture, startStreaming, onStreamStart, clearError]);
 
-  const handleStopStream = async () => {
+  const handleStopStream = useCallback(async () => {
     try {
       const recording = await stopStreaming();
 
@@ -114,7 +114,7 @@ export function LiveCapture({
         error: stopError instanceof Error ? stopError.message : 'Unknown error'
       });
     }
-  };
+  }, [stopStreaming, onRecordingReady, onStreamStop]);
 
   // Manejar cambios en el estado de streaming
   useEffect(() => {

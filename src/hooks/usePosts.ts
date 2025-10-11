@@ -49,7 +49,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
         );
         setPage(1);
       }
-    } catch (err) {
+    } catch {
       setError('Error al cargar los posts');
 
     } finally {
@@ -62,7 +62,8 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
     if (initialPosts.length === 0) {
       loadInitialPosts();
     }
-  }, [username]); // Solo depende de username, no de loadInitialPosts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]); // Omitir loadInitialPosts e initialPosts.length intencionalmente para evitar bucle infinito
 
   // Cargar más posts (paginación)
   const loadMore = useCallback(async () => {
@@ -91,7 +92,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
         );
         setPage(nextPage);
       }
-    } catch (err) {
+    } catch {
       setError('Error al cargar más posts');
 
     } finally {
