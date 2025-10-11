@@ -65,7 +65,7 @@ export default function ReelPage() {
           ...prev,
           likes: isCurrentlyLiked
             ? prev.likes.filter(like => like.user !== user?._id)
-            : [...prev.likes, { user: user?._id || '', createdAt: new Date() }]
+            : [...prev.likes, { user: user?._id || '', createdAt: new Date().toISOString() }]
         };
       });
 

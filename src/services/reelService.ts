@@ -1,62 +1,8 @@
 import api from './axios';
+import type { Reel } from '@/types';
 
-export interface Reel {
-  _id: string;
-  user: {
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-  };
-  video: {
-    url: string;
-    thumbnail?: string;
-    duration: number;
-    width: number;
-    height: number;
-  };
-  audio?: {
-    title: string;
-    artist: string;
-  };
-  caption: string;
-  hashtags: string[];
-  location?: string;
-  isPublic: boolean;
-  allowComments: boolean;
-  allowDuets: boolean;
-  allowStitches: boolean;
-  views: Array<{
-    user: string;
-    viewedAt: Date;
-  }>;
-  likes: Array<{
-    user: string;
-    createdAt: Date;
-  }>;
-  comments: Array<{
-    user: string;
-    content: string;
-    createdAt: Date;
-  }>;
-  shares: Array<{
-    user: string;
-    sharedAt: Date;
-    platform: string;
-  }>;
-  duets: Array<{
-    user: string;
-    createdAt: Date;
-  }>;
-  stitches: Array<{
-    user: string;
-    createdAt: Date;
-  }>;
-  isDeleted: boolean;
-  isArchived: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Re-exportar Reel para compatibilidad con imports existentes
+export type { Reel };
 
 export interface CreateReelResponse {
   success: boolean;

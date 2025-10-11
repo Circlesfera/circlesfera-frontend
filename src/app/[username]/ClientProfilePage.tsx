@@ -4,9 +4,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
-import { getFollowers, getFollowing, UserProfile, UserSuggestion, updateUserProfile } from '@/services/userService';
+import { getFollowers, getFollowing, UserProfile, UserSuggestion, updateUserProfile, User } from '@/services/userService';
 import { createDirectConversation } from '@/services/conversationService';
-import { User } from '@/types';
 import FollowButton from '@/components/FollowButton';
 import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
@@ -14,56 +13,29 @@ import ModernProfileHeader from '@/components/profile/ModernProfileHeader';
 import ModernProfileTabs from '@/components/profile/ModernProfileTabs';
 import { useToast } from '@/components/Toast';
 
-// Función para convertir UserProfile a User
-const convertToUser = (profile: UserProfile): User => {
-  const user: User = {
+// Función para convertir UserProfile a User compatible con EditProfileForm
+const convertToFormData = (profile: UserProfile): User => {
+  return {
     _id: profile._id,
     username: profile.username,
     email: profile.email,
+    ...(profile.avatar && { avatar: profile.avatar }),
+    ...(profile.bio && { bio: profile.bio }),
+    ...(profile.fullName && { fullName: profile.fullName }),
+    ...(profile.website && { website: profile.website }),
+    ...(profile.location && { location: profile.location }),
+    ...(profile.phone && { phone: profile.phone }),
+    ...(profile.gender && { gender: profile.gender as 'male' | 'female' | 'other' | 'prefer-not-to-say' }),
+    ...(profile.birthDate && { birthDate: profile.birthDate }),
+    ...(profile.isPrivate !== undefined && { isPrivate: profile.isPrivate }),
     followers: profile.followers || [],
     following: profile.following || [],
-    posts: profile.posts?.map(post => post._id) || [],
+    posts: profile.posts?.map(p => p._id) || [],
     savedPosts: [],
     blockedUsers: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
-  };
-
-  // Propiedades opcionales
-  if (profile.avatar) {
-    user.avatar = profile.avatar;
-  }
-  if (profile.bio) user.bio = profile.bio;
-  if (profile.fullName) user.fullName = profile.fullName;
-  if (profile.website) user.website = profile.website;
-  if (profile.location) user.location = profile.location;
-  if (profile.phone) user.phone = profile.phone;
-  if (profile.gender) user.gender = profile.gender as 'male' | 'female' | 'other' | 'prefer-not-to-say';
-  if (profile.birthDate) user.birthDate = profile.birthDate;
-  if (profile.isPrivate !== undefined) user.isPrivate = profile.isPrivate;
-
-  // Propiedades con valores por defecto
-  user.isVerified = false;
-  user.isActive = true;
-  user.lastSeen = new Date().toISOString();
-  user.preferences = {
-    notifications: {
-      likes: true,
-      comments: true,
-      follows: true,
-      mentions: true,
-      messages: true,
-      stories: true,
-      posts: true
-    },
-    privacy: {
-      showEmail: false,
-      showPhone: false,
-      showBirthDate: false
-    }
-  };
-
-  return user;
+  } as User;
 };
 
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
@@ -141,18 +113,18 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     }
   }, [profileData?.isFollowing, profileData?._id, profileData, user, isOwnProfile, isFollowingProfile]);
 
-      const reloadProfile = useCallback(async () => {
-      try {
-        const { getUserProfileByUsername } = await import('@/services/userService');
-        const newProfileData = await getUserProfileByUsername(profileData?.username || '');
-        setProfileData(newProfileData);
-      } catch (error) {
-        // Solo logear errores críticos
-        if (error instanceof Error && error.message.includes('500')) {
+  const reloadProfile = useCallback(async () => {
+    try {
+      const { getUserProfileByUsername } = await import('@/services/userService');
+      const newProfileData = await getUserProfileByUsername(profileData?.username || '');
+      setProfileData(newProfileData);
+    } catch (error) {
+      // Solo logear errores críticos
+      if (error instanceof Error && error.message.includes('500')) {
 
-        }
       }
-    }, [profileData?.username]);
+    }
+  }, [profileData?.username]);
 
   // Función para manejar cambios en el seguimiento
   const handleFollowChange = useCallback(async (isFollowing: boolean) => {
@@ -245,7 +217,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {/* Header del perfil moderno */}
         <ModernProfileHeader
-          user={convertToUser(profileData)}
+          user={convertToFormData(profileData)}
           isOwnProfile={isOwnProfile || false}
           stats={stats}
           onEditClick={() => setShowEdit(v => !v)}
@@ -280,13 +252,11 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
               <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-purple-50/20 rounded-xl"></div>
               <div className="relative bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
                 <EditProfileForm
-                  profile={profileData}
+                  profile={convertToFormData(profileData)}
                   onSave={async (updatedData) => {
                     try {
                       // Actualizar el perfil usando el servicio
                       await updateUserProfile(updatedData);
-                      // Actualizar el estado local
-                      setProfileData(prev => ({ ...prev, ...updatedData }));
 
                       // Si se actualizó el avatar, actualizar también el usuario en el contexto de autenticación
                       if (updatedData.avatar && user) {
@@ -295,8 +265,12 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
                       // Cerrar el modal
                       setShowEdit(false);
-                      // Recargar el perfil desde el servidor
+
+                      // Recargar el perfil desde el servidor para obtener datos frescos
                       await reloadProfile();
+
+                      // Mostrar mensaje de éxito
+                      toast.success('Perfil actualizado correctamente');
                     } catch (error) {
                       logger.error('Error saving profile:', {
                         error: error instanceof Error ? error.message : 'Unknown error',

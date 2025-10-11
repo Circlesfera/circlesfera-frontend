@@ -1,73 +1,9 @@
 import api from './axios';
 import { UserProfile } from './userService';
+import type { Post, Comment } from '@/types';
 
-export interface Post {
-  _id: string;
-  user: {
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-    isVerified?: boolean;
-  };
-  type: 'image' | 'video' | 'text';
-  content: {
-    images?: Array<{
-      url: string;
-      alt?: string;
-      width?: number;
-      height?: number;
-    }>;
-    video?: {
-      url: string;
-      duration: number;
-      thumbnail: string;
-      width?: number;
-      height?: number;
-    };
-    text?: string;
-    aspectRatio?: '1:1' | '4:5';
-    originalAspectRatio?: number; // Aspect ratio real de la imagen
-  };
-  caption: string;
-  location?: {
-    name: string;
-    coordinates?: {
-      type: string;
-      coordinates: number[];
-    };
-  };
-  tags?: string[];
-  likes: string[];
-  comments: string[];
-  views: number;
-  shares: number;
-  isPublic: boolean;
-  isArchived: boolean;
-  isDeleted: boolean;
-  isLiked?: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Comment {
-  _id: string;
-  user: {
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-  };
-  post: string;
-  content: string;
-  parentComment?: string;
-  replies?: Comment[];
-  likes: string[];
-  isEdited: boolean;
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+// Re-exportar para compatibilidad con imports existentes
+export type { Post, Comment };
 
 export interface FeedResponse {
   success: boolean;

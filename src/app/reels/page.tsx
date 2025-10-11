@@ -35,7 +35,7 @@ export default function ReelsPage() {
       // Actualizar estado optimista
       const updatedLikes = isLiked
         ? currentReel.likes.filter(like => like.user !== user?._id)
-        : [...currentReel.likes, { user: user?._id || '', createdAt: new Date() }];
+        : [...currentReel.likes, { user: user?._id || '', createdAt: new Date().toISOString() }];
 
       updateReel(reelId, { likes: updatedLikes });
 

@@ -1,64 +1,8 @@
 import api from './axios';
+import type { Conversation } from '@/types';
 
-export interface Conversation {
-  _id: string;
-  type: 'direct' | 'group';
-  name?: string;
-  description?: string;
-  avatar?: string;
-  participants: Array<{
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-  }>;
-  admins?: Array<{
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-  }>;
-  lastMessage?: {
-    _id: string;
-    type: 'text' | 'image' | 'video' | 'audio' | 'file' | 'location' | 'contact';
-    content: {
-      text?: string;
-      image?: {
-        url: string;
-        alt?: string;
-      };
-      video?: {
-        url: string;
-        thumbnail: string;
-      };
-      location?: {
-        name: string;
-        address?: string;
-      };
-    };
-    sender: {
-      _id: string;
-      username: string;
-      avatar?: string;
-      fullName?: string;
-    };
-    createdAt: string;
-  };
-  unreadCount: number;
-  settings?: {
-    isActive: boolean;
-    isArchived: boolean;
-    isDeleted: boolean;
-    userSettings?: {
-      mute: boolean;
-      pin: boolean;
-      lastRead: string;
-      unreadCount: number;
-    };
-  };
-  createdAt: string;
-  updatedAt: string;
-}
+// Re-exportar para compatibilidad
+export type { Conversation };
 
 export interface ConversationsResponse {
   success: boolean;

@@ -56,12 +56,26 @@ export interface Post {
     fullName?: string;
     isVerified?: boolean;
   };
+  type: 'image' | 'video' | 'text';
   content: {
-    images?: MediaFile[];
-    video?: MediaFile;
+    images?: Array<{
+      url: string;
+      alt?: string;
+      width?: number;
+      height?: number;
+    }>;
+    video?: {
+      url: string;
+      duration: number;
+      thumbnail: string;
+      width?: number;
+      height?: number;
+    };
     text?: string;
+    aspectRatio?: '1:1' | '4:5';
+    originalAspectRatio?: number;
   };
-  caption?: string;
+  caption: string;
   location?: {
     name: string;
     coordinates?: {
@@ -69,16 +83,11 @@ export interface Post {
       coordinates: number[];
     };
   };
+  tags?: string[];
   likes: string[];
-  comments: Comment[];
-  shares: Array<{
-    user: string;
-    createdAt: string;
-  }>;
-  saves: Array<{
-    user: string;
-    createdAt: string;
-  }>;
+  comments: string[];
+  views: number;
+  shares: number;
   isPublic: boolean;
   isArchived: boolean;
   isDeleted: boolean;
@@ -127,8 +136,19 @@ export interface Story {
   };
   type: 'image' | 'video' | 'text';
   content: {
-    image?: MediaFile;
-    video?: MediaFile;
+    image?: {
+      url: string;
+      alt?: string;
+      width?: number;
+      height?: number;
+    };
+    video?: {
+      url: string;
+      duration: number;
+      thumbnail: string;
+      width?: number;
+      height?: number;
+    };
     text?: {
       content: string;
       backgroundColor: string;
@@ -137,7 +157,7 @@ export interface Story {
       fontFamily: string;
     };
   };
-  caption?: string;
+  caption: string;
   location?: {
     name: string;
     coordinates?: {
@@ -167,6 +187,17 @@ export interface Story {
   updatedAt: string;
 }
 
+export interface UserWithStories {
+  _id: string;
+  username: string;
+  avatar?: string;
+  fullName?: string;
+  latestStory: Story;
+  storiesCount: number;
+  hasUnviewedStories?: boolean;
+  updatedAt?: string;
+}
+
 export interface Reel {
   _id: string;
   user: {
@@ -175,37 +206,52 @@ export interface Reel {
     avatar?: string;
     fullName?: string;
   };
-  video: MediaFile;
-  caption?: string;
-  hashtags?: string[];
-  music?: {
+  video: {
+    url: string;
+    thumbnail?: string;
+    duration: number;
+    width: number;
+    height: number;
+  };
+  audio?: {
     title: string;
     artist: string;
-    url: string;
   };
-  location?: {
-    name: string;
-    coordinates?: {
-      type: string;
-      coordinates: number[];
-    };
-  };
-  likes: Array<{
-    user: string;
-    createdAt: string;
-  }>;
-  comments: Comment[];
-  shares: Array<{
-    user: string;
-    createdAt: string;
-  }>;
+  caption: string;
+  hashtags: string[];
+  location?: string;
+  isPublic: boolean;
+  allowComments: boolean;
+  allowDuets: boolean;
+  allowStitches: boolean;
   views: Array<{
     user: string;
     viewedAt: string;
   }>;
-  isPublic: boolean;
-  isArchived: boolean;
+  likes: Array<{
+    user: string;
+    createdAt: string;
+  }>;
+  comments: Array<{
+    user: string;
+    content: string;
+    createdAt: string;
+  }>;
+  shares: Array<{
+    user: string;
+    sharedAt: string;
+    platform?: string;
+  }>;
+  duets: Array<{
+    user: string;
+    createdAt: string;
+  }>;
+  stitches: Array<{
+    user: string;
+    createdAt: string;
+  }>;
   isDeleted: boolean;
+  isArchived: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -234,23 +280,60 @@ export interface Notification {
 
 export interface Conversation {
   _id: string;
+  type: 'direct' | 'group';
+  name?: string;
+  description?: string;
+  avatar?: string;
   participants: Array<{
     _id: string;
     username: string;
     avatar?: string;
     fullName?: string;
-    lastSeen?: string;
+  }>;
+  admins?: Array<{
+    _id: string;
+    username: string;
+    avatar?: string;
+    fullName?: string;
   }>;
   lastMessage?: {
     _id: string;
-    content: string;
-    sender: string;
+    type: 'text' | 'image' | 'video' | 'audio' | 'file' | 'location' | 'contact';
+    content: {
+      text?: string;
+      image?: {
+        url: string;
+        alt?: string;
+      };
+      video?: {
+        url: string;
+        thumbnail: string;
+      };
+      location?: {
+        name: string;
+        address?: string;
+      };
+    };
+    sender: {
+      _id: string;
+      username: string;
+      avatar?: string;
+      fullName?: string;
+    };
     createdAt: string;
   };
   unreadCount: number;
-  isGroup: boolean;
-  groupName?: string;
-  groupAvatar?: string;
+  settings?: {
+    isActive: boolean;
+    isArchived: boolean;
+    isDeleted: boolean;
+    userSettings?: {
+      mute: boolean;
+      pin: boolean;
+      lastRead: string;
+      unreadCount: number;
+    };
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -264,16 +347,51 @@ export interface Message {
     avatar?: string;
     fullName?: string;
   };
-  content: string;
-  type: 'text' | 'image' | 'video' | 'audio' | 'file';
-  media?: MediaFile;
-  isRead: boolean;
-  readBy: Array<{
-    user: string;
-    readAt: string;
-  }>;
+  type: 'text' | 'image' | 'video' | 'audio' | 'file' | 'location' | 'contact';
+  content: {
+    text?: string;
+    image?: {
+      url: string;
+      alt?: string;
+      width?: number;
+      height?: number;
+    };
+    video?: {
+      url: string;
+      duration: number;
+      thumbnail: string;
+      width?: number;
+      height?: number;
+    };
+    audio?: {
+      url: string;
+      duration: number;
+    };
+    file?: {
+      url: string;
+      name: string;
+      size: number;
+      type: string;
+    };
+    location?: {
+      coordinates: number[];
+      name: string;
+      address?: string;
+    };
+    contact?: {
+      name: string;
+      phone: string;
+      email?: string;
+    };
+  };
+  status: 'sent' | 'delivered' | 'read';
   isEdited: boolean;
-  replyTo?: string;
+  editedAt?: string;
+  isDeleted: boolean;
+  deletedAt?: string;
+  isForwarded: boolean;
+  originalMessage?: string;
+  replyTo?: Message;
   createdAt: string;
   updatedAt: string;
 }
@@ -472,6 +590,5 @@ export interface AppEvent {
 }
 
 // Re-exportar tipos específicos
-export * from './story';
 export * from './cstv';
 export * from './live';

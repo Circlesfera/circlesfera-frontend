@@ -1,62 +1,8 @@
 import api from './axios';
+import type { Message } from '@/types';
 
-export interface Message {
-  _id: string;
-  conversation: string;
-  sender: {
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-  };
-  type: 'text' | 'image' | 'video' | 'audio' | 'file' | 'location' | 'contact';
-  content: {
-    text?: string;
-    image?: {
-      url: string;
-      alt?: string;
-      width?: number;
-      height?: number;
-    };
-    video?: {
-      url: string;
-      duration: number;
-      thumbnail: string;
-      width?: number;
-      height?: number;
-    };
-    audio?: {
-      url: string;
-      duration: number;
-    };
-    file?: {
-      url: string;
-      name: string;
-      size: number;
-      type: string;
-    };
-    location?: {
-      coordinates: number[];
-      name: string;
-      address?: string;
-    };
-    contact?: {
-      name: string;
-      phone: string;
-      email?: string;
-    };
-  };
-  status: 'sent' | 'delivered' | 'read';
-  isEdited: boolean;
-  editedAt?: string;
-  isDeleted: boolean;
-  deletedAt?: string;
-  isForwarded: boolean;
-  originalMessage?: string;
-  replyTo?: Message;
-  createdAt: string;
-  updatedAt: string;
-}
+// Re-exportar para compatibilidad
+export type { Message };
 
 export interface MessagesResponse {
   success: boolean;

@@ -2,24 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { checkUsernameAvailability, editProfile } from '@/services/userService';
+import { checkUsernameAvailability, editProfile, User } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  fullName?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  phone?: string;
-  gender?: string;
-  birthDate?: string;
-  isPrivate?: boolean;
-  avatar?: string;
-}
 
 interface EditProfileFormProps {
   profile: User;

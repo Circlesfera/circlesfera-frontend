@@ -1,50 +1,10 @@
 import api from './axios';
-import { Post } from './postService';
 import logger from '@/utils/logger';
-import type { Story } from '@/types';
+import type { User, Story } from '@/types';
+import type { Post } from './postService';
 
-export interface User {
-  _id: string;
-  username: string;
-  email: string;
-  avatar?: string;
-  bio?: string;
-  fullName?: string;
-  website?: string;
-  location?: string;
-  phone?: string;
-  gender?: string;
-  birthDate?: string;
-  isPrivate?: boolean;
-  isVerified?: boolean;
-  isActive?: boolean;
-  lastSeen?: string;
-  followers: string[];
-  following: string[];
-  posts: Post[];
-  savedPosts: Post[];
-  blockedUsers: string[];
-  preferences?: {
-    notifications: {
-      likes: boolean;
-      comments: boolean;
-      follows: boolean;
-      mentions: boolean;
-      messages: boolean;
-    };
-    privacy: {
-      showEmail: boolean;
-      showPhone: boolean;
-      showBirthDate: boolean;
-    };
-  };
-  followersCount?: number;
-  followingCount?: number;
-  postsCount?: number;
-  isFollowing?: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+// Re-exportar User para compatibilidad con imports existentes
+export type { User };
 
 export interface UserProfile {
   _id: string;

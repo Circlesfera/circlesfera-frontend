@@ -5,7 +5,8 @@ import Card from './Card';
 import Avatar from './Avatar';
 import { cn } from '@/utils/cn';
 
-export interface Story {
+// Tipo simplificado para Stories en el design system
+export interface StoryPreview {
   id: string;
   type: 'image' | 'video';
   url: string;
@@ -18,7 +19,7 @@ export interface UserWithStories {
   username: string;
   fullName?: string;
   avatar?: string;
-  stories: Story[];
+  stories: StoryPreview[];
   storiesCount: number;
   hasUnviewedStories: boolean;
 }
@@ -103,8 +104,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
         {/* Stories */}
         {usersWithStories.map((user) => (
           <div key={user.id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-            <div 
-              className="relative group cursor-pointer p-2" 
+            <div
+              className="relative group cursor-pointer p-2"
               onClick={() => onStoryClick?.(user)}
             >
               <Avatar
@@ -116,7 +117,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
                 ring={user.hasUnviewedStories}
                 ringColor="purple"
               />
-              
+
               {/* Story count indicator */}
               {user.storiesCount > 1 && (
                 <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
@@ -125,13 +126,13 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
                   </span>
                 </div>
               )}
-              
+
               {/* Unviewed stories indicator */}
               {user.hasUnviewedStories && (
                 <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
               )}
             </div>
-            
+
             <span className="text-xs text-gray-600 font-medium text-center truncate max-w-16">
               {user.username}
             </span>
