@@ -36,10 +36,35 @@ const getToken = () => {
   }
 };
 
+// Función para obtener token CSRF de las cookies
+const getCsrfToken = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    // Leer cookie XSRF-TOKEN (enviada por el backend)
+    const cookies = document.cookie.split(';');
+    const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('XSRF-TOKEN='));
+
+    if (csrfCookie) {
+      return csrfCookie.split('=')[1];
+    }
+
+    return null;
+  } catch (error) {
+    logger.error('Error reading CSRF token from cookie:', {
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+    return null;
+  }
+};
+
 // Interceptor para agregar token automáticamente
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
+    const csrfToken = getCsrfToken();
 
     // Rutas que no requieren token de autorización
     const publicRoutes = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password'];
@@ -50,12 +75,21 @@ api.interceptors.request.use(
       url: config.url,
       method: config.method,
       hasToken: !!token,
+      hasCsrfToken: !!csrfToken,
       isPublicRoute
     });
 
+    // Agregar Authorization token
     if (token && !isPublicRoute) {
       config.headers.Authorization = `Bearer ${token}`;
       logger.debug('Token added to request');
+    }
+
+    // Agregar CSRF token para peticiones mutativas (POST, PUT, DELETE, PATCH)
+    const mutativeMethods = ['post', 'put', 'delete', 'patch'];
+    if (csrfToken && config.method && mutativeMethods.includes(config.method.toLowerCase())) {
+      config.headers['x-csrf-token'] = csrfToken;
+      logger.debug('CSRF token added to request');
     }
 
     return config;
