@@ -39,11 +39,11 @@ export default function CreateConversationModal({
         // Filtrar el usuario actual
         const filteredUsers = users.filter((u: User) => u._id !== user?._id);
         setUsers(filteredUsers);
-        logger.debug('Users searched:', { query, count: filteredUsers.length });
+        logger.debug('Users searched:', { query: searchQuery, count: filteredUsers.length });
       } catch (searchError) {
         logger.error('Error searching users:', {
           error: searchError instanceof Error ? searchError.message : 'Unknown error',
-          query
+          query: searchQuery
         });
         setUsers([]);
       } finally {

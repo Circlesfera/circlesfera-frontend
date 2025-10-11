@@ -126,7 +126,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
         updatedAt: new Date().toISOString()
       };
       setMessages(prev => [...prev, newMessage]);
-      logger.debug('Message sent:', { conversationId, messageId: response._id });
+      logger.debug('Message sent:', { conversationId });
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
       logger.error('Error sending message:', {
@@ -195,8 +195,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
           // Recargar mensajes para mostrar el nuevo
           fetchMessages(1, false);
         },
-        (error) => {
-
+        (uploadError) => {
+          logger.error('File upload progress error:', {
+            error: uploadError instanceof Error ? uploadError.message : 'Unknown error'
+          });
         }
       );
       logger.info('File sent successfully:', { conversationId });

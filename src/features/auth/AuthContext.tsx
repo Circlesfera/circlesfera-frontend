@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '@/services/axios';
 import type { User, ApiResponse, LoginResponse } from '@/types';
+import logger from '@/utils/logger';
 
 interface AuthContextProps {
   user: User | null;
@@ -139,13 +140,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         error: registerError instanceof Error ? registerError.message : 'Unknown error'
       });
       // Si hay error de autenticación, limpiar tokens
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response?: { status?: number } };
+      if (registerError && typeof registerError === 'object' && 'response' in registerError) {
+        const axiosError = registerError as { response?: { status?: number } };
         if (axiosError.response?.status === 401) {
           clearInvalidTokens();
         }
       }
-      throw error;
+      throw registerError;
     } finally {
       setLoading(false);
     }
