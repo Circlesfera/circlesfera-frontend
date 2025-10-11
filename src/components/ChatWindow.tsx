@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { getMessages, sendTextMessage, sendImageMessage, sendVideoMessage, sendLocationMessage, Message } from '@/services/messageService';
+import { getConversations } from '@/services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
 import MessageSkeleton from './MessageSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -64,13 +65,43 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const [showAttachments, setShowAttachments] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [conversationInfo, setConversationInfo] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  // Obtener información de la conversación
+  const fetchConversationInfo = useCallback(async () => {
+    if (!token) return;
+
+    try {
+      const response = await getConversations();
+      if (response && response.conversations) {
+        const conversation = response.conversations.find((c: any) => c._id === conversationId);
+        if (conversation) {
+          setConversationInfo(conversation);
+        }
+      }
+    } catch (error) {
+      logger.error('Error fetching conversation info:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        conversationId
+      });
+    }
+  }, [conversationId, token]);
+
   // Obtener el otro participante (no el usuario actual)
   const getOtherParticipant = () => {
-    if (!participants || !user) return null;
-    return participants.find(p => p._id !== user._id) || participants[0];
+    // Si tenemos participants como prop, usarlos
+    if (participants && participants.length > 0) {
+      return participants.find(p => p._id !== user?._id) || participants[0];
+    }
+
+    // Si no, usar la información de la conversación
+    if (conversationInfo && conversationInfo.participants) {
+      return conversationInfo.participants.find((p: any) => p._id !== user?._id) || conversationInfo.participants[0];
+    }
+
+    return null;
   };
 
   const fetchMessages = useCallback(async (pageNum = 1, append = false) => {
@@ -102,6 +133,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
   useEffect(() => {
     fetchMessages(1, false);
   }, [fetchMessages]);
+
+  useEffect(() => {
+    fetchConversationInfo();
+  }, [fetchConversationInfo]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
