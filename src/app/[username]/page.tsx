@@ -28,9 +28,26 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
         const profileData = await getUserProfileByUsername(username);
         setProfile(profileData);
       } catch (loadProfileError) {
-        logger.error('Error loading user profile page:', {
-          error: loadProfileError instanceof Error ? loadProfileError.message : 'Unknown error'
-        });
+        // Manejo detallado de errores de Axios
+        if (loadProfileError && typeof loadProfileError === 'object' && 'response' in loadProfileError) {
+          const axiosError = loadProfileError as { response?: { status?: number; data?: { message?: string } }; config?: { url?: string } };
+          logger.error('Error loading user profile page:', {
+            status: axiosError.response?.status,
+            message: axiosError.response?.data?.message || 'Unknown error',
+            url: axiosError.config?.url
+          });
+        } else if (loadProfileError instanceof Error) {
+          logger.error('Error loading user profile page:', {
+            message: loadProfileError.message,
+            name: loadProfileError.name,
+            stack: loadProfileError.stack?.split('\n')[0]
+          });
+        } else {
+          logger.error('Error loading user profile page:', {
+            type: typeof loadProfileError,
+            value: String(loadProfileError)
+          });
+        }
         setError(true);
       } finally {
         setLoading(false);

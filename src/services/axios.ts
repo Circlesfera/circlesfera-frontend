@@ -21,9 +21,17 @@ const getToken = () => {
     return localStorage.getItem('token');
   } catch (storageError) {
     // Error accessing localStorage (puede estar bloqueado por privacidad)
-    logger.error('Error accessing localStorage:', {
-      error: storageError instanceof Error ? storageError.message : 'Unknown error'
-    });
+    if (storageError instanceof Error) {
+      logger.error('Error accessing localStorage:', {
+        message: storageError.message,
+        name: storageError.name
+      });
+    } else {
+      logger.error('Error accessing localStorage:', {
+        type: typeof storageError,
+        value: String(storageError)
+      });
+    }
     return null;
   }
 };
@@ -65,7 +73,10 @@ api.interceptors.response.use(
   (error: AxiosError<{ message?: string }>) => {
     // Validar que el error tiene la estructura esperada
     if (!error || typeof error !== 'object') {
-      logger.error('Invalid error object');
+      logger.error('Invalid error object:', {
+        type: typeof error,
+        value: String(error)
+      });
       return Promise.reject(error);
     }
 

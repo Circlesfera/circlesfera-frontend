@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const axiosError = loginError as { response?: { status?: number; statusText?: string; data?: { message?: string } }; config?: { url?: string; method?: string; baseURL?: string } };
 
         // Log detallado del error
-        logger.error('Login error:', {
+        logger.error('Login error (Axios):', {
           status: axiosError.response?.status,
           statusText: axiosError.response?.statusText,
           message: axiosError.response?.data?.message || 'Unknown error',
@@ -129,10 +129,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(errorMessage);
       }
 
-      // Error genérico (no es de Axios)
-      logger.error('Login error:', {
-        error: loginError instanceof Error ? loginError.message : JSON.stringify(loginError)
-      });
+      // Error genérico (Error object o respuesta sin 'success')
+      if (loginError instanceof Error) {
+        logger.error('Login error (Error):', {
+          message: loginError.message,
+          name: loginError.name,
+          stack: loginError.stack?.split('\n')[0] // Solo primera línea del stack
+        });
+      } else {
+        logger.error('Login error (Unknown):', {
+          type: typeof loginError,
+          value: String(loginError),
+          keys: loginError && typeof loginError === 'object' ? Object.keys(loginError) : []
+        });
+      }
 
       throw loginError;
     } finally {
