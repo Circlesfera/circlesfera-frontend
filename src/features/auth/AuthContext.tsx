@@ -107,18 +107,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(res.data.message || 'Error en el login');
       }
     } catch (loginError) {
-      logger.error('Login error:', {
-        error: loginError instanceof Error ? loginError.message : 'Unknown error'
-      });
       // Manejo detallado de errores de Axios
       if (loginError && typeof loginError === 'object' && 'response' in loginError) {
-        const axiosError = loginError as { response?: { status?: number; statusText?: string; data?: unknown }; config?: { url?: string; method?: string; baseURL?: string } };
+        const axiosError = loginError as { response?: { status?: number; statusText?: string; data?: { message?: string } }; config?: { url?: string; method?: string; baseURL?: string } };
+
+        // Log detallado del error
+        logger.error('Login error:', {
+          status: axiosError.response?.status,
+          statusText: axiosError.response?.statusText,
+          message: axiosError.response?.data?.message || 'Unknown error',
+          url: axiosError.config?.url
+        });
 
         // Si hay error de autenticación, limpiar tokens
         if (axiosError.response?.status === 401) {
           clearInvalidTokens();
         }
+
+        // Lanzar error con mensaje del servidor
+        const errorMessage = axiosError.response?.data?.message || 'Error en el login';
+        throw new Error(errorMessage);
       }
+
+      // Error genérico (no es de Axios)
+      logger.error('Login error:', {
+        error: loginError instanceof Error ? loginError.message : JSON.stringify(loginError)
+      });
 
       throw loginError;
     } finally {
