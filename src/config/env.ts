@@ -17,6 +17,7 @@ export const config = {
   // API Configuration
   apiUrl: requireEnv('NEXT_PUBLIC_API_URL', 'http://localhost:5001/api'),
   appUrl: requireEnv('NEXT_PUBLIC_APP_URL', typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001'),
+  wsUrl: requireEnv('NEXT_PUBLIC_WS_URL', 'ws://localhost:5001'),
 
   // App Configuration
   appName: process.env.NEXT_PUBLIC_APP_NAME || 'CircleSfera',

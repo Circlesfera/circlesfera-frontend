@@ -49,15 +49,15 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
       return;
     }
 
+    // Obtener URL del WebSocket desde config (REQUERIDO)
+    const wsUrl = config.wsUrl;
+
+    if (!wsUrl) {
+      logger.error('WebSocket URL no está configurado en config.wsUrl');
+      return;
+    }
+
     try {
-      // Obtener URL del WebSocket desde config (REQUERIDO)
-      const wsUrl = config.wsUrl;
-
-      if (!wsUrl) {
-        logger.error('WebSocket URL no está configurado en config.wsUrl');
-        return;
-      }
-
       const ws = new WebSocket(`${wsUrl}?token=${token}`);
 
       ws.onopen = () => {

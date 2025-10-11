@@ -220,15 +220,14 @@ class WebRTCService {
         if (event.candidate) {
           this.socketService.emit('webrtc:ice-candidate', {
             streamId,
-            candidate: event.candidate,
-            from: this.socketService.getUserId(),
+            candidate: event.candidate.toJSON(),
+            from: 'local', // El servidor identificará al usuario por el socket
           });
         }
       };
 
       // Manejar stream remoto
-      peerConnection.ontrack = (event) => {
-
+      peerConnection.ontrack = () => {
         // El stream remoto se manejará en el componente
       };
 
@@ -272,8 +271,8 @@ class WebRTCService {
           if (event.candidate) {
             this.socketService.emit('webrtc:ice-candidate', {
               streamId: _streamId,
-              candidate: event.candidate,
-              from: this.socketService.getUserId(),
+              candidate: event.candidate.toJSON(),
+              from: 'local', // El servidor identificará al usuario por el socket
             });
           }
         };
@@ -288,7 +287,7 @@ class WebRTCService {
       this.socketService.emit('webrtc:answer', {
         streamId: _streamId,
         answer,
-        from: this.socketService.getUserId(),
+        from: 'local', // El servidor identificará al usuario por el socket
       });
 
     } catch (error) {
