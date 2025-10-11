@@ -7,6 +7,7 @@ import { getFeed, likePost, unlikePost, Post } from '@/services/postService';
 import FeedCard from '@/components/feed/FeedCard';
 import { Card } from '@/design-system/Card';
 import { Button } from '@/design-system/Button';
+import logger from '@/utils/logger';
 
 // Iconos SVG
 const RefreshIcon = ({ className }: { className?: string }) => (
@@ -56,8 +57,11 @@ export default function FeedPage() {
 
       setHasMore(response.hasMore || false);
       setPage(pageNum);
-    } catch (err) {
-
+    } catch (loadFeedError) {
+      logger.error('Error loading feed:', {
+        error: loadFeedError instanceof Error ? loadFeedError.message : 'Unknown error',
+        page: pageNum
+      });
       setError('Error al cargar el feed');
     } finally {
       setLoading(false);
@@ -138,8 +142,11 @@ export default function FeedPage() {
           })
         );
       }
-    } catch (error) {
-
+    } catch (likeToggleError) {
+      logger.error('Error toggling like on post:', {
+        error: likeToggleError instanceof Error ? likeToggleError.message : 'Unknown error',
+        postId
+      });
     }
   }, [posts, user]);
 
@@ -164,8 +171,11 @@ export default function FeedPage() {
         await navigator.clipboard.writeText(postUrl);
         alert('¡Enlace copiado al portapapeles!');
       }
-    } catch (error) {
-
+    } catch (copyError) {
+      logger.warn('Error copying to clipboard:', {
+        error: copyError instanceof Error ? copyError.message : 'Unknown error',
+        postId
+      });
       // Fallback final: copiar manualmente
       const postUrl = `${window.location.origin}/${username}/post/${postId}`;
       navigator.clipboard.writeText(postUrl).then(() => {
