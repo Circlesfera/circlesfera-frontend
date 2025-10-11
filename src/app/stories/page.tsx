@@ -7,7 +7,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import StoryViewer from '@/components/StoryViewer';
-import { Plus, ArrowLeft } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import logger from '@/utils/logger';
 
 export default function StoriesPage() {
@@ -99,38 +99,6 @@ export default function StoriesPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-          <div className="max-w-4xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => router.back()}
-                  className="mr-4"
-                >
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  Volver
-                </Button>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Stories
-                </h1>
-              </div>
-
-              <Button
-                variant="primary"
-                gradient
-                size="sm"
-                onClick={() => router.push('/stories/create')}
-                leftIcon={<Plus className="w-4 h-4" />}
-              >
-                Crear Story
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {/* Main Content */}
         <div className="max-w-4xl mx-auto px-4 py-8">
           {stories.length === 0 ? (
