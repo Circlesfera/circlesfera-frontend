@@ -8,6 +8,7 @@ import { getUserStories } from '@/services/storyService';
 import { Post } from '@/services/postService';
 import { Reel } from '@/services/reelService';
 import { Story } from '@/services/storyService';
+import logger from '@/utils/logger';
 
 interface ProfileTabsProps {
   username: string;
@@ -99,8 +100,12 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         } else if (activeTab === 'stories' && stories.length === 0) {
           await loadStories();
         }
-      } catch (error) {
-
+      } catch (loadTabError) {
+        logger.error('Error loading tab content:', {
+          error: loadTabError instanceof Error ? loadTabError.message : 'Unknown error',
+          activeTab,
+          username
+        });
         // No propagar el error, solo loggear
       }
     };
@@ -116,12 +121,15 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
     try {
       // Cargar posts iniciales
       await loadPosts();
-      
+
       // Cargar contadores
       await loadContentCounts();
-      
-    } catch (error) {
 
+    } catch (loadInitialError) {
+      logger.error('Error loading initial profile content:', {
+        error: loadInitialError instanceof Error ? loadInitialError.message : 'Unknown error',
+        username
+      });
       setError('Error al cargar el contenido');
     } finally {
       setLoading(false);
@@ -138,8 +146,11 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         reels: reels.length,
         stories: stories.length
       });
-    } catch (error) {
-
+    } catch (countsError) {
+      logger.warn('Error loading content counts:', {
+        error: countsError instanceof Error ? countsError.message : 'Unknown error',
+        username
+      });
     }
   };
 
@@ -156,9 +167,14 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         setHasMorePosts(response.posts.length === 12);
         setPostsPage(page);
       }
-    } catch (error) {
-
-      throw error;
+    } catch (loadPostsError) {
+      logger.error('Error loading user posts:', {
+        error: loadPostsError instanceof Error ? loadPostsError.message : 'Unknown error',
+        username,
+        page,
+        append
+      });
+      throw loadPostsError;
     }
   };
 
@@ -199,8 +215,11 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
       if (response.success) {
         setStories(response.stories);
       }
-    } catch (error) {
-
+    } catch (loadStoriesError) {
+      logger.error('Error loading user stories:', {
+        error: loadStoriesError instanceof Error ? loadStoriesError.message : 'Unknown error',
+        username
+      });
       // No propagar el error, solo establecer stories vacío
       setStories([]);
     }
@@ -212,14 +231,19 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
 
     try {
       setLoading(true);
-      
+
       if (activeTab === 'posts' && hasMorePosts) {
         await loadPosts(postsPage + 1, true);
       } else if (activeTab === 'reels' && hasMoreReels) {
         await loadReels(reelsPage + 1, true);
       }
-    } catch (error) {
-
+    } catch (loadMoreError) {
+      logger.error('Error loading more content:', {
+        error: loadMoreError instanceof Error ? loadMoreError.message : 'Unknown error',
+        activeTab,
+        username,
+        page: activeTab === 'posts' ? postsPage + 1 : reelsPage + 1
+      });
       // No establecer error global, solo loggear
       setError(null);
     } finally {
@@ -267,7 +291,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
                     </svg>
                   </div>
                 )}
-                
+
                 {/* Overlay con estadísticas */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex items-center space-x-4 text-white">
@@ -311,7 +335,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
                   className="w-full h-full object-cover rounded-lg"
                   muted
                 />
-                
+
                 {/* Overlay con estadísticas */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex items-center space-x-4 text-white">
@@ -466,17 +490,17 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         {!error && (
           <>
             {renderTabContent()}
-            
+
             {/* Estado vacío */}
-            {!loading && 
+            {!loading &&
               ((activeTab === 'posts' && posts.length === 0) ||
                (activeTab === 'reels' && reels.length === 0) ||
-               (activeTab === 'stories' && stories.length === 0)) && 
+               (activeTab === 'stories' && stories.length === 0)) &&
               renderEmptyState()
             }
 
             {/* Botón de cargar más */}
-            {!loading && 
+            {!loading &&
               ((activeTab === 'posts' && hasMorePosts) ||
                (activeTab === 'reels' && hasMoreReels)) && (
               <div className="text-center mt-8">

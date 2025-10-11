@@ -7,6 +7,7 @@ import { searchUsers } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import logger from '@/utils/logger';
 
 interface SearchResult {
   _id: string;
@@ -43,8 +44,11 @@ function SearchContent() {
           ? searchResults.filter(result => result._id !== user._id)
           : searchResults;
         setResults(filteredResults);
-      } catch (err) {
-
+      } catch (searchError) {
+        logger.error('Error searching users:', {
+          error: searchError instanceof Error ? searchError.message : 'Unknown error',
+          query
+        });
         setError('Error al buscar usuarios');
         setResults([]);
       } finally {

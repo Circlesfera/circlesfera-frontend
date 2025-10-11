@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getUserProfileByUsername, UserProfile } from '@/services/userService';
 import ClientProfilePage from './ClientProfilePage';
 import { useEffect, useState } from 'react';
+import logger from '@/utils/logger';
 
 const RESERVED_ROUTES = [
   'login', 'register', 'explore', 'messages', 'notifications', 'profile', 'api'
@@ -18,7 +19,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
     const loadProfile = async () => {
       try {
         const { username } = await params;
-        
+
         if (RESERVED_ROUTES.includes(username.toLowerCase())) {
           setError(true);
           return;
@@ -26,8 +27,10 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
 
         const profileData = await getUserProfileByUsername(username);
         setProfile(profileData);
-      } catch (err) {
-
+      } catch (loadProfileError) {
+        logger.error('Error loading user profile page:', {
+          error: loadProfileError instanceof Error ? loadProfileError.message : 'Unknown error'
+        });
         setError(true);
       } finally {
         setLoading(false);

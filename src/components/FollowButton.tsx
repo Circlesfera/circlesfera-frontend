@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { followUser, unfollowUser, muteUser, restrictUser } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
+import logger from '@/utils/logger';
 
 export default function FollowButton({
   userId,
@@ -66,8 +67,11 @@ export default function FollowButton({
       setFollowing(true);
       onChangeAction?.(true);
       success('¡Usuario seguido!', 'Ahora verás sus publicaciones en tu feed');
-    } catch (error: unknown) {
-
+    } catch (followError: unknown) {
+      logger.error('Error following user:', {
+        error: followError instanceof Error ? followError.message : 'Unknown error',
+        userId
+      });
       showError('Error al seguir', 'No se pudo seguir al usuario. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
@@ -85,8 +89,11 @@ export default function FollowButton({
       setFollowing(false);
       onChangeAction?.(false);
       success('Usuario dejado de seguir', 'Ya no verás sus publicaciones en tu feed');
-    } catch (error: unknown) {
-
+    } catch (unfollowError: unknown) {
+      logger.error('Error unfollowing user:', {
+        error: unfollowError instanceof Error ? unfollowError.message : 'Unknown error',
+        userId
+      });
       showError('Error al dejar de seguir', 'No se pudo dejar de seguir al usuario. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
@@ -98,8 +105,11 @@ export default function FollowButton({
       await muteUser(userId);
       setShowMenu(false);
       success('Usuario silenciado', 'No verás más sus publicaciones en tu feed');
-    } catch (error: unknown) {
-
+    } catch (muteError: unknown) {
+      logger.error('Error muting user:', {
+        error: muteError instanceof Error ? muteError.message : 'Unknown error',
+        userId
+      });
       showError('Error al silenciar', 'No se pudo silenciar al usuario. Inténtalo de nuevo.');
     }
   };
@@ -109,8 +119,11 @@ export default function FollowButton({
       await restrictUser(userId);
       setShowMenu(false);
       success('Usuario restringido', 'Sus comentarios serán ocultados para ti');
-    } catch (error: unknown) {
-
+    } catch (restrictError: unknown) {
+      logger.error('Error restricting user:', {
+        error: restrictError instanceof Error ? restrictError.message : 'Unknown error',
+        userId
+      });
       showError('Error al restringir', 'No se pudo restringir al usuario. Inténtalo de nuevo.');
     }
   };

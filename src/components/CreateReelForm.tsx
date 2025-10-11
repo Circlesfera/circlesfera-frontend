@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { createReel } from '@/services/reelService';
+import logger from '@/utils/logger';
 
 interface CreateReelFormProps {
   onReelCreated: () => void;
@@ -160,9 +161,13 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
         throw new Error(response.message || 'Error al crear el reel');
       }
 
-    } catch (error) {
-
-      setError(error instanceof Error ? error.message : 'Error al crear el reel');
+    } catch (createReelError) {
+      logger.error('Error creating reel:', {
+        error: createReelError instanceof Error ? createReelError.message : 'Unknown error',
+        videoSize: videoFile?.size,
+        caption: formData.caption.substring(0, 50)
+      });
+      setError(createReelError instanceof Error ? createReelError.message : 'Error al crear el reel');
     } finally {
       setIsUploading(false);
       setUploadProgress(0);

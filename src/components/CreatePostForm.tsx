@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { createImagePost, createVideoPost } from '@/services/postService';
+import logger from '@/utils/logger';
 
 // Iconos SVG
 const ImageIcon = () => (
@@ -136,8 +137,13 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       setPostType('image');
 
       onPostCreated();
-    } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
+    } catch (createPostError: unknown) {
+      logger.error('Error creating post:', {
+        error: createPostError instanceof Error ? createPostError.message : 'Unknown error',
+        postType,
+        hasFile: !!file
+      });
+      const err = createPostError as { response?: { data?: { message?: string } } };
       setError(err?.response?.data?.message || 'Error al crear la publicación');
     } finally {
       setLoading(false);

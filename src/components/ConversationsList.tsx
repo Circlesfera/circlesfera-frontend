@@ -3,6 +3,7 @@ import { getConversations, Conversation } from '../services/conversationService'
 import { useAuth } from '@/features/auth/useAuth';
 import ConversationSkeleton from './ConversationSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+import logger from '@/utils/logger';
 
 // Iconos SVG
 const SearchIcon = () => (
@@ -44,23 +45,26 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
   const fetchConversations = useCallback(async () => {
     if (!token) return;
-    
+
     try {
       setLoading(true);
       const response = await getConversations();
       if (response && response.conversations) {
         setConversations(response.conversations);
       } else {
-
+        logger.warn('No conversations in response', { userId: user?._id });
         setConversations([]);
       }
-    } catch (error) {
-
+    } catch (fetchConvError) {
+      logger.error('Error fetching conversations:', {
+        error: fetchConvError instanceof Error ? fetchConvError.message : 'Unknown error',
+        userId: user?._id
+      });
       setConversations([]);
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, user?._id]);
 
   useEffect(() => {
     fetchConversations();
@@ -68,15 +72,15 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
   const filteredConversations = conversations.filter(conv => {
     const matchesSearch = conv.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         conv.participants.some((p: { username: string; fullName?: string }) => 
+                         conv.participants.some((p: { username: string; fullName?: string }) =>
                            p.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            p.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
                          );
-    
+
     const matchesFilter = filter === 'all' ||
                          (filter === 'unread' && conv.unreadCount > 0) ||
                          (filter === 'groups' && conv.type === 'group');
-    
+
     return matchesSearch && matchesFilter;
   });
 
@@ -84,7 +88,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     const now = new Date();
     const messageDate = new Date(date);
     const diffInMinutes = Math.floor((now.getTime() - messageDate.getTime()) / (1000 * 60));
-    
+
     if (diffInMinutes < 1) return 'Ahora';
     if (diffInMinutes < 60) return `${diffInMinutes}m`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
@@ -95,7 +99,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     if (conversation.type === 'group') {
       return conversation.name || 'Grupo sin nombre';
     }
-    
+
     // Para conversaciones directas, mostrar el otro participante
     const otherParticipant = conversation.participants.find((p: { _id: string }) => p._id !== user?._id);
     return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
@@ -105,7 +109,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     if (conversation.type === 'group') {
       return conversation.avatar;
     }
-    
+
     const otherParticipant = conversation.participants.find((p: { _id: string }) => p._id !== user?._id);
     return otherParticipant?.avatar;
   };
@@ -114,7 +118,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
     if (conversation.type === 'group') {
       return conversation.name?.[0]?.toUpperCase() || 'G';
     }
-    
+
     const otherParticipant = conversation.participants.find((p: { _id: string }) => p._id !== user?._id);
     return otherParticipant?.username[0]?.toUpperCase() || 'U';
   };
@@ -147,7 +151,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             )}
           </div>
         </div>
-        
+
         {/* Barra de búsqueda - Optimizada para móvil */}
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -184,7 +188,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                 {searchQuery ? 'No se encontraron conversaciones' : 'No tienes conversaciones'}
               </h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                {searchQuery 
+                {searchQuery
                   ? 'Intenta con otros términos de búsqueda o crea una nueva conversación.'
                   : 'Comienza a conectar con amigos y familiares creando tu primera conversación.'
                 }
@@ -222,10 +226,10 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                     <div className="relative flex-shrink-0">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden">
                         {getConversationAvatar(conversation) ? (
-                          <img 
-                            src={getConversationAvatar(conversation)} 
-                            alt="avatar" 
-                            className="w-full h-full object-cover" 
+                          <img
+                            src={getConversationAvatar(conversation)}
+                            alt="avatar"
+                            className="w-full h-full object-cover"
                           />
                         ) : (
                           <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm sm:text-lg">
@@ -233,14 +237,14 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                           </div>
                         )}
                       </div>
-                      
+
                       {/* Indicador de grupo */}
                       {conversation.type === 'group' && (
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center">
                           <GroupIcon />
                         </div>
                       )}
-                      
+
                       {/* Indicador de no leídos */}
                       {conversation.unreadCount > 0 && (
                         <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
@@ -261,10 +265,10 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                           </span>
                         )}
                       </div>
-                      
+
                       {conversation.lastMessage && (
                         <p className="text-xs sm:text-sm text-gray-600 truncate mt-1">
-                          {conversation.lastMessage.type === 'text' 
+                          {conversation.lastMessage.type === 'text'
                             ? conversation.lastMessage.content.text
                             : conversation.lastMessage.type === 'image'
                             ? '📷 Imagen'
