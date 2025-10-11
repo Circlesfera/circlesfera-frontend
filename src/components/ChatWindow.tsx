@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { getMessages, sendTextMessage, sendImageMessage, sendVideoMessage, sendLocationMessage, Message } from '@/services/messageService';
 import { getConversations } from '@/services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -58,6 +59,7 @@ interface ChatWindowProps {
 
 export default function ChatWindow({ conversationId, conversationName, participants }: ChatWindowProps) {
   const { token, user } = useAuth();
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -102,6 +104,14 @@ export default function ChatWindow({ conversationId, conversationName, participa
     }
 
     return null;
+  };
+
+  // Manejar click en el header para ir al perfil
+  const handleHeaderClick = () => {
+    const otherParticipant = getOtherParticipant();
+    if (otherParticipant && otherParticipant.username) {
+      router.push(`/${otherParticipant.username}`);
+    }
   };
 
   const fetchMessages = useCallback(async (pageNum = 1, append = false) => {
@@ -390,9 +400,13 @@ export default function ChatWindow({ conversationId, conversationName, participa
     <div className="flex-1 flex flex-col h-full bg-white rounded-none md:rounded-r-2xl shadow-lg">
       {/* Header mejorado del chat */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
-        <div className="flex items-center space-x-3 min-w-0 flex-1">
+        <button
+          onClick={handleHeaderClick}
+          className="flex items-center space-x-3 hover:bg-gray-50 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
+          title="Ver perfil"
+        >
           <div className="relative flex-shrink-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-gray-200 relative">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all relative">
               {(() => {
                 const otherParticipant = getOtherParticipant();
                 return otherParticipant?.avatar ? (
@@ -412,8 +426,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
             </div>
           </div>
 
-          <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-gray-900 text-base truncate">
+          <div className="min-w-0">
+            <h3 className="font-semibold text-gray-900 text-base truncate group-hover:text-blue-600 transition-colors">
               {conversationName || (() => {
                 const otherParticipant = getOtherParticipant();
                 return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
@@ -424,7 +438,14 @@ export default function ChatWindow({ conversationId, conversationName, participa
               <span>Estado no disponible</span>
             </p>
           </div>
-        </div>
+
+          {/* Indicador visual de que es clickeable */}
+          <div className="flex-shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </button>
 
         <div className="flex items-center space-x-1 flex-shrink-0">
           <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
@@ -601,6 +622,6 @@ export default function ChatWindow({ conversationId, conversationName, participa
           </div>
         </form>
       </div>
-    </div>
+    </div >
   );
 }
