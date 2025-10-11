@@ -37,7 +37,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
     if (initialPosts.length === 0) {
       loadInitialPosts();
     }
-  }, [username]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [username, loadInitialPosts]);
 
   const loadInitialPosts = useCallback(async () => {
     try {

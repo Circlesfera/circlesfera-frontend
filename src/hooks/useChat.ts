@@ -56,11 +56,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
     }
   });
 
-  // Cargar mensajes iniciales
-  useEffect(() => {
-    loadInitialMessages();
-  }, [conversationId]); // eslint-disable-line react-hooks/exhaustive-deps
-
+  // Declarar loadInitialMessages ANTES del useEffect que lo usa
   const loadInitialMessages = useCallback(async () => {
     if (!token) return;
 
@@ -84,6 +80,11 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
       setLoading(false);
     }
   }, [conversationId, token]);
+
+  // Cargar mensajes iniciales
+  useEffect(() => {
+    loadInitialMessages();
+  }, [loadInitialMessages]);
 
   // Cargar más mensajes (paginación hacia arriba)
   const loadMore = useCallback(async () => {

@@ -64,9 +64,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
     observer.observe(imgRef.current);
 
     return () => observer.disconnect();
-    // isInView is intentionally not in deps - we only want to observe once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src]);
+  }, [isInView, src]); // isInView agregado - el guard if (!isInView) previene ejecución innecesaria
 
   const handleLoad = () => {
     setIsLoaded(true);
@@ -112,9 +110,8 @@ const LazyImage: React.FC<LazyImageProps> = ({
         height={height}
         onLoad={handleLoad}
         onError={handleError}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.3 }}

@@ -68,8 +68,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
     if (user && token && !authLoading) {
       fetchComments();
     }
-    // eslint-disable-next-line
-  }, [postId, user, token, authLoading]);
+  }, [postId, user, token, authLoading, fetchComments]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
