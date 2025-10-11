@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { getTrendingReels, Reel } from '@/services/reelService';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import { getTrendingPosts, Post } from '@/services/postService';
-import { Video, Clock, TrendingUp, Users } from 'lucide-react';
+import { Video, Clock, TrendingUp, Users, Tv, Radio } from 'lucide-react';
 import logger from '@/utils/logger';
 
 export default function ExplorePage() {
@@ -321,6 +321,68 @@ export default function ExplorePage() {
               >
                 Buscar
               </Button>
+            </Card>
+          </div>
+        </div>
+
+        {/* Sección de CSTV y Live */}
+        <div className="mb-8">
+          <div className="flex items-center mb-6">
+            <Radio className="w-6 h-6 text-blue-600 mr-3" />
+            <h2 className="text-2xl font-bold text-gray-900">Contenido en Vivo</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* CSTV */}
+            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer group" onClick={() => router.push('/cstv')}>
+              <div className="flex items-start space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Tv className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <h3 className="font-bold text-gray-900 text-lg">CSTV</h3>
+                    <span className="px-2 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold rounded-full">
+                      ✨ NUEVO
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">
+                    Descubre contenido exclusivo de CSTV, entrevistas, programas especiales y mucho más
+                  </p>
+                  <div className="flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
+                    <span>Explorar CSTV</span>
+                    <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Live */}
+            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer group" onClick={() => router.push('/live')}>
+              <div className="flex items-start space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Radio className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <h3 className="font-bold text-gray-900 text-lg">En Vivo</h3>
+                    <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse">
+                      🔴 LIVE
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">
+                    Únete a transmisiones en vivo, eventos especiales y contenido en tiempo real
+                  </p>
+                  <div className="flex items-center text-red-600 text-sm font-medium group-hover:text-red-700">
+                    <span>Ver Transmisiones</span>
+                    <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </Card>
           </div>
         </div>
