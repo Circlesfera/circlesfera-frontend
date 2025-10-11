@@ -204,3 +204,9 @@ export const getUsersWithStories = async (): Promise<UsersWithStoriesResponse> =
   const res = await api.get('/stories/users');
   return res.data;
 };
+
+// Registrar visualización de una story
+export const viewStory = async (storyId: string): Promise<{ success: boolean; viewsCount: number }> => {
+  const res = await api.post(`/stories/${storyId}/view`);
+  return res.data;
+};

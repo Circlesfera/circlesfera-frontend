@@ -254,3 +254,13 @@ export const unsaveReel = async (reelId: string): Promise<{ success: boolean; me
     throw error;
   }
 };
+
+// Registrar visualización de un reel
+export const viewReel = async (reelId: string): Promise<{ success: boolean; viewsCount: number }> => {
+  try {
+    const response = await api.post(`/reels/${reelId}/view`);
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};
