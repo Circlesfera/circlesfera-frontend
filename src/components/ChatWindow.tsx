@@ -6,6 +6,7 @@ import { getConversations } from '@/services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
 import MessageSkeleton from './MessageSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getMessageSocketService } from '@/services/messageSocketService';
 import logger from '@/utils/logger';
 
 // Iconos SVG
@@ -68,8 +69,15 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [conversationInfo, setConversationInfo] = useState<any>(null);
+  const [isUserOnline, setIsUserOnline] = useState(false);
+  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState('');
+  const [messageMenuOpen, setMessageMenuOpen] = useState<string | null>(null);
+  const messageSocketService = getMessageSocketService();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Obtener información de la conversación
   const fetchConversationInfo = useCallback(async () => {
@@ -147,6 +155,101 @@ export default function ChatWindow({ conversationId, conversationName, participa
   useEffect(() => {
     fetchConversationInfo();
   }, [fetchConversationInfo]);
+
+  // Socket.IO: Unirse a la conversación y escuchar eventos
+  useEffect(() => {
+    if (!conversationId) return;
+
+    // Unirse a la conversación
+    messageSocketService.joinConversation(conversationId);
+
+    // Listener para nuevos mensajes
+    const handleNewMessage = (message: Message) => {
+      setMessages(prev => [...prev, message]);
+      // Scroll automático al nuevo mensaje
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    };
+
+    // Listener para mensaje editado
+    const handleMessageEdited = (data: { messageId: string; content: string }) => {
+      setMessages(prev => prev.map(msg =>
+        msg._id === data.messageId ? { ...msg, content: { ...msg.content, text: data.content }, isEdited: true } : msg
+      ));
+    };
+
+    // Listener para mensaje eliminado
+    const handleMessageDeleted = (data: { messageId: string; deletedFor: 'me' | 'everyone' }) => {
+      if (data.deletedFor === 'everyone') {
+        setMessages(prev => prev.filter(msg => msg._id !== data.messageId));
+      } else {
+        // Marcar como eliminado solo para mí
+        setMessages(prev => prev.map(msg =>
+          msg._id === data.messageId ? { ...msg, deletedForMe: true } : msg
+        ));
+      }
+    };
+
+    // Listener para typing
+    const handleUserTyping = (data: { userId: string; username: string; conversationId: string }) => {
+      if (data.conversationId === conversationId && data.userId !== user?._id) {
+        setTypingUsers(prev => new Set(prev).add(data.username));
+      }
+    };
+
+    const handleUserStoppedTyping = (data: { userId: string; conversationId: string }) => {
+      if (data.conversationId === conversationId) {
+        setTypingUsers(prev => {
+          const newSet = new Set(prev);
+          // Necesitamos el username para eliminarlo, usaremos el userId por ahora
+          return newSet;
+        });
+      }
+    };
+
+    // Listener para estado online/offline
+    const handleUserOnline = (data: { userId: string }) => {
+      const otherParticipant = getOtherParticipant();
+      if (otherParticipant && otherParticipant._id === data.userId) {
+        setIsUserOnline(true);
+      }
+    };
+
+    const handleUserOffline = (data: { userId: string }) => {
+      const otherParticipant = getOtherParticipant();
+      if (otherParticipant && otherParticipant._id === data.userId) {
+        setIsUserOnline(false);
+      }
+    };
+
+    // Registrar listeners
+    messageSocketService.on('new_message', handleNewMessage);
+    messageSocketService.on('message:edited', handleMessageEdited);
+    messageSocketService.on('message:deleted', handleMessageDeleted);
+    messageSocketService.on('user_typing', handleUserTyping);
+    messageSocketService.on('user_stopped_typing', handleUserStoppedTyping);
+    messageSocketService.on('user_online', handleUserOnline);
+    messageSocketService.on('user_offline', handleUserOffline);
+
+    // Verificar estado inicial
+    const otherParticipant = getOtherParticipant();
+    if (otherParticipant) {
+      setIsUserOnline(messageSocketService.isUserOnline(otherParticipant._id));
+    }
+
+    // Cleanup
+    return () => {
+      messageSocketService.leaveConversation(conversationId);
+      messageSocketService.off('new_message', handleNewMessage);
+      messageSocketService.off('message:edited', handleMessageEdited);
+      messageSocketService.off('message:deleted', handleMessageDeleted);
+      messageSocketService.off('user_typing', handleUserTyping);
+      messageSocketService.off('user_stopped_typing', handleUserStoppedTyping);
+      messageSocketService.off('user_online', handleUserOnline);
+      messageSocketService.off('user_offline', handleUserOffline);
+    };
+  }, [conversationId, messageSocketService, user]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,6 +395,54 @@ export default function ChatWindow({ conversationId, conversationName, participa
     }
   };
 
+  // Funciones para editar y borrar mensajes
+  const handleEditMessage = (messageId: string, currentText: string) => {
+    setEditingMessageId(messageId);
+    setEditingText(currentText);
+    setMessageMenuOpen(null);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingMessageId && editingText.trim()) {
+      messageSocketService.editMessage(editingMessageId, editingText.trim());
+      setEditingMessageId(null);
+      setEditingText('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditingText('');
+  };
+
+  const handleDeleteMessage = (messageId: string, deleteFor: 'me' | 'everyone') => {
+    messageSocketService.deleteMessage(messageId, deleteFor);
+    setMessageMenuOpen(null);
+  };
+
+  // Manejar indicador de escritura
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+
+    // Enviar evento de typing
+    if (e.target.value.trim()) {
+      messageSocketService.startTyping(conversationId);
+
+      // Detener typing después de 3 segundos de inactividad
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      typingTimeoutRef.current = setTimeout(() => {
+        messageSocketService.stopTyping(conversationId);
+      }, 3000);
+    } else {
+      messageSocketService.stopTyping(conversationId);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    }
+  };
+
   const renderMessage = (message: Message) => {
     const isOwnMessage = message.sender._id === user?._id;
     const isTextMessage = message.type === 'text';
@@ -330,68 +481,159 @@ export default function ChatWindow({ conversationId, conversationName, participa
           )}
 
           {/* Contenido del mensaje - Optimizado para móvil */}
-          <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${isOwnMessage
-            ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-            : 'bg-white border border-gray-200'
-            }`}>
-            {isTextMessage && (
-              <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content.text}</div>
-            )}
+          <div className={`relative group ${isOwnMessage ? 'ml-auto' : 'mr-auto'}`}>
+            {/* Menú de opciones del mensaje */}
+            {isOwnMessage && isTextMessage && (
+              <div className="absolute -left-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => setMessageMenuOpen(messageMenuOpen === message._id ? null : message._id)}
+                  className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+                  title="Opciones"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                  </svg>
+                </button>
 
-            {isImageMessage && (
-              <div className="space-y-2">
-                <Image
-                  src={message.content.image?.url || '/default-image.png'}
-                  alt={message.content.image?.alt || "imagen"}
-                  width={300}
-                  height={300}
-                  className="rounded-lg max-w-full h-auto"
-                />
-                {message.content.image?.alt && (
-                  <div className="text-xs opacity-80">{message.content.image.alt}</div>
-                )}
+                {/* Dropdown de opciones */}
+                <AnimatePresence>
+                  {messageMenuOpen === message._id && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                      className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 min-w-[160px]"
+                    >
+                      <button
+                        onClick={() => handleEditMessage(message._id, message.content.text || '')}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        <span>Editar</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteMessage(message._id, 'me')}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span>Borrar para mí</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteMessage(message._id, 'everyone')}
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span>Borrar para todos</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
 
-            {isVideoMessage && (
-              <div className="space-y-2">
-                <video
-                  src={message.content.video?.url}
-                  poster={message.content.video?.thumbnail}
-                  controls
-                  className="rounded-lg max-w-full h-auto"
-                />
-              </div>
-            )}
-
-            {isLocationMessage && (
-              <div className="space-y-2">
-                <div className="bg-gray-100 rounded-lg p-2 sm:p-3">
-                  <div className="flex items-center space-x-2 mb-1 sm:mb-2">
-                    <LocationIcon />
-                    <span className="font-medium text-xs sm:text-sm">
-                      {message.content.location?.name || 'Ubicación'}
-                    </span>
-                  </div>
-                  {message.content.location?.address && (
-                    <div className="text-xs text-gray-600">
-                      {message.content.location.address}
+            <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${isOwnMessage
+              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+              : 'bg-white border border-gray-200'
+              }`}>
+              {isTextMessage && (
+                <div>
+                  {editingMessageId === message._id ? (
+                    // Modo de edición
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={editingText}
+                        onChange={(e) => setEditingText(e.target.value)}
+                        className="w-full px-2 py-1 text-xs sm:text-sm border border-white/20 rounded bg-white/10 text-white placeholder-white/60"
+                        placeholder="Editar mensaje..."
+                        autoFocus
+                      />
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={handleSaveEdit}
+                          className="px-2 py-1 bg-white text-blue-600 text-xs rounded hover:bg-gray-100"
+                        >
+                          Guardar
+                        </button>
+                        <button
+                          onClick={handleCancelEdit}
+                          className="px-2 py-1 bg-white/20 text-white text-xs rounded hover:bg-white/30"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">
+                      {message.content.text}
+                      {message.isEdited && (
+                        <span className="ml-2 text-xs opacity-70 italic">(editado)</span>
+                      )}
                     </div>
                   )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Timestamp - Optimizado para móvil */}
-            <div className={`text-xs mt-1 ${isOwnMessage ? 'text-blue-100' : 'text-gray-500'
-              }`}>
-              {new Date(message.createdAt).toLocaleTimeString('es-ES', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {isImageMessage && (
+                <div className="space-y-2">
+                  <Image
+                    src={message.content.image?.url || '/default-image.png'}
+                    alt={message.content.image?.alt || "imagen"}
+                    width={300}
+                    height={300}
+                    className="rounded-lg max-w-full h-auto"
+                  />
+                  {message.content.image?.alt && (
+                    <div className="text-xs opacity-80">{message.content.image.alt}</div>
+                  )}
+                </div>
+              )}
+
+              {isVideoMessage && (
+                <div className="space-y-2">
+                  <video
+                    src={message.content.video?.url}
+                    poster={message.content.video?.thumbnail}
+                    controls
+                    className="rounded-lg max-w-full h-auto"
+                  />
+                </div>
+              )}
+
+              {isLocationMessage && (
+                <div className="space-y-2">
+                  <div className="bg-gray-100 rounded-lg p-2 sm:p-3">
+                    <div className="flex items-center space-x-2 mb-1 sm:mb-2">
+                      <LocationIcon />
+                      <span className="font-medium text-xs sm:text-sm">
+                        {message.content.location?.name || 'Ubicación'}
+                      </span>
+                    </div>
+                    {message.content.location?.address && (
+                      <div className="text-xs text-gray-600">
+                        {message.content.location.address}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Timestamp - Optimizado para móvil */}
+              <div className={`text-xs mt-1 ${isOwnMessage ? 'text-blue-100' : 'text-gray-500'
+                }`}>
+                {new Date(message.createdAt).toLocaleTimeString('es-ES', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
             </div>
           </div>
-        </div>
       </motion.li>
     );
   };
@@ -433,9 +675,15 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
               })()}
             </h3>
-            <p className="text-xs text-gray-500 flex items-center space-x-1">
-              <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-              <span>Estado no disponible</span>
+            <p className="text-xs flex items-center space-x-1">
+              <motion.span
+                className={`w-2 h-2 rounded-full ${isUserOnline ? 'bg-green-500' : 'bg-gray-400'}`}
+                animate={isUserOnline ? { scale: [1, 1.2, 1] } : {}}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <span className={isUserOnline ? 'text-green-600 font-medium' : 'text-gray-500'}>
+                {isUserOnline ? 'En línea' : 'Desconectado'}
+              </span>
             </p>
           </div>
 
@@ -510,6 +758,37 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 {messages.map(renderMessage)}
               </AnimatePresence>
             </ul>
+
+            {/* Indicador de "escribiendo..." */}
+            {typingUsers.size > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="flex items-center space-x-2 px-4 py-2"
+              >
+                <div className="flex space-x-1">
+                  <motion.span
+                    className="w-2 h-2 bg-gray-400 rounded-full"
+                    animate={{ y: [-2, 2, -2] }}
+                    transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                  />
+                  <motion.span
+                    className="w-2 h-2 bg-gray-400 rounded-full"
+                    animate={{ y: [-2, 2, -2] }}
+                    transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                  />
+                  <motion.span
+                    className="w-2 h-2 bg-gray-400 rounded-full"
+                    animate={{ y: [-2, 2, -2] }}
+                    transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                  />
+                </div>
+                <span className="text-sm text-gray-500">
+                  {Array.from(typingUsers).join(', ')} {typingUsers.size > 1 ? 'están' : 'está'} escribiendo...
+                </span>
+              </motion.div>
+            )}
 
             <div ref={messagesEndRef} />
           </>
@@ -593,7 +872,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
           <div className="flex-1 min-w-0 relative">
             <textarea
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={handleTextChange}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all text-gray-900 placeholder:text-gray-500"
