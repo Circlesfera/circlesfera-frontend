@@ -220,8 +220,12 @@ export const useLiveStreamViewers = (streamId: string | null) => {
         total: result.totalViewers,
         peak: result.peakViewers,
       });
+      logger.debug('Viewer added:', { streamId });
     } catch (err) {
-
+      logger.error('Error adding viewer:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        streamId
+      });
     }
   }, [streamId]);
 
@@ -235,8 +239,12 @@ export const useLiveStreamViewers = (streamId: string | null) => {
         total: result.totalViewers,
         peak: result.peakViewers,
       });
+      logger.debug('Viewer removed:', { streamId });
     } catch (err) {
-
+      logger.error('Error removing viewer:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        streamId
+      });
     }
   }, [streamId]);
 

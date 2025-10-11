@@ -38,8 +38,11 @@ export const useLiveComments = (streamId: string | null, filters: LiveCommentFil
       if (response.data.length > 0) {
         lastCommentRef.current = response.data[response.data.length - 1] || null;
       }
+      logger.debug('Live comments loaded:', { count: response.data.length, streamId });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error cargando comentarios');
+      const errorMessage = err instanceof Error ? err.message : 'Error cargando comentarios';
+      setError(errorMessage);
+      logger.error('Error loading live comments:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
     } finally {
       setLoading(false);
     }
@@ -67,8 +70,11 @@ export const useLiveComments = (streamId: string | null, filters: LiveCommentFil
       if (response.data.length > 0) {
         lastCommentRef.current = response.data[response.data.length - 1] || null;
       }
+      logger.debug('More live comments loaded:', { count: response.data.length, streamId });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error cargando más comentarios');
+      const errorMessage = err instanceof Error ? err.message : 'Error cargando más comentarios';
+      setError(errorMessage);
+      logger.error('Error loading more live comments:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
     } finally {
       setLoading(false);
     }
@@ -87,9 +93,13 @@ export const useLiveComments = (streamId: string | null, filters: LiveCommentFil
       if (response.data.length > 0) {
         setComments(prev => [...response.data, ...prev]);
         lastCommentRef.current = response.data[response.data.length - 1] || null;
+        logger.debug('Live comments refreshed:', { count: response.data.length, streamId });
       }
     } catch (err) {
-
+      logger.error('Error refreshing live comments:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        streamId
+      });
     }
   }, [streamId, filters]);
 
@@ -135,9 +145,12 @@ export const useCreateLiveComment = () => {
       setError(null);
 
       const comment = await liveCommentService.createComment(streamId, data);
+      logger.info('Live comment created:', { streamId, commentId: comment._id });
       return comment;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creando comentario');
+      const errorMessage = err instanceof Error ? err.message : 'Error creando comentario';
+      setError(errorMessage);
+      logger.error('Error creating live comment:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
       return null;
     } finally {
       setLoading(false);
@@ -169,9 +182,12 @@ export const useLiveCommentReactions = () => {
         commentId,
         reactionType
       );
+      logger.debug('Reaction added to live comment:', { streamId, commentId, reactionType });
       return result;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error reaccionando al comentario');
+      const errorMessage = err instanceof Error ? err.message : 'Error reaccionando al comentario';
+      setError(errorMessage);
+      logger.error('Error adding reaction to live comment:', { error: err instanceof Error ? err.message : 'Unknown error', streamId, commentId });
       return null;
     } finally {
       setLoading(false);
@@ -187,9 +203,12 @@ export const useLiveCommentReactions = () => {
       setError(null);
 
       const result = await liveCommentService.removeReaction(streamId, commentId);
+      logger.debug('Reaction removed from live comment:', { streamId, commentId });
       return result;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error removiendo reacción');
+      const errorMessage = err instanceof Error ? err.message : 'Error removiendo reacción';
+      setError(errorMessage);
+      logger.error('Error removing reaction from live comment:', { error: err instanceof Error ? err.message : 'Unknown error', streamId, commentId });
       return null;
     } finally {
       setLoading(false);
@@ -238,9 +257,12 @@ export const useLiveCommentModeration = () => {
         action,
         reason
       );
+      logger.info('Live comment moderated:', { streamId, commentId, action });
       return result;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error moderando comentario');
+      const errorMessage = err instanceof Error ? err.message : 'Error moderando comentario';
+      setError(errorMessage);
+      logger.error('Error moderating live comment:', { error: err instanceof Error ? err.message : 'Unknown error', streamId, commentId, action });
       return null;
     } finally {
       setLoading(false);
@@ -268,8 +290,11 @@ export const useLiveCommentStats = (streamId: string | null) => {
 
       const statsData = await liveCommentService.getCommentStats(streamId);
       setStats(statsData);
+      logger.debug('Live comment stats loaded:', { streamId });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error cargando estadísticas');
+      const errorMessage = err instanceof Error ? err.message : 'Error cargando estadísticas';
+      setError(errorMessage);
+      logger.error('Error loading live comment stats:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
     } finally {
       setLoading(false);
     }
