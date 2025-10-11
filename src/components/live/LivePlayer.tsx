@@ -7,6 +7,7 @@ import { LiveChat } from './LiveChat';
 import { LiveCapture } from './LiveCapture';
 import { useLiveStreamViewers } from '@/hooks/useLiveStream';
 import type { LiveStream } from '@/types/live';
+import logger from '@/utils/logger';
 
 interface LivePlayerProps {
   stream: LiveStream;
@@ -66,7 +67,7 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
     logger.info('Recording ready for CSTV upload:', {
       size: blob.size,
       type: blob.type,
-      streamId
+      streamId: stream._id
     });
     // TODO: Implementar subida automática a CSTV
     // const formData = new FormData();
