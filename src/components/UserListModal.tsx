@@ -38,9 +38,9 @@ export default function UserListModal({ open, onClose, users, title, currentUser
 
   // Función para manejar cambios en el estado de seguir
   const handleFollowChange = (userId: string, isFollowing: boolean) => {
-    setLocalUsers(prevUsers => 
-      prevUsers.map(user => 
-        user._id === userId 
+    setLocalUsers(prevUsers =>
+      prevUsers.map(user =>
+        user._id === userId
           ? { ...user, isFollowing }
           : user
       )
@@ -50,9 +50,9 @@ export default function UserListModal({ open, onClose, users, title, currentUser
   // Filtrar usuarios basado en el término de búsqueda
   const filteredUsers = useMemo(() => {
     if (!searchTerm.trim()) return localUsers;
-    
+
     const term = searchTerm.toLowerCase();
-    return localUsers.filter(user => 
+    return localUsers.filter(user =>
       user.username.toLowerCase().includes(term) ||
       user.fullName?.toLowerCase().includes(term) ||
       user.bio?.toLowerCase().includes(term)
@@ -70,8 +70,8 @@ export default function UserListModal({ open, onClose, users, title, currentUser
             <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
             <p className="text-sm text-gray-500 mt-1">{localUsers.length} usuario{localUsers.length !== 1 ? 's' : ''}</p>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-all duration-200 hover:scale-105"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,8 +112,8 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                 {searchTerm ? 'No se encontraron resultados' : 'No hay usuarios para mostrar'}
               </h3>
               <p className="text-gray-500 text-sm text-center">
-                {searchTerm 
-                  ? 'Intenta con otros términos de búsqueda' 
+                {searchTerm
+                  ? 'Intenta con otros términos de búsqueda'
                   : 'Este usuario aún no tiene seguidores o no sigue a nadie'
                 }
               </p>
@@ -122,20 +122,20 @@ export default function UserListModal({ open, onClose, users, title, currentUser
             <div className="overflow-y-auto max-h-96 px-6 pb-6">
               <div className="space-y-3">
                 {filteredUsers.map(user => (
-                  <div 
-                    key={user._id} 
+                  <div
+                    key={user._id}
                     className="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-200 hover:shadow-md group"
                   >
                     {/* Avatar - Clickeable para navegar al perfil */}
-                    <div 
+                    <div
                       className="relative flex-shrink-0 cursor-pointer"
                       onClick={() => handleUserClick(user.username)}
                     >
                       {user.avatar ? (
-                        <img 
-                          src={user.avatar} 
+                        <img
+                          src={user.avatar}
                           alt={`Avatar de ${user.username}`}
-                          className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200" 
+                          className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200"
                         />
                       ) : (
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-lg border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200">
@@ -153,7 +153,7 @@ export default function UserListModal({ open, onClose, users, title, currentUser
                     </div>
 
                     {/* User Info - Clickeable para navegar al perfil */}
-                    <div 
+                    <div
                       className="flex-1 min-w-0 cursor-pointer"
                       onClick={() => handleUserClick(user.username)}
                     >
@@ -175,10 +175,10 @@ export default function UserListModal({ open, onClose, users, title, currentUser
 
                     {/* Follow Button */}
                     <div className="flex-shrink-0">
-                      <FollowButton 
-                        userId={user._id} 
-                        initialFollowing={user.isFollowing || currentUserFollowing.includes(user._id)} 
-                        onChange={(isFollowing) => handleFollowChange(user._id, isFollowing)} 
+                      <FollowButton
+                        userId={user._id}
+                        initialFollowing={user.isFollowing || currentUserFollowing.includes(user._id)}
+                        onChangeAction={(isFollowing: boolean) => handleFollowChange(user._id, isFollowing)}
                       />
                     </div>
                   </div>

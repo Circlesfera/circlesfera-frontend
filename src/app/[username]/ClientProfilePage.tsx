@@ -81,11 +81,11 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   // Función para enviar mensaje directo
   const handleSendMessage = useCallback(async () => {
     if (!profile || isOwnProfile) return;
-    
+
     try {
       // Crear conversación directa
       const response = await createDirectConversation(profile._id);
-      
+
       if (response.success) {
         // Redirigir a la página de mensajes con la conversación seleccionada
         router.push(`/messages?conversation=${response.conversation._id}`);
@@ -154,22 +154,22 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     if (process.env.NODE_ENV === 'development') {
 
     }
-    
+
     // Actualizar el estado local inmediatamente
     setIsFollowingProfile(isFollowing);
-    
+
     // Actualizar el estado del perfil para reflejar el cambio
     setProfileData(prevData => {
       if (!prevData) return prevData;
       return {
         ...prevData,
         isFollowing,
-        followersCount: isFollowing 
-          ? (prevData.followersCount || 0) + 1 
+        followersCount: isFollowing
+          ? (prevData.followersCount || 0) + 1
           : Math.max((prevData.followersCount || 0) - 1, 0)
       };
     });
-    
+
     // Actualizar el estado del usuario actual para reflejar el cambio
     if (user) {
       try {
@@ -181,7 +181,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         }
       }
     }
-    
+
     // Recargar los datos del perfil para actualizar contadores
     await reloadProfile();
   }, [reloadProfile, user, refreshUser, profileData?.username, isFollowingProfile]);
@@ -201,7 +201,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       setFollowersList([]);
     }
   };
-  
+
   const handleShowFollowing = async () => {
     if (!profileData?._id) return;
     setShowFollowing(true);
@@ -248,9 +248,9 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           onMessageClick={handleSendMessage}
           followButton={!isOwnProfile ? (
             <div className="flex flex-col gap-2">
-              <ProfileFollowButton 
-                userId={profileData._id} 
-                username={profileData.username} 
+              <ProfileFollowButton
+                userId={profileData._id}
+                username={profileData.username}
                 isFollowing={isFollowingProfile}
                 onFollowChange={handleFollowChange}
               />
@@ -273,22 +273,22 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-purple-50/20 rounded-xl"></div>
               <div className="relative bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100/50 p-4 sm:p-6">
-                <EditProfileForm 
-                  profile={profileData} 
-                  onSave={async (updatedData) => { 
+                <EditProfileForm
+                  profile={profileData}
+                  onSave={async (updatedData) => {
                     try {
                       // Actualizar el perfil usando el servicio
                       await updateUserProfile(updatedData);
                       // Actualizar el estado local
                       setProfileData(prev => ({ ...prev, ...updatedData }));
-                      
+
                       // Si se actualizó el avatar, actualizar también el usuario en el contexto de autenticación
                       if (updatedData.avatar && user) {
                         await refreshUser();
                       }
-                      
+
                       // Cerrar el modal
-                      setShowEdit(false); 
+                      setShowEdit(false);
                       // Recargar el perfil desde el servidor
                       await reloadProfile();
                     } catch (error) {
@@ -296,8 +296,8 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                       // Mostrar error al usuario
                       alert('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
                     }
-                  }} 
-                  onCancel={() => setShowEdit(false)} 
+                  }}
+                  onCancel={() => setShowEdit(false)}
                 />
               </div>
             </div>
@@ -305,9 +305,9 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         )}
 
         {/* Pestañas de contenido modernas */}
-        <ModernProfileTabs 
-          username={profileData.username} 
-          isOwnProfile={isOwnProfile || false} 
+        <ModernProfileTabs
+          username={profileData.username}
+          isOwnProfile={isOwnProfile || false}
         />
       </div>
 
@@ -330,20 +330,20 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   );
 }
 
-function ProfileFollowButton({ 
-  userId, 
-  username, 
-  isFollowing, 
-  onFollowChange 
-}: { 
-  userId: string; 
-  username: string; 
+function ProfileFollowButton({
+  userId,
+  username,
+  isFollowing,
+  onFollowChange
+}: {
+  userId: string;
+  username: string;
   isFollowing: boolean;
   onFollowChange: (isFollowing: boolean) => void;
 }) {
   const { user } = useAuth();
-  
+
   if (!user || user.username === username) return null;
-  
-  return <FollowButton userId={userId} initialFollowing={isFollowing} onChange={onFollowChange} />;
-} 
+
+  return <FollowButton userId={userId} initialFollowing={isFollowing} onChangeAction={onFollowChange} />;
+}
