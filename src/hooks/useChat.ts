@@ -13,6 +13,7 @@ interface UseChatReturn {
   loading: boolean;
   sending: boolean;
   hasMore: boolean;
+  error: string | null;
   loadMore: () => Promise<void>;
   sendMessage: (text: string) => Promise<void>;
   markAsRead: (messageId: string) => void;
@@ -31,6 +32,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
   const [sending, setSending] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -87,9 +89,9 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
   const loadMore = useCallback(async () => {
     if (loading || !hasMore || !token) return;
 
+    const nextPage = page + 1;
     try {
       setLoading(true);
-      const nextPage = page + 1;
       const response = await getMessages(conversationId, token, nextPage);
 
       setMessages(prev => [...response.messages.reverse(), ...prev]);
@@ -119,7 +121,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
       if (response.success) {
         // El mensaje se agregará vía WebSocket
         scrollToBottom();
-        logger.info('Chat message sent:', { conversationId, messageId: response._id });
+        logger.info('Chat message sent:', { conversationId });
       }
     } catch (sendError) {
       logger.error('Error sending chat message:', {
@@ -152,6 +154,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
     loading,
     sending,
     hasMore,
+    error,
     loadMore,
     sendMessage,
     markAsRead,
