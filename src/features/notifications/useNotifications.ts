@@ -42,16 +42,16 @@ export function useNotifications() {
   const markAsRead = useCallback(async (notificationId: string) => {
     try {
       await markNotificationAsRead(notificationId);
-      
+
       // Actualizar el estado local
-      setNotifications(prev => 
-        prev.map(notification => 
-          notification._id === notificationId 
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification._id === notificationId
             ? { ...notification, isRead: true }
             : notification
         )
       );
-      
+
       // Actualizar el conteo
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (err) {
@@ -63,12 +63,12 @@ export function useNotifications() {
   const markAllAsRead = useCallback(async () => {
     try {
       await markAllNotificationsAsRead();
-      
+
       // Actualizar el estado local
-      setNotifications(prev => 
+      setNotifications(prev =>
         prev.map(notification => ({ ...notification, isRead: true }))
       );
-      
+
       setUnreadCount(0);
     } catch (err) {
 
@@ -81,13 +81,15 @@ export function useNotifications() {
   }, [fetchNotifications]);
 
   useEffect(() => {
+    if (!user) return;
+
     fetchNotifications();
-    
-    // Actualizar cada 30 segundos
-    const interval = setInterval(fetchNotifications, 30000);
-    
+
+    // Actualizar cada 60 segundos (reducir frecuencia)
+    const interval = setInterval(fetchNotifications, 60000);
+
     return () => clearInterval(interval);
-  }, [fetchNotifications]);
+  }, [user?._id]); // Solo depende del ID del usuario
 
   return {
     notifications,

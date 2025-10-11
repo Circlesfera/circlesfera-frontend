@@ -94,7 +94,7 @@ global.IntersectionObserver = class IntersectionObserver {
     return []
   }
   unobserve() { }
-} as unknown as IntersectionObserver
+} as unknown as typeof IntersectionObserver
 
 // ✅ CORREGIDO: Tipar mock correctamente
 // Mock de ResizeObserver

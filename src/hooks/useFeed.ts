@@ -115,7 +115,7 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
     } else {
       setLoading(false)
     }
-  }, [loadInitialPosts, isAuthenticated])
+  }, [isAuthenticated]) // Remover loadInitialPosts de dependencias para evitar bucle
 
   return {
     posts,

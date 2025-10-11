@@ -2,11 +2,12 @@
 
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import NextImage from 'next/image';
 import { Card, Button, Input } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
 import { createStory } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { ArrowLeft, Camera, Image, Type, MapPin } from 'lucide-react';
+import { ArrowLeft, Camera, Image as ImageIcon, Type, MapPin } from 'lucide-react';
 import logger from '@/utils/logger';
 import { useToast } from '@/components/Toast';
 
@@ -29,7 +30,7 @@ export default function CreateStoryPage() {
   const storyTypes = [
     {
       type: 'image' as const,
-      icon: Image,
+      icon: ImageIcon,
       label: 'Imagen',
       description: 'Comparte una foto'
     },
@@ -217,11 +218,10 @@ export default function CreateStoryPage() {
                       <button
                         key={type.type}
                         onClick={() => setStoryType(type.type)}
-                        className={`p-4 rounded-lg border-2 transition-all ${
-                          storyType === type.type
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                        className={`p-4 rounded-lg border-2 transition-all ${storyType === type.type
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                          }`}
                       >
                         <type.icon className="w-8 h-8 mx-auto mb-2 text-gray-600" />
                         <p className="font-medium text-gray-900">{type.label}</p>
@@ -279,7 +279,7 @@ export default function CreateStoryPage() {
 
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                           {storyType === 'image' ? (
-                            <Image className="w-8 h-8 text-gray-400" />
+                            <ImageIcon className="w-8 h-8 text-gray-400" />
                           ) : (
                             <Camera className="w-8 h-8 text-gray-400" />
                           )}
@@ -303,9 +303,11 @@ export default function CreateStoryPage() {
                     ) : (
                       <div className="relative">
                         {storyType === 'image' ? (
-                          <img
+                          <NextImage
                             src={preview}
-                            alt="Preview"
+                            alt="Vista previa de la story"
+                            width={400}
+                            height={256}
                             className="w-full h-64 object-cover rounded-lg"
                           />
                         ) : (
@@ -376,11 +378,15 @@ export default function CreateStoryPage() {
                         <p className="text-center p-4">{formData.textContent}</p>
                       ) : preview ? (
                         storyType === 'image' ? (
-                          <img
-                            src={preview}
-                            alt="Preview"
-                            className="w-full h-full object-cover rounded-lg"
-                          />
+                          <div className="relative w-full h-full">
+                            <NextImage
+                              src={preview}
+                              alt="Vista previa de la story"
+                              fill
+                              className="object-cover rounded-lg"
+                              sizes="(max-width: 768px) 100vw, 400px"
+                            />
+                          </div>
                         ) : (
                           <video
                             src={preview}

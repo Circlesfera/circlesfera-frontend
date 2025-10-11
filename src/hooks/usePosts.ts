@@ -62,7 +62,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
     if (initialPosts.length === 0) {
       loadInitialPosts();
     }
-  }, [initialPosts.length, username, loadInitialPosts]);
+  }, [username]); // Solo depende de username, no de loadInitialPosts
 
   // Cargar más posts (paginación)
   const loadMore = useCallback(async () => {

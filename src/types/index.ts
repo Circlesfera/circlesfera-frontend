@@ -291,6 +291,8 @@ export interface LoginResponse {
   success: boolean;
   message: string;
   token: string;
+  accessToken?: string; // Backend devuelve ambos
+  refreshToken?: string;
   user: User;
 }
 

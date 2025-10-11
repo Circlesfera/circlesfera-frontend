@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, MoreHorizontal, Pin, ThumbsUp } from 'lucide-react';
 import type { LiveComment as LiveCommentType } from '@/types/live';
@@ -93,9 +94,11 @@ export function LiveComment({
       <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 transition-colors">
         {/* Avatar */}
         <div className="flex-shrink-0">
-          <img
+          <Image
             src={comment.user.avatar || '/default-avatar.png'}
-            alt={comment.user.username}
+            alt={`Avatar de ${comment.user.username}`}
+            width={32}
+            height={32}
             className="w-8 h-8 rounded-full object-cover"
           />
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Post } from '@/services/postService';
 import { formatRelativeTime, formatNumber } from '@/utils/format';
 import { Card } from '@/design-system/Card';
@@ -137,10 +138,12 @@ export default function FeedCard({
 
       {/* Media */}
       {post.content.images && post.content.images.length > 0 && post.content.images[0] && !imageError && (
-        <div className="relative">
-          <img
+        <div className="relative w-full">
+          <Image
             src={post.content.images[0].url}
-            alt="Post content"
+            alt={post.caption || post.content.images[0].alt || "Contenido del post"}
+            width={600}
+            height={384}
             className="w-full h-auto max-h-96 object-cover"
             onError={() => setImageError(true)}
           />
