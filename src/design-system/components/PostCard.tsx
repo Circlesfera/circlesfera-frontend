@@ -19,6 +19,7 @@ export interface PostCardProps {
       type: 'image' | 'video' | 'text';
       url?: string;
       text?: string;
+      aspectRatio?: '1:1' | '4:5';
     };
     caption?: string;
     likes: number;
@@ -212,7 +213,10 @@ const PostCard: React.FC<PostCardProps> = ({
         className="relative cursor-pointer"
         onClick={() => onPostClick?.(post.id, post.user.username)}
       >
-        <div className="relative w-full aspect-video overflow-hidden bg-black">
+        <div className={cn(
+          "relative w-full overflow-hidden bg-black",
+          post.content.aspectRatio === '4:5' ? 'aspect-[4/5]' : 'aspect-square'
+        )}>
           {post.content.type === 'image' && post.content.url && (
             <Image
               src={post.content.url}

@@ -26,6 +26,7 @@ export interface Post {
       height?: number;
     };
     text?: string;
+    aspectRatio?: '1:1' | '4:5';
   };
   caption: string;
   location?: {

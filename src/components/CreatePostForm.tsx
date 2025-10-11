@@ -51,6 +51,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [aspectRatio, setAspectRatio] = useState<'1:1' | '4:5'>('1:1');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (selectedFile: File) => {
@@ -79,10 +80,31 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       setFile(selectedFile);
       setError('');
 
-      // Crear preview
+      // Crear preview y detectar aspect ratio
       const reader = new FileReader();
       reader.onload = (e) => {
-        setPreview(e.target?.result as string);
+        const result = e.target?.result as string;
+        setPreview(result);
+
+        // Detectar aspect ratio de la imagen
+        if (postType === 'image') {
+          const img = document.createElement('img');
+          img.onload = () => {
+            const ratio = img.width / img.height;
+
+            // Determinar el aspect ratio más cercano
+            if (Math.abs(ratio - 1) < 0.1) {
+              setAspectRatio('1:1'); // Cuadrado
+            } else if (Math.abs(ratio - 0.8) < 0.1) {
+              setAspectRatio('4:5'); // Vertical
+            } else if (ratio < 1) {
+              setAspectRatio('4:5'); // Por defecto vertical
+            } else {
+              setAspectRatio('1:1'); // Por defecto cuadrado
+            }
+          };
+          img.src = result;
+        }
       };
       reader.readAsDataURL(selectedFile);
     }
@@ -179,7 +201,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
         </div>
 
         {/* Selector de tipo de publicación */}
-        <div className="flex space-x-2 mb-6">
+        <div className="flex space-x-2 mb-4">
           <button
             type="button"
             onClick={() => setPostType('image')}
@@ -204,6 +226,81 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             <span className="font-medium">Video</span>
           </button>
         </div>
+
+        {/* Selector visual de aspect ratio - Solo para imágenes */}
+        {postType === 'image' && (
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Formato de la publicación
+            </label>
+            <div className="flex space-x-4">
+              {/* Opción 1:1 (Cuadrado) */}
+              <button
+                type="button"
+                onClick={() => setAspectRatio('1:1')}
+                className={`flex-1 p-4 rounded-xl border-2 transition-all ${aspectRatio === '1:1'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300 bg-white'
+                  }`}
+              >
+                <div className="flex flex-col items-center space-y-2">
+                  {/* Icono visual cuadrado */}
+                  <div className={`w-16 h-16 rounded border-2 ${aspectRatio === '1:1' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50'
+                    }`} />
+                  <div className="text-center">
+                    <div className={`font-semibold ${aspectRatio === '1:1' ? 'text-blue-700' : 'text-gray-700'}`}>
+                      Cuadrado
+                    </div>
+                    <div className="text-xs text-gray-500">1:1</div>
+                  </div>
+                  {aspectRatio === '1:1' && (
+                    <div className="flex items-center text-blue-600 text-sm">
+                      <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Seleccionado
+                    </div>
+                  )}
+                </div>
+              </button>
+
+              {/* Opción 4:5 (Vertical) */}
+              <button
+                type="button"
+                onClick={() => setAspectRatio('4:5')}
+                className={`flex-1 p-4 rounded-xl border-2 transition-all ${aspectRatio === '4:5'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300 bg-white'
+                  }`}
+              >
+                <div className="flex flex-col items-center space-y-2">
+                  {/* Icono visual vertical */}
+                  <div className={`w-12 h-16 rounded border-2 ${aspectRatio === '4:5' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50'
+                    }`} />
+                  <div className="text-center">
+                    <div className={`font-semibold ${aspectRatio === '4:5' ? 'text-blue-700' : 'text-gray-700'}`}>
+                      Vertical
+                    </div>
+                    <div className="text-xs text-gray-500">4:5</div>
+                  </div>
+                  {aspectRatio === '4:5' && (
+                    <div className="flex items-center text-blue-600 text-sm">
+                      <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Seleccionado
+                    </div>
+                  )}
+                </div>
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {aspectRatio === '1:1'
+                ? '📷 Formato clásico de Instagram - Foto cuadrada balanceada'
+                : '📱 Ocupa más espacio en el feed - Ideal para retratos y productos'}
+            </p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           {/* Área de upload de archivo */}
@@ -239,12 +336,20 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             ) : (
               <div className="relative">
                 {postType === 'image' ? (
-                  <Image src={preview} alt="Vista previa de la publicación" width={600} height={256} className="w-full h-64 object-cover rounded-lg" />
+                  <div className={`relative mx-auto ${aspectRatio === '1:1' ? 'aspect-square max-w-md' : 'aspect-[4/5] max-w-sm'}`}>
+                    <Image
+                      src={preview}
+                      alt="Vista previa de la publicación"
+                      width={600}
+                      height={aspectRatio === '1:1' ? 600 : 750}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  </div>
                 ) : (
                   <video
                     src={preview}
                     controls
-                    className="w-full h-64 object-cover rounded-lg"
+                    className="w-full max-h-96 object-contain rounded-lg"
                   />
                 )}
                 <button
@@ -253,7 +358,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                     setFile(null);
                     setPreview(null);
                   }}
-                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                  className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
                 >
                   <CloseIcon />
                 </button>

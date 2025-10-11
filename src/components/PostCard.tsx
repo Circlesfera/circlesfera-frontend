@@ -224,17 +224,32 @@ export default function PostCard({
     }
   };
 
+  // Determinar clase de aspect ratio según el aspect ratio del post
+  const getAspectRatioClass = () => {
+    const aspectRatio = post.content?.aspectRatio || '1:1';
+    switch (aspectRatio) {
+      case '1:1':
+        return 'aspect-square'; // Instagram cuadrado
+      case '4:5':
+        return 'aspect-[4/5]'; // Instagram vertical
+      default:
+        return 'aspect-square';
+    }
+  };
+
+  const aspectRatioClass = getAspectRatioClass();
+
   const renderContent = () => {
     switch (post.type) {
       case 'image':
         if (post.content.images && post.content.images.length > 1) {
           return (
             <div className="relative overflow-hidden">
-              <div className="relative">
+              <div className={`relative ${aspectRatioClass}`}>
                 <LazyImage
                   src={post.content.images[currentImageIndex]?.url || ''}
                   alt={post.content.images[currentImageIndex]?.alt || "post"}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-full object-cover"
                 />
                 {/* Indicadores de imagen */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -242,9 +257,8 @@ export default function PostCard({
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                        index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                      }`}
+                      className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                        }`}
                     />
                   ))}
                 </div>
@@ -274,11 +288,11 @@ export default function PostCard({
           );
         } else {
           return (
-            <div className="relative overflow-hidden">
+            <div className={`relative overflow-hidden ${aspectRatioClass}`}>
               <LazyImage
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
-                className="w-full h-auto object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
           );
@@ -286,12 +300,12 @@ export default function PostCard({
 
       case 'video':
         return (
-          <div className="relative overflow-hidden">
+          <div className={`relative overflow-hidden ${aspectRatioClass}`}>
             <video
               ref={videoRef}
               src={post.content.video?.url}
               poster={post.content.video?.thumbnail}
-              className="w-full h-auto object-cover"
+              className="w-full h-full object-cover"
               preload="metadata"
               onPlay={() => setIsVideoPlaying(true)}
               onPause={() => setIsVideoPlaying(false)}
@@ -384,7 +398,7 @@ export default function PostCard({
             <MoreIcon />
           </button>
 
-                    {/* Menú desplegable */}
+          {/* Menú desplegable */}
           {showMore && (
             <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
               <div className="py-1">
