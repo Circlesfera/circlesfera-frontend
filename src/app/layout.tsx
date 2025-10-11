@@ -3,6 +3,8 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import { ThemeProvider } from '@/features/theme/ThemeContext';
+import { ToastProvider } from '@/components/Toast';
+import { ToastContainer } from '@/components/Toast';
 import AppLayout from '@/components/layout/AppLayout';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import OfflineIndicator from '@/components/OfflineIndicator';
@@ -104,12 +106,15 @@ export default function RootLayout({
       <body className="antialiased">
         <ErrorBoundary>
           <ThemeProvider>
-            <AuthProvider>
-              <OfflineIndicator />
-              <AppLayout>
-                {children}
-              </AppLayout>
-            </AuthProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <OfflineIndicator />
+                <AppLayout>
+                  {children}
+                </AppLayout>
+                <ToastContainer />
+              </AuthProvider>
+            </ToastProvider>
           </ThemeProvider>
         </ErrorBoundary>
       </body>

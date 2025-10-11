@@ -6,6 +6,7 @@ import { ArrowLeft, Heart, Bookmark, Share2, Eye, Clock, User, MoreVertical } fr
 import { useRouter } from 'next/navigation';
 import { useCSTVVideo, useCSTVLikes, useCSTVSaves } from '@/hooks/useCSTV';
 import { useAuthContext } from '@/features/auth/AuthContext';
+import { useToast } from '@/components/Toast';
 
 interface CSTVVideoPageProps {
   params: Promise<{
@@ -18,6 +19,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
   const router = useRouter();
   const { user } = useAuthContext();
   const isAuthenticated = !!user;
+  const toast = useToast();
 
   const [showShareModal, setShowShareModal] = useState(false);
 
@@ -54,8 +56,8 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copiado al portapapeles');
       setShowShareModal(true);
-      // TODO: Show toast notification
       setTimeout(() => setShowShareModal(false), 2000);
     }
   };

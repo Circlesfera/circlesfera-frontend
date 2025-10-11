@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useLiveStream, useStartLiveStream, useEndLiveStream } from '@/hooks/useLiveStream';
 import { LivePlayer } from '@/components/live/LivePlayer';
 import { useAuthContext } from '@/features/auth/AuthContext';
+import { useToast } from '@/components/Toast';
 
 interface LiveStreamPageProps {
   params: Promise<{
@@ -18,6 +19,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
   const { id } = use(params);
   const router = useRouter();
   const { user } = useAuthContext();
+  const toast = useToast();
 
   const [isLiked, setIsLiked] = useState(false);
 
@@ -78,7 +80,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      // TODO: Show toast notification
+      toast.success('Link copiado al portapapeles');
     }
   };
 

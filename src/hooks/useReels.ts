@@ -157,8 +157,15 @@ export function useReels(): UseReelsReturn {
   // Implementar lógica de guardar/desguardar
   const handleSave = useCallback(async (videoId: string, isSaved: boolean) => {
     try {
-      // TODO: Implementar servicio de guardado cuando esté disponible
-      logger.info('Save/Unsave reel:', { videoId, isSaved })
+      const { saveReel, unsaveReel } = await import('@/services/reelService')
+
+      if (isSaved) {
+        await unsaveReel(videoId)
+        logger.info('Reel unsaved successfully:', { videoId })
+      } else {
+        await saveReel(videoId)
+        logger.info('Reel saved successfully:', { videoId })
+      }
 
       // Actualizar estado local
       setReels(prev => prev.map(reel =>

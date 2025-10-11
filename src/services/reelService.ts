@@ -234,3 +234,23 @@ export const getReelStats = (reel: Reel) => {
     stitchesCount: reel.stitches.length,
   };
 };
+
+// Guardar un reel
+export const saveReel = async (reelId: string): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await api.post(`/reels/${reelId}/save`);
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};
+
+// Desguardar un reel
+export const unsaveReel = async (reelId: string): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await api.delete(`/reels/${reelId}/save`);
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};
