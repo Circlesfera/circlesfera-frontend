@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { User } from '@/types';
 import { formatNumber, formatDate } from '@/utils/format';
 
@@ -50,7 +51,7 @@ export default function ModernProfileHeader({
     <div className="relative">
       {/* Hero Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/20 rounded-2xl"></div>
-      
+
       <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
           {/* Avatar Section */}
@@ -58,10 +59,12 @@ export default function ModernProfileHeader({
             <div className="relative">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100">
                 {user.avatar && !imageError ? (
-                  <img 
-                    src={user.avatar} 
+                  <Image
+                    src={user.avatar}
                     alt={`Avatar de ${user.username}`}
-                    className="w-full h-full object-cover" 
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 80px, 96px"
                     onError={() => setImageError(true)}
                     onLoad={() => setImageError(false)}
                   />
@@ -71,7 +74,7 @@ export default function ModernProfileHeader({
                   </div>
                 )}
               </div>
-              
+
               {/* Verified Badge */}
               {user.isVerified && (
                 <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-1 shadow-md">
@@ -99,13 +102,13 @@ export default function ModernProfileHeader({
                   </div>
                 )}
               </div>
-              
+
               <div className="flex items-center justify-center sm:justify-start gap-2">
                 {!isOwnProfile && (
                   <>
                     {followButton}
                     {onMessageClick && (
-                      <button 
+                      <button
                         onClick={onMessageClick}
                         className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-1.5 text-sm"
                       >
@@ -117,10 +120,10 @@ export default function ModernProfileHeader({
                     )}
                   </>
                 )}
-                
+
                 {isOwnProfile && (
                   <>
-                    <button 
+                    <button
                       onClick={onEditClick}
                       className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-1.5 text-sm"
                     >
@@ -129,8 +132,8 @@ export default function ModernProfileHeader({
                       </svg>
                       Editar
                     </button>
-                    <Link 
-                      href="/settings" 
+                    <Link
+                      href="/settings"
                       className="p-2 bg-white/80 backdrop-blur-sm text-gray-700 rounded-lg hover:bg-white transition-all duration-300 shadow-md hover:shadow-lg border border-gray-200/50"
                       title="Configuración"
                     >
@@ -155,9 +158,9 @@ export default function ModernProfileHeader({
                 </div>
               )}
               {user.website && (
-                <a 
+                <a
                   href={user.website.startsWith('http') ? user.website : `https://${user.website}`}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 text-sm"
                 >
@@ -171,15 +174,15 @@ export default function ModernProfileHeader({
 
             {/* Followers and Following */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-6 text-base font-medium mb-4">
-              <button 
-                className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105" 
+              <button
+                className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105"
                 onClick={onFollowersClick}
               >
                 <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.followers)}</span>
                 <span className="text-gray-600">seguidores</span>
               </button>
-              <button 
-                className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105" 
+              <button
+                className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105"
                 onClick={onFollowingClick}
               >
                 <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.following)}</span>

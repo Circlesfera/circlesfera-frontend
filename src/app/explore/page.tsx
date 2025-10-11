@@ -3,6 +3,7 @@
 import ProtectedRoute from '@/components/ProtectedRoute';
 import UserSearch from '@/components/UserSearch';
 import ExploreGrid from '@/components/ExploreGrid';
+import Image from 'next/image';
 import { Card, Button } from '@/design-system';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -170,10 +171,12 @@ export default function ExplorePage() {
                 >
                   <div className="aspect-[9/16] relative">
                     {post.content.images && post.content.images[0] ? (
-                      <img
-                        className="absolute inset-0 w-full h-full object-cover"
+                      <Image
+                        fill
+                        className="object-cover"
                         src={post.content.images[0].url}
                         alt={post.caption || 'Post trending'}
+                        sizes="(max-width: 768px) 50vw, 33vw"
                       />
                     ) : post.content.video ? (
                       <video
@@ -233,11 +236,13 @@ export default function ExplorePage() {
                 >
                   <div className="relative w-16 h-16 mx-auto mb-2">
                     <div className="w-full h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-600 p-0.5">
-                      <div className="w-full h-full rounded-full bg-white p-0.5">
-                        <img
+                      <div className="w-full h-full rounded-full bg-white p-0.5 relative">
+                        <Image
                           src={user.avatar || '/default-avatar.png'}
-                          alt={user.username}
-                          className="w-full h-full rounded-full object-cover"
+                          alt={`Story de ${user.username}`}
+                          fill
+                          className="rounded-full object-cover"
+                          sizes="64px"
                         />
                       </div>
                     </div>

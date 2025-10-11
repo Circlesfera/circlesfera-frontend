@@ -92,6 +92,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
             style={{ width, height }}
           >
             {blurDataURL && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={blurDataURL}
                 alt=""
@@ -103,6 +104,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
         )}
       </AnimatePresence>
 
+      {/* Usar img nativo para compatibilidad con framer-motion y lazy loading personalizado */}
       <motion.img
         src={currentSrc}
         alt={alt}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, Users, TrendingUp, Clock, Play } from 'lucide-react';
 import { useLiveStreams } from '@/hooks/useLiveStream';
@@ -107,11 +108,10 @@ export default function LivePage() {
           <div className="flex items-center space-x-4 mt-4">
             <button
               onClick={() => setFilter('live')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === 'live'
-                  ? 'bg-red-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors ${filter === 'live'
+                ? 'bg-red-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-current rounded-full animate-pulse"></div>
@@ -121,11 +121,10 @@ export default function LivePage() {
 
             <button
               onClick={() => setFilter('scheduled')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === 'scheduled'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors ${filter === 'scheduled'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4" />
@@ -135,11 +134,10 @@ export default function LivePage() {
 
             <button
               onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === 'all'
-                  ? 'bg-gray-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all'
+                ? 'bg-gray-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               <TrendingUp className="w-4 h-4" />
               <span>Todos</span>
@@ -174,13 +172,13 @@ export default function LivePage() {
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               {filter === 'live' ? 'No hay transmisiones en vivo' :
-               filter === 'scheduled' ? 'No hay transmisiones programadas' :
-               'No hay transmisiones disponibles'}
+                filter === 'scheduled' ? 'No hay transmisiones programadas' :
+                  'No hay transmisiones disponibles'}
             </h3>
             <p className="text-gray-600 mb-6">
               {filter === 'live' ? 'Sé el primero en transmitir en vivo' :
-               filter === 'scheduled' ? 'Programa tu próxima transmisión' :
-               'Explora las transmisiones disponibles'}
+                filter === 'scheduled' ? 'Programa tu próxima transmisión' :
+                  'Explora las transmisiones disponibles'}
             </p>
             {isAuthenticated && filter === 'live' && (
               <button
@@ -204,10 +202,12 @@ export default function LivePage() {
                 {/* Thumbnail */}
                 <div className="relative aspect-video bg-gray-200">
                   {stream.thumbnailUrl ? (
-                    <img
+                    <Image
                       src={stream.thumbnailUrl}
                       alt={stream.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-500 to-red-600">
@@ -243,9 +243,11 @@ export default function LivePage() {
                   </h3>
 
                   <div className="flex items-center space-x-2 mb-3">
-                    <img
+                    <Image
                       src={stream.user.avatar || '/default-avatar.png'}
-                      alt={stream.user.username}
+                      alt={`Avatar de ${stream.user.username}`}
+                      width={24}
+                      height={24}
                       className="w-6 h-6 rounded-full object-cover"
                     />
                     <span className="text-sm font-medium text-gray-900">
@@ -261,8 +263,8 @@ export default function LivePage() {
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>
                       {stream.status === 'live' ? 'En vivo' :
-                       stream.status === 'scheduled' ? `Programado para ${formatDate(stream.scheduledAt || stream.startTime)}` :
-                       `Finalizado ${formatDate(stream.endTime || stream.startTime)}`}
+                        stream.status === 'scheduled' ? `Programado para ${formatDate(stream.scheduledAt || stream.startTime)}` :
+                          `Finalizado ${formatDate(stream.endTime || stream.startTime)}`}
                     </span>
                     {stream.status === 'live' && (
                       <span className="flex items-center space-x-1">

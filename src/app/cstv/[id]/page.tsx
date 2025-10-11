@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, use } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Bookmark, Share2, Eye, Clock, User, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -125,11 +126,10 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
             <button
               onClick={handleLike}
               disabled={likeLoading || !isAuthenticated}
-              className={`p-2 rounded-full transition-colors ${
-                video.isLikedByUser
-                  ? 'bg-red-600 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-              } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`p-2 rounded-full transition-colors ${video.isLikedByUser
+                ? 'bg-red-600 text-white'
+                : 'bg-white/20 text-white hover:bg-white/30'
+                } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Heart className={`w-5 h-5 ${video.isLikedByUser ? 'fill-current' : ''}`} />
             </button>
@@ -137,11 +137,10 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
             <button
               onClick={handleSave}
               disabled={saveLoading || !isAuthenticated}
-              className={`p-2 rounded-full transition-colors ${
-                video.isSavedByUser
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-              } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`p-2 rounded-full transition-colors ${video.isSavedByUser
+                ? 'bg-blue-600 text-white'
+                : 'bg-white/20 text-white hover:bg-white/30'
+                } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Bookmark className={`w-5 h-5 ${video.isSavedByUser ? 'fill-current' : ''}`} />
             </button>
@@ -237,9 +236,11 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
         {/* User Info */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3 mb-4">
-            <img
+            <Image
               src={video.user.avatar || '/default-avatar.png'}
-              alt={video.user.username}
+              alt={`Avatar de ${video.user.username}`}
+              width={48}
+              height={48}
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
@@ -305,11 +306,10 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
             <button
               onClick={handleLike}
               disabled={likeLoading || !isAuthenticated}
-              className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                video.isLikedByUser
-                  ? 'bg-red-100 text-red-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${video.isLikedByUser
+                ? 'bg-red-100 text-red-600'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Heart className={`w-4 h-4 ${video.isLikedByUser ? 'fill-current' : ''}`} />
               <span>{video.isLikedByUser ? 'Quitar Like' : 'Dar Like'}</span>
@@ -318,11 +318,10 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
             <button
               onClick={handleSave}
               disabled={saveLoading || !isAuthenticated}
-              className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                video.isSavedByUser
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${video.isSavedByUser
+                ? 'bg-blue-100 text-blue-600'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Bookmark className={`w-4 h-4 ${video.isSavedByUser ? 'fill-current' : ''}`} />
               <span>{video.isSavedByUser ? 'Quitar de Guardados' : 'Guardar'}</span>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels } from '@/services/reelService';
@@ -266,10 +267,12 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             {posts.map((post) => (
               <div key={post._id} className="aspect-square relative group cursor-pointer">
                 {post.content.images && post.content.images.length > 0 ? (
-                  <img
-                    src={post.content.images[0]?.url || ''}
+                  <Image
+                    src={post.content.images[0]?.url || '/placeholder.png'}
                     alt={post.caption || 'Post'}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 33vw, 25vw"
                   />
                 ) : post.content.video ? (
                   <div className="w-full h-full bg-gray-900 flex items-center justify-center relative">
@@ -383,10 +386,12 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             {stories.map((story) => (
               <div key={story._id} className="aspect-square relative group cursor-pointer">
                 {story.content.image ? (
-                  <img
+                  <Image
                     src={story.content.image.url}
                     alt="Story"
-                    className="w-full h-full object-cover rounded-lg"
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes="(max-width: 768px) 33vw, 25vw"
                   />
                 ) : story.content.video ? (
                   <div className="w-full h-full bg-gray-900 flex items-center justify-center relative rounded-lg">

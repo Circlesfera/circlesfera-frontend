@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { getUserPosts } from '@/services/postService';
@@ -330,11 +331,10 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-300 relative ${
-                  activeTab === tab.id
-                    ? 'text-blue-600 bg-gradient-to-r from-blue-50 to-purple-50'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/50'
-                }`}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-300 relative ${activeTab === tab.id
+                  ? 'text-blue-600 bg-gradient-to-r from-blue-50 to-purple-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50/50'
+                  }`}
               >
                 {activeTab === tab.id && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
@@ -363,11 +363,10 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
                       }
                     }
                   }}
-                  className={`px-2 py-1 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer hover:scale-105 ${
-                    activeTab === tab.id
-                      ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  } ${tab.count > 0 ? 'hover:shadow-md' : 'cursor-default'}`}
+                  className={`px-2 py-1 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer hover:scale-105 ${activeTab === tab.id
+                    ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    } ${tab.count > 0 ? 'hover:shadow-md' : 'cursor-default'}`}
                 >
                   {formatNumber(tab.count)}
                 </span>
@@ -503,10 +502,12 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
             className="aspect-video rounded-2xl lg:rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
           >
             <div className="absolute inset-0">
-              <img
-                src={(story as Story).content?.image?.url || ''}
+              <Image
+                src={(story as Story).content?.image?.url || '/placeholder.png'}
                 alt="Story"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -527,10 +528,12 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
         >
           <div className="absolute inset-0">
             {type === 'posts' ? (
-              <img
-                src={(item as Post).content?.images?.[0]?.url || ''}
+              <Image
+                src={(item as Post).content?.images?.[0]?.url || '/placeholder.png'}
                 alt="Post"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+                sizes="(max-width: 768px) 50vw, 20vw"
               />
             ) : (
               <video

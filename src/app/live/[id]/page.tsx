@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, use } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Users, Heart, Share2, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -151,11 +152,10 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
             <button
               onClick={handleLike}
-              className={`p-2 rounded-full transition-colors ${
-                isLiked
-                  ? 'bg-red-600 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-              }`}
+              className={`p-2 rounded-full transition-colors ${isLiked
+                ? 'bg-red-600 text-white'
+                : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
             >
               <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
             </button>
@@ -197,9 +197,11 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
               <div className="bg-white/10 rounded-lg p-6 mb-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <img
+                  <Image
                     src={stream.user.avatar || '/default-avatar.png'}
-                    alt={stream.user.username}
+                    alt={`Avatar de ${stream.user.username}`}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>
@@ -255,9 +257,11 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
               <div className="bg-white/10 rounded-lg p-6 mb-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <img
+                  <Image
                     src={stream.user.avatar || '/default-avatar.png'}
-                    alt={stream.user.username}
+                    alt={`Avatar de ${stream.user.username}`}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>

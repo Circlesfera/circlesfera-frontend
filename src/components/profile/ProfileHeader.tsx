@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { User } from '@/types';
 import { formatNumber } from '@/utils/format';
 import { SettingsIcon, EditIcon, VerifiedIcon } from './ProfileIcons';
@@ -42,10 +43,12 @@ export default function ProfileHeader({
         <div className="flex-shrink-0 relative">
           <div className="relative">
             {user.avatar && !imageError ? (
-              <img 
-                src={user.avatar} 
+              <Image
+                src={user.avatar}
                 alt={`Avatar de ${user.username}`}
-                className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform hover:scale-105" 
+                width={128}
+                height={128}
+                className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg transition-transform hover:scale-105"
                 onError={() => setImageError(true)}
               />
             ) : (
@@ -53,7 +56,7 @@ export default function ProfileHeader({
                 {user.username?.[0]?.toUpperCase() || '?'}
               </div>
             )}
-            
+
             {/* Verified Badge */}
             {user.isVerified && (
               <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-blue-500 rounded-full p-1.5 sm:p-2 shadow-lg">
@@ -73,13 +76,13 @@ export default function ProfileHeader({
                 <VerifiedIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
               )}
             </div>
-            
+
             <div className="flex items-center justify-center sm:justify-start gap-2">
               {!isOwnProfile && followButton}
-              
+
               {isOwnProfile && (
                 <>
-                  <button 
+                  <button
                     onClick={onEditClick}
                     className="px-3 sm:px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-semibold border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1 sm:gap-2"
                   >
@@ -87,8 +90,8 @@ export default function ProfileHeader({
                     <span className="hidden sm:inline">Editar perfil</span>
                     <span className="sm:hidden">Editar</span>
                   </button>
-                  <Link 
-                    href="/settings" 
+                  <Link
+                    href="/settings"
                     className="p-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
                     title="Configuración"
                   >
@@ -108,9 +111,9 @@ export default function ProfileHeader({
               <div className="text-gray-700 mb-2 break-words leading-relaxed text-sm sm:text-base">{user.bio}</div>
             )}
             {user.website && (
-              <a 
+              <a
                 href={user.website.startsWith('http') ? user.website : `https://${user.website}`}
-                target="_blank" 
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 text-sm sm:text-base"
               >
@@ -121,39 +124,39 @@ export default function ProfileHeader({
 
           {/* Statistics Grid - Optimizado para móvil */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
-            <StatCard 
-              icon="posts" 
-              count={stats.posts} 
-              label="Publicaciones" 
+            <StatCard
+              icon="posts"
+              count={stats.posts}
+              label="Publicaciones"
             />
-            <StatCard 
-              icon="reels" 
-              count={stats.reels} 
-              label="Reels" 
+            <StatCard
+              icon="reels"
+              count={stats.reels}
+              label="Reels"
             />
-            <StatCard 
-              icon="stories" 
-              count={stats.stories} 
-              label="Stories" 
+            <StatCard
+              icon="stories"
+              count={stats.stories}
+              label="Stories"
             />
-            <StatCard 
-              icon="likes" 
-              count={stats.likes} 
-              label="Me gusta" 
+            <StatCard
+              icon="likes"
+              count={stats.likes}
+              label="Me gusta"
             />
           </div>
 
           {/* Followers and Following - Optimizado para móvil */}
           <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-6 lg:gap-8 text-sm sm:text-base font-medium">
-            <button 
-              className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600" 
+            <button
+              className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600"
               onClick={onFollowersClick}
             >
               <span className="font-bold text-gray-900">{formatNumber(stats.followers)}</span>
               <span className="text-gray-600">seguidores</span>
             </button>
-            <button 
-              className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600" 
+            <button
+              className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600"
               onClick={onFollowingClick}
             >
               <span className="font-bold text-gray-900">{formatNumber(stats.following)}</span>

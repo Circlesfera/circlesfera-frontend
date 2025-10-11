@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { checkUsernameAvailability, editProfile } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
@@ -281,15 +282,19 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         <div className="flex items-center space-x-4">
           <div className="flex-shrink-0">
             {avatarPreview ? (
-              <img
+              <Image
                 src={avatarPreview}
-                alt="avatar preview"
+                alt="Vista previa del avatar"
+                width={80}
+                height={80}
                 className="w-20 h-20 rounded-full object-cover ring-2 ring-blue-300"
               />
             ) : profile.avatar ? (
-              <img
+              <Image
                 src={profile.avatar}
-                alt="avatar"
+                alt={`Avatar de ${profile.username}`}
+                width={80}
+                height={80}
                 className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-200"
               />
             ) : (

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import logger from '@/utils/logger';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels } from '@/services/reelService';
@@ -241,11 +242,10 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-all duration-200 ${
-                activeTab === tab.id
-                  ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
+              className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-all duration-200 ${activeTab === tab.id
+                ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
             >
               {tab.icon}
               <span className="hidden sm:inline">{tab.label}</span>
@@ -342,10 +342,12 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
         {safeContent.map((story) => (
           <div key={story._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 relative group cursor-pointer">
-            <img
-              src={(story as Story).content?.image?.url || ''}
+            <Image
+              src={(story as Story).content?.image?.url || '/placeholder.png'}
               alt="Story"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-200"
+              sizes="(max-width: 768px) 33vw, 20vw"
             />
             <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-200" />
           </div>
@@ -359,10 +361,12 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
       {safeContent.map((item) => (
         <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
           {type === 'posts' ? (
-            <img
-              src={(item as Post).content?.images?.[0]?.url || ''}
+            <Image
+              src={(item as Post).content?.images?.[0]?.url || '/placeholder.png'}
               alt="Post"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-200"
+              sizes="(max-width: 768px) 50vw, 20vw"
             />
           ) : (
             <video
