@@ -290,8 +290,13 @@ class WebRTCService {
         from: 'local', // El servidor identificará al usuario por el socket
       });
 
-    } catch (error) {
-
+    } catch (offerError) {
+      logger.error('Error handling WebRTC offer:', {
+        error: offerError instanceof Error ? offerError.message : 'Unknown error',
+        streamId: _streamId,
+        from
+      });
+      throw offerError;
     }
   }
 

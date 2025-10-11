@@ -2,6 +2,8 @@
  * Utilidades para almacenamiento offline usando IndexedDB
  */
 
+import logger from './logger';
+
 const DB_NAME = 'CirclesferapWADB';
 const DB_VERSION = 1;
 const STORES = {
@@ -64,12 +66,18 @@ export const saveToIndexedDB = async (
     }
 
     return new Promise((resolve, reject) => {
-      transaction.oncomplete = () => resolve();
+      transaction.oncomplete = () => {
+        logger.debug('Data saved to IndexedDB:', { store, isArray: Array.isArray(data) });
+        resolve();
+      };
       transaction.onerror = () => reject(transaction.error);
     });
-  } catch (error) {
-
-    throw error;
+  } catch (saveError) {
+    logger.error('Error saving to IndexedDB:', {
+      error: saveError instanceof Error ? saveError.message : 'Unknown error',
+      store
+    });
+    throw saveError;
   }
 };
 
@@ -100,8 +108,12 @@ export const getFromIndexedDB = async <T>(
         request.onerror = () => reject(request.error);
       });
     }
-  } catch (error) {
-
+  } catch (retrieveError) {
+    logger.error('Error retrieving from IndexedDB:', {
+      error: retrieveError instanceof Error ? retrieveError.message : 'Unknown error',
+      store,
+      key
+    });
     return null;
   }
 };
@@ -121,12 +133,19 @@ export const deleteFromIndexedDB = async (
     objectStore.delete(key);
 
     return new Promise((resolve, reject) => {
-      transaction.oncomplete = () => resolve();
+      transaction.oncomplete = () => {
+        logger.debug('Data deleted from IndexedDB:', { store, key });
+        resolve();
+      };
       transaction.onerror = () => reject(transaction.error);
     });
-  } catch (error) {
-
-    throw error;
+  } catch (deleteError) {
+    logger.error('Error deleting from IndexedDB:', {
+      error: deleteError instanceof Error ? deleteError.message : 'Unknown error',
+      store,
+      key
+    });
+    throw deleteError;
   }
 };
 
@@ -142,12 +161,18 @@ export const clearStore = async (store: keyof typeof STORES): Promise<void> => {
     objectStore.clear();
 
     return new Promise((resolve, reject) => {
-      transaction.oncomplete = () => resolve();
+      transaction.oncomplete = () => {
+        logger.info('IndexedDB store cleared:', { store });
+        resolve();
+      };
       transaction.onerror = () => reject(transaction.error);
     });
-  } catch (error) {
-
-    throw error;
+  } catch (clearError) {
+    logger.error('Error clearing IndexedDB store:', {
+      error: clearError instanceof Error ? clearError.message : 'Unknown error',
+      store
+    });
+    throw clearError;
   }
 };
 
@@ -194,8 +219,12 @@ export const syncPendingData = async (): Promise<void> => {
 
     // Limpiar datos sincronizados
     await deleteFromIndexedDB('userData', 'pendingSync');
-  } catch (error) {
-
+    logger.info('Pending data synced successfully:', { count: pendingSync.length });
+  } catch (syncError) {
+    logger.error('Error syncing pending data:', {
+      error: syncError instanceof Error ? syncError.message : 'Unknown error'
+    });
+    throw syncError;
   }
 };
 
