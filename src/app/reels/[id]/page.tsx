@@ -15,16 +15,16 @@ export default function ReelPage() {
   const { loading: authLoading } = useAuth();
   const [reel, setReel] = useState<Reel | null>(null);
   const [loading, setLoading] = useState(true);
-  const [commentsModal, setCommentsModal] = useState<{ isOpen: boolean; reelId: string }>({ 
-    isOpen: false, 
-    reelId: '' 
+  const [commentsModal, setCommentsModal] = useState<{ isOpen: boolean; reelId: string }>({
+    isOpen: false,
+    reelId: ''
   });
 
   // Cargar reel específico
   useEffect(() => {
     const loadReel = async () => {
       if (!id || authLoading) return;
-      
+
       try {
         setLoading(true);
         const response = await getReel(id as string);
@@ -43,11 +43,34 @@ export default function ReelPage() {
   }, [id, authLoading, router]);
 
   const handleLike = async (reelId: string) => {
+    if (!reel) return;
     try {
-      // TODO: Implementar likeReel service call
+      const { likeReel, unlikeReel } = await import('@/services/reelService');
+      const isCurrentlyLiked = reel.likes.includes(user?._id || '');
 
-    } catch (error) {
+      if (isCurrentlyLiked) {
+        await unlikeReel(reelId);
+      } else {
+        await likeReel(reelId);
+      }
 
+      // Update local state optimistically
+      setReel(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          likes: isCurrentlyLiked
+            ? prev.likes.filter(id => id !== user?._id)
+            : [...prev.likes, user?._id || '']
+        };
+      });
+
+      logger.info('Reel like toggled:', { reelId, isLiked: !isCurrentlyLiked });
+    } catch (likeReelError) {
+      logger.error('Error toggling reel like:', {
+        error: likeReelError instanceof Error ? likeReelError.message : 'Unknown error',
+        reelId
+      });
     }
   };
 
@@ -59,22 +82,31 @@ export default function ReelPage() {
   };
 
   const handleShare = (reelId: string) => {
-    // TODO: Implementar compartir
-
-    // Compartir URL
-    if (navigator.share) {
-      const shareData: ShareData = {
-        title: `Reel de ${reel?.user.username}`,
-        url: window.location.href
-      };
-      if (reel?.caption) {
-        shareData.text = reel.caption;
+    const shareUrl = window.location.href;
+    try {
+      if (navigator.share) {
+        const shareData: ShareData = {
+          title: `Reel de ${reel?.user.username}`,
+          url: shareUrl
+        };
+        if (reel?.caption) {
+          shareData.text = reel.caption;
+        }
+        navigator.share(shareData).catch(shareError => {
+          if (shareError instanceof Error && shareError.name !== 'AbortError') {
+            logger.warn('Share dialog cancelled or failed:', { error: shareError.message, reelId });
+          }
+        });
+      } else {
+        navigator.clipboard.writeText(shareUrl);
+        logger.info('Reel URL copied to clipboard:', { reelId });
+        // Could show a toast notification using a notification hook
       }
-      navigator.share(shareData);
-    } else {
-      // Fallback: copiar al clipboard
-      navigator.clipboard.writeText(window.location.href);
-      // TODO: Mostrar toast de confirmación
+    } catch (shareReelError) {
+      logger.error('Error sharing reel:', {
+        error: shareReelError instanceof Error ? shareReelError.message : 'Unknown error',
+        reelId
+      });
     }
   };
 
@@ -135,7 +167,7 @@ export default function ReelPage() {
               <ArrowLeft className="w-5 h-5 mr-2" />
               Volver
             </Button>
-            
+
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
@@ -167,7 +199,7 @@ export default function ReelPage() {
               controls
               playsInline
             />
-            
+
             {/* Overlay gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           </div>
@@ -194,7 +226,7 @@ export default function ReelPage() {
                   </p>
                 </div>
               </div>
-              
+
               <Button
                 variant="primary"
                 size="sm"

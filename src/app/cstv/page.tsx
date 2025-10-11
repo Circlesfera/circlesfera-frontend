@@ -8,6 +8,8 @@ import { CSTVVideoCard } from '@/components/cstv/CSTVVideoCard';
 import { CSTV_CATEGORIES, type CSTVCategory } from '@/types/cstv';
 import { useAuthContext } from '@/features/auth/AuthContext';
 import { useRouter } from 'next/navigation';
+import api from '@/services/axios';
+import logger from '@/utils/logger';
 
 export default function CSTVPage() {
   const [activeTab, setActiveTab] = useState<'trending' | 'recent' | 'search'>('trending');
@@ -59,18 +61,71 @@ export default function CSTVPage() {
   };
 
   const handleVideoLike = async (videoId: string, isLiked: boolean) => {
-    // TODO: Implement like functionality
-
+    if (!user) {
+      logger.warn('User not authenticated for video like');
+      return;
+    }
+    try {
+      const endpoint = isLiked ? `/cstv/${videoId}/unlike` : `/cstv/${videoId}/like`;
+      await api.post(endpoint);
+      logger.info('CSTV video like toggled:', { videoId, isLiked: !isLiked });
+      // Refresh the current tab to show updated like status
+      if (activeTab === 'trending') {
+        refreshTrending();
+      } else {
+        refreshRecent();
+      }
+    } catch (likeVideoError) {
+      logger.error('Error liking CSTV video:', {
+        error: likeVideoError instanceof Error ? likeVideoError.message : 'Unknown error',
+        videoId,
+        isLiked
+      });
+    }
   };
 
   const handleVideoSave = async (videoId: string, isSaved: boolean) => {
-    // TODO: Implement save functionality
-
+    if (!user) {
+      logger.warn('User not authenticated for video save');
+      return;
+    }
+    try {
+      const endpoint = isSaved ? `/cstv/${videoId}/unsave` : `/cstv/${videoId}/save`;
+      await api.post(endpoint);
+      logger.info('CSTV video save toggled:', { videoId, isSaved: !isSaved });
+    } catch (saveVideoError) {
+      logger.error('Error saving CSTV video:', {
+        error: saveVideoError instanceof Error ? saveVideoError.message : 'Unknown error',
+        videoId,
+        isSaved
+      });
+    }
   };
 
   const handleVideoShare = (videoId: string) => {
-    // TODO: Implement share functionality
-
+    const shareUrl = `${window.location.origin}/cstv/${videoId}`;
+    try {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Mira este video en CircleSfera CSTV',
+          text: 'Echa un vistazo a este video',
+          url: shareUrl,
+        }).catch(shareError => {
+          if (shareError instanceof Error && shareError.name !== 'AbortError') {
+            logger.warn('Share dialog cancelled or failed:', { error: shareError.message, videoId });
+          }
+        });
+      } else {
+        navigator.clipboard.writeText(shareUrl);
+        logger.info('CSTV video URL copied to clipboard:', { videoId });
+        // Could show a toast notification here
+      }
+    } catch (shareVideoError) {
+      logger.error('Error sharing CSTV video:', {
+        error: shareVideoError instanceof Error ? shareVideoError.message : 'Unknown error',
+        videoId
+      });
+    }
   };
 
   const handleSearch = () => {
