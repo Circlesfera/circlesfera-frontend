@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { getWebRTCService } from '@/services/webrtcService';
+import logger from '@/utils/logger';
 
 interface UseWebRTCOptions {
   streamId?: string;
@@ -115,8 +116,10 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
 
       stopStatsMonitoring();
 
-    } catch (error) {
-
+    } catch (stopError) {
+      logger.error('Error stopping stream:', {
+        error: stopError instanceof Error ? stopError.message : 'Unknown error'
+      });
     }
   }, [isStreamer]);
 
@@ -161,9 +164,11 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
       stopStatsMonitoring();
 
       return recording;
-    } catch (error) {
-
-      throw error;
+    } catch (recordingError) {
+      logger.error('Error stopping recording:', {
+        error: recordingError instanceof Error ? recordingError.message : 'Unknown error'
+      });
+      throw recordingError;
     }
   }, []);
 
@@ -194,8 +199,10 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
         if (stats) {
           setState(prev => ({ ...prev, stats }));
         }
-      } catch (error) {
-
+      } catch (statsError) {
+        logger.debug('Error getting stats (non-critical):', {
+          error: statsError instanceof Error ? statsError.message : 'Unknown error'
+        });
       }
     }, 1000); // Actualizar cada segundo
   }, []);

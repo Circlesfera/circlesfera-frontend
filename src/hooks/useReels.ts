@@ -41,9 +41,12 @@ export function useReels(): UseReelsReturn {
           setReels(response.reels)
           setHasMore(response.reels.length === REELS_PER_PAGE)
         }
-      } catch (err) {
-        setError('Error al cargar reels')
-
+      } catch (loadError) {
+        const errorMessage = 'Error al cargar reels'
+        setError(errorMessage)
+        logger.error('Error loading reels:', {
+          error: loadError instanceof Error ? loadError.message : 'Unknown error'
+        })
       } finally {
         setLoading(false)
       }
@@ -71,8 +74,12 @@ export function useReels(): UseReelsReturn {
         setHasMore(response.reels.length === REELS_PER_PAGE)
         setPage(nextPage)
       }
-    } catch (err) {
-
+    } catch (loadMoreError) {
+      logger.error('Error loading more reels:', {
+        error: loadMoreError instanceof Error ? loadMoreError.message : 'Unknown error',
+        page
+      })
+      setError('Error al cargar más reels')
     }
   }, [hasMore, loading, page])
 

@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { searchUsers, UserSuggestion } from '@/services/userService';
 import { searchReelsByHashtag, Reel } from '@/services/reelService';
 import { useDebounce } from './useDebounce';
+import logger from '@/utils/logger';
 
 export type SearchType = 'users' | 'reels' | 'all';
 
