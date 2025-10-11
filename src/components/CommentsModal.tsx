@@ -38,11 +38,11 @@ export default function CommentsModal({
 
     try {
       const data = await getComments(postId, pageNum);
-      if (data && data.comments) {
+      if (data && data.data) {
         if (append) {
-          setComments(prev => [...prev, ...data.comments]);
+          setComments(prev => [...prev, ...data.data]);
         } else {
-          setComments(data.comments);
+          setComments(data.data);
         }
         setHasMore(data.pagination.page < data.pagination.pages);
       } else {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getSuggestions, UserSuggestion } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import FollowButton from './FollowButton';
+import logger from '@/utils/logger';
 
 export default function UserSuggestions() {
   const { user } = useAuth();
