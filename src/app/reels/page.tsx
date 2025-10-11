@@ -10,6 +10,7 @@ import { Video, Heart, MessageCircle, Share2, MoreHorizontal } from 'lucide-reac
 import { useReels } from '@/hooks/useReels';
 import VideoPlayer from '@/components/VideoPlayer';
 import logger from '@/utils/logger';
+import { useToast } from '@/components/Toast';
 
 export default function ReelsPage() {
   const { user, loading: authLoading } = useAuth();
