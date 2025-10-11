@@ -7,6 +7,7 @@ import type {
   EndLiveStreamData,
   LiveStreamFilters,
 } from '@/types/live';
+import logger from '@/utils/logger';
 
 export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
   const [streams, setStreams] = useState<LiveStream[]>([]);
@@ -32,8 +33,11 @@ export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
 
       setStreams(response.data);
       setPagination(response.pagination);
+      logger.debug('Live streams loaded:', { count: response.data.length });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error cargando transmisiones');
+      const errorMessage = err instanceof Error ? err.message : 'Error cargando transmisiones';
+      setError(errorMessage);
+      logger.error('Error loading live streams:', { error: err instanceof Error ? err.message : 'Unknown error' });
     } finally {
       setLoading(false);
     }
@@ -78,8 +82,11 @@ export const useLiveStream = (streamId: string | null) => {
 
       const streamData = await liveStreamService.getLiveStream(streamId);
       setStream(streamData);
+      logger.debug('Live stream loaded:', { streamId });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error cargando transmisión');
+      const errorMessage = err instanceof Error ? err.message : 'Error cargando transmisión';
+      setError(errorMessage);
+      logger.error('Error loading live stream:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
     } finally {
       setLoading(false);
     }
@@ -113,9 +120,12 @@ export const useCreateLiveStream = () => {
       setError(null);
 
       const stream = await liveStreamService.createLiveStream(data);
+      logger.info('Live stream created:', { streamId: stream._id });
       return stream;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creando transmisión');
+      const errorMessage = err instanceof Error ? err.message : 'Error creando transmisión';
+      setError(errorMessage);
+      logger.error('Error creating live stream:', { error: err instanceof Error ? err.message : 'Unknown error', data });
       return null;
     } finally {
       setLoading(false);
@@ -142,9 +152,12 @@ export const useStartLiveStream = () => {
       setError(null);
 
       const stream = await liveStreamService.startLiveStream(streamId, data);
+      logger.info('Live stream started:', { streamId });
       return stream;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error iniciando transmisión');
+      const errorMessage = err instanceof Error ? err.message : 'Error iniciando transmisión';
+      setError(errorMessage);
+      logger.error('Error starting live stream:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
       return null;
     } finally {
       setLoading(false);
@@ -171,9 +184,12 @@ export const useEndLiveStream = () => {
       setError(null);
 
       const result = await liveStreamService.endLiveStream(streamId, data);
+      logger.info('Live stream ended:', { streamId });
       return result;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error terminando transmisión');
+      const errorMessage = err instanceof Error ? err.message : 'Error terminando transmisión';
+      setError(errorMessage);
+      logger.error('Error ending live stream:', { error: err instanceof Error ? err.message : 'Unknown error', streamId });
       return null;
     } finally {
       setLoading(false);
@@ -244,9 +260,12 @@ export const useCoHostInvitation = () => {
       setError(null);
 
       const stream = await liveStreamService.inviteCoHost(streamId, userId);
+      logger.info('Co-host invited:', { streamId, userId });
       return stream;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error invitando co-host');
+      const errorMessage = err instanceof Error ? err.message : 'Error invitando co-host';
+      setError(errorMessage);
+      logger.error('Error inviting co-host:', { error: err instanceof Error ? err.message : 'Unknown error', streamId, userId });
       return null;
     } finally {
       setLoading(false);
