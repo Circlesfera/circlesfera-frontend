@@ -27,6 +27,7 @@ export interface Post {
     };
     text?: string;
     aspectRatio?: '1:1' | '4:5';
+    originalAspectRatio?: number; // Aspect ratio real de la imagen
   };
   caption: string;
   location?: {
@@ -140,13 +141,26 @@ export const createPost = async (formData: FormData): Promise<PostResponse> => {
 };
 
 // Crear publicación de imagen
-export const createImagePost = async (files: File[], caption: string): Promise<PostResponse> => {
+export const createImagePost = async (
+  files: File[],
+  caption: string,
+  aspectRatio?: '1:1' | '4:5',
+  originalAspectRatio?: number
+): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'image');
   files.forEach((file) => {
     formData.append('images', file);
   });
   formData.append('caption', caption);
+
+  // Agregar aspect ratios si están disponibles
+  if (aspectRatio) {
+    formData.append('aspectRatio', aspectRatio);
+  }
+  if (originalAspectRatio) {
+    formData.append('originalAspectRatio', originalAspectRatio.toString());
+  }
 
   const res = await api.post('/posts/media', formData, {
     headers: {
@@ -157,11 +171,24 @@ export const createImagePost = async (files: File[], caption: string): Promise<P
 };
 
 // Crear publicación de video
-export const createVideoPost = async (file: File, caption: string): Promise<PostResponse> => {
+export const createVideoPost = async (
+  file: File,
+  caption: string,
+  aspectRatio?: '1:1' | '4:5',
+  originalAspectRatio?: number
+): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('type', 'video');
   formData.append('video', file);
   formData.append('caption', caption);
+
+  // Agregar aspect ratios si están disponibles
+  if (aspectRatio) {
+    formData.append('aspectRatio', aspectRatio);
+  }
+  if (originalAspectRatio) {
+    formData.append('originalAspectRatio', originalAspectRatio.toString());
+  }
 
   const res = await api.post('/posts/media', formData, {
     headers: {

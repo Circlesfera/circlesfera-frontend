@@ -520,44 +520,77 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 lg:gap-4">
-      {safeContent.map((item) => (
-        <div
-          key={item._id}
-          onClick={() => handleContentClick(item._id)}
-          className="aspect-[9/16] rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-        >
-          <div className="absolute inset-0">
-            {type === 'posts' ? (
-              <Image
-                src={(item as Post).content?.images?.[0]?.url || '/placeholder.png'}
-                alt="Post"
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-300"
-                sizes="(max-width: 768px) 50vw, 20vw"
-              />
-            ) : (
-              <video
-                src={(item as Reel).video?.url || ''}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                muted
-              />
-            )}
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl lg:rounded-3xl transition-all duration-300" />
+      {safeContent.map((item) => {
+        const post = item as Post;
+        const reel = item as Reel;
+        const isCarousel = type === 'posts' && post.content?.images && post.content.images.length > 1;
+        const isVideo = type === 'posts' && post.type === 'video';
 
-          {/* Video play icon for reels */}
-          {type === 'reels' && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+        return (
+          <div
+            key={item._id}
+            onClick={() => handleContentClick(item._id)}
+            className="aspect-[9/16] rounded-2xl lg:rounded-3xl overflow-hidden bg-gray-100 relative group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div className="absolute inset-0">
+              {type === 'posts' ? (
+                <Image
+                  src={post.content?.images?.[0]?.url || '/placeholder.png'}
+                  alt="Post"
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  sizes="(max-width: 768px) 50vw, 20vw"
+                />
+              ) : (
+                <video
+                  src={reel.video?.url || ''}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  muted
+                />
+              )}
+            </div>
+
+            {/* Indicador de carrusel (múltiples imágenes) - esquina superior derecha */}
+            {isCarousel && (
+              <div className="absolute top-3 right-3 z-10">
+                <svg className="w-6 h-6 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 5h2v14H3V5zm4 0h12c1.103 0 2 .897 2 2v10c0 1.103-.897 2-2 2H7c-1.103 0-2-.897-2-2V7c0-1.103.897-2 2-2z" />
                 </svg>
               </div>
-            </div>
-          )}
-        </div>
-      ))}
+            )}
+
+            {/* Indicador de video - esquina superior derecha */}
+            {isVideo && (
+              <div className="absolute top-3 right-3 z-10">
+                <svg className="w-6 h-6 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            )}
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl lg:rounded-3xl transition-all duration-300" />
+
+            {/* Video play icon for reels - centro, aparece al hover */}
+            {type === 'reels' && (
+              <>
+                <div className="absolute top-3 right-3 z-10">
+                  <svg className="w-6 h-6 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -2,8 +2,10 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/features/auth/useAuth';
 import { createImagePost, createVideoPost } from '@/services/postService';
+import ImageCropEditor from './ImageCropEditor';
 import logger from '@/utils/logger';
 
 // Iconos SVG
@@ -52,6 +54,8 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [aspectRatio, setAspectRatio] = useState<'1:1' | '4:5'>('1:1');
+  const [originalAspectRatio, setOriginalAspectRatio] = useState<number>(1);
+  const [showCropEditor, setShowCropEditor] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (selectedFile: File) => {
@@ -92,7 +96,10 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
           img.onload = () => {
             const ratio = img.width / img.height;
 
-            // Determinar el aspect ratio más cercano
+            // Guardar el aspect ratio original real (con precisión decimal)
+            setOriginalAspectRatio(ratio);
+
+            // Determinar el aspect ratio más cercano para display
             if (Math.abs(ratio - 1) < 0.1) {
               setAspectRatio('1:1'); // Cuadrado
             } else if (Math.abs(ratio - 0.8) < 0.1) {
@@ -102,6 +109,11 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             } else {
               setAspectRatio('1:1'); // Por defecto cuadrado
             }
+
+            logger.debug('Aspect ratio detectado:', {
+              original: ratio.toFixed(3),
+              category: ratio < 1 ? '4:5' : '1:1'
+            });
           };
           img.src = result;
         }
@@ -147,9 +159,9 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       const fullCaption = text.trim() ? `${text.trim()}\n\n${caption}` : caption;
 
       if (postType === 'image') {
-        await createImagePost([file], fullCaption);
+        await createImagePost([file], fullCaption, aspectRatio, originalAspectRatio);
       } else {
-        await createVideoPost(file, fullCaption);
+        await createVideoPost(file, fullCaption, aspectRatio, originalAspectRatio);
       }
 
       // Limpiar formulario
@@ -235,9 +247,11 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             </label>
             <div className="flex space-x-4">
               {/* Opción 1:1 (Cuadrado) */}
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setAspectRatio('1:1')}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className={`flex-1 p-4 rounded-xl border-2 transition-all ${aspectRatio === '1:1'
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-200 hover:border-gray-300 bg-white'
@@ -245,29 +259,45 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               >
                 <div className="flex flex-col items-center space-y-2">
                   {/* Icono visual cuadrado */}
-                  <div className={`w-16 h-16 rounded border-2 ${aspectRatio === '1:1' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50'
-                    }`} />
+                  <motion.div
+                    animate={{
+                      scale: aspectRatio === '1:1' ? 1.05 : 1
+                    }}
+                    transition={{ duration: 0.2 }}
+                    className={`w-16 h-16 rounded border-2 ${aspectRatio === '1:1' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50'
+                      }`}
+                  />
                   <div className="text-center">
                     <div className={`font-semibold ${aspectRatio === '1:1' ? 'text-blue-700' : 'text-gray-700'}`}>
                       Cuadrado
                     </div>
                     <div className="text-xs text-gray-500">1:1</div>
                   </div>
-                  {aspectRatio === '1:1' && (
-                    <div className="flex items-center text-blue-600 text-sm">
-                      <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Seleccionado
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {aspectRatio === '1:1' && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex items-center text-blue-600 text-sm"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Seleccionado
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </button>
+              </motion.button>
 
               {/* Opción 4:5 (Vertical) */}
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setAspectRatio('4:5')}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className={`flex-1 p-4 rounded-xl border-2 transition-all ${aspectRatio === '4:5'
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-200 hover:border-gray-300 bg-white'
@@ -275,24 +305,38 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               >
                 <div className="flex flex-col items-center space-y-2">
                   {/* Icono visual vertical */}
-                  <div className={`w-12 h-16 rounded border-2 ${aspectRatio === '4:5' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50'
-                    }`} />
+                  <motion.div
+                    animate={{
+                      scale: aspectRatio === '4:5' ? 1.05 : 1
+                    }}
+                    transition={{ duration: 0.2 }}
+                    className={`w-12 h-16 rounded border-2 ${aspectRatio === '4:5' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50'
+                      }`}
+                  />
                   <div className="text-center">
                     <div className={`font-semibold ${aspectRatio === '4:5' ? 'text-blue-700' : 'text-gray-700'}`}>
                       Vertical
                     </div>
                     <div className="text-xs text-gray-500">4:5</div>
                   </div>
-                  {aspectRatio === '4:5' && (
-                    <div className="flex items-center text-blue-600 text-sm">
-                      <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Seleccionado
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {aspectRatio === '4:5' && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex items-center text-blue-600 text-sm"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Seleccionado
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </button>
+              </motion.button>
             </div>
             <p className="text-xs text-gray-500 mt-2">
               {aspectRatio === '1:1'
@@ -336,14 +380,30 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             ) : (
               <div className="relative">
                 {postType === 'image' ? (
-                  <div className={`relative mx-auto ${aspectRatio === '1:1' ? 'aspect-square max-w-md' : 'aspect-[4/5] max-w-sm'} bg-black rounded-lg overflow-hidden`}>
-                    <Image
-                      src={preview}
-                      alt="Vista previa de la publicación"
-                      width={600}
-                      height={aspectRatio === '1:1' ? 600 : 750}
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="space-y-4">
+                    <div className={`relative mx-auto ${aspectRatio === '1:1' ? 'aspect-square max-w-md' : 'aspect-[4/5] max-w-sm'} bg-black rounded-lg overflow-hidden`}>
+                      <Image
+                        src={preview}
+                        alt="Vista previa de la publicación"
+                        width={600}
+                        height={aspectRatio === '1:1' ? 600 : 750}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+
+                    {/* Botón de editar */}
+                    <div className="flex justify-center">
+                      <button
+                        type="button"
+                        onClick={() => setShowCropEditor(true)}
+                        className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors font-medium"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        <span>Editar Imagen</span>
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="relative mx-auto max-w-md bg-black rounded-lg overflow-hidden">
@@ -449,6 +509,18 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
           </div>
         </form>
       </div>
+
+      {/* Crop Editor Modal */}
+      {showCropEditor && preview && postType === 'image' && (
+        <ImageCropEditor
+          imageUrl={preview}
+          aspectRatio={aspectRatio}
+          onAspectRatioChange={(newRatio) => {
+            setAspectRatio(newRatio);
+          }}
+          onClose={() => setShowCropEditor(false)}
+        />
+      )}
     </div>
   );
 }

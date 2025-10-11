@@ -358,26 +358,52 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
-      {safeContent.map((item) => (
-        <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
-          {type === 'posts' ? (
-            <Image
-              src={(item as Post).content?.images?.[0]?.url || '/placeholder.png'}
-              alt="Post"
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-200"
-              sizes="(max-width: 768px) 50vw, 20vw"
-            />
-          ) : (
-            <video
-              src={(item as Reel).video?.url || ''}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-              muted
-            />
-          )}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200" />
-        </div>
-      ))}
+      {safeContent.map((item) => {
+        const post = item as Post;
+        const reel = item as Reel;
+        const isCarousel = type === 'posts' && post.content?.images && post.content.images.length > 1;
+        const isVideo = type === 'posts' && post.type === 'video';
+
+        return (
+          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
+            {type === 'posts' ? (
+              <Image
+                src={post.content?.images?.[0]?.url || '/placeholder.png'}
+                alt="Post"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-200"
+                sizes="(max-width: 768px) 50vw, 20vw"
+              />
+            ) : (
+              <video
+                src={reel.video?.url || ''}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                muted
+              />
+            )}
+
+            {/* Indicador de carrusel (múltiples imágenes) */}
+            {isCarousel && (
+              <div className="absolute top-2 right-2 z-10">
+                <svg className="w-5 h-5 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 5h2v14H3V5zm4 0h12c1.103 0 2 .897 2 2v10c0 1.103-.897 2-2 2H7c-1.103 0-2-.897-2-2V7c0-1.103.897-2 2-2z" />
+                </svg>
+              </div>
+            )}
+
+            {/* Indicador de video */}
+            {(isVideo || type === 'reels') && (
+              <div className="absolute top-2 right-2 z-10">
+                <svg className="w-5 h-5 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            )}
+
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200" />
+          </div>
+        );
+      })}
     </div>
   );
 }
