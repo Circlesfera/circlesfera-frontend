@@ -57,19 +57,19 @@ export default function ModernProfileHeader({
           {/* Avatar Section */}
           <div className="flex-shrink-0 relative group">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100 relative">
                 {user.avatar && !imageError ? (
                   <Image
                     src={user.avatar}
                     alt={`Avatar de ${user.username}`}
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-full"
                     sizes="(max-width: 640px) 80px, 96px"
                     onError={() => setImageError(true)}
                     onLoad={() => setImageError(false)}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold border-4 border-white shadow-lg transition-transform hover:scale-105">
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold rounded-full transition-transform hover:scale-105">
                     {user.username?.[0]?.toUpperCase() || '?'}
                   </div>
                 )}
