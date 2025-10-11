@@ -86,10 +86,10 @@ export default function CreateConversationModal({
         logger.info('Conversation created:', { conversationId: response.conversation._id });
       }
     } catch (createError) {
-      logger.error('Error creating conversation:', {
-        error: createError instanceof Error ? createError.message : 'Unknown error',
-        selectedUserId
-      });
+        logger.error('Error creating conversation:', {
+          error: createError instanceof Error ? createError.message : 'Unknown error',
+          selectedUsers
+        });
     } finally {
       setCreating(false);
     }

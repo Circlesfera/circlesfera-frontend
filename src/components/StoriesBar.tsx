@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import StoryViewer from './StoryViewer';
 import StorySkeleton from './StorySkeleton';
 import CreateStoryForm from './CreateStoryForm';
+import logger from '@/utils/logger';
 
 // Iconos SVG modernos
 const StoryIcon = () => (

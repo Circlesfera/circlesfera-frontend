@@ -5,6 +5,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { useRouter, usePathname } from 'next/navigation';
 import { Sidebar, Header } from '@/design-system';
 import { cn } from '@/utils/cn';
+import logger from '@/utils/logger';
 
 interface ModernAppLayoutProps {
   children: React.ReactNode;
