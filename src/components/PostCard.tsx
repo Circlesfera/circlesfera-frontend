@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
 import LazyImage from './LazyImage';
 import ReportModal from './ReportModal';
+import ImageModal from './ImageModal';
 import logger from '@/utils/logger';
 
 // Iconos SVG modernos
@@ -78,6 +79,7 @@ export default function PostCard({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
@@ -288,12 +290,23 @@ export default function PostCard({
           );
         } else {
           return (
-            <div className={`relative overflow-hidden ${aspectRatioClass} bg-black`}>
+            <div
+              className={`relative overflow-hidden ${aspectRatioClass} bg-black cursor-pointer group`}
+              onClick={() => setShowImageModal(true)}
+            >
               <LazyImage
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain transition-opacity group-hover:opacity-90"
               />
+              {/* Indicador de clic para ampliar */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
+                <div className="bg-white/90 rounded-full p-3 backdrop-blur-sm">
+                  <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           );
         }
@@ -633,6 +646,16 @@ export default function PostCard({
         postId={post._id}
         onReport={handleReportPost}
       />
+
+      {/* Image Modal con Zoom */}
+      {post.content.images && post.content.images.length > 0 && (
+        <ImageModal
+          isOpen={showImageModal}
+          onClose={() => setShowImageModal(false)}
+          imageUrl={post.content.images[currentImageIndex]?.url || ''}
+          alt={post.content.images[currentImageIndex]?.alt || "post"}
+        />
+      )}
     </motion.div>
   );
 }
