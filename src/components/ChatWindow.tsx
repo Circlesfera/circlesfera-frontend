@@ -157,8 +157,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
       setShowAttachments(false);
       // Recargar mensajes para mostrar el nuevo
       fetchMessages(1, false);
-    } catch (error) {
-
+      logger.info('Image sent successfully:', { conversationId });
+    } catch (sendImageError) {
+      logger.error('Error sending image:', {
+        error: sendImageError instanceof Error ? sendImageError.message : 'Unknown error',
+        conversationId
+      });
     } finally {
       setSending(false);
     }
