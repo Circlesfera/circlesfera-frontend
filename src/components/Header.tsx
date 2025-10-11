@@ -349,9 +349,19 @@ export default function Header() {
                         href={`/${user?.username}`}
                         className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
                       >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-                          {user?.username?.[0]?.toUpperCase() || 'U'}
-                        </div>
+                        {user?.avatar ? (
+                          <Image
+                            src={user.avatar}
+                            alt={`Avatar de ${user.username}`}
+                            width={32}
+                            height={32}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
+                            {user?.username?.[0]?.toUpperCase() || 'U'}
+                          </div>
+                        )}
                         <div>
                           <Link
                             href={`/${user?.username}`}

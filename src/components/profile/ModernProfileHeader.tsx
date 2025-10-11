@@ -57,7 +57,7 @@ export default function ModernProfileHeader({
           {/* Avatar Section */}
           <div className="flex-shrink-0 relative group">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100 relative">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full shadow-lg overflow-hidden bg-gray-100 relative">
                 {user.avatar && !imageError ? (
                   <Image
                     src={user.avatar}
