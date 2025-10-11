@@ -175,8 +175,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
       setShowAttachments(false);
       // Recargar mensajes para mostrar el nuevo
       fetchMessages(1, false);
-    } catch (error) {
-
+      logger.info('Video sent successfully:', { conversationId });
+    } catch (sendVideoError) {
+      logger.error('Error sending video:', {
+        error: sendVideoError instanceof Error ? sendVideoError.message : 'Unknown error',
+        conversationId
+      });
     } finally {
       setSending(false);
     }

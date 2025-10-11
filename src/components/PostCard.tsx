@@ -139,9 +139,14 @@ export default function PostCard({
       // Simular llamada a API
       await new Promise(resolve => setTimeout(resolve, 1000));
       setShowReportModal(false);
-    } catch (error) {
-
-      throw error;
+    } catch (reportError) {
+      logger.error('Error reporting post:', {
+        error: reportError instanceof Error ? reportError.message : 'Unknown error',
+        postId: post._id,
+        reason,
+        description
+      });
+      throw reportError;
     }
   };
 
@@ -156,9 +161,12 @@ export default function PostCard({
         setIsEditing(false);
         setShowMore(false);
       }
-    } catch (err) {
+    } catch (editError) {
+      logger.error('Error editing post:', {
+        error: editError instanceof Error ? editError.message : 'Unknown error',
+        postId: post._id
+      });
       setError('Error al editar el post');
-
     }
   };
 
@@ -171,9 +179,12 @@ export default function PostCard({
         setIsPinned(response.isPinned);
         setShowMore(false);
       }
-    } catch (err) {
+    } catch (pinError) {
+      logger.error('Error pinning post:', {
+        error: pinError instanceof Error ? pinError.message : 'Unknown error',
+        postId: post._id
+      });
       setError('Error al fijar el post');
-
     }
   };
 
