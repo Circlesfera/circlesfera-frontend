@@ -30,14 +30,14 @@ const getStoredAuthData = () => {
     if (storedToken && storedUser) {
       return {
         token: storedToken,
-      user: JSON.parse(storedUser)
-    };
+        user: JSON.parse(storedUser)
+      };
+    }
+  } catch (initError) {
+    logger.error('Error initializing auth state:', {
+      error: initError instanceof Error ? initError.message : 'Unknown error'
+    });
   }
-} catch (initError) {
-  logger.error('Error initializing auth state:', {
-    error: initError instanceof Error ? initError.message : 'Unknown error'
-  });
-}
 
   return { token: null, user: null };
 };
@@ -76,9 +76,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(storedToken);
         setUser(storedUser);
       }
+
+      // Obtener token CSRF para peticiones mutativas
+      initializeCsrfToken();
+
       setLoading(false);
     }
   }, []);
+
+  // Función para inicializar token CSRF
+  const initializeCsrfToken = async () => {
+    try {
+      const response = await api.get('/auth/csrf-token');
+      if (response.data.success) {
+        logger.info('CSRF token initialized successfully');
+      } else {
+        logger.warn('CSRF token initialization failed:', response.data);
+      }
+    } catch (error) {
+      logger.error('Failed to initialize CSRF token:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        fullError: error
+      });
+    }
+  };
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -86,16 +107,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const res = await api.post<LoginResponse>('/auth/login', { email, password });
 
-      if (res.data.success && res.data.token && res.data.user) {
-        setToken(res.data.token);
+      if (res.data.success && (res.data.token || res.data.accessToken) && res.data.user) {
+        // Usar accessToken si está disponible, sino usar token
+        const authToken = res.data.accessToken || res.data.token;
+        setToken(authToken);
         setUser(res.data.user);
 
         // Guardar en localStorage de forma segura
         if (typeof window !== 'undefined') {
           try {
-            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('token', authToken);
             localStorage.setItem('user', JSON.stringify(res.data.user));
-            logger.info('User logged in successfully');
+            if (res.data.refreshToken) {
+              localStorage.setItem('refreshToken', res.data.refreshToken);
+            }
+            logger.info('User logged in successfully', {
+              hasAccessToken: !!res.data.accessToken,
+              hasRefreshToken: !!res.data.refreshToken
+            });
+
+            // Obtener nuevo token CSRF después del login
+            await initializeCsrfToken();
           } catch (storageError) {
             logger.error('Error storing login data:', {
               error: storageError instanceof Error ? storageError.message : 'Unknown error'
@@ -103,7 +135,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         }
       } else {
-
+        logger.error('Invalid login response structure:', {
+          success: res.data.success,
+          hasToken: !!res.data.token,
+          hasAccessToken: !!res.data.accessToken,
+          hasUser: !!res.data.user,
+          message: res.data.message
+        });
         throw new Error(res.data.message || 'Error en el login');
       }
     } catch (loginError) {
@@ -116,7 +154,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           status: axiosError.response?.status,
           statusText: axiosError.response?.statusText,
           message: axiosError.response?.data?.message || 'Unknown error',
-          url: axiosError.config?.url
+          url: axiosError.config?.url,
+          fullError: loginError
         });
 
         // Si hay error de autenticación, limpiar tokens

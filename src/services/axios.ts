@@ -87,9 +87,16 @@ api.interceptors.request.use(
 
     // Agregar CSRF token para peticiones mutativas (POST, PUT, DELETE, PATCH)
     const mutativeMethods = ['post', 'put', 'delete', 'patch'];
-    if (csrfToken && config.method && mutativeMethods.includes(config.method.toLowerCase())) {
-      config.headers['x-csrf-token'] = csrfToken;
-      logger.debug('CSRF token added to request');
+    if (config.method && mutativeMethods.includes(config.method.toLowerCase())) {
+      if (csrfToken) {
+        config.headers['x-csrf-token'] = csrfToken;
+        logger.debug('CSRF token added to request');
+      } else {
+        logger.warn('CSRF token not available for mutative request', {
+          method: config.method,
+          url: config.url
+        });
+      }
     }
 
     return config;
@@ -104,7 +111,7 @@ api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error: AxiosError<{ message?: string }>) => {
+  async (error: AxiosError<{ message?: string }>) => {
     // Validar que el error tiene la estructura esperada
     if (!error || typeof error !== 'object') {
       logger.error('Invalid error object:', {
@@ -143,7 +150,33 @@ api.interceptors.response.use(
         break;
 
       case 403:
-        logger.warn('Authorization error:', { message });
+        // Error CSRF - no intentar recursión infinita
+        if (message.includes('CSRF') || message.includes('csrf')) {
+          logger.warn('CSRF error detected:', {
+            message,
+            url: error.config?.url
+          });
+
+          // Solo intentar refrescar si no es una petición al endpoint de CSRF
+          if (error.config?.url && !error.config.url.includes('/auth/csrf-token')) {
+            try {
+              // Crear nueva instancia de axios para evitar recursión
+              const csrfResponse = await fetch(`${config.apiUrl}/auth/csrf-token`, {
+                method: 'GET',
+                credentials: 'include'
+              });
+
+              if (csrfResponse.ok) {
+                logger.info('CSRF token refreshed successfully');
+                // No reintentar automáticamente, dejar que el usuario reintente
+              }
+            } catch (csrfError) {
+              logger.error('Failed to refresh CSRF token:', csrfError);
+            }
+          }
+        } else {
+          logger.warn('Authorization error:', { message });
+        }
         break;
 
       case 404:
