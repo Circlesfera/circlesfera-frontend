@@ -452,8 +452,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
               type="button"
               onClick={() => setShowAttachments(!showAttachments)}
               className={`p-3 rounded-xl transition-all duration-200 ${showAttachments
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+                ? 'bg-blue-100 text-blue-600'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
                 }`}
             >
               <svg className={`w-5 h-5 transition-transform duration-200 ${showAttachments ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -523,7 +523,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               onChange={(e) => setText(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all text-gray-900 placeholder:text-gray-500"
               rows={1}
               disabled={sending}
               style={{ minHeight: '48px', maxHeight: '120px' }}

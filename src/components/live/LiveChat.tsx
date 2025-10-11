@@ -232,7 +232,7 @@ export function LiveChat({
           </div>
         ) : (
           <>
-              {comments.map((comment) => (
+            {comments.map((comment) => (
               <LiveComment
                 key={comment._id}
                 comment={comment}
@@ -291,7 +291,7 @@ export function LiveChat({
               value={message}
               onChange={handleMessageChange}
               placeholder={replyTo ? `Responder a ${replyTo.username}...` : 'Escribe un comentario...'}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-500"
               maxLength={500}
             />
             <button
