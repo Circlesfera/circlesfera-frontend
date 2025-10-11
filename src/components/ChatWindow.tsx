@@ -539,7 +539,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
             <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${isOwnMessage
               ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-              : 'bg-white border border-gray-200'
+              : 'bg-white border border-gray-200 text-gray-900'
               }`}>
               {isTextMessage && (
                 <div>
