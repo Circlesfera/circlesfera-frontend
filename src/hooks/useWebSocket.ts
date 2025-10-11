@@ -1,5 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
+import logger from '@/utils/logger';
+import { config } from '@/config/env';
 
 interface WebSocketMessage {
   type: string;
@@ -48,11 +50,11 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
     }
 
     try {
-      // Obtener URL del WebSocket desde variables de entorno (REQUERIDO)
-      const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
+      // Obtener URL del WebSocket desde config (REQUERIDO)
+      const wsUrl = config.wsUrl;
 
       if (!wsUrl) {
-        logger.error('NEXT_PUBLIC_WS_URL no está configurado');
+        logger.error('WebSocket URL no está configurado en config.wsUrl');
         return;
       }
 

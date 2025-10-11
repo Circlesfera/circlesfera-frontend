@@ -88,8 +88,10 @@ class WebRTCService {
       });
 
       return this.localStream;
-    } catch (error) {
-
+    } catch (mediaError) {
+      logger.error('Error accessing media devices:', {
+        error: mediaError instanceof Error ? mediaError.message : 'Unknown error'
+      });
       throw new Error('No se pudo acceder a la cámara/micrófono');
     }
   }
@@ -219,7 +221,7 @@ class WebRTCService {
           this.socketService.emit('webrtc:ice-candidate', {
             streamId,
             candidate: event.candidate,
-            to: viewerId,
+            from: this.socketService.getUserId(),
           });
         }
       };
@@ -268,11 +270,11 @@ class WebRTCService {
 
         peerConnection.onicecandidate = (event) => {
           if (event.candidate) {
-        this.socketService.emit('webrtc:ice-candidate', {
-          streamId: _streamId,
-          candidate: event.candidate,
-          to: from,
-        });
+            this.socketService.emit('webrtc:ice-candidate', {
+              streamId: _streamId,
+              candidate: event.candidate,
+              from: this.socketService.getUserId(),
+            });
           }
         };
 
@@ -286,7 +288,7 @@ class WebRTCService {
       this.socketService.emit('webrtc:answer', {
         streamId: _streamId,
         answer,
-        to: from,
+        from: this.socketService.getUserId(),
       });
 
     } catch (error) {
