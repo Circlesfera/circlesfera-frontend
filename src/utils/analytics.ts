@@ -3,6 +3,8 @@
  * Tracking de eventos y métricas de usuario
  */
 
+import logger from './logger';
+
 export type AnalyticsEvent =
   | 'page_view'
   | 'post_created'
@@ -68,11 +70,12 @@ export const trackEvent = (
     sendToBackend(event, eventData);
 
     // Log en desarrollo
-    if (process.env.NODE_ENV === 'development') {
-
-    }
-  } catch (error) {
-
+    logger.debug('Analytics event tracked:', { event, category: eventData.category });
+  } catch (trackError) {
+    logger.error('Error tracking analytics event:', {
+      error: trackError instanceof Error ? trackError.message : 'Unknown error',
+      event
+    });
   }
 };
 
@@ -98,9 +101,12 @@ const sendToBackend = async (
       }),
       keepalive: true // Enviar incluso si el usuario cierra la página
     });
-  } catch (error) {
+  } catch (sendError) {
     // Silenciar errores de analytics para no afectar UX
-
+    logger.debug('Analytics backend send failed (non-critical):', {
+      error: sendError instanceof Error ? sendError.message : 'Unknown error',
+      event
+    });
   }
 };
 
