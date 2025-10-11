@@ -59,8 +59,10 @@ export default function HomePage() {
         if (storiesResponse.success) {
           setStories(storiesResponse.users || []);
         }
-      } catch (error) {
-
+      } catch (loadStoriesError) {
+        logger.error('Error loading stories in home:', {
+          error: loadStoriesError instanceof Error ? loadStoriesError.message : 'Unknown error'
+        });
       }
     };
 

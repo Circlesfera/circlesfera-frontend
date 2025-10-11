@@ -42,8 +42,10 @@ export default function StoriesPage() {
             }
           }
         }
-      } catch (error) {
-
+      } catch (loadStoriesError) {
+        logger.error('Error loading stories in stories page:', {
+          error: loadStoriesError instanceof Error ? loadStoriesError.message : 'Unknown error'
+        });
       } finally {
         setLoading(false);
       }

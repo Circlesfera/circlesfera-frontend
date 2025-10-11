@@ -44,8 +44,10 @@ export default function ExplorePage() {
       if (storiesResponse.success) {
         setRecentStories(storiesResponse.users?.slice(0, 8) || []);
       }
-    } catch (error) {
-
+    } catch (loadContentError) {
+      logger.error('Error loading explore content:', {
+        error: loadContentError instanceof Error ? loadContentError.message : 'Unknown error'
+      });
     }
   }, []);
 
