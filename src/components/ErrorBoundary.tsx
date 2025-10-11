@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import logger from '@/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -29,13 +30,19 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log del error
+    logger.error('Error caught by ErrorBoundary:', {
+      error: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack
+    });
 
     // Guardar errorInfo en el estado
     this.setState({ errorInfo });
-    
+
     // Enviar a Sentry si está configurado
     if (process.env.NEXT_PUBLIC_SENTRY_DSN && typeof window !== 'undefined') {
       // TODO: Integrar Sentry.captureException(error);
+      logger.info('Sentry integration pending', { dsn: 'configured' });
     }
   }
 
@@ -71,7 +78,7 @@ class ErrorBoundary extends Component<Props, State> {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Algo salió mal
             </h1>
-            
+
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Lo sentimos, ocurrió un error inesperado en la aplicación.
             </p>
@@ -99,7 +106,7 @@ class ErrorBoundary extends Component<Props, State> {
               >
                 Intentar de nuevo
               </button>
-              
+
               <button
                 onClick={() => window.location.href = '/'}
                 className="px-6 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"

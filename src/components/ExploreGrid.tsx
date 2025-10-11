@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getRecentPosts } from '@/services/exploreService';
 import { Post } from '@/services/postService';
 import PostCard from './PostCard';
+import logger from '@/utils/logger';
 
 export default function ExploreGrid() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -18,7 +19,9 @@ export default function ExploreGrid() {
         setLoading(false);
       })
       .catch(error => {
-
+        logger.error('Error loading recent posts in ExploreGrid:', {
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
         setLoading(false);
       });
   }, []);
@@ -29,7 +32,7 @@ export default function ExploreGrid() {
         <h2 className="text-xl font-bold text-gray-900">Publicaciones recientes</h2>
         <p className="text-gray-600 text-sm mt-1">Descubre el contenido más reciente de la comunidad</p>
       </div>
-      
+
       <div className="p-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">

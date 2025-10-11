@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 import { Button } from '@/design-system';
+import logger from '@/utils/logger';
 
 interface CommentsModalProps {
   isOpen: boolean;
@@ -49,7 +50,11 @@ export default function CommentsModal({
         setComments([]);
       }
     } catch (err) {
-
+      logger.error('Error loading comments in CommentsModal:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        postId,
+        page: pageNum
+      });
       setError('Error al cargar comentarios');
       setComments([]);
     } finally {

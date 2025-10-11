@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
+import logger from '@/utils/logger';
 
 export default function CommentsSection({ postId }: { postId: string }) {
   const { user, token, loading: authLoading } = useAuth();
@@ -52,7 +53,10 @@ export default function CommentsSection({ postId }: { postId: string }) {
       }
       setLoading(false);
     }).catch(err => {
-
+      logger.error('Error loading comments in CommentsSection:', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        postId
+      });
       setError('Error al cargar comentarios');
       setComments([]);
       setLoading(false);
