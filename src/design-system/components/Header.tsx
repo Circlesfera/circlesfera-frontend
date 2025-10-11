@@ -204,7 +204,7 @@ const Header: React.FC<HeaderProps> = ({
               >
                 Crear
               </Button>
-              
+
               <button
                 onClick={() => setShowCreateMenu(!showCreateMenu)}
                 className="sm:hidden p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
@@ -217,7 +217,7 @@ const Header: React.FC<HeaderProps> = ({
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
                   <button
                     onClick={() => {
-                      router.push('/create/post');
+                      router.push('/post/create');
                       setShowCreateMenu(false);
                     }}
                     className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center space-x-3 transition-colors duration-200"
@@ -225,7 +225,7 @@ const Header: React.FC<HeaderProps> = ({
                     <PostIcon />
                     <span className="text-sm font-medium text-gray-700">Publicación</span>
                   </button>
-                  
+
                   <button
                     onClick={() => {
                       router.push('/create/story');
@@ -236,7 +236,7 @@ const Header: React.FC<HeaderProps> = ({
                     <StoryIcon />
                     <span className="text-sm font-medium text-gray-700">Historia</span>
                   </button>
-                  
+
                   <button
                     onClick={() => {
                       router.push('/create/reel');
@@ -276,7 +276,7 @@ const Header: React.FC<HeaderProps> = ({
                       </p>
                       <p className="text-xs text-gray-500">@{user.username}</p>
                     </div>
-                    
+
                     <button
                       onClick={() => {
                         router.push('/profile');
@@ -286,7 +286,7 @@ const Header: React.FC<HeaderProps> = ({
                     >
                       <span className="text-sm font-medium text-gray-700">Perfil</span>
                     </button>
-                    
+
                     <button
                       onClick={() => {
                         router.push('/settings');
@@ -296,7 +296,7 @@ const Header: React.FC<HeaderProps> = ({
                     >
                       <span className="text-sm font-medium text-gray-700">Configuración</span>
                     </button>
-                    
+
                     <div className="border-t border-gray-100 mt-2 pt-2">
                       <button
                         onClick={() => {

@@ -276,7 +276,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
                 onClick={() => {
                   switch (activeTab) {
                     case 'posts':
-                      router.push('/create/post');
+                      router.push('/post/create');
                       break;
                     case 'reels':
                       router.push('/create/reel');
