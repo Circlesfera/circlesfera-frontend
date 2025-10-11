@@ -69,7 +69,7 @@ export default function ModernProfileHeader({
                     onLoad={() => setImageError(false)}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold border-4 border-white shadow-lg transition-transform hover:scale-105">
                     {user.username?.[0]?.toUpperCase() || '?'}
                   </div>
                 )}

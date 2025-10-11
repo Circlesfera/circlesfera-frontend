@@ -52,7 +52,7 @@ export default function ProfileHeader({
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-3xl sm:text-4xl lg:text-5xl font-bold border-4 border-white shadow-lg">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-3xl sm:text-4xl lg:text-5xl font-bold border-4 border-blue-500 shadow-lg transition-transform hover:scale-105">
                 {user.username?.[0]?.toUpperCase() || '?'}
               </div>
             )}
