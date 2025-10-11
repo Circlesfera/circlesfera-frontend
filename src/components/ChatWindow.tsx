@@ -277,8 +277,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
           {/* Contenido del mensaje - Optimizado para móvil */}
           <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${isOwnMessage
-              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-              : 'bg-white border border-gray-200'
+            ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+            : 'bg-white border border-gray-200'
             }`}>
             {isTextMessage && (
               <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content.text}</div>
@@ -341,59 +341,82 @@ export default function ChatWindow({ conversationId, conversationName, participa
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white rounded-none md:rounded-r-2xl shadow-md">
-      {/* Header del chat - Optimizado para móvil */}
-      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-100">
-        <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0">
-            {participants?.[0]?.avatar ? (
-              <img
-                src={participants[0].avatar}
-                alt="avatar"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs sm:text-sm">
-                {participants?.[0]?.username?.[0]?.toUpperCase() || 'U'}
-              </div>
-            )}
+    <div className="flex-1 flex flex-col h-full bg-white rounded-none md:rounded-r-2xl shadow-lg">
+      {/* Header mejorado del chat */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
+        <div className="flex items-center space-x-3 min-w-0 flex-1">
+          <div className="relative flex-shrink-0">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden ring-2 ring-gray-200">
+              {participants?.[0]?.avatar ? (
+                <img
+                  src={participants[0].avatar}
+                  alt="avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-base">
+                  {participants?.[0]?.username?.[0]?.toUpperCase() || 'U'}
+                </div>
+              )}
+            </div>
+            {/* Indicador de estado en línea (opcional) */}
+            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
+
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
-              {conversationName || participants?.map(p => p.username).join(', ')}
+            <h3 className="font-semibold text-gray-900 text-base truncate">
+              {conversationName || participants?.map(p => p.fullName || p.username).join(', ')}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-500">
-              {participants?.length || 0} participantes
+            <p className="text-xs text-gray-500 flex items-center space-x-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              <span>En línea</span>
             </p>
           </div>
         </div>
 
-        <button className="p-2 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0">
-          <MoreIcon />
-        </button>
+        <div className="flex items-center space-x-1 flex-shrink-0">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </button>
+
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </button>
+
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
+            <MoreIcon />
+          </button>
+        </div>
       </div>
 
-      {/* Área de mensajes - Optimizada para móvil */}
+      {/* Área de mensajes mejorada */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gray-50"
+        className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-gray-50/50 to-white/50"
       >
         {loading ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
               <MessageSkeleton key={i} align={i % 2 === 0 ? 'left' : 'right'} />
             ))}
           </div>
         ) : messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center p-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
+            <div className="text-center p-6 max-w-sm">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full blur-2xl opacity-20"></div>
+                <div className="relative w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
               </div>
-              <h3 className="text-gray-600 font-medium mb-2 text-sm sm:text-base">No hay mensajes aún</h3>
-              <p className="text-gray-400 text-xs sm:text-sm">¡Sé el primero en enviar un mensaje!</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">¡Comienza la conversación!</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">Envía un mensaje para iniciar el chat</p>
             </div>
           </div>
         ) : (
@@ -402,14 +425,14 @@ export default function ChatWindow({ conversationId, conversationName, participa
               <div className="text-center mb-4">
                 <button
                   onClick={handleLoadMore}
-                  className="text-blue-500 text-xs sm:text-sm hover:text-blue-700 transition-colors"
+                  className="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl font-medium transition-all"
                 >
                   Cargar mensajes anteriores
                 </button>
               </div>
             )}
 
-            <ul className="space-y-1">
+            <ul className="space-y-2">
               <AnimatePresence>
                 {messages.map(renderMessage)}
               </AnimatePresence>
@@ -420,28 +443,32 @@ export default function ChatWindow({ conversationId, conversationName, participa
         )}
       </div>
 
-      {/* Formulario de envío - Optimizado para móvil */}
-      <div className="p-3 sm:p-4 border-t border-gray-100 bg-white rounded-none md:rounded-b-2xl">
-        <form onSubmit={handleSend} className="flex items-end space-x-2 sm:space-x-3">
-          {/* Botones de adjuntos */}
+      {/* Formulario de envío mejorado */}
+      <div className="p-4 border-t border-gray-200/50 bg-gradient-to-t from-white to-gray-50/50 backdrop-blur-sm">
+        <form onSubmit={handleSend} className="flex items-end space-x-3">
+          {/* Botón de adjuntos mejorado */}
           <div className="relative flex-shrink-0">
             <button
               type="button"
               onClick={() => setShowAttachments(!showAttachments)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className={`p-3 rounded-xl transition-all duration-200 ${showAttachments
+                  ? 'bg-blue-100 text-blue-600'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+                }`}
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg className={`w-5 h-5 transition-transform duration-200 ${showAttachments ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
               </svg>
             </button>
 
             <AnimatePresence>
               {showAttachments && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2 space-y-2 z-10"
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute bottom-full left-0 mb-3 bg-white rounded-2xl shadow-2xl border border-gray-200/50 p-2 space-y-1 z-10 min-w-[180px]"
                 >
                   {/* Input oculto para imágenes */}
                   <input
@@ -451,9 +478,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     className="hidden"
                     id="image-upload"
                   />
-                  <label htmlFor="image-upload" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors cursor-pointer">
-                    <ImageIcon />
-                    <span className="text-sm">Imagen</span>
+                  <label htmlFor="image-upload" className="flex items-center space-x-3 w-full px-4 py-3 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer group">
+                    <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+                      <ImageIcon />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Imagen</span>
                   </label>
 
                   {/* Input oculto para videos */}
@@ -464,44 +493,48 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     className="hidden"
                     id="video-upload"
                   />
-                  <label htmlFor="video-upload" className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors cursor-pointer">
-                    <VideoIcon />
-                    <span className="text-sm">Video</span>
+                  <label htmlFor="video-upload" className="flex items-center space-x-3 w-full px-4 py-3 rounded-xl hover:bg-purple-50 transition-colors cursor-pointer group">
+                    <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors">
+                      <VideoIcon />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Video</span>
                   </label>
 
                   <button
                     type="button"
                     onClick={handleLocationShare}
                     disabled={sending}
-                    className="flex items-center space-x-2 w-full px-3 py-2 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    className="flex items-center space-x-3 w-full px-4 py-3 rounded-xl hover:bg-green-50 transition-colors disabled:opacity-50 group"
                   >
-                    <LocationIcon />
-                    <span className="text-sm">Ubicación</span>
+                    <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
+                      <LocationIcon />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Ubicación</span>
                   </button>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Input de texto */}
-          <div className="flex-1 min-w-0">
+          {/* Input de texto mejorado */}
+          <div className="flex-1 min-w-0 relative">
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all"
               rows={1}
               disabled={sending}
-              style={{ minHeight: '40px', maxHeight: '120px' }}
+              style={{ minHeight: '48px', maxHeight: '120px' }}
             />
           </div>
 
-          {/* Botones de acción */}
-          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+          {/* Botones de acción mejorados */}
+          <div className="flex items-center space-x-2 flex-shrink-0">
             <button
               type="button"
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-all"
             >
               <EmojiIcon />
             </button>
@@ -509,7 +542,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
             <button
               type="submit"
               disabled={sending || !text.trim()}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-2.5 sm:p-3 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
             >
               <SendIcon />
             </button>

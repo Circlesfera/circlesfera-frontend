@@ -72,14 +72,14 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
   const filteredConversations = conversations.filter(conv => {
     const matchesSearch = conv.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         conv.participants.some((p: { username: string; fullName?: string }) =>
-                           p.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           p.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
-                         );
+      conv.participants.some((p: { username: string; fullName?: string }) =>
+        p.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
     const matchesFilter = filter === 'all' ||
-                         (filter === 'unread' && conv.unreadCount > 0) ||
-                         (filter === 'groups' && conv.type === 'group');
+      (filter === 'unread' && conv.unreadCount > 0) ||
+      (filter === 'groups' && conv.type === 'group');
 
     return matchesSearch && matchesFilter;
   });
@@ -124,18 +124,26 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
   };
 
   return (
-    <div className="h-full flex flex-col bg-gray-50">
-      {/* Header - Optimizado para móvil */}
-      <div className="p-4 sm:p-6 border-b border-gray-200 bg-white">
-        <div className="flex items-center justify-between mb-4 sm:mb-6">
+    <div className="h-full flex flex-col bg-gradient-to-b from-white to-gray-50/50">
+      {/* Header mejorado */}
+      <div className="p-4 sm:p-5 border-b border-gray-200/50 bg-white/80 backdrop-blur-sm">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Conversaciones</h2>
-            <p className="text-xs sm:text-sm text-gray-500">Gestiona tus chats y mensajes</p>
+            <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              Conversaciones
+            </h2>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {conversations.length} {conversations.length === 1 ? 'chat' : 'chats'}
+            </p>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5">
+            {/* Filtro mejorado */}
             <button
               onClick={() => setFilter(filter === 'all' ? 'unread' : filter === 'unread' ? 'groups' : 'all')}
-              className="p-2 sm:p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-gray-800"
+              className={`p-2.5 rounded-xl transition-all duration-200 ${filter !== 'all'
+                ? 'bg-blue-100 text-blue-600'
+                : 'text-gray-600 hover:bg-gray-100'
+                }`}
               title={filter === 'all' ? 'Mostrar no leídos' : filter === 'unread' ? 'Mostrar grupos' : 'Mostrar todos'}
             >
               <FilterIcon />
@@ -143,7 +151,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             {onCreateNew && (
               <button
                 onClick={onCreateNew}
-                className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                className="p-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105 duration-200"
                 title="Nueva conversación"
               >
                 <PlusIcon />
@@ -152,9 +160,9 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
           </div>
         </div>
 
-        {/* Barra de búsqueda - Optimizada para móvil */}
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+        {/* Barra de búsqueda mejorada */}
+        <div className="relative group">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
             <SearchIcon />
           </div>
           <input
@@ -162,10 +170,19 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             placeholder="Buscar conversaciones..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white shadow-sm !text-gray-900 !placeholder-gray-500"
-            style={{ color: '#111827', '--tw-placeholder-opacity': '1' } as React.CSSProperties}
+            className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm bg-gray-50/50 hover:bg-white transition-all !text-gray-900 placeholder:text-gray-500"
           />
         </div>
+
+        {/* Filtros activos */}
+        {filter !== 'all' && (
+          <div className="mt-3 flex items-center space-x-2">
+            <span className="text-xs font-medium text-gray-600">Filtro:</span>
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+              {filter === 'unread' ? 'No leídos' : 'Grupos'}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Lista de conversaciones */}
@@ -179,24 +196,27 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
         ) : filteredConversations.length === 0 ? (
           <div className="flex items-center justify-center h-full p-8">
             <div className="text-center max-w-sm mx-auto">
-              <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full blur-2xl opacity-30"></div>
+                <div className="relative w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto">
+                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
                 {searchQuery ? 'No se encontraron conversaciones' : 'No tienes conversaciones'}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-gray-500 text-sm leading-relaxed mb-4">
                 {searchQuery
-                  ? 'Intenta con otros términos de búsqueda o crea una nueva conversación.'
-                  : 'Comienza a conectar con amigos y familiares creando tu primera conversación.'
+                  ? 'Intenta con otros términos de búsqueda'
+                  : 'Comienza a conectar con amigos creando tu primera conversación'
                 }
               </p>
               {!searchQuery && onCreateNew && (
                 <button
                   onClick={onCreateNew}
-                  className="mt-4 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                  className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                 >
                   Crear conversación
                 </button>
@@ -204,27 +224,27 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             </div>
           </div>
         ) : (
-          <ul className="p-2">
+          <ul className="p-2 space-y-1">
             <AnimatePresence>
               {filteredConversations.map((conversation) => (
                 <motion.li
                   key={conversation._id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
                   <button
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                      selectedId === conversation._id
-                        ? 'bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200'
-                        : 'hover:bg-gray-50'
-                    }`}
+                    className={`group w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${selectedId === conversation._id
+                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 shadow-sm'
+                      : 'hover:bg-gray-50 border-2 border-transparent'
+                      }`}
                     onClick={() => onSelect(conversation)}
                   >
-                    {/* Avatar - Optimizado para móvil */}
+                    {/* Avatar mejorado */}
                     <div className="relative flex-shrink-0">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden">
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden ring-2 ${selectedId === conversation._id ? 'ring-blue-400' : 'ring-gray-200 group-hover:ring-gray-300'
+                        } transition-all`}>
                         {getConversationAvatar(conversation) ? (
                           <img
                             src={getConversationAvatar(conversation)}
@@ -232,53 +252,60 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm sm:text-lg">
+                          <div className="w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-lg">
                             {getConversationInitials(conversation)}
                           </div>
                         )}
                       </div>
 
-                      {/* Indicador de grupo */}
+                      {/* Indicador de grupo mejorado */}
                       {conversation.type === 'group' && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center">
-                          <GroupIcon />
+                        <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center text-white shadow-md">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                          </svg>
                         </div>
                       )}
 
-                      {/* Indicador de no leídos */}
+                      {/* Badge de no leídos mejorado */}
                       {conversation.unreadCount > 0 && (
-                        <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <div className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold px-1.5 shadow-lg">
                           {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
                         </div>
                       )}
                     </div>
 
-                    {/* Información de la conversación - Optimizada para móvil */}
+                    {/* Información mejorada */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className={`font-semibold truncate text-base ${conversation.unreadCount > 0 ? 'text-gray-900' : 'text-gray-700'
+                          }`}>
                           {getConversationName(conversation)}
                         </h3>
                         {conversation.lastMessage && (
-                          <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
+                          <span className={`text-xs flex-shrink-0 ml-2 font-medium ${conversation.unreadCount > 0 ? 'text-blue-600' : 'text-gray-500'
+                            }`}>
                             {formatTimeAgo(conversation.lastMessage.createdAt)}
                           </span>
                         )}
                       </div>
 
                       {conversation.lastMessage && (
-                        <p className="text-xs sm:text-sm text-gray-600 truncate mt-1">
-                          {conversation.lastMessage.type === 'text'
-                            ? conversation.lastMessage.content?.text || 'Mensaje de texto'
-                            : conversation.lastMessage.type === 'image'
-                            ? '📷 Imagen'
-                            : conversation.lastMessage.type === 'video'
-                            ? '🎥 Video'
-                            : conversation.lastMessage.type === 'location'
-                            ? '📍 Ubicación'
-                            : 'Mensaje'
-                          }
-                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-gray-900 font-medium' : 'text-gray-600'
+                            }`}>
+                            {conversation.lastMessage.type === 'text'
+                              ? conversation.lastMessage.content?.text || 'Mensaje de texto'
+                              : conversation.lastMessage.type === 'image'
+                                ? '📷 Imagen'
+                                : conversation.lastMessage.type === 'video'
+                                  ? '🎥 Video'
+                                  : conversation.lastMessage.type === 'location'
+                                    ? '📍 Ubicación'
+                                    : 'Mensaje'
+                            }
+                          </p>
+                        </div>
                       )}
                     </div>
                   </button>

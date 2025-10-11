@@ -13,7 +13,7 @@ export default function MessagesPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  
+
   const handleSelectConversation = (conversation: Conversation) => {
     setSelected(conversation._id);
     setShowChat(true);
@@ -58,40 +58,55 @@ export default function MessagesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        {/* Header de la página - Optimizado para móvil */}
-        <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
+      <div className="h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+        {/* Header mejorado con glassmorphism */}
+        <div className="backdrop-blur-xl bg-white/80 border-b border-gray-200/50 shadow-sm px-4 sm:px-6 py-4">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 sm:space-x-4">
-                {/* Botón de regreso en móvil cuando se muestra el chat */}
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                {/* Botón de regreso mejorado */}
                 {showChat && (
                   <button
                     onClick={handleBackToList}
-                    className="md:hidden p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="md:hidden p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
                 )}
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mensajes</h1>
-                <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
-                  <span>•</span>
-                  <span>Conecta con amigos</span>
-                  <span>•</span>
-                  <span>Chat en tiempo real</span>
+
+                {/* Título con gradiente */}
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                      Mensajes
+                    </h1>
+                    <p className="hidden sm:block text-xs text-gray-500">Chat en tiempo real</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+
+              {/* Acciones del header */}
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleCreateNew}
+                  className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
+                  <span className="text-sm">Nuevo</span>
                 </button>
-                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-6H4v6zM4 5h6V4a1 1 0 00-1-1H5a1 1 0 00-1 1v1zm0 6h6V9H4v2zm0 4h6v-2H4v2z" />
+
+                <button className="p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                   </svg>
                 </button>
               </div>
@@ -99,50 +114,70 @@ export default function MessagesPage() {
           </div>
         </div>
 
-        {/* Contenido principal - Optimizado para móvil */}
-        <div className="max-w-7xl mx-auto h-[calc(100vh-80px)] sm:h-[calc(100vh-120px)]">
-          <div className="bg-white rounded-none sm:rounded-2xl shadow-xl border border-gray-200 overflow-hidden h-full">
+        {/* Contenido principal mejorado */}
+        <div className="max-w-7xl mx-auto h-[calc(100vh-88px)] p-2 sm:p-4">
+          <div className="backdrop-blur-xl bg-white/90 rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden h-full">
             <div className="flex h-full">
-              {/* Sidebar de conversaciones - Oculto en móvil cuando se muestra el chat */}
-              <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200 bg-gray-50`}>
-                <ConversationsList 
-                  onSelect={handleSelectConversation} 
-                  selectedId={selected} 
+              {/* Sidebar mejorado */}
+              <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200/50 bg-gradient-to-b from-gray-50/50 to-white/50`}>
+                <ConversationsList
+                  onSelect={handleSelectConversation}
+                  selectedId={selected}
                   onCreateNew={handleCreateNew}
                 />
               </div>
 
-              {/* Área de chat - Oculto en móvil cuando no hay conversación seleccionada */}
+              {/* Área de chat mejorada */}
               <div className={`${!showChat ? 'hidden md:flex' : 'flex'} flex-1 flex-col bg-white`}>
                 {selected ? (
                   <ChatWindow conversationId={selected} />
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6">
+                  <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-blue-50/50 via-indigo-50/50 to-purple-50/50 p-6">
                     <div className="text-center max-w-md mx-auto">
-                      <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                        <svg className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
+                      {/* Ilustración mejorada */}
+                      <div className="relative mb-8">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+                        <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                          <svg className="w-12 h-12 sm:w-16 sm:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                        </div>
                       </div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">¡Comienza a chatear!</h3>
-                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">
-                        Selecciona una conversación de la lista para comenzar a enviar mensajes y conectar con tus amigos.
+
+                      <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3">
+                        ¡Comienza a chatear!
+                      </h3>
+                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
+                        Selecciona una conversación o crea una nueva para comenzar a conectar con tus amigos
                       </p>
-                      <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-gray-500">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                          <span>Chat en tiempo real</span>
+
+                      {/* Features mejorados */}
+                      <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+                        <div className="flex items-center space-x-2 px-4 py-2 bg-green-50 rounded-full">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-sm text-green-700 font-medium">Tiempo real</span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                          <span>Mensajes seguros</span>
+                        <div className="flex items-center space-x-2 px-4 py-2 bg-blue-50 rounded-full">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span className="text-sm text-blue-700 font-medium">Seguro</span>
+                        </div>
+                        <div className="flex items-center space-x-2 px-4 py-2 bg-purple-50 rounded-full">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span className="text-sm text-purple-700 font-medium">Multimedia</span>
                         </div>
                       </div>
+
+                      {/* Botón CTA mejorado */}
                       <button
                         onClick={handleCreateNew}
-                        className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                        className="group px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 duration-300"
                       >
-                        Crear nueva conversación
+                        <span className="flex items-center space-x-2">
+                          <svg className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                          </svg>
+                          <span>Crear conversación</span>
+                        </span>
                       </button>
                     </div>
                   </div>
@@ -152,7 +187,7 @@ export default function MessagesPage() {
           </div>
         </div>
 
-        {/* Modal para crear nueva conversación */}
+        {/* Modal mejorado */}
         {showCreateModal && (
           <CreateConversationModal
             isOpen={showCreateModal}
