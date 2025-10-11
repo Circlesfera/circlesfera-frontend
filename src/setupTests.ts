@@ -94,15 +94,16 @@ global.IntersectionObserver = class IntersectionObserver {
     return []
   }
   unobserve() { }
-} as any
+} as unknown as IntersectionObserver
 
+// ✅ CORREGIDO: Tipar mock correctamente
 // Mock de ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   constructor() { }
   disconnect() { }
   observe() { }
   unobserve() { }
-} as any
+} as unknown as typeof ResizeObserver
 
 // Mock de fetch (será sobrescrito por MSW en tests específicos)
 global.fetch = vi.fn()

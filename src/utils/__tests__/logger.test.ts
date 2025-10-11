@@ -209,8 +209,13 @@ describe('Logger Utility', () => {
 
   describe('Manejo de errores complejos', () => {
     test('debe manejar objetos circulares', () => {
+      // ✅ CORREGIDO: Tipar objeto circular correctamente
       // Arrange
-      const circular: any = { prop: 'value' }
+      interface CircularObject {
+        prop: string;
+        circular?: CircularObject;
+      }
+      const circular: CircularObject = { prop: 'value' }
       circular.circular = circular
 
       // Act & Assert

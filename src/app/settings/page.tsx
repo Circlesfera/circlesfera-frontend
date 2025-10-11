@@ -211,6 +211,7 @@ export default function SettingsPage() {
   });
 
   // Handlers para guardar configuraciones con validación
+  // ✅ CORREGIDO: Incluir showMessage en dependencies
   const handleSavePrivacy = useCallback(async () => {
     try {
       setSaving(true);
@@ -223,8 +224,9 @@ export default function SettingsPage() {
     } finally {
       setSaving(false);
     }
-  }, [privacySettings, privacyValidation, setSaving]);
+  }, [privacySettings, privacyValidation, setSaving, showMessage]);
 
+  // ✅ CORREGIDO: Incluir showMessage en dependencies
   const handleSaveNotifications = useCallback(async () => {
     try {
       setSaving(true);
@@ -237,8 +239,9 @@ export default function SettingsPage() {
     } finally {
       setSaving(false);
     }
-  }, [notificationSettings, notificationValidation, setSaving]);
+  }, [notificationSettings, notificationValidation, setSaving, showMessage]);
 
+  // ✅ CORREGIDO: Incluir showMessage en dependencies
   const handleSaveSecurity = useCallback(async () => {
     try {
       setSaving(true);
@@ -251,7 +254,7 @@ export default function SettingsPage() {
     } finally {
       setSaving(false);
     }
-  }, [securitySettings, securityValidation, setSaving]);
+  }, [securitySettings, securityValidation, setSaving, showMessage]);
 
   // Validación de cambio de contraseña con Zod
   const passwordValidation = useFormValidation({
@@ -264,6 +267,7 @@ export default function SettingsPage() {
     }
   });
 
+  // ✅ CORREGIDO: Incluir showMessage en dependencies
   const handleChangePassword = useCallback(async () => {
     try {
       setSaving(true);
@@ -277,7 +281,7 @@ export default function SettingsPage() {
     } finally {
       setSaving(false);
     }
-  }, [passwordForm, passwordValidation, setSaving]);
+  }, [passwordForm, passwordValidation, setSaving, showMessage]);
 
   const handleToggleTwoFactor = async (enabled: boolean) => {
     try {

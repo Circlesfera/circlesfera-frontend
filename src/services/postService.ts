@@ -235,8 +235,8 @@ export const getComments = async (postId: string, page = 1, limit = 10): Promise
     });
 
     return res.data;
-  } catch (error: any) {
-
+  } catch (error: unknown) {
+    // ✅ CORREGIDO: Usar unknown en lugar de any
     throw error;
   }
 };

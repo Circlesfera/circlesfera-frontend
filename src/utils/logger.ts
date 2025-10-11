@@ -60,7 +60,18 @@ class Logger {
    */
   error(...args: unknown[]): void {
     if (this.shouldLog('error')) {
-      console.error(...args);
+      // Serializar objetos complejos para mejor debugging
+      const serializedArgs = args.map(arg => {
+        if (typeof arg === 'object' && arg !== null) {
+          try {
+            return JSON.stringify(arg, null, 2);
+          } catch {
+            return String(arg);
+          }
+        }
+        return arg;
+      });
+      console.error(...serializedArgs);
     }
 
     // En producción, también enviar a servicio de monitoreo
@@ -127,9 +138,18 @@ class Logger {
    * Enviar error a servicio de monitoreo (producción)
    */
   private sendToMonitoring(args: unknown[]): void {
+    // ✅ CORREGIDO: Tipar window con interfaz extendida
+    interface WindowWithSentry extends Window {
+      Sentry?: {
+        captureException: (error: Error) => void;
+      };
+    }
+
+    const globalWindow = window as WindowWithSentry;
+
     // Aquí iría la integración con Sentry, LogRocket, etc.
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      (window as any).Sentry.captureException(new Error(JSON.stringify(args)));
+    if (typeof window !== 'undefined' && globalWindow.Sentry) {
+      globalWindow.Sentry.captureException(new Error(JSON.stringify(args)));
     }
   }
 
@@ -177,10 +197,17 @@ class Logger {
       console.log(`👤 Event: ${eventName}`, properties);
     }
 
+    // ✅ CORREGIDO: Tipar window con interfaz extendida
+    interface WindowWithGTag extends Window {
+      gtag?: (command: string, eventName: string, properties?: Record<string, unknown>) => void;
+    }
+
+    const globalWindow = window as WindowWithGTag;
+
     // En producción, enviar a analytics
     if (!isDevelopment && typeof window !== 'undefined') {
-      if ((window as any).gtag) {
-        (window as any).gtag('event', eventName, properties);
+      if (globalWindow.gtag) {
+        globalWindow.gtag('event', eventName, properties);
       }
     }
   }
