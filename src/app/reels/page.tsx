@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { Video, Heart, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
 import { useReels } from '@/hooks/useReels';
 import VideoPlayer from '@/components/VideoPlayer';
+import logger from '@/utils/logger';
 
 export default function ReelsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -43,8 +44,11 @@ export default function ReelsPage() {
         // Revertir si falla
         updateReel(reelId, { likes: currentReel.likes });
       }
-    } catch (error) {
-
+    } catch (likeReelError) {
+      logger.error('Error liking reel:', {
+        error: likeReelError instanceof Error ? likeReelError.message : 'Unknown error',
+        reelId
+      });
       // Revertir en caso de error
       if (currentReel) {
         updateReel(reelId, { likes: currentReel.likes });
@@ -70,8 +74,11 @@ export default function ReelsPage() {
         await navigator.clipboard.writeText(reelUrl);
         alert('¡Enlace copiado al portapapeles!');
       }
-    } catch (error) {
-
+    } catch (shareReelError) {
+      logger.warn('Error sharing reel:', {
+        error: shareReelError instanceof Error ? shareReelError.message : 'Unknown error',
+        reelId
+      });
     }
   }, []);
 

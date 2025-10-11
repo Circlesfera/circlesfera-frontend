@@ -8,6 +8,7 @@ import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import StoryViewer from '@/components/StoryViewer';
 import { Plus, ArrowLeft } from 'lucide-react';
+import logger from '@/utils/logger';
 
 export default function StoriesPage() {
   const router = useRouter();
@@ -25,13 +26,13 @@ export default function StoriesPage() {
   useEffect(() => {
     const loadStories = async () => {
       if (authLoading || !user) return;
-      
+
       try {
         setLoading(true);
         const response = await getUsersWithStories();
         if (response.success) {
           setStories(response.users || []);
-          
+
           // Si hay usuario inicial, configurarlo
           if (initialUser && response.users) {
             const foundUser = response.users.find(u => u.username === initialUser);
@@ -54,7 +55,7 @@ export default function StoriesPage() {
   const handleUserSelect = (user: UserWithStories) => {
     setSelectedUser(user);
     setIsViewing(true);
-    
+
     // Actualizar URL
     router.push(`/stories?user=${user.username}`);
   };
@@ -78,7 +79,7 @@ export default function StoriesPage() {
 
   if (isViewing && selectedUser) {
     const currentStory = selectedUser.latestStory;
-    
+
     return (
       <StoryViewer
         story={currentStory}
@@ -114,7 +115,7 @@ export default function StoriesPage() {
                   Stories
                 </h1>
               </div>
-              
+
               <Button
                 variant="primary"
                 gradient
@@ -195,11 +196,11 @@ export default function StoriesPage() {
                 <h2 className="text-lg font-semibold text-gray-900">
                   Todas las stories
                 </h2>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {stories.map((userWithStories) => (
-                    <Card 
-                      key={userWithStories._id} 
+                    <Card
+                      key={userWithStories._id}
                       className="p-4 hover:shadow-md transition-shadow cursor-pointer"
                       onClick={() => handleUserSelect(userWithStories)}
                     >
@@ -222,7 +223,7 @@ export default function StoriesPage() {
                             </div>
                           )}
                         </div>
-                        
+
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-900">
                             {userWithStories.username}
@@ -234,7 +235,7 @@ export default function StoriesPage() {
                             {userWithStories.storiesCount} {userWithStories.storiesCount === 1 ? 'story' : 'stories'}
                           </p>
                         </div>
-                        
+
                         <div className="text-right">
                           <p className="text-xs text-gray-500">
                             {new Date(userWithStories.latestStory.createdAt).toLocaleTimeString()}

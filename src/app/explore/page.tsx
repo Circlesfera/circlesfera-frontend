@@ -10,6 +10,7 @@ import { getTrendingReels, Reel } from '@/services/reelService';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import { getTrendingPosts, Post } from '@/services/postService';
 import { Video, Clock, TrendingUp, Users } from 'lucide-react';
+import logger from '@/utils/logger';
 
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');

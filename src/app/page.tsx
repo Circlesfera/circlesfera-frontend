@@ -11,6 +11,7 @@ import UserSuggestions from '@/components/UserSuggestions';
 import { useRouter } from 'next/navigation';
 import { useFeed } from '@/hooks/useFeed';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import logger from '@/utils/logger';
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
