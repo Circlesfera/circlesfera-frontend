@@ -35,51 +35,69 @@ export default function Sidebar() {
     </svg>
   );
 
+  const ReelsIcon = ({ filled = false }) => (
+    <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 4v16M17 4v16M3 8h18M3 12h18M3 16h18M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+    </svg>
+  );
+
+  const CSTVIcon = ({ filled = false }) => (
+    <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+      {filled ? (
+        <path d="M21 3H3C1.9 3 1 3.9 1 5V19C1 20.1 1.9 21 3 21H21C22.1 21 23 20.1 23 19V5C23 3.9 22.1 3 21 3ZM10 16L10 8L16 12L10 16Z" />
+      ) : (
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 4v16M17 4v16M3 8h18M3 12h18M3 16h18M10 9l5 3-5 3V9z" />
+      )}
+    </svg>
+  );
+
+  const LiveIcon = ({ filled = false }) => (
+    <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+      {filled ? (
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+      ) : (
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      )}
+    </svg>
+  );
+
+  const MessagesIcon = ({ filled = false }) => (
+    <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+  );
+
+  const NotificationsIcon = ({ filled = false }) => (
+    <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-5-5V7a5 5 0 00-10 0v5l-5 5h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+  );
+
+  const ProfileIcon = ({ filled = false }) => (
+    <svg className="w-6 h-6" fill={filled ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+  );
+
   // Items para desktop
   const desktopNavigationItems = [
     { href: '/', label: 'Inicio', icon: HomeIcon, exact: true },
     { href: '/explore', label: 'Explorar', icon: ExploreIcon },
-    {
-      href: '/cstv', label: 'CSTV', icon: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2 7a2 2 0 012-2h16a2 2 0 012 2v9a2 2 0 01-2 2H8l-4 3v-3H4a2 2 0 01-2-2V7z" />
-        </svg>
-      )
-    },
-    {
-      href: '/live', label: 'Live', icon: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-        </svg>
-      )
-    },
-    {
-      href: '/messages', label: 'Mensajes', icon: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-      )
-    },
-    {
-      href: '/notifications', label: 'Notificaciones', icon: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5-5V7a5 5 0 00-10 0v5l-5 5h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-      )
-    },
-    {
-      href: '/profile', label: 'Perfil', icon: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-      )
-    },
+    { href: '/reels', label: 'Reels', icon: ReelsIcon, badge: 'hot' },
+    { href: '/cstv', label: 'CSTV', icon: CSTVIcon, badge: 'new' },
+    { href: '/live', label: 'En Vivo', icon: LiveIcon, badge: 'live' },
+    { href: '/messages', label: 'Mensajes', icon: MessagesIcon },
+    { href: '/notifications', label: 'Notificaciones', icon: NotificationsIcon },
+    { href: '/profile', label: 'Perfil', icon: ProfileIcon },
   ];
 
-  // Items para móvil - Instagram style (3 elementos principales)
+  // Items para móvil - Expandido con acceso rápido
   const mobileNavigationItems = [
     { href: '/', icon: HomeIcon, exact: true },
+    { href: '/reels', icon: ReelsIcon },
     { href: '/explore', icon: ExploreIcon },
+    { href: '/cstv', icon: CSTVIcon, badge: 'new' },
+    { href: '/live', icon: LiveIcon, badge: 'live' },
     { href: '/profile', icon: 'profile' }, // Special case for profile avatar
   ];
 
@@ -117,15 +135,33 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all duration-200 group ${active
+                className={`flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all duration-200 group relative ${active
                   ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600 border border-blue-100'
                   : 'hover:bg-gray-50 text-gray-700'
                   }`}
               >
                 <div className={`transition-colors ${active ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-700'}`}>
-                  <Icon />
+                  <Icon filled={active} />
                 </div>
                 <span className="font-medium text-sm">{item.label}</span>
+
+                {/* Badges dinámicos */}
+                {item.badge === 'live' && (
+                  <span className="ml-auto flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded uppercase animate-pulse">
+                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                    LIVE
+                  </span>
+                )}
+                {item.badge === 'hot' && (
+                  <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold rounded uppercase">
+                    🔥 HOT
+                  </span>
+                )}
+                {item.badge === 'new' && (
+                  <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold rounded uppercase">
+                    ✨ NUEVO
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -139,47 +175,59 @@ export default function Sidebar() {
           </button>
         </div>
       </aside>
-      {/* Menú inferior fijo para móvil - Instagram style (3 elementos) */}
-      <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex items-center justify-center gap-16 py-3 z-50 md:hidden shadow-lg">
-        {mobileNavigationItems.map((item) => {
-          const active = isActive(item.href, item.exact);
+      {/* Menú inferior fijo para móvil - Expandido con scroll horizontal */}
+      <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 md:hidden shadow-lg overflow-x-auto">
+        <div className="flex items-center justify-start gap-2 px-2 py-3 min-w-max">
+          {mobileNavigationItems.map((item) => {
+            const active = isActive(item.href, item.exact);
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center justify-center transition-all duration-200 ${active ? 'text-black' : 'text-gray-500'
-                }`}
-            >
-              {item.icon === 'profile' ? (
-                // Avatar del perfil - Instagram style
-                <div className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${active ? 'border-black' : 'border-gray-300'
-                  }`}>
-                  {user?.avatar ? (
-                    <Image
-                      src={user.avatar}
-                      alt={`Perfil de ${user.username}`}
-                      width={24}
-                      height={24}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">
-                        {user?.username?.[0]?.toUpperCase() || '?'}
-                      </span>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="relative flex flex-col items-center justify-center gap-1 px-4 py-1 transition-all duration-200"
+              >
+                {item.icon === 'profile' ? (
+                  // Avatar del perfil - Instagram style
+                  <div className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${active ? 'border-black' : 'border-gray-300'
+                    }`}>
+                    {user?.avatar ? (
+                      <Image
+                        src={user.avatar}
+                        alt={`Perfil de ${user.username}`}
+                        width={28}
+                        height={28}
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">
+                          {user?.username?.[0]?.toUpperCase() || '?'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // Iconos normales
+                  <div className="relative">
+                    <div className={`transition-transform duration-200 ${active ? 'scale-110 text-black' : 'text-gray-500'}`}>
+                      <item.icon filled={active} />
                     </div>
-                  )}
-                </div>
-              ) : (
-                // Iconos normales
-                <div className={`transition-transform duration-200 ${active ? 'scale-110' : ''}`}>
-                  <item.icon filled={active} />
-                </div>
-              )}
-            </Link>
-          );
-        })}
+
+                    {/* Badge LIVE para móvil */}
+                    {item.badge === 'live' && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-white"></span>
+                    )}
+                    {/* Badge NEW para móvil */}
+                    {item.badge === 'new' && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full border border-white"></span>
+                    )}
+                  </div>
+                )}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </>
   );

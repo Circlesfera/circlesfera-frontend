@@ -69,6 +69,18 @@ const NotificationIcon = () => (
   </svg>
 );
 
+const CSTVIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h18M3 12h18M3 16h18M10 9l5 3-5 3V9z" />
+  </svg>
+);
+
+const LiveIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+);
+
 const MenuIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -448,6 +460,27 @@ export default function Header() {
             <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <StoriesIcon />
               <span>Stories</span>
+            </Link>
+
+            <Link href="/cstv" className="flex items-center justify-between p-3 hover:bg-blue-50 rounded-lg transition-colors group">
+              <div className="flex items-center space-x-3">
+                <CSTVIcon />
+                <span>CSTV</span>
+              </div>
+              <span className="px-2 py-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold rounded">
+                ✨ NUEVO
+              </span>
+            </Link>
+
+            <Link href="/live" className="flex items-center justify-between p-3 hover:bg-red-50 rounded-lg transition-colors group">
+              <div className="flex items-center space-x-3">
+                <LiveIcon />
+                <span>En Vivo</span>
+              </div>
+              <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded animate-pulse">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                LIVE
+              </span>
             </Link>
 
             <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
