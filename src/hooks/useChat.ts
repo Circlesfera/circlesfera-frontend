@@ -70,8 +70,13 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
 
       // Scroll al final después de cargar
       setTimeout(scrollToBottom, 100);
-    } catch (error) {
-
+      logger.debug('Chat messages loaded:', { conversationId, count: response.messages.length });
+    } catch (loadError) {
+      logger.error('Error loading chat messages:', {
+        error: loadError instanceof Error ? loadError.message : 'Unknown error',
+        conversationId
+      });
+      setError('Error al cargar mensajes');
     } finally {
       setLoading(false);
     }
@@ -89,8 +94,14 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
       setMessages(prev => [...response.messages.reverse(), ...prev]);
       setHasMore(response.pagination.page < response.pagination.pages);
       setPage(nextPage);
-    } catch (error) {
-
+      logger.debug('More chat messages loaded:', { conversationId, count: response.messages.length, page: nextPage });
+    } catch (loadMoreError) {
+      logger.error('Error loading more chat messages:', {
+        error: loadMoreError instanceof Error ? loadMoreError.message : 'Unknown error',
+        conversationId,
+        page: nextPage
+      });
+      setError('Error al cargar más mensajes');
     } finally {
       setLoading(false);
     }
@@ -107,10 +118,15 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
       if (response.success) {
         // El mensaje se agregará vía WebSocket
         scrollToBottom();
+        logger.info('Chat message sent:', { conversationId, messageId: response._id });
       }
-    } catch (error) {
-
-      throw error;
+    } catch (sendError) {
+      logger.error('Error sending chat message:', {
+        error: sendError instanceof Error ? sendError.message : 'Unknown error',
+        conversationId
+      });
+      setError('Error al enviar mensaje');
+      throw sendError;
     } finally {
       setSending(false);
     }
