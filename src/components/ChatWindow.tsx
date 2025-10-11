@@ -67,6 +67,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  // Obtener el otro participante (no el usuario actual)
+  const getOtherParticipant = () => {
+    if (!participants || !user) return null;
+    return participants.find(p => p._id !== user._id) || participants[0];
+  };
+
   const fetchMessages = useCallback(async (pageNum = 1, append = false) => {
     if (!token) return;
 
@@ -352,25 +358,31 @@ export default function ChatWindow({ conversationId, conversationName, participa
         <div className="flex items-center space-x-3 min-w-0 flex-1">
           <div className="relative flex-shrink-0">
             <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-gray-200 relative">
-              {participants?.[0]?.avatar ? (
-                <Image
-                  src={participants[0].avatar}
-                  alt={`Avatar de ${participants[0].username}`}
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-base">
-                  {participants?.[0]?.username?.[0]?.toUpperCase() || 'U'}
-                </div>
-              )}
+              {(() => {
+                const otherParticipant = getOtherParticipant();
+                return otherParticipant?.avatar ? (
+                  <Image
+                    src={otherParticipant.avatar}
+                    alt={`Avatar de ${otherParticipant.username}`}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-base">
+                    {otherParticipant?.username?.[0]?.toUpperCase() || 'U'}
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
           <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-gray-900 text-base truncate">
-              {conversationName || participants?.map(p => p.fullName || p.username).join(', ')}
+              {conversationName || (() => {
+                const otherParticipant = getOtherParticipant();
+                return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
+              })()}
             </h3>
             <p className="text-xs text-gray-500 flex items-center space-x-1">
               <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
