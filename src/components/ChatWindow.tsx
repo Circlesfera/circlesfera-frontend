@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { getMessages, sendTextMessage, sendImageMessage, sendVideoMessage, sendLocationMessage, Message } from '@/services/messageService';
 import { useAuth } from '@/features/auth/useAuth';
 import MessageSkeleton from './MessageSkeleton';
@@ -259,11 +260,13 @@ export default function ChatWindow({ conversationId, conversationName, participa
           {/* Avatar del remitente - Optimizado para móvil */}
           {!isOwnMessage && (
             <div className="flex items-end mb-1">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden mr-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden mr-2 relative">
                 {message.sender.avatar ? (
-                  <img
+                  <Image
                     src={message.sender.avatar}
-                    alt="avatar"
+                    alt={`Avatar de ${message.sender.username}`}
+                    width={32}
+                    height={32}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -286,9 +289,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
             {isImageMessage && (
               <div className="space-y-2">
-                <img
-                  src={message.content.image?.url}
+                <Image
+                  src={message.content.image?.url || '/default-image.png'}
                   alt={message.content.image?.alt || "imagen"}
+                  width={300}
+                  height={300}
                   className="rounded-lg max-w-full h-auto"
                 />
                 {message.content.image?.alt && (
@@ -346,11 +351,13 @@ export default function ChatWindow({ conversationId, conversationName, participa
       <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
         <div className="flex items-center space-x-3 min-w-0 flex-1">
           <div className="relative flex-shrink-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden ring-2 ring-gray-200">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden ring-2 ring-gray-200 relative">
               {participants?.[0]?.avatar ? (
-                <img
+                <Image
                   src={participants[0].avatar}
-                  alt="avatar"
+                  alt={`Avatar de ${participants[0].username}`}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -359,8 +366,6 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 </div>
               )}
             </div>
-            {/* Indicador de estado en línea (opcional) */}
-            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
 
           <div className="min-w-0 flex-1">
@@ -368,8 +373,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
               {conversationName || participants?.map(p => p.fullName || p.username).join(', ')}
             </h3>
             <p className="text-xs text-gray-500 flex items-center space-x-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              <span>En línea</span>
+              <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
+              <span>Estado no disponible</span>
             </p>
           </div>
         </div>

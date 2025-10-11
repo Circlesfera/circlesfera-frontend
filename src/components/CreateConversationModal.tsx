@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { searchUsers, UserSuggestion } from '@/services/userService';
 import { createConversation, Conversation as ServiceConversation } from '@/services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -86,10 +87,10 @@ export default function CreateConversationModal({
         logger.info('Conversation created:', { conversationId: response.conversation._id });
       }
     } catch (createError) {
-        logger.error('Error creating conversation:', {
-          error: createError instanceof Error ? createError.message : 'Unknown error',
-          selectedUsers
-        });
+      logger.error('Error creating conversation:', {
+        error: createError instanceof Error ? createError.message : 'Unknown error',
+        selectedUsers
+      });
     } finally {
       setCreating(false);
     }
@@ -158,9 +159,9 @@ export default function CreateConversationModal({
                         key={user._id}
                         className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm"
                       >
-                        <div className="w-6 h-6 rounded-full overflow-hidden bg-blue-200">
+                        <div className="w-6 h-6 rounded-full overflow-hidden bg-blue-200 relative">
                           {user.avatar ? (
-                            <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" />
+                            <Image src={user.avatar} alt={`Avatar de ${user.username}`} fill className="object-cover" sizes="24px" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-xs font-bold">
                               {user.username?.[0]?.toUpperCase() || 'U'}
@@ -230,15 +231,14 @@ export default function CreateConversationModal({
                         <button
                           key={user._id}
                           onClick={() => handleUserSelect(user)}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                            isSelected
-                              ? 'bg-blue-50 border border-blue-200'
-                              : 'hover:bg-gray-50'
-                          }`}
+                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${isSelected
+                            ? 'bg-blue-50 border border-blue-200'
+                            : 'hover:bg-gray-50'
+                            }`}
                         >
-                          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200">
+                          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 relative">
                             {user.avatar ? (
-                              <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" />
+                              <Image src={user.avatar} alt={`Avatar de ${user.username}`} fill className="object-cover" sizes="40px" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center font-bold text-gray-600">
                                 {user.username?.[0]?.toUpperCase() || 'U'}

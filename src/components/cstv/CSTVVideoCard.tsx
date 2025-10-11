@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Play, Heart, Bookmark, MoreVertical, Eye, Clock } from 'lucide-react';
 import type { CSTVVideo } from '@/types/cstv';
@@ -92,10 +93,12 @@ export function CSTVVideoCard({
     >
       {/* Thumbnail */}
       <div className="relative aspect-video bg-gray-200 group cursor-pointer" onClick={handlePlay}>
-        <img
+        <Image
           src={video.video.thumbnail}
           alt={video.title}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
 
         {/* Play Button Overlay */}
@@ -144,9 +147,11 @@ export function CSTVVideoCard({
         {/* User Info */}
         {showUserInfo && (
           <div className="flex items-center space-x-2 mb-3">
-            <img
+            <Image
               src={video.user.avatar || '/default-avatar.png'}
-              alt={video.user.username}
+              alt={`Avatar de ${video.user.username}`}
+              width={24}
+              height={24}
               className="w-6 h-6 rounded-full object-cover"
             />
             <span className="text-sm font-medium text-gray-900">
@@ -183,22 +188,20 @@ export function CSTVVideoCard({
           <div className="flex items-center space-x-2">
             <button
               onClick={handleLike}
-              className={`p-2 rounded-full transition-colors ${
-                isLiked
-                  ? 'bg-red-100 text-red-600'
-                  : 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600'
-              }`}
+              className={`p-2 rounded-full transition-colors ${isLiked
+                ? 'bg-red-100 text-red-600'
+                : 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600'
+                }`}
             >
               <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
             </button>
 
             <button
               onClick={handleSave}
-              className={`p-2 rounded-full transition-colors ${
-                isSaved
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600'
-              }`}
+              className={`p-2 rounded-full transition-colors ${isSaved
+                ? 'bg-blue-100 text-blue-600'
+                : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600'
+                }`}
             >
               <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
             </button>

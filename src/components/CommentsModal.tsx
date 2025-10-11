@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -151,9 +152,11 @@ export default function CommentsModal({
           <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
             <div className="flex items-center space-x-3">
               {postImage && (
-                <img
+                <Image
                   src={postImage}
-                  alt="Post"
+                  alt="Publicación"
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded-lg object-cover"
                 />
               )}
@@ -179,9 +182,11 @@ export default function CommentsModal({
               <div className="space-y-4 py-2">
                 {comments.map((comment) => (
                   <div key={comment._id} className="flex space-x-3">
-                    <img
+                    <Image
                       src={comment.user.avatar || '/default-avatar.png'}
-                      alt={comment.user.username}
+                      alt={`Avatar de ${comment.user.username}`}
+                      width={32}
+                      height={32}
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
@@ -224,9 +229,11 @@ export default function CommentsModal({
           {user && (
             <div className="border-t border-gray-200 p-4">
               <form onSubmit={handleSubmit} className="flex items-center space-x-3">
-                <img
+                <Image
                   src={user.avatar || '/default-avatar.png'}
-                  alt={user.username}
+                  alt={`Avatar de ${user.username}`}
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                 />
                 <div className="flex-1 relative">

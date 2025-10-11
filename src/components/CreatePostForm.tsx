@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/features/auth/useAuth';
 import { createImagePost, createVideoPost } from '@/services/postService';
 import logger from '@/utils/logger';
@@ -164,7 +165,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       <div className="p-6">
         <div className="flex items-center space-x-4 mb-6">
           {user?.avatar ? (
-            <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-full object-cover" />
+            <Image src={user.avatar} alt={`Avatar de ${user.username}`} width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
           ) : (
             <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white">
               {user?.username?.[0]?.toUpperCase()}
@@ -182,11 +183,10 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
           <button
             type="button"
             onClick={() => setPostType('image')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-              postType === 'image'
-                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${postType === 'image'
+              ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             <ImageIcon />
             <span className="font-medium">Foto</span>
@@ -195,11 +195,10 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
           <button
             type="button"
             onClick={() => setPostType('video')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-              postType === 'video'
-                ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${postType === 'video'
+              ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             <VideoIcon />
             <span className="font-medium">Video</span>
@@ -211,11 +210,10 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
           <div className="mb-4">
             {!preview ? (
               <div
-                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                  isDragOver
-                    ? 'border-blue-400 bg-blue-50'
-                    : 'border-gray-300 hover:border-gray-400'
-                }`}
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${isDragOver
+                  ? 'border-blue-400 bg-blue-50'
+                  : 'border-gray-300 hover:border-gray-400'
+                  }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -241,7 +239,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             ) : (
               <div className="relative">
                 {postType === 'image' ? (
-                  <img src={preview} alt="preview" className="w-full h-64 object-cover rounded-lg" />
+                  <Image src={preview} alt="Vista previa de la publicación" width={600} height={256} className="w-full h-64 object-cover rounded-lg" />
                 ) : (
                   <video
                     src={preview}

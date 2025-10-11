@@ -87,9 +87,8 @@ export function LiveComment({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className={`relative group ${comment.isPinned ? 'bg-blue-50 border-l-4 border-blue-500' : ''} ${
-        !comment.isVisible ? 'opacity-50' : ''
-      }`}
+      className={`relative group ${comment.isPinned ? 'bg-blue-50 border-l-4 border-blue-500' : ''} ${!comment.isVisible ? 'opacity-50' : ''
+        }`}
     >
       <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 transition-colors">
         {/* Avatar */}
@@ -147,9 +146,8 @@ export function LiveComment({
           <div className="flex items-center space-x-4 mt-2">
             <button
               onClick={toggleLike}
-              className={`flex items-center space-x-1 text-xs hover:text-blue-500 transition-colors ${
-                isLiked ? 'text-blue-500' : 'text-gray-500'
-              }`}
+              className={`flex items-center space-x-1 text-xs hover:text-blue-500 transition-colors ${isLiked ? 'text-blue-500' : 'text-gray-500'
+                }`}
             >
               <ThumbsUp className="w-3 h-3" />
               <span>Me gusta</span>
