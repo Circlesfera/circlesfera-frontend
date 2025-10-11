@@ -10,6 +10,7 @@ import type {
   LiveCommentFilters,
   LiveStreamStats,
 } from '@/types/live';
+import type { CSTVVideo } from '@/types/cstv';
 
 export const liveStreamService = {
   // Crear una nueva transmisión en vivo
