@@ -10,6 +10,7 @@ import type { UserProfile } from '@/services/userService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
+import { useToast } from '@/components/Toast';
 
 interface Props {
   params: Promise<{ username: string; id: string }>;
@@ -21,6 +22,7 @@ export default function UserStoryPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user: currentUser } = useAuth();
+  const { showToast } = useToast();
   const router = useRouter();
 
   const handleView = useCallback(async () => {
@@ -128,7 +130,7 @@ export default function UserStoryPage({ params }: Props) {
         storyId: story?._id
       });
       // Fallback: mostrar mensaje de error al usuario
-      alert('Error al compartir la story');
+      showToast('error', 'Error al compartir la story');
     }
   };
 

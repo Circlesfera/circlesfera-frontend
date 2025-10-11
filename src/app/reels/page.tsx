@@ -72,7 +72,7 @@ export default function ReelsPage() {
         });
       } else {
         await navigator.clipboard.writeText(reelUrl);
-        alert('¡Enlace copiado al portapapeles!');
+        showToast('success', '¡Enlace copiado al portapapeles!');
       }
     } catch (shareReelError) {
       logger.warn('Error sharing reel:', {

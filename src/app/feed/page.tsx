@@ -8,6 +8,7 @@ import FeedCard from '@/components/feed/FeedCard';
 import { Card } from '@/design-system/Card';
 import { Button } from '@/design-system/Button';
 import logger from '@/utils/logger';
+import { useToast } from '@/components/Toast';
 
 // Iconos SVG
 const RefreshIcon = ({ className }: { className?: string }) => (
@@ -25,6 +26,7 @@ const PlusIcon = ({ className }: { className?: string }) => (
 export default function FeedPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
@@ -169,7 +171,7 @@ export default function FeedPage() {
       } else {
         // Fallback: copiar al portapapeles
         await navigator.clipboard.writeText(postUrl);
-        alert('¡Enlace copiado al portapapeles!');
+        showToast('success', '¡Enlace copiado al portapapeles!');
       }
     } catch (copyError) {
       logger.warn('Error copying to clipboard:', {
@@ -179,7 +181,7 @@ export default function FeedPage() {
       // Fallback final: copiar manualmente
       const postUrl = `${window.location.origin}/${username}/post/${postId}`;
       navigator.clipboard.writeText(postUrl).then(() => {
-        alert('¡Enlace copiado al portapapeles!');
+        showToast('success', '¡Enlace copiado al portapapeles!');
       });
     }
   }, []);

@@ -74,7 +74,7 @@ export function usePost(
       }
     } catch (error) {
 
-      alert('Error al eliminar el post. Por favor intenta de nuevo.');
+      // El error se maneja en el componente que usa el hook
     } finally {
       setLoading(false);
     }
