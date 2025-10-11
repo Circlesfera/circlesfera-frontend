@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { deleteStory, Story } from '@/services/storyService';
 import logger from '@/utils/logger';
-import logger from '@/utils/logger';
 
 // Iconos SVG modernos estilo Instagram
 const CloseIcon = () => (
