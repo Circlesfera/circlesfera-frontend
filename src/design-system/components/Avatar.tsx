@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef } from 'react';
+import Image from 'next/image';
 import { cn } from '@/utils/cn';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -90,10 +91,12 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         {...props}
       >
         {src ? (
-          <img
+          <Image
             src={src}
             alt={alt}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100px, 150px"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.style.display = 'none';
@@ -104,7 +107,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             }}
           />
         ) : null}
-        
+
         <div
           className={cn(
             'w-full h-full flex items-center justify-center',
@@ -158,7 +161,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
             })}
           </div>
         ))}
-        
+
         {remainingCount > 0 && (
           <div
             className={cn(

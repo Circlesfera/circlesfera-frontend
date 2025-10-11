@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getUnreadCount } from '@/services/notificationService';
 import { useAuth } from '@/features/auth/useAuth';
+import logger from '@/utils/logger';
 
 export function useUnreadNotifications() {
   const { user } = useAuth();
@@ -17,16 +18,21 @@ export function useUnreadNotifications() {
       const unreadCount = await getUnreadCount();
       setUnread(unreadCount);
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al obtener notificaciones no leídas
+      logger.error('Error fetching unread notifications count:', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       setUnread(0);
     }
   }, [user]);
 
   useEffect(() => {
+    if (!user) return;
+
     fetchUnread();
-    const interval = setInterval(fetchUnread, 30000); // Actualiza cada 30s
+    const interval = setInterval(fetchUnread, 60000); // Reducir frecuencia a 60s
     return () => clearInterval(interval);
-  }, [fetchUnread]);
+  }, [user?._id]); // Solo depende del ID del usuario, no de fetchUnread
 
   return unread;
 }

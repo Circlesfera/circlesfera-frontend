@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 import CreatePostForm from './CreatePostForm';
@@ -199,207 +200,209 @@ export default function Header() {
               </Link>
             </div>
 
-          {/* Buscador centrado - Desktop */}
-          <div className="hidden md:block w-72 relative" ref={searchRef}>
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <input
-                type="text"
-                placeholder="Buscar usuarios, posts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => {
-                  setSearchFocused(true);
-                  setShowSearch(true);
-                }}
-                onBlur={() => setSearchFocused(false)}
-                className={`w-full px-12 py-2 bg-gray-50 border border-gray-200 rounded-xl text-center text-sm !text-gray-900 !placeholder-gray-500 focus:outline-none transition-all duration-200 ${
-                  searchFocused ? 'border-blue-400 bg-white shadow-lg !text-gray-900' : 'hover:border-gray-300'
-                }`}
-                style={{ color: '#111827', '--tw-placeholder-opacity': '1' } as React.CSSProperties}
-              />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <SearchIcon />
-              </div>
-            </form>
+            {/* Buscador centrado - Desktop */}
+            <div className="hidden md:block w-72 relative" ref={searchRef}>
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <input
+                  type="text"
+                  placeholder="Buscar usuarios, posts..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => {
+                    setSearchFocused(true);
+                    setShowSearch(true);
+                  }}
+                  onBlur={() => setSearchFocused(false)}
+                  className={`w-full px-12 py-2 bg-gray-50 border border-gray-200 rounded-xl text-center text-sm !text-gray-900 !placeholder-gray-500 focus:outline-none transition-all duration-200 ${searchFocused ? 'border-blue-400 bg-white shadow-lg !text-gray-900' : 'hover:border-gray-300'
+                    }`}
+                  style={{ color: '#111827', '--tw-placeholder-opacity': '1' } as React.CSSProperties}
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <SearchIcon />
+                </div>
+              </form>
 
-            {/* Resultados de búsqueda */}
-            {showSearch && searchQuery && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50">
-                <UserSearch query={searchQuery} onResultClick={() => setShowSearch(false)} />
-              </div>
-            )}
-          </div>
-
-          {/* Navegación derecha - Desktop */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-            <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <HomeIcon />
-              <span className="sr-only">Inicio</span>
-            </Link>
-
-            <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <MessageIcon />
-              <span className="sr-only">Mensajes</span>
-            </Link>
-
-            <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <ExploreIcon />
-              <span className="sr-only">Explorar</span>
-            </Link>
-
-            <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <ReelsIcon />
-              <span className="sr-only">Reels</span>
-            </Link>
-
-            <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <StoriesIcon />
-              <span className="sr-only">Stories</span>
-            </Link>
-
-            <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <SearchIcon />
-              <span className="sr-only">Buscar</span>
-            </Link>
-
-            <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <FeedIcon />
-              <span className="sr-only">Feed</span>
-            </Link>
-
-            <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <SettingsIcon />
-              <span className="sr-only">Configuración</span>
-            </Link>
-
-            <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
-              <NotificationIcon />
-              {unread > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center font-bold animate-pulse">
-                  {unread > 9 ? '9+' : unread}
-                </span>
-              )}
-              <span className="sr-only">Notificaciones</span>
-            </Link>
-
-            {/* Toggle de tema */}
-            <ThemeToggle size="md" />
-
-            {/* Botón de crear contenido */}
-            <div className="relative">
-              <button
-                onClick={() => setShowCreateMenu(!showCreateMenu)}
-                className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group"
-              >
-                <PlusIcon />
-                <span className="sr-only">Crear contenido</span>
-              </button>
-
-              {/* Menú desplegable de crear contenido */}
-              {showCreateMenu && (
-                <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
-                  <div className="space-y-1">
-                    <button
-                      onClick={() => setShowPostForm(true)}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
-                    >
-                      <PostIcon />
-                      <span className="font-medium text-gray-900">Crear publicación</span>
-                    </button>
-
-                    <button
-                      onClick={() => setShowStoryForm(true)}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
-                    >
-                      <StoryIcon />
-                      <span className="font-medium text-gray-900">Crear story</span>
-                    </button>
-                  </div>
+              {/* Resultados de búsqueda */}
+              {showSearch && searchQuery && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50">
+                  <UserSearch query={searchQuery} onResultClick={() => setShowSearch(false)} />
                 </div>
               )}
             </div>
 
-            {/* Avatar del usuario */}
-            <div className="relative" ref={userMenuRef}>
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="block group"
-              >
-                {user?.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt="avatar"
-                    className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
-                  />
-                ) : (
-                  <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs lg:text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
-                    {user?.username?.[0]?.toUpperCase() || 'U'}
+            {/* Navegación derecha - Desktop */}
+            <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+              <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <HomeIcon />
+                <span className="sr-only">Inicio</span>
+              </Link>
+
+              <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <MessageIcon />
+                <span className="sr-only">Mensajes</span>
+              </Link>
+
+              <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <ExploreIcon />
+                <span className="sr-only">Explorar</span>
+              </Link>
+
+              <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <ReelsIcon />
+                <span className="sr-only">Reels</span>
+              </Link>
+
+              <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <StoriesIcon />
+                <span className="sr-only">Stories</span>
+              </Link>
+
+              <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <SearchIcon />
+                <span className="sr-only">Buscar</span>
+              </Link>
+
+              <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <FeedIcon />
+                <span className="sr-only">Feed</span>
+              </Link>
+
+              <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <SettingsIcon />
+                <span className="sr-only">Configuración</span>
+              </Link>
+
+              <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+                <NotificationIcon />
+                {unread > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center font-bold animate-pulse">
+                    {unread > 9 ? '9+' : unread}
+                  </span>
+                )}
+                <span className="sr-only">Notificaciones</span>
+              </Link>
+
+              {/* Toggle de tema */}
+              <ThemeToggle size="md" />
+
+              {/* Botón de crear contenido */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowCreateMenu(!showCreateMenu)}
+                  className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group"
+                >
+                  <PlusIcon />
+                  <span className="sr-only">Crear contenido</span>
+                </button>
+
+                {/* Menú desplegable de crear contenido */}
+                {showCreateMenu && (
+                  <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
+                    <div className="space-y-1">
+                      <button
+                        onClick={() => setShowPostForm(true)}
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <PostIcon />
+                        <span className="font-medium text-gray-900">Crear publicación</span>
+                      </button>
+
+                      <button
+                        onClick={() => setShowStoryForm(true)}
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <StoryIcon />
+                        <span className="font-medium text-gray-900">Crear story</span>
+                      </button>
+                    </div>
                   </div>
                 )}
-              </button>
+              </div>
 
-              {/* Menú de usuario */}
-              {showUserMenu && (
-                <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
-                  <div className="space-y-1">
-                    <Link
-                      href={`/${user?.username}`}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-                        {user?.username?.[0]?.toUpperCase() || 'U'}
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-900">{user?.username || 'Usuario'}</div>
-                        <div className="text-sm text-gray-500">Ver perfil</div>
-                      </div>
-                    </Link>
+              {/* Avatar del usuario */}
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="block group"
+                >
+                  {user?.avatar ? (
+                    <Image
+                      src={user.avatar}
+                      alt={`Avatar de ${user.username}`}
+                      width={32}
+                      height={32}
+                      className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
+                      priority
+                    />
+                  ) : (
+                    <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs lg:text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
+                      {user?.username?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                </button>
 
-                    <Link
-                      href="/settings"
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
-                    >
-                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <span className="font-medium text-gray-900">Configuración</span>
-                    </Link>
+                {/* Menú de usuario */}
+                {showUserMenu && (
+                  <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
+                    <div className="space-y-1">
+                      <Link
+                        href={`/${user?.username}`}
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
+                          {user?.username?.[0]?.toUpperCase() || 'U'}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">{user?.username || 'Usuario'}</div>
+                          <div className="text-sm text-gray-500">Ver perfil</div>
+                        </div>
+                      </Link>
 
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors text-red-600"
-                    >
-                      <LogoutIcon />
-                      <span className="font-medium">Cerrar sesión</span>
-                    </button>
+                      <Link
+                        href="/settings"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span className="font-medium text-gray-900">Configuración</span>
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors text-red-600"
+                      >
+                        <LogoutIcon />
+                        <span className="font-medium">Cerrar sesión</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+            </nav>
+
+            {/* Menú móvil - Optimizado */}
+            <div className="md:hidden flex items-center gap-2">
+              {/* Notificaciones en móvil */}
+              <Link href="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <NotificationIcon />
+                {unread > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold animate-pulse">
+                    {unread > 9 ? '9+' : unread}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <MenuIcon />
+              </button>
             </div>
-          </nav>
-
-          {/* Menú móvil - Optimizado */}
-          <div className="md:hidden flex items-center gap-2">
-            {/* Notificaciones en móvil */}
-            <Link href="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <NotificationIcon />
-              {unread > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold animate-pulse">
-                  {unread > 9 ? '9+' : unread}
-                </span>
-              )}
-            </Link>
-
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <MenuIcon />
-            </button>
           </div>
         </div>
-      </div>
       </header>
 
       {/* Menú móvil desplegable - Optimizado */}
@@ -486,9 +489,11 @@ export default function Header() {
 
             <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               {user?.avatar ? (
-                <img
+                <Image
                   src={user.avatar}
-                  alt="avatar"
+                  alt={`Avatar de ${user.username}`}
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-full object-cover"
                 />
               ) : (

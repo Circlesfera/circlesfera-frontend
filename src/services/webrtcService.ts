@@ -122,7 +122,11 @@ class WebRTCService {
       };
 
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al configurar grabación
+      logger.error('Error setting up media recorder:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        hasLocalStream: !!this.localStream
+      });
     }
   }
 
@@ -165,7 +169,12 @@ class WebRTCService {
         type: blob.type,
       });
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al guardar grabación
+      logger.error('Error saving recording:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        blobSize: blob.size,
+        blobType: blob.type
+      });
     }
   }
 
@@ -242,7 +251,12 @@ class WebRTCService {
       this.socketService.joinLiveStream(streamId);
 
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al unirse a stream
+      logger.error('Error joining stream:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        streamId,
+        viewerId
+      });
       throw error;
     }
   }
@@ -302,27 +316,43 @@ class WebRTCService {
 
   // Manejar respuesta WebRTC
   private async handleAnswer(_streamId: string, answer: RTCSessionDescriptionInit, from: string) {
+    // ✅ CORREGIDO: Definir peerConnection fuera del try para acceso en catch
+    const peerConnection = this.peerConnections.get(from);
+
     try {
-      const peerConnection = this.peerConnections.get(from);
       if (peerConnection) {
         await peerConnection.setRemoteDescription(answer);
 
       }
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al manejar respuesta WebRTC
+      logger.error('Error handling WebRTC answer:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        streamId: _streamId,
+        from,
+        hasPeerConnection: !!peerConnection
+      });
     }
   }
 
   // Manejar candidato ICE
   private async handleIceCandidate(_streamId: string, candidate: RTCIceCandidateInit, from: string) {
+    // ✅ CORREGIDO: Definir peerConnection fuera del try para acceso en catch
+    const peerConnection = this.peerConnections.get(from);
+
     try {
-      const peerConnection = this.peerConnections.get(from);
       if (peerConnection) {
         await peerConnection.addIceCandidate(candidate);
 
       }
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al manejar candidato ICE
+      logger.error('Error handling ICE candidate:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        streamId: _streamId,
+        from,
+        hasPeerConnection: !!peerConnection
+      });
     }
   }
 
@@ -368,7 +398,11 @@ class WebRTCService {
         },
       };
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al obtener estadísticas
+      logger.error('Error getting WebRTC stats:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        hasLocalStream: !!this.localStream
+      });
       return null;
     }
   }
@@ -398,7 +432,10 @@ class WebRTCService {
         speakers: devices.filter(device => device.kind === 'audiooutput'),
       };
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al obtener dispositivos
+      logger.error('Error getting device info:', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       return { cameras: [], microphones: [], speakers: [] };
     }
   }
@@ -426,7 +463,11 @@ class WebRTCService {
 
       return true;
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al cambiar cámara
+      logger.error('Error switching camera:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        deviceId
+      });
       return false;
     }
   }
@@ -454,7 +495,11 @@ class WebRTCService {
 
       return true;
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al cambiar micrófono
+      logger.error('Error switching microphone:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        deviceId
+      });
       return false;
     }
   }
@@ -485,7 +530,10 @@ class WebRTCService {
 
       return 'unknown';
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al obtener calidad de red
+      logger.error('Error getting network quality:', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       return 'unknown';
     }
   }

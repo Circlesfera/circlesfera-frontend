@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { getLiveSocketService } from '@/services/liveSocketService';
 import type { LiveComment, LiveStreamViewer } from '@/types/live';
+import logger from '@/utils/logger';
 
 interface UseLiveSocketOptions {
   streamId: string;
@@ -57,8 +58,8 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     // Verificar estado inicial
     updateConnectionStatus();
 
-    // Escuchar cambios de conexión
-    const interval = setInterval(updateConnectionStatus, 1000);
+    // Escuchar cambios de conexión (reducir frecuencia)
+    const interval = setInterval(updateConnectionStatus, 5000); // Cambiar de 1s a 5s
 
     return () => {
       clearInterval(interval);
@@ -258,7 +259,13 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     try {
       socketService.sendComment(streamId, content.trim(), parentId);
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al enviar comentario de live
+      logger.error('Error sending live comment:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        streamId,
+        contentLength: content.length,
+        hasParent: !!parentId
+      });
       setError('Error al enviar comentario');
     } finally {
       setLoading(false);

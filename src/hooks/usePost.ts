@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toggleLike, deletePost, Post } from '@/services/postService';
+import logger from '@/utils/logger';
 
 interface UsePostReturn {
   isLiked: boolean;
@@ -50,7 +51,12 @@ export function usePost(
         setLikesCount(response.likesCount);
       }
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al dar like
+      logger.error('Error toggling like:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        postId: post._id,
+        action: isLiked ? 'unlike' : 'like'
+      });
       // Revertir en caso de error
       setIsLiked(previousLiked);
       setLikesCount(previousCount);
@@ -73,7 +79,11 @@ export function usePost(
         }
       }
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error al eliminar post
+      logger.error('Error deleting post:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        postId: post._id
+      });
       // El error se maneja en el componente que usa el hook
     } finally {
       setLoading(false);

@@ -202,7 +202,12 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       setShowReactionFeedback(true);
       setTimeout(() => setShowReactionFeedback(false), 1000);
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error de reacción
+      logger.error('Error al reaccionar a story:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        storyId: story._id,
+        reactionType
+      });
     }
   };
 
@@ -229,7 +234,12 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       setReplyText('');
       setShowReplyInput(false);
     } catch (error) {
-
+      // ✅ IMPLEMENTADO: Logging de error de respuesta
+      logger.error('Error al enviar respuesta a story:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        storyId: story._id,
+        replyText: replyText.substring(0, 50) // Solo primeros 50 chars para log
+      });
     } finally {
       setSendingReply(false);
     }
