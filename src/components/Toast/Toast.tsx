@@ -19,28 +19,28 @@ const iconMap = {
 
 const colorMap = {
   success: {
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    border: 'border-green-500',
-    text: 'text-green-800 dark:text-green-200',
-    icon: 'text-green-500',
+    bg: 'bg-green-500 dark:bg-green-600',
+    border: 'border-green-600 dark:border-green-500',
+    text: 'text-white',
+    icon: 'text-white',
   },
   error: {
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    border: 'border-red-500',
-    text: 'text-red-800 dark:text-red-200',
-    icon: 'text-red-500',
+    bg: 'bg-red-500 dark:bg-red-600',
+    border: 'border-red-600 dark:border-red-500',
+    text: 'text-white',
+    icon: 'text-white',
   },
   warning: {
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-    border: 'border-yellow-500',
-    text: 'text-yellow-800 dark:text-yellow-200',
-    icon: 'text-yellow-500',
+    bg: 'bg-orange-500 dark:bg-orange-600',
+    border: 'border-orange-600 dark:border-orange-500',
+    text: 'text-white',
+    icon: 'text-white',
   },
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    border: 'border-blue-500',
-    text: 'text-blue-800 dark:text-blue-200',
-    icon: 'text-blue-500',
+    bg: 'bg-blue-500 dark:bg-blue-600',
+    border: 'border-blue-600 dark:border-blue-500',
+    text: 'text-white',
+    icon: 'text-white',
   },
 };
 
@@ -65,9 +65,9 @@ export function Toast({ toast, onClose }: ToastProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
       className={`
-        flex items-start gap-3 p-4 rounded-lg border-l-4 shadow-lg
+        flex items-start gap-3 p-4 rounded-lg border-l-4 shadow-xl
         ${colors.bg} ${colors.border} ${colors.text}
-        max-w-md w-full pointer-events-auto
+        max-w-md w-full pointer-events-auto backdrop-blur-sm
       `}
     >
       <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${colors.icon}`} />
@@ -76,7 +76,7 @@ export function Toast({ toast, onClose }: ToastProps) {
 
       <button
         onClick={() => onClose(toast.id)}
-        className={`flex-shrink-0 ${colors.text} hover:opacity-70 transition-opacity`}
+        className={`flex-shrink-0 ${colors.text} hover:bg-white/20 rounded-full p-1 -m-1 transition-colors`}
         aria-label="Cerrar notificación"
       >
         <X className="w-4 h-4" />
