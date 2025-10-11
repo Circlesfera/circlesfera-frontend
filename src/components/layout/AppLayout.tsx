@@ -88,6 +88,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [isHydrated, setIsHydrated] = useState(false);
   const unreadNotifications = useUnreadNotifications();
 
+  // Rutas públicas (sin layout/sidebar)
+  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
   // Rutas que requieren autenticación
   const protectedRoutes = ['/explore', '/messages', '/notifications', '/profile'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
@@ -116,6 +120,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </div>
       </div>
     );
+  }
+
+  // Si es ruta pública, NO mostrar sidebar/navegación (solo el contenido)
+  if (isPublicRoute) {
+    return <>{children}</>;
   }
 
   // Navegación organizada por secciones
@@ -418,7 +427,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       </svg>
                     </button>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <button
                       onClick={() => handleCreateContent('post')}
@@ -482,7 +491,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       </svg>
                     </button>
                   </div>
-                  
+
                   {createType === 'post' && (
                     <CompactCreatePostForm onPostCreated={handleCloseCreateModal} />
                   )}
@@ -490,9 +499,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <CompactCreateStoryForm onClose={handleCloseCreateModal} />
                   )}
                   {createType === 'reel' && (
-                    <CompactCreateReelForm 
-                      onReelCreated={handleCloseCreateModal} 
-                      onClose={handleCloseCreateModal} 
+                    <CompactCreateReelForm
+                      onReelCreated={handleCloseCreateModal}
+                      onClose={handleCloseCreateModal}
                     />
                   )}
                 </div>
