@@ -9,10 +9,12 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 // import CreateReelForm from '@/components/CreateReelForm';
 import { ArrowLeft, Video, Upload } from 'lucide-react';
 import logger from '@/utils/logger';
+import { useToast } from '@/components/Toast';
 
 export default function CreateReelPage() {
   const router = useRouter();
   const { loading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [step, setStep] = useState<'upload' | 'edit'>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -32,13 +34,13 @@ export default function CreateReelPage() {
     if (file) {
       // Validar que sea un video
       if (!file.type.startsWith('video/')) {
-        alert('Por favor selecciona un archivo de video válido');
+        showToast('error', 'Por favor selecciona un archivo de video válido');
         return;
       }
 
       // Validar tamaño (máximo 100MB)
       if (file.size > 100 * 1024 * 1024) {
-        alert('El archivo es demasiado grande. Máximo 100MB');
+        showToast('error', 'El archivo es demasiado grande. Máximo 100MB');
         return;
       }
 
@@ -60,7 +62,7 @@ export default function CreateReelPage() {
 
   const handleSubmit = async () => {
     if (!selectedFile) {
-      alert('Por favor selecciona un video');
+      showToast('error', 'Por favor selecciona un video');
       return;
     }
 
@@ -101,7 +103,7 @@ export default function CreateReelPage() {
           router.push('/reels');
         }
       } else {
-        alert('Error al crear el reel. Inténtalo de nuevo.');
+        showToast('error', 'Error al crear el reel. Inténtalo de nuevo.');
       }
     } catch (error) {
       logger.error('Error creating reel:', {
@@ -109,7 +111,7 @@ export default function CreateReelPage() {
         hasVideo: !!selectedFile,
         hasCaption: !!formData.caption
       });
-      alert('Error al crear el reel. Inténtalo de nuevo.');
+      showToast('error', 'Error al crear el reel. Inténtalo de nuevo.');
     } finally {
       setUploading(false);
     }

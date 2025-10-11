@@ -12,6 +12,7 @@ import EditProfileForm from '@/components/EditProfileForm';
 import UserListModal from '@/components/UserListModal';
 import ModernProfileHeader from '@/components/profile/ModernProfileHeader';
 import ModernProfileTabs from '@/components/profile/ModernProfileTabs';
+import { useToast } from '@/components/Toast';
 
 // Función para convertir UserProfile a User
 const convertToUser = (profile: UserProfile): User => {
@@ -68,6 +69,7 @@ const convertToUser = (profile: UserProfile): User => {
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
   const { user, refreshUser } = useAuth();
   const router = useRouter();
+  const { showToast } = useToast();
   const [showEdit, setShowEdit] = useState(false);
   const [profileData, setProfileData] = useState(profile);
   const isOwnProfile = user && user.username === profile?.username;
@@ -301,7 +303,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                         username: profileData?.username
                       });
                       // Mostrar error al usuario
-                      alert('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
+                      showToast('error', 'Error al guardar el perfil. Por favor, inténtalo de nuevo.');
                     }
                   }}
                   onCancel={() => setShowEdit(false)}
