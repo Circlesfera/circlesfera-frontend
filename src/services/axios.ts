@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { config } from '@/config/env';
+import { TIMEOUTS } from '@/config/constants';
 
 const api = axios.create({
-  baseURL: '/api', // Usar ruta relativa para aprovechar el proxy de Next.js
-  timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'),
-  withCredentials: false,
+  baseURL: config.apiUrl, // Usar URL de API desde config
+  timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || String(TIMEOUTS.API_REQUEST)),
+  withCredentials: true, // Permitir cookies para CSRF
   headers: {
     'Content-Type': 'application/json',
   },
@@ -19,8 +20,11 @@ const getToken = () => {
   }
   try {
     return localStorage.getItem('token');
-  } catch (error) {
-
+  } catch (storageError) {
+    // Error accessing localStorage (puede estar bloqueado por privacidad)
+    console.error('Error accessing localStorage:', {
+      error: storageError instanceof Error ? storageError.message : 'Unknown error'
+    });
     return null;
   }
 };

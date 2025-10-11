@@ -1,9 +1,22 @@
 // Configuración de variables de entorno para el frontend
 
+// Función helper para requerir variables de entorno
+const requireEnv = (key: string, fallback?: string): string => {
+  const value = process.env[key];
+
+  // En producción, no usar fallback
+  if (process.env.NODE_ENV === 'production' && !value) {
+    throw new Error(`Variable de entorno requerida en producción: ${key}`);
+  }
+
+  // En desarrollo, permitir fallback
+  return value || fallback || '';
+};
+
 export const config = {
   // API Configuration
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
-  appUrl: process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001/'),
+  apiUrl: requireEnv('NEXT_PUBLIC_API_URL', 'http://localhost:5001/api'),
+  appUrl: requireEnv('NEXT_PUBLIC_APP_URL', typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001'),
 
   // App Configuration
   appName: process.env.NEXT_PUBLIC_APP_NAME || 'CircleSfera',

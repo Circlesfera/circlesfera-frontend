@@ -48,8 +48,14 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
     }
 
     try {
-      // Obtener URL del WebSocket desde variables de entorno o usar default
-      const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000';
+      // Obtener URL del WebSocket desde variables de entorno (REQUERIDO)
+      const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
+
+      if (!wsUrl) {
+        console.error('NEXT_PUBLIC_WS_URL no está configurado');
+        return;
+      }
+
       const ws = new WebSocket(`${wsUrl}?token=${token}`);
 
       ws.onopen = () => {
@@ -77,8 +83,17 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
         }
       };
 
-      ws.onerror = (error) => {
+      ws.onerror = () => {
+        console.error('WebSocket error:', {
+          url: wsUrl,
+          readyState: ws.readyState,
+          timestamp: new Date().toISOString()
+        });
 
+        // Si hay un handler de desconexión, llamarlo
+        if (onDisconnect) {
+          onDisconnect();
+        }
       };
 
       ws.onmessage = (event) => {
@@ -89,23 +104,49 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
           if (onMessage) {
             onMessage(message);
           }
-        } catch (error) {
-
+        } catch (parseError) {
+          console.error('Error parsing WebSocket message:', {
+            error: parseError instanceof Error ? parseError.message : 'Unknown error',
+            data: event.data
+          });
         }
       };
 
       wsRef.current = ws;
-    } catch (error) {
+    } catch (connectionError) {
+      console.error('Error connecting to WebSocket:', {
+        error: connectionError instanceof Error ? connectionError.message : 'Unknown error',
+        url: wsUrl
+      });
 
+      // Intentar reconectar si no se alcanzó el máximo de intentos
+      if (reconnectAttemptsRef.current < maxReconnectAttempts) {
+        reconnectAttemptsRef.current += 1;
+        reconnectTimeoutRef.current = setTimeout(() => {
+          connect();
+        }, reconnectInterval);
+      }
     }
   }, [token, onConnect, onDisconnect, onMessage, reconnectInterval, maxReconnectAttempts]);
 
   const sendMessage = useCallback((type: string, data: unknown) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
-      const message: WebSocketMessage = { type, data };
-      wsRef.current.send(JSON.stringify(message));
+      try {
+        const message: WebSocketMessage = { type, data };
+        wsRef.current.send(JSON.stringify(message));
+      } catch (sendError) {
+        console.error('Error sending WebSocket message:', {
+          error: sendError instanceof Error ? sendError.message : 'Unknown error',
+          type,
+          data
+        });
+      }
     } else {
-
+      console.warn('Cannot send message: WebSocket is not connected', {
+        type,
+        readyState: wsRef.current?.readyState,
+        expectedState: WebSocket.OPEN
+      });
     }
   }, []);
 
