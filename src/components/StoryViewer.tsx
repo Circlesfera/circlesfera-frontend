@@ -75,6 +75,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
   //   console.log('🎬 StoryViewer renderizado con onClose:', typeof onClose, 'onStoryDeleted:', typeof onStoryDeleted);
   // }
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [story, setStory] = useState<Story | null>(initialStory);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -283,7 +284,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
 
     } catch (err) {
 
-      alert('Error al eliminar la story. Inténtalo de nuevo.');
+      showToast('error', 'Error al eliminar la story. Inténtalo de nuevo.');
     } finally {
       setIsDeleting(false);
     }
@@ -555,7 +556,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
                  onClick={() => {
 
                    // Aquí iría la lógica de reporte
-                   alert('Función de reporte en desarrollo');
+                   showToast('info', 'Función de reporte en desarrollo');
                    setShowMoreMenu(false);
                  }}
                  className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
