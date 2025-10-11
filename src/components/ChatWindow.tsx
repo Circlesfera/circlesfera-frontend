@@ -351,7 +351,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
         <div className="flex items-center space-x-3 min-w-0 flex-1">
           <div className="relative flex-shrink-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden ring-2 ring-gray-200 relative">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-gray-200 relative">
               {participants?.[0]?.avatar ? (
                 <Image
                   src={participants[0].avatar}

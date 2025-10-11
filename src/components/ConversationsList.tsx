@@ -238,7 +238,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                   >
                     {/* Avatar mejorado */}
                     <div className="relative flex-shrink-0">
-                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden ring-2 ${selectedId === conversation._id ? 'ring-blue-400' : 'ring-gray-200 group-hover:ring-gray-300'
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden ring-2 ${selectedId === conversation._id ? 'ring-blue-400' : 'ring-gray-200 group-hover:ring-gray-300'
                         } transition-all`}>
                         {getConversationAvatar(conversation) ? (
                           <Image
@@ -257,7 +257,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
                       {/* Indicador de grupo mejorado */}
                       {conversation.type === 'group' && (
-                        <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center text-white shadow-md">
+                        <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white shadow-md">
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                           </svg>
