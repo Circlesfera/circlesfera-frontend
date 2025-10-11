@@ -269,7 +269,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                       {conversation.lastMessage && (
                         <p className="text-xs sm:text-sm text-gray-600 truncate mt-1">
                           {conversation.lastMessage.type === 'text'
-                            ? conversation.lastMessage.content.text
+                            ? conversation.lastMessage.content?.text || 'Mensaje de texto'
                             : conversation.lastMessage.type === 'image'
                             ? '📷 Imagen'
                             : conversation.lastMessage.type === 'video'
