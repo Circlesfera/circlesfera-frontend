@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { createImageStory, createVideoStory, createTextStory, Story } from '@/services/storyService';
 import { useAuth } from '@/features/auth/useAuth';
 import { Button } from '@/design-system/Button';
@@ -62,12 +63,12 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
     if (selectedFile) {
       const isImage = selectedFile.type.startsWith('image/');
       const isVideo = selectedFile.type.startsWith('video/');
-      
+
       if (storyType === 'image' && !isImage) {
         setError('Por favor selecciona una imagen válida');
         return;
       }
-      
+
       if (storyType === 'video' && !isVideo) {
         setError('Por favor selecciona un video válido');
         return;
@@ -103,7 +104,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) {
       handleFileSelect(droppedFile);
@@ -151,7 +152,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
       setStoryType('image');
       setTextColor('#ffffff');
       setBackgroundColor('#000000');
-      
+
       onStoryCreated?.(response.story);
       onClose?.();
     } catch (error: unknown) {
@@ -181,22 +182,22 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
           onClick={() => setStoryType('image')}
           className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-            storyType === 'image' 
-              ? 'bg-purple-100 text-purple-700 border border-purple-300' 
+            storyType === 'image'
+              ? 'bg-purple-100 text-purple-700 border border-purple-300'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
           )}
         >
           <CameraIcon className="w-4 h-4" />
           Foto
         </button>
-        
+
         <button
           type="button"
           onClick={() => setStoryType('video')}
           className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-            storyType === 'video' 
-              ? 'bg-purple-100 text-purple-700 border border-purple-300' 
+            storyType === 'video'
+              ? 'bg-purple-100 text-purple-700 border border-purple-300'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
           )}
         >
@@ -209,8 +210,8 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
           onClick={() => setStoryType('text')}
           className={cn(
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-            storyType === 'text' 
-              ? 'bg-purple-100 text-purple-700 border border-purple-300' 
+            storyType === 'text'
+              ? 'bg-purple-100 text-purple-700 border border-purple-300'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
           )}
         >
@@ -230,7 +231,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             rows={3}
             maxLength={1000}
           />
-          
+
           <div className="flex gap-3">
             <div className="flex-1">
               <label className="block text-xs font-medium text-gray-700 mb-1">Color del texto</label>
@@ -258,8 +259,8 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             <div
               className={cn(
                 "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
-                isDragOver 
-                  ? 'border-purple-400 bg-purple-50' 
+                isDragOver
+                  ? 'border-purple-400 bg-purple-50'
                   : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
               )}
               onDragOver={handleDragOver}
@@ -278,11 +279,11 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
           ) : (
             <div className="relative">
               {storyType === 'image' ? (
-                <img src={preview} alt="preview" className="w-full h-48 object-cover rounded-lg" />
+                <Image src={preview} alt="Vista previa de la story" width={400} height={192} className="w-full h-48 object-cover rounded-lg" />
               ) : (
-                <video 
-                  src={preview} 
-                  controls 
+                <video
+                  src={preview}
+                  controls
                   className="w-full h-48 object-cover rounded-lg"
                 />
               )}
@@ -298,7 +299,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
               </button>
             </div>
           )}
-          
+
           <input
             ref={fileInputRef}
             type="file"

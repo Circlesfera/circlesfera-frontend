@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { cn } from '@/utils/cn';
 import Avatar from './Avatar';
 import Button from './Button';
@@ -213,10 +214,12 @@ const PostCard: React.FC<PostCardProps> = ({
       >
         <div className="relative w-full aspect-video overflow-hidden bg-black">
           {post.content.type === 'image' && post.content.url && (
-            <img
+            <Image
               src={post.content.url}
-              alt={post.caption || 'Post image'}
-              className="absolute inset-0 w-full h-full object-cover"
+              alt={post.caption || 'Imagen del post'}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
 

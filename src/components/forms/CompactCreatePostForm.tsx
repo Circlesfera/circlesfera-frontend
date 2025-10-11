@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/features/auth/useAuth';
 import { createImagePost, createVideoPost } from '@/services/postService';
 import { Button } from '@/design-system/Button';
@@ -198,7 +199,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
         ) : (
           <div className="relative">
             {postType === 'image' ? (
-              <img src={preview} alt="preview" className="w-full h-48 object-cover rounded-lg" />
+              <Image src={preview} alt="Vista previa del post" width={400} height={192} className="w-full h-48 object-cover rounded-lg" />
             ) : (
               <video
                 src={preview}
