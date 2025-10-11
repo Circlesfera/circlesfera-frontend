@@ -36,6 +36,11 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Scroll al final del chat (definir PRIMERO, usado por otros callbacks)
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
   // Configurar WebSocket para mensajes en tiempo real
   useWebSocket({
     onMessage: (wsMessage) => {
@@ -79,7 +84,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
     } finally {
       setLoading(false);
     }
-  }, [conversationId, token]);
+  }, [conversationId, token, scrollToBottom]);
 
   // Cargar mensajes iniciales
   useEffect(() => {
@@ -134,7 +139,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
     } finally {
       setSending(false);
     }
-  }, [conversationId, token, sending]);
+  }, [conversationId, token, sending, scrollToBottom]);
 
   // Marcar mensaje como leído
   const markAsRead = useCallback((messageId: string) => {
@@ -143,11 +148,6 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
         msg._id === messageId ? { ...msg, read: true } : msg
       )
     );
-  }, []);
-
-  // Scroll al final del chat
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   return {

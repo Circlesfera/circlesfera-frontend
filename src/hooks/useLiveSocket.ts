@@ -75,7 +75,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
       };
     }
 
-    return () => {}; // Cleanup function por defecto
+    return () => { }; // Cleanup function por defecto
   }, [streamId, autoJoin, state.isConnected, socketService]);
 
   // Event listeners para comentarios
@@ -288,6 +288,19 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
   }, [streamId, state.isConnected, socketService]);
 
   // Métodos para typing indicator
+  // stopTyping PRIMERO (usado por startTyping)
+  const stopTyping = useCallback(() => {
+    if (!state.isConnected) return;
+
+    setState(prev => ({ ...prev, isTyping: false }));
+    socketService.stopTyping(streamId);
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
+  }, [streamId, state.isConnected, socketService]);
+
   const startTyping = useCallback(() => {
     if (!state.isConnected) return;
 
@@ -304,19 +317,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     typingTimeoutRef.current = setTimeout(() => {
       stopTyping();
     }, 3000);
-  }, [streamId, state.isConnected, socketService]);
-
-  const stopTyping = useCallback(() => {
-    if (!state.isConnected) return;
-
-    setState(prev => ({ ...prev, isTyping: false }));
-    socketService.stopTyping(streamId);
-
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-      typingTimeoutRef.current = null;
-    }
-  }, [streamId, state.isConnected, socketService]);
+  }, [streamId, state.isConnected, socketService, stopTyping]);
 
   // Limpiar al desmontar
   useEffect(() => {

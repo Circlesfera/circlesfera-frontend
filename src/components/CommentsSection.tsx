@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
@@ -13,7 +13,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchComments = () => {
+  const fetchComments = useCallback(() => {
     setLoading(true);
     setError('');
 
@@ -61,14 +61,14 @@ export default function CommentsSection({ postId }: { postId: string }) {
       setComments([]);
       setLoading(false);
     });
-  };
+  }, [postId, user, token, authLoading]);
 
   useEffect(() => {
     // Solo cargar comentarios cuando el usuario esté autenticado
     if (user && token && !authLoading) {
       fetchComments();
     }
-  }, [postId, user, token, authLoading, fetchComments]);
+  }, [user, token, authLoading, fetchComments]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

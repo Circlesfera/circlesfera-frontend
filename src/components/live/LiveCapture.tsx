@@ -66,45 +66,7 @@ export function LiveCapture({
     }
   }, [localStream]);
 
-  // Manejar cambios en el estado de streaming
-  useEffect(() => {
-    if (isStreaming && !webrtcStreaming) {
-      handleStartStream();
-    } else if (!isStreaming && webrtcStreaming) {
-      handleStopStream();
-    }
-  }, [isStreaming]);
-
-  // Configurar eventos de grabación
-  useEffect(() => {
-    const handleRecordingReady = (event: { blob: Blob; size: number; type: string }) => {
-      if (onRecordingReady && event.blob) {
-        onRecordingReady(event.blob);
-      }
-    };
-
-    // Escuchar eventos de grabación desde el servicio WebRTC
-    const setupRecordingListener = async () => {
-      try {
-        const { getLiveSocketService } = await import('@/services/liveSocketService');
-        const socketService = getLiveSocketService();
-
-        // Usar directamente el servicio de socket
-        socketService.on('webrtc:recording-ready', handleRecordingReady);
-      } catch (setupError) {
-        logger.error('Error setting up WebRTC listeners:', {
-          error: setupError instanceof Error ? setupError.message : 'Unknown error'
-        });
-      }
-    };
-
-    setupRecordingListener();
-
-    return () => {
-      // Cleanup se manejará automáticamente
-    };
-  }, [onRecordingReady]);
-
+  // Definir handlers ANTES de los useEffect que los usan
   const handleStartStream = async () => {
     try {
       clearError();
@@ -153,6 +115,45 @@ export function LiveCapture({
       });
     }
   };
+
+  // Manejar cambios en el estado de streaming
+  useEffect(() => {
+    if (isStreaming && !webrtcStreaming) {
+      handleStartStream();
+    } else if (!isStreaming && webrtcStreaming) {
+      handleStopStream();
+    }
+  }, [isStreaming, webrtcStreaming, handleStartStream, handleStopStream]);
+
+  // Configurar eventos de grabación
+  useEffect(() => {
+    const handleRecordingReady = (event: { blob: Blob; size: number; type: string }) => {
+      if (onRecordingReady && event.blob) {
+        onRecordingReady(event.blob);
+      }
+    };
+
+    // Escuchar eventos de grabación desde el servicio WebRTC
+    const setupRecordingListener = async () => {
+      try {
+        const { getLiveSocketService } = await import('@/services/liveSocketService');
+        const socketService = getLiveSocketService();
+
+        // Usar directamente el servicio de socket
+        socketService.on('webrtc:recording-ready', handleRecordingReady);
+      } catch (setupError) {
+        logger.error('Error setting up WebRTC listeners:', {
+          error: setupError instanceof Error ? setupError.message : 'Unknown error'
+        });
+      }
+    };
+
+    setupRecordingListener();
+
+    return () => {
+      // Cleanup se manejará automáticamente
+    };
+  }, [onRecordingReady]);
 
   const toggleControls = () => {
     setShowControls(!showControls);
@@ -335,11 +336,10 @@ export function LiveCapture({
                 <button
                   onClick={toggleCamera}
                   disabled={!isCapturing}
-                  className={`p-3 rounded-full transition-colors ${
-                    isCameraEnabled
-                      ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                      : 'bg-red-500 hover:bg-red-600 text-white'
-                  } disabled:bg-gray-500 disabled:cursor-not-allowed`}
+                  className={`p-3 rounded-full transition-colors ${isCameraEnabled
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'bg-red-500 hover:bg-red-600 text-white'
+                    } disabled:bg-gray-500 disabled:cursor-not-allowed`}
                   title={isCameraEnabled ? 'Desactivar cámara' : 'Activar cámara'}
                 >
                   {isCameraEnabled ? (
@@ -353,11 +353,10 @@ export function LiveCapture({
                 <button
                   onClick={toggleMicrophone}
                   disabled={!isCapturing}
-                  className={`p-3 rounded-full transition-colors ${
-                    isMicrophoneEnabled
-                      ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                      : 'bg-red-500 hover:bg-red-600 text-white'
-                  } disabled:bg-gray-500 disabled:cursor-not-allowed`}
+                  className={`p-3 rounded-full transition-colors ${isMicrophoneEnabled
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'bg-red-500 hover:bg-red-600 text-white'
+                    } disabled:bg-gray-500 disabled:cursor-not-allowed`}
                   title={isMicrophoneEnabled ? 'Desactivar micrófono' : 'Activar micrófono'}
                 >
                   {isMicrophoneEnabled ? (

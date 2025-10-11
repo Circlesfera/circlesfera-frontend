@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserPosts } from '@/services/postService';
 import { getUserReels } from '@/services/reelService';
@@ -82,80 +82,8 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
     }
   ];
 
-  // Cargar contenido inicial
-  useEffect(() => {
-    if (username) {
-      loadInitialContent();
-    }
-  }, [username]);
-
-  // Cargar contenido cuando cambie la pestaña
-  useEffect(() => {
-    const loadTabContent = async () => {
-      try {
-        if (activeTab === 'posts' && posts.length === 0) {
-          await loadPosts();
-        } else if (activeTab === 'reels' && reels.length === 0) {
-          await loadReels();
-        } else if (activeTab === 'stories' && stories.length === 0) {
-          await loadStories();
-        }
-      } catch (loadTabError) {
-        logger.error('Error loading tab content:', {
-          error: loadTabError instanceof Error ? loadTabError.message : 'Unknown error',
-          activeTab,
-          username
-        });
-        // No propagar el error, solo loggear
-      }
-    };
-
-    loadTabContent();
-  }, [activeTab]);
-
-  // Cargar contenido inicial
-  const loadInitialContent = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Cargar posts iniciales
-      await loadPosts();
-
-      // Cargar contadores
-      await loadContentCounts();
-
-    } catch (loadInitialError) {
-      logger.error('Error loading initial profile content:', {
-        error: loadInitialError instanceof Error ? loadInitialError.message : 'Unknown error',
-        username
-      });
-      setError('Error al cargar el contenido');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Cargar contadores de contenido
-  const loadContentCounts = async () => {
-    try {
-      // Aquí podrías hacer una llamada específica para obtener solo los contadores
-      // Por ahora usamos los datos ya cargados
-      setContentCounts({
-        posts: posts.length,
-        reels: reels.length,
-        stories: stories.length
-      });
-    } catch (countsError) {
-      logger.warn('Error loading content counts:', {
-        error: countsError instanceof Error ? countsError.message : 'Unknown error',
-        username
-      });
-    }
-  };
-
   // Cargar posts
-  const loadPosts = async (page: number = 1, append: boolean = false) => {
+  const loadPosts = useCallback(async (page: number = 1, append: boolean = false) => {
     try {
       const response = await getUserPosts(username, page, 12);
       if (response.success) {
@@ -176,10 +104,10 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
       });
       throw loadPostsError;
     }
-  };
+  }, [username]);
 
   // Cargar reels
-  const loadReels = async (page: number = 1, append: boolean = false) => {
+  const loadReels = useCallback(async (page: number = 1, append: boolean = false) => {
     try {
       const response = await getUserReels(username, page, 12);
       if (response.success) {
@@ -206,10 +134,10 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
       }
       setHasMoreReels(false);
     }
-  };
+  }, [username]);
 
   // Cargar stories
-  const loadStories = async () => {
+  const loadStories = useCallback(async () => {
     try {
       const response = await getUserStories(username);
       if (response.success) {
@@ -223,7 +151,79 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
       // No propagar el error, solo establecer stories vacío
       setStories([]);
     }
-  };
+  }, [username]);
+
+  // Cargar contadores de contenido
+  const loadContentCounts = useCallback(async () => {
+    try {
+      // Aquí podrías hacer una llamada específica para obtener solo los contadores
+      // Por ahora usamos los datos ya cargados
+      setContentCounts({
+        posts: posts.length,
+        reels: reels.length,
+        stories: stories.length
+      });
+    } catch (countsError) {
+      logger.warn('Error loading content counts:', {
+        error: countsError instanceof Error ? countsError.message : 'Unknown error',
+        username
+      });
+    }
+  }, [posts.length, reels.length, stories.length, username]);
+
+  // Cargar contenido inicial
+  const loadInitialContent = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Cargar posts iniciales
+      await loadPosts();
+
+      // Cargar contadores
+      await loadContentCounts();
+
+    } catch (loadInitialError) {
+      logger.error('Error loading initial profile content:', {
+        error: loadInitialError instanceof Error ? loadInitialError.message : 'Unknown error',
+        username
+      });
+      setError('Error al cargar el contenido');
+    } finally {
+      setLoading(false);
+    }
+  }, [username, loadPosts, loadContentCounts]);
+
+  // Cargar contenido inicial cuando cambia username
+  useEffect(() => {
+    if (username) {
+      loadInitialContent();
+    }
+  }, [username, loadInitialContent]);
+
+  // Cargar contenido cuando cambie la pestaña
+  useEffect(() => {
+    const loadTabContent = async () => {
+      try {
+        if (activeTab === 'posts' && posts.length === 0) {
+          await loadPosts();
+        } else if (activeTab === 'reels' && reels.length === 0) {
+          await loadReels();
+        } else if (activeTab === 'stories' && stories.length === 0) {
+          await loadStories();
+        }
+      } catch (loadTabError) {
+        logger.error('Error loading tab content:', {
+          error: loadTabError instanceof Error ? loadTabError.message : 'Unknown error',
+          activeTab,
+          username
+        });
+        // No propagar el error, solo loggear
+      }
+    };
+
+    loadTabContent();
+  }, [activeTab, posts.length, reels.length, stories.length, username, loadPosts, loadReels, loadStories]);
 
   // Cargar más contenido (paginación)
   const loadMoreContent = async () => {
@@ -459,11 +459,10 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 border-b-2 transition-colors ${
-                activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 border-b-2 transition-colors ${activeTab === tab.id
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
             >
               {tab.icon}
               <span className="text-sm font-medium hidden sm:block">{tab.label}</span>
@@ -494,24 +493,24 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             {/* Estado vacío */}
             {!loading &&
               ((activeTab === 'posts' && posts.length === 0) ||
-               (activeTab === 'reels' && reels.length === 0) ||
-               (activeTab === 'stories' && stories.length === 0)) &&
+                (activeTab === 'reels' && reels.length === 0) ||
+                (activeTab === 'stories' && stories.length === 0)) &&
               renderEmptyState()
             }
 
             {/* Botón de cargar más */}
             {!loading &&
               ((activeTab === 'posts' && hasMorePosts) ||
-               (activeTab === 'reels' && hasMoreReels)) && (
-              <div className="text-center mt-8">
-                <button
-                  onClick={loadMoreContent}
-                  className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  Cargar más
-                </button>
-              </div>
-            )}
+                (activeTab === 'reels' && hasMoreReels)) && (
+                <div className="text-center mt-8">
+                  <button
+                    onClick={loadMoreContent}
+                    className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Cargar más
+                  </button>
+                </div>
+              )}
 
             {/* Loading */}
             {loading && (

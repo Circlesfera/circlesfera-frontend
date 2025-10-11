@@ -82,7 +82,7 @@ export default function ReelsPage() {
         reelId
       });
     }
-  }, []);
+  }, [toast]);
 
   const handleUserClick = useCallback((userId: string) => {
     router.push(`/${userId}`);
@@ -221,9 +221,8 @@ export default function ReelsPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className={`w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white ${
-                  currentReel.likes.some(like => like.user === user?._id) ? 'text-red-500' : ''
-                }`}
+                className={`w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white ${currentReel.likes.some(like => like.user === user?._id) ? 'text-red-500' : ''
+                  }`}
                 onClick={() => handleLike(currentReel._id)}
               >
                 <Heart
@@ -320,9 +319,8 @@ export default function ReelsPage() {
             {reels.slice(0, Math.min(10, reels.length)).map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-1 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-white' : 'bg-white/30'
-                }`}
+                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white' : 'bg-white/30'
+                  }`}
               />
             ))}
           </div>

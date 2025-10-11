@@ -115,14 +115,14 @@ export default function SettingsPage() {
   });
   const [showPasswordForm, setShowPasswordForm] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      fetchProfile();
-      fetchSettings();
-    }
-  }, [user]);
+  // Definir showMessage PRIMERO (usado por otras funciones)
+  const showMessage = useCallback((type: 'success' | 'error', text: string) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 3000);
+  }, []);
 
-  const fetchProfile = async () => {
+  // Definir funciones ANTES del useEffect que las usa
+  const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
       const profileData = await getUserProfile();
@@ -134,9 +134,9 @@ export default function SettingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       const response = await getUserSettings();
       if (response.success) {
@@ -144,14 +144,21 @@ export default function SettingsPage() {
         setNotificationSettings(response.settings.notifications);
         setSecuritySettings(response.settings.security);
       }
-    } catch (error) {
+    } catch (settingsError) {
       logger.error('Error loading user settings:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: settingsError instanceof Error ? settingsError.message : 'Unknown error',
         userId: user?._id
       });
       showMessage('error', 'Error al cargar la configuración');
     }
-  };
+  }, [user?._id, showMessage]);
+
+  useEffect(() => {
+    if (user) {
+      fetchProfile();
+      fetchSettings();
+    }
+  }, [user, fetchProfile, fetchSettings]);
 
   const handleProfileUpdate = async (updatedData: Partial<User>) => {
     try {
@@ -176,11 +183,6 @@ export default function SettingsPage() {
         error: deleteAccountError instanceof Error ? deleteAccountError.message : 'Unknown error'
       });
     }
-  };
-
-  const showMessage = (type: 'success' | 'error', text: string) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage(null), 3000);
   };
 
   // Validaciones con Zod para configuraciones
@@ -340,11 +342,10 @@ export default function SettingsPage() {
 
           {/* Mensaje de estado */}
           {message && (
-            <div className={`mb-6 p-4 rounded-lg ${
-              message.type === 'success'
-                ? 'bg-green-50 text-green-800 border border-green-200'
-                : 'bg-red-50 text-red-800 border border-red-200'
-            }`}>
+            <div className={`mb-6 p-4 rounded-lg ${message.type === 'success'
+              ? 'bg-green-50 text-green-800 border border-green-200'
+              : 'bg-red-50 text-red-800 border border-red-200'
+              }`}>
               {message.text}
             </div>
           )}
@@ -356,11 +357,10 @@ export default function SettingsPage() {
                 <nav className="space-y-2">
                   <button
                     onClick={() => setActiveSection('account')}
-                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                      activeSection === 'account'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'account'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : 'hover:bg-gray-50 text-gray-700'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <AccountIcon />
@@ -371,11 +371,10 @@ export default function SettingsPage() {
 
                   <button
                     onClick={() => setActiveSection('security')}
-                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                      activeSection === 'security'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'security'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : 'hover:bg-gray-50 text-gray-700'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <SecurityIcon />
@@ -386,11 +385,10 @@ export default function SettingsPage() {
 
                   <button
                     onClick={() => setActiveSection('privacy')}
-                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                      activeSection === 'privacy'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'privacy'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : 'hover:bg-gray-50 text-gray-700'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <PrivacyIcon />
@@ -401,11 +399,10 @@ export default function SettingsPage() {
 
                   <button
                     onClick={() => setActiveSection('notifications')}
-                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                      activeSection === 'notifications'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'notifications'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : 'hover:bg-gray-50 text-gray-700'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <NotificationIcon />
@@ -416,11 +413,10 @@ export default function SettingsPage() {
 
                   <button
                     onClick={() => setActiveSection('help')}
-                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                      activeSection === 'help'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'help'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : 'hover:bg-gray-50 text-gray-700'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <HelpIcon />
@@ -511,11 +507,10 @@ export default function SettingsPage() {
                           <button
                             onClick={() => handleToggleTwoFactor(!securitySettings.twoFactorEnabled)}
                             disabled={saving}
-                            className={`px-4 py-2 rounded-lg transition-colors ${
-                              securitySettings.twoFactorEnabled
-                                ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                : 'bg-green-100 text-green-700 hover:bg-green-200'
-                            } ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`px-4 py-2 rounded-lg transition-colors ${securitySettings.twoFactorEnabled
+                              ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                              : 'bg-green-100 text-green-700 hover:bg-green-200'
+                              } ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             {saving ? 'Guardando...' : (securitySettings.twoFactorEnabled ? 'Deshabilitar' : 'Habilitar')}
                           </button>

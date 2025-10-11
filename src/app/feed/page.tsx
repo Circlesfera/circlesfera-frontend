@@ -184,7 +184,7 @@ export default function FeedPage() {
         toast.success('¡Enlace copiado al portapapeles!');
       });
     }
-  }, []);
+  }, [toast]);
 
   const handlePostDelete = useCallback((postId: string) => {
     setPosts(prev => prev.filter(post => post._id !== postId));

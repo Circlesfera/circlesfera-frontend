@@ -32,13 +32,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
 
   const POSTS_PER_PAGE = 9;
 
-  // Cargar posts iniciales
-  useEffect(() => {
-    if (initialPosts.length === 0) {
-      loadInitialPosts();
-    }
-  }, [username, loadInitialPosts]);
-
+  // Definir loadInitialPosts ANTES del useEffect
   const loadInitialPosts = useCallback(async () => {
     try {
       setLoading(true);
@@ -62,6 +56,13 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
       setLoading(false);
     }
   }, [username]);
+
+  // Cargar posts iniciales cuando cambia username
+  useEffect(() => {
+    if (initialPosts.length === 0) {
+      loadInitialPosts();
+    }
+  }, [initialPosts.length, username, loadInitialPosts]);
 
   // Cargar más posts (paginación)
   const loadMore = useCallback(async () => {

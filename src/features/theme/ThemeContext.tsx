@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -45,7 +45,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   // Función para aplicar el tema al DOM
   const applyTheme = (newTheme: 'light' | 'dark') => {
     const root = document.documentElement;
-    
+
     if (newTheme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');
@@ -53,7 +53,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       root.classList.add('light');
       root.classList.remove('dark');
     }
-    
+
     // Actualizar meta theme-color
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
@@ -62,12 +62,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   };
 
   // Función para resolver el tema actual
-  const resolveTheme = (currentTheme: Theme): 'light' | 'dark' => {
+  const resolveTheme = useCallback((currentTheme: Theme): 'light' | 'dark' => {
     if (currentTheme === 'system') {
       return getSystemTheme();
     }
     return currentTheme;
-  };
+  }, []);
 
   // Efecto para cargar el tema guardado
   useEffect(() => {
@@ -84,13 +84,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const newResolvedTheme = resolveTheme(theme);
     setResolvedTheme(newResolvedTheme);
     applyTheme(newResolvedTheme);
-  }, [theme]);
+  }, [theme, resolveTheme]);
 
   // Efecto para escuchar cambios en el tema del sistema
   useEffect(() => {
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      
+
       const handleChange = () => {
         const newResolvedTheme = resolveTheme(theme);
         setResolvedTheme(newResolvedTheme);
@@ -100,9 +100,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
     }
-    
+
     return undefined;
-  }, [theme]);
+  }, [theme, resolveTheme]);
 
   // Función para cambiar el tema
   const handleSetTheme = (newTheme: Theme) => {

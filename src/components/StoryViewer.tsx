@@ -93,26 +93,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
   const shouldCloseRef = useRef(false);
   const storyDuration = 5000; // 5 segundos por story
 
-  // Inicializar la story y el progreso
-  useEffect(() => {
-    if (story) {
-      setLoading(false);
-      setError(null);
-      // Iniciar progreso automático
-      startProgress();
-    } else {
-      setError('No se pudo cargar la historia');
-      setLoading(false);
-    }
-
-    return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-    };
-  }, [story]); // Solo depende de story
-
-  // Iniciar progreso automático
+  // Iniciar progreso automático (definir ANTES del useEffect que lo usa)
   const startProgress = useCallback(() => {
     if (progressInterval.current) {
       clearInterval(progressInterval.current);
@@ -131,6 +112,25 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
       }
     }, 100);
   }, [isPaused, storyDuration]); // Agregado storyDuration como dependencia
+
+  // Inicializar la story y el progreso
+  useEffect(() => {
+    if (story) {
+      setLoading(false);
+      setError(null);
+      // Iniciar progreso automático
+      startProgress();
+    } else {
+      setError('No se pudo cargar la historia');
+      setLoading(false);
+    }
+
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current);
+      }
+    };
+  }, [story, startProgress]);
 
   // Verificar si debe cerrarse la story
   useEffect(() => {
@@ -468,114 +468,110 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
 
       {/* Botones de interacción - Estilo Instagram */}
       <div className="absolute bottom-8 left-4 right-4 flex items-center justify-center space-x-6">
-                 <button
-           onClick={() => {
+        <button
+          onClick={() => {
 
-             handleReaction('like');
-           }}
-           className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${
-             story?.reactions.some(r => r.user === user?._id)
-               ? 'bg-red-500/80 hover:bg-red-600/90'
-               : 'bg-black/20 hover:bg-black/40'
-           }`}
-         >
-           <HeartIcon />
-         </button>
+            handleReaction('like');
+          }}
+          className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${story?.reactions.some(r => r.user === user?._id)
+            ? 'bg-red-500/80 hover:bg-red-600/90'
+            : 'bg-black/20 hover:bg-black/40'
+            }`}
+        >
+          <HeartIcon />
+        </button>
 
-         <button
-           onClick={() => {
+        <button
+          onClick={() => {
 
-             setShowReplyInput(!showReplyInput);
-           }}
-           className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${
-             showReplyInput
-               ? 'bg-blue-500/80 hover:bg-blue-600/90 ring-2 ring-blue-300'
-               : 'bg-black/20 hover:bg-black/40'
-           }`}
-           title="Responder a la historia"
-         >
-           <MessageIcon />
-         </button>
+            setShowReplyInput(!showReplyInput);
+          }}
+          className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${showReplyInput
+            ? 'bg-blue-500/80 hover:bg-blue-600/90 ring-2 ring-blue-300'
+            : 'bg-black/20 hover:bg-black/40'
+            }`}
+          title="Responder a la historia"
+        >
+          <MessageIcon />
+        </button>
 
-         <button
-           onClick={() => {
+        <button
+          onClick={() => {
 
-             togglePause();
-           }}
-           className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${
-             isPaused
-               ? 'bg-green-500/80 hover:bg-green-600/90'
-               : 'bg-black/20 hover:bg-black/40'
-           }`}
-         >
-           {isPaused ? <PlayIcon /> : <PauseIcon />}
-         </button>
+            togglePause();
+          }}
+          className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${isPaused
+            ? 'bg-green-500/80 hover:bg-green-600/90'
+            : 'bg-black/20 hover:bg-black/40'
+            }`}
+        >
+          {isPaused ? <PlayIcon /> : <PauseIcon />}
+        </button>
 
-         <div className="relative">
-           <button
-             onClick={() => setShowMoreMenu(!showMoreMenu)}
-             className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40 transition-all duration-200 flex items-center justify-center group"
-             title="Más opciones"
-           >
-             <MoreIcon />
-           </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowMoreMenu(!showMoreMenu)}
+            className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40 transition-all duration-200 flex items-center justify-center group"
+            title="Más opciones"
+          >
+            <MoreIcon />
+          </button>
 
-           {/* Menú desplegable */}
-           {showMoreMenu && (
-             <div className="absolute bottom-16 right-0 w-48 bg-black/90 backdrop-blur-sm rounded-lg shadow-xl border border-white/10 z-50">
-               {/* Solo mostrar opción de eliminar si es el propietario de la story */}
-               {story?.user._id === user?._id && (
-                 <button
-                   onClick={() => {
+          {/* Menú desplegable */}
+          {showMoreMenu && (
+            <div className="absolute bottom-16 right-0 w-48 bg-black/90 backdrop-blur-sm rounded-lg shadow-xl border border-white/10 z-50">
+              {/* Solo mostrar opción de eliminar si es el propietario de la story */}
+              {story?.user._id === user?._id && (
+                <button
+                  onClick={() => {
 
-                     handleDeleteStory();
-                   }}
-                   disabled={isDeleting}
-                   className={`w-full px-4 py-3 text-left transition-colors rounded-lg flex items-center space-x-3 ${
-                     isDeleting
-                       ? 'text-gray-400 bg-gray-800/50 cursor-not-allowed'
-                       : 'text-red-400 hover:bg-red-500/20'
-                   }`}
-                 >
-                   {isDeleting ? (
-                     <>
-                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-                       <span>Eliminando...</span>
-                     </>
-                   ) : (
-                     <>
-                       <TrashIcon />
-                       <span>Eliminar story</span>
-                     </>
-                   )}
-                 </button>
-               )}
+                    handleDeleteStory();
+                  }}
+                  disabled={isDeleting}
+                  className={`w-full px-4 py-3 text-left transition-colors rounded-lg flex items-center space-x-3 ${isDeleting
+                    ? 'text-gray-400 bg-gray-800/50 cursor-not-allowed'
+                    : 'text-red-400 hover:bg-red-500/20'
+                    }`}
+                >
+                  {isDeleting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                      <span>Eliminando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <TrashIcon />
+                      <span>Eliminar story</span>
+                    </>
+                  )}
+                </button>
+              )}
 
-               {/* Opción para reportar (siempre visible) */}
-               <button
-                 onClick={() => {
+              {/* Opción para reportar (siempre visible) */}
+              <button
+                onClick={() => {
 
-                   // Aquí iría la lógica de reporte
-                   toast.info('Función de reporte en desarrollo');
-                   setShowMoreMenu(false);
-                 }}
-                 className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
-               >
-                 <ReportIcon />
-                 <span>Reportar</span>
-               </button>
+                  // Aquí iría la lógica de reporte
+                  toast.info('Función de reporte en desarrollo');
+                  setShowMoreMenu(false);
+                }}
+                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
+              >
+                <ReportIcon />
+                <span>Reportar</span>
+              </button>
 
-               {/* Opción para cerrar menú */}
-               <button
-                 onClick={() => setShowMoreMenu(false)}
-                 className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
-               >
-                 <CloseIcon />
-                 <span>Cerrar</span>
-               </button>
-             </div>
-           )}
-         </div>
+              {/* Opción para cerrar menú */}
+              <button
+                onClick={() => setShowMoreMenu(false)}
+                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
+              >
+                <CloseIcon />
+                <span>Cerrar</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Input de respuesta - Estilo Instagram */}
@@ -594,11 +590,11 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
             disabled={sendingReply || !replyText.trim()}
             className="w-12 h-12 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 rounded-full flex items-center justify-center transition-colors"
           >
-                         {sendingReply ? (
-               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-             ) : (
-               <SendIcon />
-             )}
+            {sendingReply ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            ) : (
+              <SendIcon />
+            )}
           </button>
         </div>
       )}

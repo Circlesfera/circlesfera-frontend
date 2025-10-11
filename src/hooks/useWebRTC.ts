@@ -52,6 +52,33 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
   const webrtcService = useRef(getWebRTCService());
   const statsIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Funciones de monitoreo (definir PRIMERO - usadas por otros callbacks)
+  // Detener monitoreo de estadísticas
+  const stopStatsMonitoring = useCallback(() => {
+    if (statsIntervalRef.current) {
+      clearInterval(statsIntervalRef.current);
+      statsIntervalRef.current = null;
+    }
+  }, []);
+
+  // Iniciar monitoreo de estadísticas
+  const startStatsMonitoring = useCallback(() => {
+    if (statsIntervalRef.current) return;
+
+    statsIntervalRef.current = setInterval(async () => {
+      try {
+        const stats = await webrtcService.current.getStats();
+        if (stats) {
+          setState(prev => ({ ...prev, stats }));
+        }
+      } catch (statsError) {
+        logger.debug('Error getting stats (non-critical):', {
+          error: statsError instanceof Error ? statsError.message : 'Unknown error'
+        });
+      }
+    }, 1000); // Actualizar cada segundo
+  }, []);
+
   // Iniciar captura de medios
   const startCapture = useCallback(async (config: {
     video?: boolean | MediaTrackConstraints;
@@ -90,7 +117,29 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
       }));
       throw error;
     }
-  }, [isStreamer]);
+  }, [isStreamer, startStatsMonitoring]);
+
+  // Detener transmisión (ANTES de stopCapture que lo usa)
+  const stopStreaming = useCallback(async () => {
+    try {
+      const recording = await webrtcService.current.stopStreaming();
+
+      setState(prev => ({
+        ...prev,
+        isStreaming: false,
+        isRecording: false,
+      }));
+
+      stopStatsMonitoring();
+
+      return recording;
+    } catch (recordingError) {
+      logger.error('Error stopping recording:', {
+        error: recordingError instanceof Error ? recordingError.message : 'Unknown error'
+      });
+      throw recordingError;
+    }
+  }, [stopStatsMonitoring]);
 
   // Detener captura
   const stopCapture = useCallback(async () => {
@@ -121,7 +170,7 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
         error: stopError instanceof Error ? stopError.message : 'Unknown error'
       });
     }
-  }, [isStreamer]);
+  }, [isStreamer, stopStreaming, stopStatsMonitoring]);
 
   // Iniciar transmisión
   const startStreaming = useCallback(async () => {
@@ -150,28 +199,6 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
     }
   }, [streamId]);
 
-  // Detener transmisión
-  const stopStreaming = useCallback(async () => {
-    try {
-      const recording = await webrtcService.current.stopStreaming();
-
-      setState(prev => ({
-        ...prev,
-        isStreaming: false,
-        isRecording: false,
-      }));
-
-      stopStatsMonitoring();
-
-      return recording;
-    } catch (recordingError) {
-      logger.error('Error stopping recording:', {
-        error: recordingError instanceof Error ? recordingError.message : 'Unknown error'
-      });
-      throw recordingError;
-    }
-  }, []);
-
   // Unirse a transmisión como viewer
   const joinStream = useCallback(async (streamId: string, viewerId: string) => {
     try {
@@ -186,32 +213,6 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
         error: errorMessage,
       }));
       throw error;
-    }
-  }, []);
-
-  // Iniciar monitoreo de estadísticas
-  const startStatsMonitoring = useCallback(() => {
-    if (statsIntervalRef.current) return;
-
-    statsIntervalRef.current = setInterval(async () => {
-      try {
-        const stats = await webrtcService.current.getStats();
-        if (stats) {
-          setState(prev => ({ ...prev, stats }));
-        }
-      } catch (statsError) {
-        logger.debug('Error getting stats (non-critical):', {
-          error: statsError instanceof Error ? statsError.message : 'Unknown error'
-        });
-      }
-    }, 1000); // Actualizar cada segundo
-  }, []);
-
-  // Detener monitoreo de estadísticas
-  const stopStatsMonitoring = useCallback(() => {
-    if (statsIntervalRef.current) {
-      clearInterval(statsIntervalRef.current);
-      statsIntervalRef.current = null;
     }
   }, []);
 
@@ -238,9 +239,11 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
 
   // Cleanup al desmontar
   useEffect(() => {
+    // Capturar el ref value para usarlo en cleanup
+    const service = webrtcService.current;
     return () => {
       stopStatsMonitoring();
-      webrtcService.current.cleanup();
+      service.cleanup();
     };
   }, [stopStatsMonitoring]);
 
