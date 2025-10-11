@@ -14,27 +14,28 @@ export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
   const [streams, setStreams] = useState<LiveStream[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: filters.limit || 20,
     total: 0,
     pages: 0,
   });
 
-  const loadStreams = useCallback(async () => {
+  const loadStreams = useCallback(async (currentPage: number) => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await liveStreamService.getLiveStreams({
         ...filters,
-        page: pagination.page,
-        limit: pagination.limit,
+        page: currentPage,
+        limit: filters.limit || 20,
       });
 
-      setStreams(response.data);
+      setStreams(prev => currentPage === 1 ? response.data : [...prev, ...response.data]);
       setPagination(response.pagination);
-      logger.debug('Live streams loaded:', { count: response.data.length });
+      logger.debug('Live streams loaded:', { count: response.data.length, page: currentPage });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error cargando transmisiones';
       setError(errorMessage);
@@ -42,21 +43,25 @@ export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
     } finally {
       setLoading(false);
     }
-  }, [filters, pagination.page, pagination.limit]);
+  }, [filters]);
 
   const loadMore = useCallback(async () => {
-    if (pagination.page < pagination.pages && !loading) {
-      setPagination(prev => ({ ...prev, page: prev.page + 1 }));
+    if (page < pagination.pages && !loading) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      await loadStreams(nextPage);
     }
-  }, [pagination.page, pagination.pages, loading]);
+  }, [page, pagination.pages, loading, loadStreams]);
 
   const refresh = useCallback(() => {
-    setPagination(prev => ({ ...prev, page: 1 }));
+    setPage(1);
     setStreams([]);
-  }, []);
+    loadStreams(1);
+  }, [loadStreams]);
 
   useEffect(() => {
-    loadStreams();
+    loadStreams(1);
+    // Solo ejecutar al montar o cuando filters cambie
   }, [loadStreams]);
 
   return {
