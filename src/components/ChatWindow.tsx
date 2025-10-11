@@ -634,6 +634,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               </div>
             </div>
           </div>
+        </div>
       </motion.li>
     );
   };
