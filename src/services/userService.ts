@@ -80,14 +80,30 @@ export const getUserProfile = async (): Promise<User> => {
 
 export const updateUserProfile = async (userData: Partial<User>): Promise<User> => {
   try {
-    const res = await api.put('/auth/profile', userData);
+    // Limpiar campos vacíos/null antes de enviar
+    const cleanedData: Record<string, unknown> = {};
+    Object.keys(userData).forEach(key => {
+      const value = userData[key as keyof User];
+      // Solo incluir campos que no sean undefined
+      if (value !== undefined) {
+        cleanedData[key] = value === '' ? null : value;
+      }
+    });
+
+    logger.debug('Enviando datos de perfil:', cleanedData);
+
+    const res = await api.put('/auth/profile', cleanedData);
     return res.data.user;
   } catch (error: unknown) {
-    logger.error('Error en updateUserProfile:', (error as Error)?.message || 'Error desconocido');
-    if (error && typeof error === 'object' && 'response' in error) {
-      const apiError = error as { response?: { data?: { errors?: string[] } } };
-      if (apiError.response?.data?.errors) {
+    logger.error('Error en updateUserProfile:', {
+      message: (error as Error)?.message || 'Error desconocido',
+      userData
+    });
 
+    if (error && typeof error === 'object' && 'response' in error) {
+      const apiError = error as { response?: { data?: { message?: string; errors?: unknown[] } } };
+      if (apiError.response?.data) {
+        logger.error('Detalles del error del servidor:', apiError.response.data);
       }
     }
     throw error;
