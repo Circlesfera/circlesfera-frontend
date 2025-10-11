@@ -29,12 +29,14 @@ const getStoredAuthData = () => {
     if (storedToken && storedUser) {
       return {
         token: storedToken,
-        user: JSON.parse(storedUser)
-      };
-    }
-  } catch (error) {
-
+      user: JSON.parse(storedUser)
+    };
   }
+} catch (initError) {
+  logger.error('Error initializing auth state:', {
+    error: initError instanceof Error ? initError.message : 'Unknown error'
+  });
+}
 
   return { token: null, user: null };
 };
@@ -45,8 +47,10 @@ const clearStoredAuthData = () => {
     try {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-    } catch (error) {
-
+    } catch (clearError) {
+      logger.error('Error clearing invalid tokens:', {
+        error: clearError instanceof Error ? clearError.message : 'Unknown error'
+      });
     }
   }
 };
@@ -90,17 +94,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           try {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
-
-          } catch (error) {
-
+            logger.info('User logged in successfully');
+          } catch (storageError) {
+            logger.error('Error storing login data:', {
+              error: storageError instanceof Error ? storageError.message : 'Unknown error'
+            });
           }
         }
       } else {
 
         throw new Error(res.data.message || 'Error en el login');
       }
-    } catch (error) {
-
+    } catch (loginError) {
+      logger.error('Login error:', {
+        error: loginError instanceof Error ? loginError.message : 'Unknown error'
+      });
       // Manejo detallado de errores de Axios
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response?: { status?: number; statusText?: string; data?: unknown }; config?: { url?: string; method?: string; baseURL?: string } };
@@ -125,7 +133,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await api.post('/auth/register', { username, email, password });
       // Login automático tras registro
       await login(email, password);
-    } catch (error) {
+      logger.info('User registered successfully');
+    } catch (registerError) {
+      logger.error('Register error:', {
+        error: registerError instanceof Error ? registerError.message : 'Unknown error'
+      });
       // Si hay error de autenticación, limpiar tokens
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response?: { status?: number } };
@@ -150,8 +162,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           localStorage.setItem('user', JSON.stringify(res.data.data));
         }
       }
-    } catch (error) {
-
+    } catch (refreshError) {
+      logger.error('Error refreshing user:', {
+        error: refreshError instanceof Error ? refreshError.message : 'Unknown error'
+      });
       // Si hay error, limpiar tokens
       clearInvalidTokens();
     }

@@ -27,8 +27,11 @@ const ModernAppLayout: React.FC<ModernAppLayoutProps> = ({ children }) => {
     try {
       await logout();
       router.push('/login');
-    } catch (error) {
-
+      logger.info('User logged out from layout');
+    } catch (logoutError) {
+      logger.error('Error logging out from layout:', {
+        error: logoutError instanceof Error ? logoutError.message : 'Unknown error'
+      });
     }
   };
 

@@ -45,9 +45,12 @@ export default function StoriesBar() {
       const response = await getUsersWithStories();
       if (response.success) {
         setUsersWithStories(response.users);
+        logger.debug('Stories loaded:', { count: response.users.length });
       }
-    } catch (error) {
-
+    } catch (loadStoriesError) {
+      logger.error('Error loading stories:', {
+        error: loadStoriesError instanceof Error ? loadStoriesError.message : 'Unknown error'
+      });
     } finally {
       setLoading(false);
     }
