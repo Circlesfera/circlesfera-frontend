@@ -50,7 +50,7 @@ export function usePost(
         setLikesCount(response.likesCount);
       }
     } catch (error) {
-      console.error('Error toggling like:', error);
+
       // Revertir en caso de error
       setIsLiked(previousLiked);
       setLikesCount(previousCount);
@@ -73,7 +73,7 @@ export function usePost(
         }
       }
     } catch (error) {
-      console.error('Error deleting post:', error);
+
       alert('Error al eliminar el post. Por favor intenta de nuevo.');
     } finally {
       setLoading(false);

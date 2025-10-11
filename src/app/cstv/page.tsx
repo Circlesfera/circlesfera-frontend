@@ -60,17 +60,17 @@ export default function CSTVPage() {
 
   const handleVideoLike = async (videoId: string, isLiked: boolean) => {
     // TODO: Implement like functionality
-    console.log('Like video:', videoId, isLiked);
+
   };
 
   const handleVideoSave = async (videoId: string, isSaved: boolean) => {
     // TODO: Implement save functionality
-    console.log('Save video:', videoId, isSaved);
+
   };
 
   const handleVideoShare = (videoId: string) => {
     // TODO: Implement share functionality
-    console.log('Share video:', videoId);
+
   };
 
   const handleSearch = () => {

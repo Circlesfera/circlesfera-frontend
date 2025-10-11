@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
@@ -14,12 +14,12 @@ interface CommentsModalProps {
   postImage?: string | undefined;
 }
 
-export default function CommentsModal({ 
-  isOpen, 
-  onClose, 
-  postId, 
-  postAuthor, 
-  postImage 
+export default function CommentsModal({
+  isOpen,
+  onClose,
+  postId,
+  postAuthor,
+  postImage
 }: CommentsModalProps) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
@@ -31,10 +31,10 @@ export default function CommentsModal({
   const [hasMore, setHasMore] = useState(true);
   const commentsEndRef = useRef<HTMLDivElement>(null);
 
-  const fetchComments = async (pageNum = 1, append = false) => {
+  const fetchComments = useCallback(async (pageNum = 1, append = false) => {
     if (pageNum === 1) setLoading(true);
     setError('');
-    
+
     try {
       const data = await getComments(postId, pageNum);
       if (data && data.comments) {
@@ -49,13 +49,13 @@ export default function CommentsModal({
         setComments([]);
       }
     } catch (err) {
-      console.error('Error al obtener comentarios:', err);
+
       setError('Error al cargar comentarios');
       setComments([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
   const loadMoreComments = () => {
     if (!loading && hasMore) {
@@ -70,7 +70,7 @@ export default function CommentsModal({
       fetchComments();
       setPage(1);
     }
-  }, [isOpen, postId]);
+  }, [isOpen, postId, fetchComments]);
 
   useEffect(() => {
     if (commentsEndRef.current) {
@@ -82,7 +82,7 @@ export default function CommentsModal({
     e.preventDefault();
     setError('');
     if (!text.trim() || !user) return;
-    
+
     setSending(true);
     try {
       await createComment(postId, text);
@@ -101,7 +101,7 @@ export default function CommentsModal({
     const now = new Date();
     const date = new Date(dateString);
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) return 'ahora';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
@@ -121,7 +121,7 @@ export default function CommentsModal({
           className="absolute inset-0 bg-black bg-opacity-50"
           onClick={onClose}
         />
-        
+
         {/* Modal */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -197,7 +197,7 @@ export default function CommentsModal({
                   </div>
                 ))}
                 <div ref={commentsEndRef} />
-                
+
                 {/* Load More */}
                 {hasMore && (
                   <div className="text-center py-4">
@@ -249,7 +249,7 @@ export default function CommentsModal({
                   {sending ? '...' : 'Publicar'}
                 </Button>
               </form>
-              
+
               {error && (
                 <div className="text-red-500 text-xs mt-2 text-center">
                   {error}

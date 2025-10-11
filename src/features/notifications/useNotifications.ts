@@ -30,7 +30,7 @@ export function useNotifications() {
       setNotifications(notificationsData);
       setUnreadCount(unreadCountData);
     } catch (err) {
-      console.error('Error al obtener notificaciones:', err);
+
       setError('Error al cargar notificaciones');
       setNotifications([]);
       setUnreadCount(0);
@@ -55,7 +55,7 @@ export function useNotifications() {
       // Actualizar el conteo
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (err) {
-      console.error('Error al marcar notificación como leída:', err);
+
       setError('Error al marcar notificación como leída');
     }
   }, []);
@@ -71,7 +71,7 @@ export function useNotifications() {
       
       setUnreadCount(0);
     } catch (err) {
-      console.error('Error al marcar todas las notificaciones como leídas:', err);
+
       setError('Error al marcar todas las notificaciones como leídas');
     }
   }, []);

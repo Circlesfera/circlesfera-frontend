@@ -13,7 +13,6 @@ const VideoIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-
 const CloseIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -55,7 +54,7 @@ interface ReelFormData {
   allowStitches: boolean;
 }
 
-export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose }: CompactCreateReelFormProps) {
+export default function CompactCreateReelForm({ onReelCreated, onClose }: CompactCreateReelFormProps) {
   const { user } = useAuth();
   const [formData, setFormData] = useState<ReelFormData>({
     caption: '',
@@ -67,18 +66,18 @@ export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose
     allowDuets: true,
     allowStitches: true
   });
-  
+
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -124,7 +123,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) {
       handleFileSelect(droppedFile);
@@ -166,8 +165,10 @@ export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose
       });
       setVideoFile(null);
       setVideoPreview(null);
-      
+
       onReelCreated();
+      // Cerrar el modal después de crear el reel
+      onClose();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
       setError(err?.response?.data?.message || 'Error al crear el reel');
@@ -200,8 +201,8 @@ export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose
           <div
             className={cn(
               "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
-              isDragOver 
-                ? 'border-pink-400 bg-pink-50' 
+              isDragOver
+                ? 'border-pink-400 bg-pink-50'
                 : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
             )}
             onDragOver={handleDragOver}
@@ -222,9 +223,9 @@ export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose
           </div>
         ) : (
           <div className="relative">
-            <video 
-              src={videoPreview} 
-              controls 
+            <video
+              src={videoPreview}
+              controls
               className="w-full h-48 object-cover rounded-lg"
             />
             <button
@@ -239,7 +240,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose: _onClose
             </button>
           </div>
         )}
-        
+
         <input
           ref={fileInputRef}
           type="file"

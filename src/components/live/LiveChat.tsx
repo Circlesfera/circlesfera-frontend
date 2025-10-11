@@ -49,10 +49,9 @@ export function LiveChat({
     streamId,
     autoJoin: true,
     onError: (error) => {
-      console.error('Live Chat Error:', error);
+
     },
   });
-
 
   // Auto-scroll to bottom when new comments arrive
   useEffect(() => {
@@ -77,7 +76,7 @@ export function LiveChat({
       setReplyTo(null);
       stopTyping();
     } catch (error) {
-      console.error('Error sending comment:', error);
+
     }
   };
 

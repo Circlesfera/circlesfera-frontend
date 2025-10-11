@@ -89,7 +89,7 @@ export const useLiveComments = (streamId: string | null, filters: LiveCommentFil
         lastCommentRef.current = response.data[response.data.length - 1] || null;
       }
     } catch (err) {
-      console.error('Error cargando comentarios nuevos:', err);
+
     }
   }, [streamId, filters]);
 

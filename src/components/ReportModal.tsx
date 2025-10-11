@@ -22,11 +22,11 @@ const REPORT_REASONS = [
   { id: 'other', label: 'Otro', description: 'Otra razón no listada' },
 ] as const;
 
-export default function ReportModal({ 
-  isOpen, 
-  onClose, 
-  postId: _postId, 
-  onReport 
+export default function ReportModal({
+  isOpen,
+  onClose,
+  postId,
+  onReport
 }: ReportModalProps) {
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [description, setDescription] = useState('');
@@ -42,12 +42,13 @@ export default function ReportModal({
 
     try {
       await onReport(selectedReason, description.trim() || undefined);
+
       onClose();
       // Reset form
       setSelectedReason('');
       setDescription('');
     } catch (err) {
-      console.error('Error al reportar:', err);
+
       setError('Error al enviar el reporte. Inténtalo de nuevo.');
     } finally {
       setSubmitting(false);
@@ -76,7 +77,7 @@ export default function ReportModal({
           className="absolute inset-0 bg-black bg-opacity-50"
           onClick={handleClose}
         />
-        
+
         {/* Modal */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}

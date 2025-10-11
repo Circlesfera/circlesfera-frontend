@@ -69,13 +69,13 @@ class LiveSocketService {
     if (!this.socket) return;
 
     this.socket.on('connect', () => {
-      console.log('🔌 Conectado al servidor de Live Streaming');
+
       this.isConnected = true;
       this.reconnectAttempts = 0;
     });
 
     this.socket.on('disconnect', (reason: string) => {
-      console.log('🔌 Desconectado del servidor:', reason);
+
       this.isConnected = false;
 
       if (reason === 'io server disconnect') {
@@ -85,12 +85,12 @@ class LiveSocketService {
     });
 
     this.socket.on('connect_error', (error: Error) => {
-      console.error('❌ Error de conexión:', error);
+
       this.handleReconnect();
     });
 
     this.socket.on('error', (error: Error) => {
-      console.error('❌ Error del socket:', error);
+
     });
   }
 
@@ -105,22 +105,21 @@ class LiveSocketService {
         this.connect();
       }, delay);
     } else {
-      console.error('❌ Máximo de intentos de reconexión alcanzado');
+
     }
   }
-
 
   // Métodos públicos para unirse a salas
   joinLiveStream(streamId: string) {
     if (this.socket && this.isConnected) {
-      console.log(`📺 Uniéndose a transmisión: ${streamId}`);
+
       this.socket.emit('join:stream', streamId);
     }
   }
 
   leaveLiveStream(streamId: string) {
     if (this.socket && this.isConnected) {
-      console.log(`📺 Dejando transmisión: ${streamId}`);
+
       this.socket.emit('leave:stream', streamId);
     }
   }
@@ -221,7 +220,6 @@ class LiveSocketService {
       }
     }
   }
-
 
   // Métodos para typing indicators
   startTyping(streamId: string) {

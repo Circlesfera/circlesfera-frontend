@@ -80,7 +80,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       setHasMore(pageNum < response.pagination.pages);
       setPage(pageNum);
     } catch (error) {
-      console.error('Error fetching messages:', error);
+
     } finally {
       setLoading(false);
     }
@@ -122,7 +122,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       setMessages(prev => [...prev, newMessage]);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      console.error('Error sending message:', err);
+
     } finally {
       setSending(false);
     }
@@ -148,7 +148,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       // Recargar mensajes para mostrar el nuevo
       fetchMessages(1, false);
     } catch (error) {
-      console.error('Error sending image:', error);
+
     } finally {
       setSending(false);
     }
@@ -166,7 +166,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       // Recargar mensajes para mostrar el nuevo
       fetchMessages(1, false);
     } catch (error) {
-      console.error('Error sending video:', error);
+
     } finally {
       setSending(false);
     }
@@ -186,16 +186,15 @@ export default function ChatWindow({ conversationId, conversationName, participa
           fetchMessages(1, false);
         },
         (error) => {
-          console.error('Error getting location:', error);
+
         }
       );
     } catch (error) {
-      console.error('Error sending location:', error);
+
     } finally {
       setSending(false);
     }
   };
-
 
   const handleLoadMore = () => {
     if (hasMore && !loading) {

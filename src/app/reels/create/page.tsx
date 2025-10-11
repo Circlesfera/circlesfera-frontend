@@ -103,7 +103,7 @@ export default function CreateReelPage() {
         alert('Error al crear el reel. Inténtalo de nuevo.');
       }
     } catch (error) {
-      console.error('Error creating reel:', error);
+
       alert('Error al crear el reel. Inténtalo de nuevo.');
     } finally {
       setUploading(false);

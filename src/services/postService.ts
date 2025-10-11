@@ -229,19 +229,14 @@ export const getComments = async (postId: string, page = 1, limit = 10): Promise
   };
 }> => {
   try {
-    console.log('🔍 getComments - Iniciando petición:', { postId, page, limit });
+
     const res = await api.get(`/comments/post/${postId}`, {
       params: { page, limit },
     });
-    console.log('✅ getComments - Respuesta recibida:', res.data);
+
     return res.data;
   } catch (error: any) {
-    console.error('❌ getComments - Error en petición:', {
-      postId,
-      page,
-      limit,
-      error: error.response?.data || error.message
-    });
+
     throw error;
   }
 };

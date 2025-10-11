@@ -113,7 +113,7 @@ export const createReel = async (formData: FormData): Promise<CreateReelResponse
     });
     return response.data;
   } catch (error: unknown) {
-    console.error('Error creating reel:', error);
+
     throw error;
   }
 };
@@ -124,11 +124,10 @@ export const getReelsForFeed = async (page: number = 1, limit: number = 10): Pro
     const response = await api.get(`/reels/feed?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error fetching reels for feed:', error);
+
     throw error;
   }
 };
-
 
 // Obtener reels de un usuario específico
 export const getUserReels = async (username: string, page: number = 1, limit: number = 10): Promise<GetReelsResponse> => {
@@ -137,7 +136,7 @@ export const getUserReels = async (username: string, page: number = 1, limit: nu
     const response = await api.get(url);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error fetching user reels:', error);
+
     throw error;
   }
 };
@@ -148,7 +147,7 @@ export const getReel = async (reelId: string): Promise<GetReelResponse> => {
     const response = await api.get(`/reels/${reelId}`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error fetching reel:', error);
+
     throw error;
   }
 };
@@ -159,7 +158,7 @@ export const likeReel = async (reelId: string): Promise<LikeReelResponse> => {
     const response = await api.post(`/reels/${reelId}/like`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error liking reel:', error);
+
     throw error;
   }
 };
@@ -170,7 +169,7 @@ export const unlikeReel = async (reelId: string): Promise<LikeReelResponse> => {
     const response = await api.delete(`/reels/${reelId}/like`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error unliking reel:', error);
+
     throw error;
   }
 };
@@ -181,7 +180,7 @@ export const commentReel = async (reelId: string, content: string): Promise<Comm
     const response = await api.post(`/reels/${reelId}/comment`, { content });
     return response.data;
   } catch (error: unknown) {
-    console.error('Error commenting reel:', error);
+
     throw error;
   }
 };
@@ -192,7 +191,7 @@ export const deleteReel = async (reelId: string): Promise<DeleteReelResponse> =>
     const response = await api.delete(`/reels/${reelId}`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error deleting reel:', error);
+
     throw error;
   }
 };
@@ -203,7 +202,7 @@ export const searchReelsByHashtag = async (hashtag: string, page: number = 1, li
     const response = await api.get(`/reels/search/hashtag/${hashtag}?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error searching reels by hashtag:', error);
+
     throw error;
   }
 };
@@ -214,7 +213,7 @@ export const getTrendingReels = async (timeFrame: 'week' | 'month' = 'week', lim
     const response = await api.get(`/reels/trending?timeFrame=${timeFrame}&limit=${limit}`);
     return response.data;
   } catch (error: unknown) {
-    console.error('Error fetching trending reels:', error);
+
     throw error;
   }
 };

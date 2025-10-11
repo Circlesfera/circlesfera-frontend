@@ -119,7 +119,7 @@ export default function CreateStoryPage() {
       // Redirigir a stories
       router.push('/stories');
     } catch (error) {
-      console.error('Error creating story:', error);
+
       alert('Error al crear la story. Inténtalo de nuevo.');
     } finally {
       setUploading(false);

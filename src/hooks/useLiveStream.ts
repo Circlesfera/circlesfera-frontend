@@ -205,7 +205,7 @@ export const useLiveStreamViewers = (streamId: string | null) => {
         peak: result.peakViewers,
       });
     } catch (err) {
-      console.error('Error agregando viewer:', err);
+
     }
   }, [streamId]);
 
@@ -220,7 +220,7 @@ export const useLiveStreamViewers = (streamId: string | null) => {
         peak: result.peakViewers,
       });
     } catch (err) {
-      console.error('Error removiendo viewer:', err);
+
     }
   }, [streamId]);
 

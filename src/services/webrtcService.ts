@@ -88,7 +88,7 @@ class WebRTCService {
 
       return this.localStream;
     } catch (error) {
-      console.error('❌ Error iniciando captura:', error);
+
       throw new Error('No se pudo acceder a la cámara/micrófono');
     }
   }
@@ -118,9 +118,8 @@ class WebRTCService {
         this.saveRecording(blob);
       };
 
-      console.log('📹 Grabación configurada para CSTV');
     } catch (error) {
-      console.error('❌ Error configurando grabación:', error);
+
     }
   }
 
@@ -128,7 +127,7 @@ class WebRTCService {
   startRecording() {
     if (this.mediaRecorder && this.mediaRecorder.state === 'inactive') {
       this.mediaRecorder.start(1000); // Grabación en chunks de 1 segundo
-      console.log('📹 Grabación iniciada');
+
     }
   }
 
@@ -141,7 +140,7 @@ class WebRTCService {
           resolve(blob);
         };
         this.mediaRecorder.stop();
-        console.log('📹 Grabación detenida');
+
       } else {
         resolve(new Blob());
       }
@@ -155,7 +154,6 @@ class WebRTCService {
       formData.append('recording', blob, `live-recording-${Date.now()}.webm`);
 
       // Aquí podrías subir el archivo al servidor para CSTV
-      console.log('💾 Grabación guardada:', blob.size, 'bytes');
 
       // Emitir evento para que el componente maneje la subida
       this.socketService.emit('webrtc:recording-ready', {
@@ -164,7 +162,7 @@ class WebRTCService {
         type: blob.type,
       });
     } catch (error) {
-      console.error('❌ Error guardando grabación:', error);
+
     }
   }
 
@@ -180,7 +178,6 @@ class WebRTCService {
     // Unirse a la sala de WebRTC
     this.socketService.joinLiveStream(streamId);
 
-    console.log('🚀 Transmisión iniciada:', streamId);
   }
 
   // Detener transmisión
@@ -201,8 +198,6 @@ class WebRTCService {
       this.localStream.getTracks().forEach(track => track.stop());
       this.localStream = null;
     }
-
-    console.log('🛑 Transmisión detenida');
 
     return recording;
   }
@@ -230,13 +225,13 @@ class WebRTCService {
 
       // Manejar stream remoto
       peerConnection.ontrack = (event) => {
-        console.log('📺 Stream remoto recibido:', event.streams[0]);
+
         // El stream remoto se manejará en el componente
       };
 
       // Manejar cambios de estado
       peerConnection.onconnectionstatechange = () => {
-        console.log('🔗 Estado de conexión:', peerConnection.connectionState);
+
       };
 
       this.peerConnections.set(viewerId, peerConnection);
@@ -244,9 +239,8 @@ class WebRTCService {
       // Unirse a la sala
       this.socketService.joinLiveStream(streamId);
 
-      console.log('👀 Unido a transmisión como viewer:', streamId);
     } catch (error) {
-      console.error('❌ Error uniéndose a transmisión:', error);
+
       throw error;
     }
   }
@@ -294,9 +288,8 @@ class WebRTCService {
         to: from,
       });
 
-      console.log('🤝 Oferta WebRTC manejada:', from);
     } catch (error) {
-      console.error('❌ Error manejando oferta:', error);
+
     }
   }
 
@@ -306,10 +299,10 @@ class WebRTCService {
       const peerConnection = this.peerConnections.get(from);
       if (peerConnection) {
         await peerConnection.setRemoteDescription(answer);
-        console.log('🤝 Respuesta WebRTC manejada:', from);
+
       }
     } catch (error) {
-      console.error('❌ Error manejando respuesta:', error);
+
     }
   }
 
@@ -319,10 +312,10 @@ class WebRTCService {
       const peerConnection = this.peerConnections.get(from);
       if (peerConnection) {
         await peerConnection.addIceCandidate(candidate);
-        console.log('🧊 Candidato ICE agregado:', from);
+
       }
     } catch (error) {
-      console.error('❌ Error manejando candidato ICE:', error);
+
     }
   }
 
@@ -332,7 +325,7 @@ class WebRTCService {
     if (peerConnection) {
       peerConnection.close();
       this.peerConnections.delete(peerId);
-      console.log('👋 Peer desconectado:', peerId);
+
     }
   }
 
@@ -368,7 +361,7 @@ class WebRTCService {
         },
       };
     } catch (error) {
-      console.error('❌ Error obteniendo estadísticas:', error);
+
       return null;
     }
   }
@@ -398,7 +391,7 @@ class WebRTCService {
         speakers: devices.filter(device => device.kind === 'audiooutput'),
       };
     } catch (error) {
-      console.error('❌ Error obteniendo dispositivos:', error);
+
       return { cameras: [], microphones: [], speakers: [] };
     }
   }
@@ -424,10 +417,9 @@ class WebRTCService {
         this.localStream.addTrack(newVideoTrack);
       }
 
-      console.log('📹 Cámara cambiada:', deviceId);
       return true;
     } catch (error) {
-      console.error('❌ Error cambiando cámara:', error);
+
       return false;
     }
   }
@@ -453,10 +445,9 @@ class WebRTCService {
         this.localStream.addTrack(newAudioTrack);
       }
 
-      console.log('🎤 Micrófono cambiado:', deviceId);
       return true;
     } catch (error) {
-      console.error('❌ Error cambiando micrófono:', error);
+
       return false;
     }
   }
@@ -487,7 +478,7 @@ class WebRTCService {
 
       return 'unknown';
     } catch (error) {
-      console.error('❌ Error obteniendo calidad de red:', error);
+
       return 'unknown';
     }
   }

@@ -42,7 +42,7 @@ export default function StoriesPage() {
           }
         }
       } catch (error) {
-        console.error('Error cargando stories:', error);
+
       } finally {
         setLoading(false);
       }
@@ -64,7 +64,6 @@ export default function StoriesPage() {
     setSelectedUser(null);
     router.push('/stories');
   };
-
 
   if (loading || authLoading) {
     return (
@@ -88,7 +87,7 @@ export default function StoriesPage() {
         onClose={handleCloseViewer}
         onStoryDeleted={() => {
           // Recargar stories cuando se elimine una
-          console.log('Story deleted, reloading...');
+
         }}
       />
     );

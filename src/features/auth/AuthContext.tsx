@@ -33,7 +33,7 @@ const getStoredAuthData = () => {
       };
     }
   } catch (error) {
-    console.error('Error reading from localStorage:', error);
+
   }
 
   return { token: null, user: null };
@@ -46,7 +46,7 @@ const clearStoredAuthData = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     } catch (error) {
-      console.error('Error clearing localStorage:', error);
+
     }
   }
 };
@@ -78,16 +78,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      console.log('🔐 Intentando login con:', { email, apiUrl: process.env.NEXT_PUBLIC_API_URL });
 
       const res = await api.post<LoginResponse>('/auth/login', { email, password });
-
-      console.log('✅ Respuesta del login:', {
-        success: res.data.success,
-        hasToken: !!res.data.token,
-        hasUser: !!res.data.user,
-        message: res.data.message
-      });
 
       if (res.data.success && res.data.token && res.data.user) {
         setToken(res.data.token);
@@ -98,36 +90,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           try {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
-            console.log('✅ Datos guardados en localStorage');
+
           } catch (error) {
-            console.error('❌ Error saving to localStorage:', error);
+
           }
         }
       } else {
-        console.error('❌ Login falló:', res.data);
+
         throw new Error(res.data.message || 'Error en el login');
       }
     } catch (error) {
-      console.error('❌ Error en login:', error);
 
       // Manejo detallado de errores de Axios
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response?: { status?: number; statusText?: string; data?: unknown }; config?: { url?: string; method?: string; baseURL?: string } };
-        console.error('❌ Axios Error Details:', {
-          status: axiosError.response?.status,
-          statusText: axiosError.response?.statusText,
-          data: axiosError.response?.data,
-          url: axiosError.config?.url,
-          method: axiosError.config?.method,
-          baseURL: axiosError.config?.baseURL
-        });
 
         // Si hay error de autenticación, limpiar tokens
         if (axiosError.response?.status === 401) {
           clearInvalidTokens();
         }
       } else {
-        console.error('❌ Error no relacionado con Axios:', error);
+
       }
 
       throw error;
@@ -168,7 +151,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       }
     } catch (error) {
-      console.error('Error refreshing user:', error);
+
       // Si hay error, limpiar tokens
       clearInvalidTokens();
     }

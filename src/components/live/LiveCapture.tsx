@@ -91,7 +91,7 @@ export function LiveCapture({
         // Usar directamente el servicio de socket
         socketService.on('webrtc:recording-ready', handleRecordingReady);
       } catch (error) {
-        console.error('Error setting up recording listener:', error);
+
       }
     };
 
@@ -126,9 +126,8 @@ export function LiveCapture({
       await startStreaming();
       onStreamStart?.();
 
-      console.log('🚀 Stream iniciado');
     } catch (error) {
-      console.error('❌ Error iniciando stream:', error);
+
     }
   };
 
@@ -142,9 +141,9 @@ export function LiveCapture({
       }
 
       onStreamStop?.();
-      console.log('🛑 Stream detenido');
+
     } catch (error) {
-      console.error('❌ Error deteniendo stream:', error);
+
     }
   };
 
@@ -181,7 +180,7 @@ export function LiveCapture({
       if (videoTrack) {
         videoTrack.enabled = !videoTrack.enabled;
         setIsCameraEnabled(videoTrack.enabled);
-        console.log('📹 Cámara:', videoTrack.enabled ? 'Activada' : 'Desactivada');
+
       }
     }
   };
@@ -193,7 +192,7 @@ export function LiveCapture({
       if (audioTrack) {
         audioTrack.enabled = !audioTrack.enabled;
         setIsMicrophoneEnabled(audioTrack.enabled);
-        console.log('🎤 Micrófono:', audioTrack.enabled ? 'Activado' : 'Desactivado');
+
       }
     }
   };
@@ -202,9 +201,9 @@ export function LiveCapture({
   const handleStopCapture = async () => {
     try {
       await stopCapture();
-      console.log('🛑 Captura detenida completamente');
+
     } catch (error) {
-      console.error('❌ Error deteniendo captura:', error);
+
     }
   };
 

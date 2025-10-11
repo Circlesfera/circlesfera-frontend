@@ -39,7 +39,7 @@ export default function CreateConversationModal({
         const filteredUsers = users.filter((u: User) => u._id !== user?._id);
         setUsers(filteredUsers);
       } catch (error) {
-        console.error('Error searching users:', error);
+
         setUsers([]);
       } finally {
         setLoading(false);
@@ -80,7 +80,7 @@ export default function CreateConversationModal({
         handleClose();
       }
     } catch (error) {
-      console.error('Error creating conversation:', error);
+
     } finally {
       setCreating(false);
     }

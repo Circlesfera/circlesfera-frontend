@@ -23,13 +23,9 @@ export default function FollowButton({
 
   // Sincronizar el estado cuando cambie initialFollowing
   useEffect(() => {
-    console.log('🔍 FollowButton - Sincronizando estado:', {
-      userId,
-      initialFollowing,
-      currentFollowing: following
-    });
+
     setFollowing(initialFollowing);
-  }, [initialFollowing, userId]);
+  }, [initialFollowing, userId, following]);
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -53,7 +49,7 @@ export default function FollowButton({
 
     // Verificar autenticación antes de proceder
     if (!user) {
-      console.error('Usuario no autenticado');
+
       return;
     }
 
@@ -71,7 +67,7 @@ export default function FollowButton({
       onChangeAction?.(true);
       success('¡Usuario seguido!', 'Ahora verás sus publicaciones en tu feed');
     } catch (error: unknown) {
-      console.error('Error al seguir usuario:', error);
+
       showError('Error al seguir', 'No se pudo seguir al usuario. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
@@ -90,7 +86,7 @@ export default function FollowButton({
       onChangeAction?.(false);
       success('Usuario dejado de seguir', 'Ya no verás sus publicaciones en tu feed');
     } catch (error: unknown) {
-      console.error('Error al dejar de seguir usuario:', error);
+
       showError('Error al dejar de seguir', 'No se pudo dejar de seguir al usuario. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
@@ -103,7 +99,7 @@ export default function FollowButton({
       setShowMenu(false);
       success('Usuario silenciado', 'No verás más sus publicaciones en tu feed');
     } catch (error: unknown) {
-      console.error('Error al silenciar usuario:', error);
+
       showError('Error al silenciar', 'No se pudo silenciar al usuario. Inténtalo de nuevo.');
     }
   };
@@ -114,11 +110,10 @@ export default function FollowButton({
       setShowMenu(false);
       success('Usuario restringido', 'Sus comentarios serán ocultados para ti');
     } catch (error: unknown) {
-      console.error('Error al restringir usuario:', error);
+
       showError('Error al restringir', 'No se pudo restringir al usuario. Inténtalo de nuevo.');
     }
   };
-
 
   const UnfollowIcon = () => (
     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

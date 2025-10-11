@@ -11,13 +11,6 @@ const api = axios.create({
 });
 
 // Log de inicialización para debug - SIEMPRE mostrar en desarrollo
-console.log('🔧 Axios API inicializada:', {
-  baseURL: '/api', // Usando proxy de Next.js
-  configApiUrl: config.apiUrl,
-  envApiUrl: process.env.NEXT_PUBLIC_API_URL,
-  nodeEnv: process.env.NODE_ENV,
-  isClient: typeof window !== 'undefined'
-});
 
 // Función para obtener token de forma segura
 const getToken = () => {
@@ -27,7 +20,7 @@ const getToken = () => {
   try {
     return localStorage.getItem('token');
   } catch (error) {
-    console.error('Error getting token from localStorage:', error);
+
     return null;
   }
 };
@@ -59,12 +52,11 @@ api.interceptors.request.use(
 
       // Log de token enviado
       console.log('Axios interceptor - Token enviado:', `Bearer ${token.substring(0, 20)}...`);
-      console.log('Axios interceptor - URL:', config.url);
-      console.log('Axios interceptor - Método:', config.method);
+
     } else if (isPublicRoute) {
-      console.log('Axios interceptor - Ruta pública, no se agrega token');
+
     } else {
-      console.log('Axios interceptor - No hay token disponible');
+
     }
 
     // Verificar que el header se configuró correctamente DESPUÉS de configurarlo
@@ -72,7 +64,7 @@ api.interceptors.request.use(
     if (authHeader && typeof authHeader === 'string') {
       console.log('🔐 Header Authorization configurado:', authHeader.substring(0, 30) + '...');
     } else {
-      console.log('❌ Header Authorization NO configurado - Token:', token ? 'Presente' : 'Ausente');
+
     }
 
     return config;
@@ -90,7 +82,7 @@ api.interceptors.response.use(
   (error: AxiosError<{ message?: string }>) => {
     // Validar que el error tiene la estructura esperada
     if (!error || typeof error !== 'object') {
-      console.error('Error inesperado en interceptor de axios:', error);
+
       return Promise.reject(error);
     }
 
@@ -99,12 +91,7 @@ api.interceptors.response.use(
 
     // Log de errores en desarrollo (solo para errores críticos)
     if (process.env.NODE_ENV === 'development' && status && status >= 500) {
-      console.error('API Error Details:', {
-        status: status || 'No status',
-        message: message || 'No message',
-        url: error.config?.url || 'No URL',
-        method: error.config?.method || 'No method'
-      });
+
     }
 
     // Manejo específico de errores
@@ -133,29 +120,29 @@ api.interceptors.response.use(
 
       case 403:
         // Error de autorización
-        console.warn('Acceso denegado:', message);
+
         break;
 
       case 404:
         // Recurso no encontrado
-        console.warn('Recurso no encontrado:', message);
+
         break;
 
       case 429:
         // Rate limit excedido
-        console.warn('Demasiadas solicitudes:', message);
+
         break;
 
       case 500:
         // Error interno del servidor
-        console.error('Error interno del servidor:', message);
+
         break;
 
       default:
         if (status && status >= 500) {
-          console.error('Error del servidor:', message);
+
         } else if (status && status >= 400) {
-          console.warn('Error del cliente:', message);
+
         }
     }
 

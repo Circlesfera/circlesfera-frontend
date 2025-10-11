@@ -134,7 +134,6 @@ const Header: React.FC<HeaderProps> = ({
     </svg>
   );
 
-
   const LogoutIcon = () => (
     <svg
       className="w-5 h-5"

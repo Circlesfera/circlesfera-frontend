@@ -161,7 +161,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
       }
 
     } catch (error) {
-      console.error('Error creando reel:', error);
+
       setError(error instanceof Error ? error.message : 'Error al crear el reel');
     } finally {
       setIsUploading(false);

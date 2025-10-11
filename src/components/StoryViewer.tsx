@@ -67,7 +67,7 @@ interface StoryViewerProps {
   onStoryDeleted?: (storyId: string) => void;
 }
 
-export default function StoryViewer({ story: initialStory, userId: _userId, username: _username, onClose, onStoryDeleted }: StoryViewerProps) {
+export default function StoryViewer({ story: initialStory, userId, username, onClose, onStoryDeleted }: StoryViewerProps) {
   // Solo loggear en desarrollo (comentado temporalmente para evitar spam)
   // if (process.env.NODE_ENV === 'development') {
   //   console.log('🎬 StoryViewer renderizado con onClose:', typeof onClose, 'onStoryDeleted:', typeof onStoryDeleted);
@@ -84,7 +84,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
   const [progress, setProgress] = useState(0);
   const [showReactionFeedback, setShowReactionFeedback] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const shouldCloseRef = useRef(false);
@@ -135,63 +135,67 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
       shouldCloseRef.current = false;
       onClose();
     }
-  }, [progress]); // Removido onClose de las dependencias para evitar bucle
+  }, [progress, onClose]); // Incluir onClose en las dependencias
+
+  // Loggear información de la story en desarrollo
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && story) {
+      console.log(`StoryViewer: Mostrando story ${story._id} del usuario ${username} (${userId})`);
+    }
+  }, [story, userId, username]);
 
   // Pausar/reanudar story
   const togglePause = () => {
-    console.log('⏸️ togglePause called, current state:', isPaused);
+
     setIsPaused(!isPaused);
-    
+
     if (videoRef.current) {
       if (isPaused) {
-        console.log('▶️ Playing video');
+
         videoRef.current.play();
       } else {
-        console.log('⏸️ Pausing video');
+
         videoRef.current.pause();
       }
     }
-    
-    console.log('🔄 Pause state changed to:', !isPaused);
+
   };
 
   // Manejar reacción
   const handleReaction = async (reactionType: 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry') => {
-    console.log('🖤 handleReaction called with:', reactionType);
-    
+
     if (!story || !user) {
-      console.log('❌ No story or user:', { story: !!story, user: !!user });
+
       return;
     }
 
     try {
       // Aquí iría la llamada real a la API
-      console.log('✅ Adding reaction:', reactionType);
-      
+
       // Actualizar estado local
       setStory(prev => {
         if (!prev) return prev;
-        
+
         const existingReaction = prev.reactions.find(r => r.user === user._id);
         if (existingReaction) {
           existingReaction.type = reactionType;
-          console.log('🔄 Updated existing reaction');
+
         } else {
           prev.reactions.push({
             user: user._id,
             type: reactionType,
             createdAt: new Date().toISOString()
           });
-          console.log('➕ Added new reaction');
+
         }
         return { ...prev };
       });
-      
+
       // Mostrar feedback visual
       setShowReactionFeedback(true);
       setTimeout(() => setShowReactionFeedback(false), 1000);
     } catch (error) {
-      console.error('❌ Error adding reaction:', error);
+
     }
   };
 
@@ -201,10 +205,9 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
 
     try {
       setSendingReply(true);
-      
+
       // Aquí iría la llamada real a la API
-      console.log('Sending reply:', replyText);
-      
+
       // Actualizar estado local
       setStory(prev => {
         if (!prev) return prev;
@@ -215,11 +218,11 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
         });
         return { ...prev };
       });
-      
+
       setReplyText('');
       setShowReplyInput(false);
     } catch (error) {
-      console.error('Error sending reply:', error);
+
     } finally {
       setSendingReply(false);
     }
@@ -227,61 +230,50 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
 
   // Manejar eliminación de story
   const handleDeleteStory = async () => {
-    console.log('🔍 Verificando permisos para eliminar story:');
-    console.log('📖 Story:', story);
-    console.log('👤 Usuario autenticado:', user);
-    console.log('🆔 Story user ID:', story?.user._id);
-    console.log('🆔 Usuario autenticado ID:', user?._id);
-    console.log('✅ ¿Es propietario?:', story?.user._id === user?._id);
-    
+
     if (!story || !user || story.user._id !== user._id) {
-      console.log('❌ No se puede eliminar: no es el propietario o faltan datos');
+
       return;
     }
-    
+
     try {
       setIsDeleting(true);
-      console.log('🗑️ Iniciando eliminación de story:', story._id);
-      
+
       // Llamada real a la API para eliminar la story
-      console.log('🗑️ Llamando a la API para eliminar story:', story._id);
+
       console.log('🔐 Token actual:', localStorage.getItem('token') ? 'Presente' : 'Ausente');
-      console.log('👤 Usuario actual:', user);
-      
+
       const result = await deleteStory(story._id);
-      
+
       if (!result.success) {
         throw new Error(result.message || 'Error al eliminar la story');
       }
-      
-      console.log('✅ API respondió:', result.message);
-      console.log('✅ Story eliminada exitosamente');
-      
+
       // Cerrar menú primero
       setShowMoreMenu(false);
-      
+
       // Limpiar intervalos
       if (progressInterval.current) {
         clearInterval(progressInterval.current);
       }
-      
+
       // Notificar que la story fue eliminada
       if (onStoryDeleted && story) {
-        console.log('🗑️ Notificando eliminación de story:', story._id);
+
         onStoryDeleted(story._id);
       }
-      
+
       // Cerrar inmediatamente después de la eliminación exitosa
-      console.log('🚪 Ejecutando onClose inmediatamente');
+
       try {
         onClose();
-        console.log('✅ onClose ejecutado exitosamente');
+
       } catch (err) {
-        console.error('❌ Error ejecutando onClose:', err);
+
       }
-      
+
     } catch (err) {
-      console.error('❌ Error eliminando story:', err);
+
       alert('Error al eliminar la story. Inténtalo de nuevo.');
     } finally {
       setIsDeleting(false);
@@ -336,10 +328,9 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
       document.addEventListener('click', handleClickOutside);
       return () => document.removeEventListener('click', handleClickOutside);
     }
-    
+
     return undefined;
   }, [showMoreMenu]);
-
 
   if (loading) {
     return (
@@ -372,7 +363,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
     <div className="fixed inset-0 bg-black z-50 story-viewer">
       {/* Barra de progreso superior - Estilo Instagram */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gray-800 z-10">
-        <div 
+        <div
           className="h-full bg-white transition-all duration-100 ease-linear"
           style={{ width: `${progress}%` }}
         />
@@ -382,8 +373,8 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full overflow-hidden border border-white/30">
-            <img 
-              src={story.user.avatar || '/default-avatar.png'} 
+            <img
+              src={story.user.avatar || '/default-avatar.png'}
               alt={story.user.username}
               className="w-full h-full object-cover"
             />
@@ -393,7 +384,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
             <p className="text-xs text-gray-300 opacity-80">hace 2h</p>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {/* Solo el botón de cerrar en el header */}
           <button
@@ -406,7 +397,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
       </div>
 
       {/* Contenido principal de la story - Estilo Instagram */}
-      <div 
+      <div
         className="w-full h-full flex items-center justify-center"
         onClick={togglePause}
         style={{ cursor: 'pointer' }}
@@ -419,7 +410,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
             draggable={false}
           />
         )}
-        
+
         {story.type === 'video' && story.content.video && (
           <video
             ref={videoRef}
@@ -431,9 +422,9 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
             onEnded={() => onClose()}
           />
         )}
-        
+
         {story.type === 'text' && story.content.text && (
-          <div 
+          <div
             className="max-w-md mx-8 text-center p-8 rounded-2xl"
             style={{
               backgroundColor: story.content.text.backgroundColor,
@@ -454,7 +445,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
             </p>
           </div>
         )}
-        
+
         {/* Feedback de reacción */}
         {showReactionFeedback && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
@@ -469,56 +460,56 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
       <div className="absolute bottom-8 left-4 right-4 flex items-center justify-center space-x-6">
                  <button
            onClick={() => {
-             console.log('🖤 Heart button clicked!');
+
              handleReaction('like');
            }}
            className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${
-             story?.reactions.some(r => r.user === user?._id) 
-               ? 'bg-red-500/80 hover:bg-red-600/90' 
+             story?.reactions.some(r => r.user === user?._id)
+               ? 'bg-red-500/80 hover:bg-red-600/90'
                : 'bg-black/20 hover:bg-black/40'
            }`}
          >
            <HeartIcon />
          </button>
-         
+
          <button
            onClick={() => {
-             console.log('💬 Message button clicked, current state:', showReplyInput);
+
              setShowReplyInput(!showReplyInput);
            }}
            className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${
-             showReplyInput 
-               ? 'bg-blue-500/80 hover:bg-blue-600/90 ring-2 ring-blue-300' 
+             showReplyInput
+               ? 'bg-blue-500/80 hover:bg-blue-600/90 ring-2 ring-blue-300'
                : 'bg-black/20 hover:bg-black/40'
            }`}
            title="Responder a la historia"
          >
            <MessageIcon />
          </button>
-         
+
          <button
            onClick={() => {
-             console.log('⏸️ Pause button clicked!');
+
              togglePause();
            }}
            className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${
-             isPaused 
-               ? 'bg-green-500/80 hover:bg-green-600/90' 
+             isPaused
+               ? 'bg-green-500/80 hover:bg-green-600/90'
                : 'bg-black/20 hover:bg-black/40'
            }`}
          >
            {isPaused ? <PlayIcon /> : <PauseIcon />}
          </button>
-         
+
          <div className="relative">
-           <button 
+           <button
              onClick={() => setShowMoreMenu(!showMoreMenu)}
              className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40 transition-all duration-200 flex items-center justify-center group"
              title="Más opciones"
            >
              <MoreIcon />
            </button>
-           
+
            {/* Menú desplegable */}
            {showMoreMenu && (
              <div className="absolute bottom-16 right-0 w-48 bg-black/90 backdrop-blur-sm rounded-lg shadow-xl border border-white/10 z-50">
@@ -526,14 +517,13 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
                {story?.user._id === user?._id && (
                  <button
                    onClick={() => {
-                     console.log('🗑️ Botón eliminar story clickeado');
-                     console.log('📊 Estado actual:', { story: !!story, user: !!user, isOwner: story?.user._id === user?._id });
+
                      handleDeleteStory();
                    }}
                    disabled={isDeleting}
                    className={`w-full px-4 py-3 text-left transition-colors rounded-lg flex items-center space-x-3 ${
-                     isDeleting 
-                       ? 'text-gray-400 bg-gray-800/50 cursor-not-allowed' 
+                     isDeleting
+                       ? 'text-gray-400 bg-gray-800/50 cursor-not-allowed'
                        : 'text-red-400 hover:bg-red-500/20'
                    }`}
                  >
@@ -550,11 +540,11 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
                    )}
                  </button>
                )}
-               
+
                {/* Opción para reportar (siempre visible) */}
                <button
                  onClick={() => {
-                   console.log('🚨 Report story clicked');
+
                    // Aquí iría la lógica de reporte
                    alert('Función de reporte en desarrollo');
                    setShowMoreMenu(false);
@@ -564,7 +554,7 @@ export default function StoryViewer({ story: initialStory, userId: _userId, user
                  <ReportIcon />
                  <span>Reportar</span>
                </button>
-               
+
                {/* Opción para cerrar menú */}
                <button
                  onClick={() => setShowMoreMenu(false)}

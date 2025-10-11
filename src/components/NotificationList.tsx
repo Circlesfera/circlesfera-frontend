@@ -32,12 +32,12 @@ export default function NotificationList() {
       if (Array.isArray(data)) {
         setNotifications(data);
       } else {
-        console.error('getNotifications no devolvió un array:', data);
+
         setError('Error al cargar notificaciones');
         setNotifications([]);
       }
     } catch (error) {
-      console.error('Error al obtener notificaciones:', error);
+
       setError('Error al cargar notificaciones');
       setNotifications([]);
     } finally {
@@ -55,7 +55,7 @@ export default function NotificationList() {
       await markNotificationAsRead(id);
       fetchNotifications();
     } catch (error) {
-      console.error('Error al marcar notificación como leída:', error);
+
     }
   };
 

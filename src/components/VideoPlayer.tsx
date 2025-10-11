@@ -41,7 +41,7 @@ export default function VideoPlayer({
 
     if (isActive && autoPlay) {
       video.play().catch(err => {
-        console.error('Error playing video:', err);
+
       });
       setIsPlaying(true);
     } else {
@@ -76,7 +76,7 @@ export default function VideoPlayer({
       setIsPlaying(false);
     } else {
       video.play().catch(err => {
-        console.error('Error playing video:', err);
+
       });
       setIsPlaying(true);
     }

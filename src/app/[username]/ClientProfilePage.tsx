@@ -12,7 +12,6 @@ import UserListModal from '@/components/UserListModal';
 import ModernProfileHeader from '@/components/profile/ModernProfileHeader';
 import ModernProfileTabs from '@/components/profile/ModernProfileTabs';
 
-
 // Función para convertir UserProfile a User
 const convertToUser = (profile: UserProfile): User => {
   const user: User = {
@@ -92,7 +91,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         router.push(`/messages?conversation=${response.conversation._id}`);
       }
     } catch (error) {
-      console.error('Error creating conversation:', error);
+
       // Si falla, redirigir a la página de mensajes para que el usuario pueda crear la conversación manualmente
       router.push('/messages');
     }
@@ -115,13 +114,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       // Usar la información isFollowing que viene del backend
       const isFollowing = profileData.isFollowing || false;
       // Loggear siempre para debugging del problema
-      console.log('🔍 ClientProfilePage - Estado inicial de seguimiento:', {
-        username: profileData.username,
-        isFollowing,
-        fromBackend: profileData.isFollowing,
-        profileData: profileData,
-        userFollowing: user.following
-      });
+
       setIsFollowingProfile(isFollowing);
     }
   }, [user, profileData, isOwnProfile]);
@@ -135,11 +128,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       if (isFollowing !== isFollowingProfile) {
         // Solo loggear en desarrollo para debugging
         if (process.env.NODE_ENV === 'development') {
-          console.log('🔄 ClientProfilePage - Actualizando estado de seguimiento:', {
-            username: profileData.username,
-            oldState: isFollowingProfile,
-            newState: isFollowing
-          });
+
         }
         setIsFollowingProfile(isFollowing);
       }
@@ -154,7 +143,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       } catch (error) {
         // Solo logear errores críticos
         if (error instanceof Error && error.message.includes('500')) {
-          console.error('Error al recargar perfil:', error);
+
         }
       }
     }, [profileData?.username]);
@@ -163,11 +152,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   const handleFollowChange = useCallback(async (isFollowing: boolean) => {
     // Solo loggear en desarrollo para debugging
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 ClientProfilePage - handleFollowChange:', {
-        username: profileData?.username,
-        newState: isFollowing,
-        previousState: isFollowingProfile
-      });
+
     }
     
     // Actualizar el estado local inmediatamente
@@ -192,7 +177,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       } catch (error) {
         // Solo logear errores críticos
         if (error instanceof Error && error.message.includes('500')) {
-          console.error('Error refreshing user after follow:', error);
+
         }
       }
     }
@@ -200,8 +185,6 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     // Recargar los datos del perfil para actualizar contadores
     await reloadProfile();
   }, [reloadProfile, user, refreshUser, profileData?.username, isFollowingProfile]);
-
-
 
   // Handlers para abrir modales
   const handleShowFollowers = async () => {
@@ -213,7 +196,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     } catch (error) {
       // Solo logear errores críticos
       if (error instanceof Error && error.message.includes('500')) {
-        console.error('Error loading followers:', error);
+
       }
       setFollowersList([]);
     }
@@ -228,7 +211,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     } catch (error) {
       // Solo logear errores críticos
       if (error instanceof Error && error.message.includes('500')) {
-        console.error('Error loading following:', error);
+
       }
       setFollowingList([]);
     }
@@ -284,7 +267,6 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           ) : undefined}
         />
 
-
         {/* Edición de perfil */}
         {isOwnProfile && showEdit && (
           <div className="mb-6">
@@ -310,7 +292,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                       // Recargar el perfil desde el servidor
                       await reloadProfile();
                     } catch (error) {
-                      console.error('Error guardando perfil:', error);
+
                       // Mostrar error al usuario
                       alert('Error al guardar el perfil. Por favor, inténtalo de nuevo.');
                     }

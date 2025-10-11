@@ -209,7 +209,6 @@ export interface Reel {
   updatedAt: string;
 }
 
-
 export interface Notification {
   _id: string;
   user: string;

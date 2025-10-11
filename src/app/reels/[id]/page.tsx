@@ -32,7 +32,7 @@ export default function ReelPage() {
           setReel(response.reel);
         }
       } catch (error) {
-        console.error('Error cargando reel:', error);
+
         router.push('/reels');
       } finally {
         setLoading(false);
@@ -45,9 +45,9 @@ export default function ReelPage() {
   const handleLike = async (reelId: string) => {
     try {
       // TODO: Implementar likeReel service call
-      console.log('Liking reel:', reelId);
+
     } catch (error) {
-      console.error('Error liking reel:', error);
+
     }
   };
 
@@ -60,8 +60,7 @@ export default function ReelPage() {
 
   const handleShare = (reelId: string) => {
     // TODO: Implementar compartir
-    console.log('Sharing reel:', reelId);
-    
+
     // Compartir URL
     if (navigator.share) {
       const shareData: ShareData = {

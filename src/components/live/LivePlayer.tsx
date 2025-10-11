@@ -63,10 +63,6 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
   // Handle recording ready (para CSTV)
   const handleRecordingReady = async (blob: Blob) => {
     // Aquí podrías subir automáticamente el archivo para crear un CSTV
-    console.log('📹 Grabación lista para CSTV:', {
-      size: blob.size,
-      type: blob.type,
-    });
 
     // TODO: Implementar subida automática a CSTV
   };
@@ -74,13 +70,13 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
   // Handle stream start
   const handleStreamStart = () => {
     setIsStreaming(true);
-    console.log('🚀 Stream iniciado');
+
   };
 
   // Handle stream stop
   const handleStreamStop = () => {
     setIsStreaming(false);
-    console.log('🛑 Stream detenido');
+
   };
 
   // Handle play/pause

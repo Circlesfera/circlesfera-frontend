@@ -34,7 +34,6 @@ export default function LivePage() {
     router.push(`/live/${streamId}`);
   };
 
-
   const formatViewerCount = (count: number) => {
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;

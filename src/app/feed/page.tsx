@@ -57,7 +57,7 @@ export default function FeedPage() {
       setHasMore(response.hasMore || false);
       setPage(pageNum);
     } catch (err) {
-      console.error('Error fetching feed:', err);
+
       setError('Error al cargar el feed');
     } finally {
       setLoading(false);
@@ -139,7 +139,7 @@ export default function FeedPage() {
         );
       }
     } catch (error) {
-      console.error('Error liking post:', error);
+
     }
   }, [posts, user]);
 
@@ -165,7 +165,7 @@ export default function FeedPage() {
         alert('¡Enlace copiado al portapapeles!');
       }
     } catch (error) {
-      console.error('Error sharing post:', error);
+
       // Fallback final: copiar manualmente
       const postUrl = `${window.location.origin}/${username}/post/${postId}`;
       navigator.clipboard.writeText(postUrl).then(() => {

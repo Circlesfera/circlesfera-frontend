@@ -71,7 +71,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
       // Scroll al final después de cargar
       setTimeout(scrollToBottom, 100);
     } catch (error) {
-      console.error('Error loading messages:', error);
+
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
       setHasMore(response.pagination.page < response.pagination.pages);
       setPage(nextPage);
     } catch (error) {
-      console.error('Error loading more messages:', error);
+
     } finally {
       setLoading(false);
     }
@@ -109,7 +109,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
         scrollToBottom();
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+
       throw error;
     } finally {
       setSending(false);

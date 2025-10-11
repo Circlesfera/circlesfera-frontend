@@ -48,7 +48,7 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
       }
     } catch (err) {
       setError('Error al cargar el feed')
-      console.error('Error loading feed:', err)
+
     } finally {
       setLoading(false)
     }
@@ -81,7 +81,7 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
       }
     } catch (err) {
       setError('Error al cargar más posts')
-      console.error('Error loading more posts:', err)
+
     } finally {
       setLoadingMore(false)
     }

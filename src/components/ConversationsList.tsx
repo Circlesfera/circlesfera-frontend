@@ -51,11 +51,11 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
       if (response && response.conversations) {
         setConversations(response.conversations);
       } else {
-        console.error('getConversations no devolvió datos válidos:', response);
+
         setConversations([]);
       }
     } catch (error) {
-      console.error('Error fetching conversations:', error);
+
       setConversations([]);
     } finally {
       setLoading(false);

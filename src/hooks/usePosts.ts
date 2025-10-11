@@ -57,7 +57,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
       }
     } catch (err) {
       setError('Error al cargar los posts');
-      console.error('Error loading posts:', err);
+
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
       }
     } catch (err) {
       setError('Error al cargar más posts');
-      console.error('Error loading more posts:', err);
+
     } finally {
       setLoading(false);
     }

@@ -59,7 +59,7 @@ export default function HomePage() {
           setStories(storiesResponse.users || []);
         }
       } catch (error) {
-        console.error('Error cargando stories:', error);
+
       }
     };
 
@@ -70,14 +70,14 @@ export default function HomePage() {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && user && !authLoading) {
-        console.log('🔄 Página visible, refrescando feed...');
+
         refresh();
       }
     };
 
     const handleFocus = () => {
       if (user && !authLoading) {
-        console.log('🔄 Ventana enfocada, refrescando feed...');
+
         refresh();
       }
     };

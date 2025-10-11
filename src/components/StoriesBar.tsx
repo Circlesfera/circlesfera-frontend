@@ -47,7 +47,7 @@ export default function StoriesBar() {
         setUsersWithStories(response.users);
       }
     } catch (error) {
-      console.error('Error fetching users with stories:', error);
+
     } finally {
       setLoading(false);
     }

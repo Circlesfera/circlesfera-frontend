@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { notFound, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { getStory } from '@/services/storyService';
 import { getUserProfileByUsername } from '@/services/userService';
+import type { Story } from '@/services/storyService';
+import type { UserProfile } from '@/services/userService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
 
@@ -13,11 +16,22 @@ interface Props {
 
 export default function UserStoryPage({ params }: Props) {
   const [story, setStory] = useState<Story | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { user: _currentUser } = useAuth();
+  const { user: currentUser } = useAuth();
   const router = useRouter();
+
+  const handleView = useCallback(async () => {
+    if (!story || !currentUser) return;
+
+    try {
+      // Registrar visualización de la story (implementar cuando esté disponible)
+
+    } catch (error) {
+
+    }
+  }, [story, currentUser]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -46,7 +60,7 @@ export default function UserStoryPage({ params }: Props) {
           setError(true);
         }
       } catch (err) {
-        console.error('Error loading story:', err);
+
         setError(true);
       } finally {
         setLoading(false);
@@ -55,6 +69,13 @@ export default function UserStoryPage({ params }: Props) {
 
     loadData();
   }, [params]);
+
+  // Registrar visualización automáticamente cuando se carga la story
+  useEffect(() => {
+    if (story && currentUser && story.user._id !== currentUser._id) {
+      handleView();
+    }
+  }, [story, currentUser, handleView]);
 
   if (loading) {
     return (
@@ -79,9 +100,24 @@ export default function UserStoryPage({ params }: Props) {
     return notFound();
   }
 
-  const handleView = () => {
-    // Implementar lógica de visualización
-    console.log('View story:', story._id);
+  const handleShare = async () => {
+    if (!story) return;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `Story de ${user?.username}`,
+          text: story.content?.text?.content || 'Mira esta story en CircleSfera',
+          url: window.location.href
+        });
+      } else {
+        // Fallback: copiar al clipboard
+        await navigator.clipboard.writeText(window.location.href);
+
+      }
+    } catch (error) {
+
+    }
   };
 
   return (
@@ -113,9 +149,11 @@ export default function UserStoryPage({ params }: Props) {
           {/* Header */}
           <div className="p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <img
+              <Image
                 src={user.avatar || '/default-avatar.png'}
                 alt={user.username}
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
@@ -133,7 +171,7 @@ export default function UserStoryPage({ params }: Props) {
 
             <div className="text-sm text-gray-500">
               <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">
-                {story.isExpired ? 'Expirada' : 'Activa'}
+                {new Date(story.expiresAt) < new Date() ? 'Expirada' : 'Activa'}
               </span>
             </div>
           </div>
@@ -141,10 +179,13 @@ export default function UserStoryPage({ params }: Props) {
           {/* Content */}
           <div className="relative">
             {story.type === 'image' && story.content?.image?.url && (
-              <img
+              <Image
                 src={story.content.image.url}
-                alt={story.content.text || 'Story image'}
+                alt={story.content.text?.content || 'Story image'}
+                width={400}
+                height={711}
                 className="w-full aspect-[9/16] object-cover"
+                priority
               />
             )}
 
@@ -156,15 +197,22 @@ export default function UserStoryPage({ params }: Props) {
               />
             )}
 
-            {story.type === 'text' && (
+            {story.type === 'text' && story.content?.text && (
               <div
                 className="w-full aspect-[9/16] flex items-center justify-center p-8"
                 style={{
-                  background: story.content?.background || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                  backgroundColor: story.content.text.backgroundColor || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                 }}
               >
-                <p className="text-white text-lg font-medium text-center leading-relaxed">
-                  {story.content?.text}
+                <p
+                  className="text-lg font-medium text-center leading-relaxed"
+                  style={{
+                    color: story.content.text.textColor || 'white',
+                    fontSize: `${story.content.text.fontSize}px`,
+                    fontFamily: story.content.text.fontFamily
+                  }}
+                >
+                  {story.content.text.content}
                 </p>
               </div>
             )}
@@ -173,7 +221,7 @@ export default function UserStoryPage({ params }: Props) {
             {story.content?.text && story.type !== 'text' && (
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
                 <p className="text-white text-sm leading-relaxed">
-                  {story.content.text}
+                  {story.content.text.content}
                 </p>
               </div>
             )}
@@ -188,11 +236,11 @@ export default function UserStoryPage({ params }: Props) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
-                  <span className="text-sm font-medium">{story.views}</span>
+                  <span className="text-sm font-medium">{story.views.length}</span>
                 </div>
 
                 <button
-                  onClick={handleView}
+                  onClick={handleShare}
                   className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,7 +258,7 @@ export default function UserStoryPage({ params }: Props) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>{story.location}</span>
+                <span>{story.location.name}</span>
               </div>
             )}
           </div>

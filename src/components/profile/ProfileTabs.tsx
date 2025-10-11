@@ -121,7 +121,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         }
       }
     } catch (err) {
-      console.error(`Error loading ${type}:`, err);
+
       setError(`Error al cargar ${type}`);
     } finally {
       setLoading(false);

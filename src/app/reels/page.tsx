@@ -44,7 +44,7 @@ export default function ReelsPage() {
         updateReel(reelId, { likes: currentReel.likes });
       }
     } catch (error) {
-      console.error('Error liking reel:', error);
+
       // Revertir en caso de error
       if (currentReel) {
         updateReel(reelId, { likes: currentReel.likes });
@@ -71,7 +71,7 @@ export default function ReelsPage() {
         alert('¡Enlace copiado al portapapeles!');
       }
     } catch (error) {
-      console.error('Error sharing reel:', error);
+
     }
   }, []);
 

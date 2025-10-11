@@ -66,7 +66,7 @@ export function useSearch(): UseSearchReturn {
           const usersResponse = await searchUsers(debouncedQuery);
           newResults.users = usersResponse || [];
         } catch (error) {
-          console.error('Error searching users:', error);
+
         }
       }
 
@@ -83,13 +83,13 @@ export function useSearch(): UseSearchReturn {
             newResults.reels = reelsResponse.reels || [];
           }
         } catch (error) {
-          console.error('Error searching reels:', error);
+
         }
       }
 
       setResults(newResults);
     } catch (error) {
-      console.error('Error in search:', error);
+
     } finally {
       setLoading(false);
     }

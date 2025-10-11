@@ -13,15 +13,13 @@ export const searchUsers = async (query: string): Promise<UserSearchResult[]> =>
 };
 
 export const getRecentPosts = async (): Promise<Post[]> => {
-  console.log('🔍 exploreService - getRecentPosts llamada');
-  console.log('🔍 exploreService - baseURL configurado:', api.defaults.baseURL);
-  console.log('🔍 exploreService - URL completa será:', `${api.defaults.baseURL}/posts/recent`);
+
   try {
     const res = await api.get('/posts/recent');
-    console.log('✅ exploreService - getRecentPosts respuesta:', res.data);
+
     return res.data.posts;
   } catch (error) {
-    console.error('❌ exploreService - getRecentPosts error:', error);
+
     throw error;
   }
 };

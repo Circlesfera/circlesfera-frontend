@@ -69,10 +69,10 @@ export const trackEvent = (
 
     // Log en desarrollo
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 Analytics Event:', event, eventData);
+
     }
   } catch (error) {
-    console.error('Error tracking event:', error);
+
   }
 };
 
@@ -100,7 +100,7 @@ const sendToBackend = async (
     });
   } catch (error) {
     // Silenciar errores de analytics para no afectar UX
-    console.debug('Analytics backend error:', error);
+
   }
 };
 

@@ -17,7 +17,7 @@ export function useUnreadNotifications() {
       const unreadCount = await getUnreadCount();
       setUnread(unreadCount);
     } catch (error) {
-      console.error('Error al obtener conteo de notificaciones:', error);
+
       setUnread(0);
     }
   };

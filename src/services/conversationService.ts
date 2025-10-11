@@ -78,19 +78,15 @@ export interface ConversationResponse {
 
 // Obtener conversaciones del usuario
 export const getConversations = async (page = 1, limit = 20): Promise<ConversationsResponse> => {
-  console.log('🔍 conversationService - getConversations llamada:', { page, limit });
-  console.log('🔍 conversationService - baseURL actual:', api.defaults.baseURL);
-  console.log('🔍 conversationService - URL completa será:', `${api.defaults.baseURL}/conversations`);
-  console.log('🔍 conversationService - config.apiUrl:', process.env.NEXT_PUBLIC_API_URL);
 
   try {
     const res = await api.get('/conversations', {
       params: { page, limit }
     });
-    console.log('✅ conversationService - getConversations respuesta:', res.data);
+
     return res.data;
   } catch (error) {
-    console.error('❌ conversationService - getConversations error:', error);
+
     throw error;
   }
 };

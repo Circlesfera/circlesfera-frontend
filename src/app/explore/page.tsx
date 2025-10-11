@@ -28,14 +28,14 @@ export default function ExplorePage() {
       }
 
       // Cargar posts trending
-      console.log('🔍 ExplorePage - Cargando posts trending');
+
       const postsResponse = await getTrendingPosts(8);
-      console.log('📊 ExplorePage - Respuesta getTrendingPosts:', postsResponse);
+
       if (postsResponse.success) {
         setTrendingPosts(postsResponse.posts || []);
-        console.log('✅ ExplorePage - Posts trending establecidos:', postsResponse.posts?.length || 0);
+
       } else {
-        console.warn('⚠️ ExplorePage - getTrendingPosts falló:', postsResponse);
+
       }
 
       // Cargar stories recientes
@@ -44,7 +44,7 @@ export default function ExplorePage() {
         setRecentStories(storiesResponse.users?.slice(0, 8) || []);
       }
     } catch (error) {
-      console.error('Error cargando contenido de explore:', error);
+
     }
   }, []);
 
@@ -56,13 +56,13 @@ export default function ExplorePage() {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        console.log('🔄 Explore visible, refrescando contenido...');
+
         loadExploreContent();
       }
     };
 
     const handleFocus = () => {
-      console.log('🔄 Explore enfocado, refrescando contenido...');
+
       loadExploreContent();
     };
 

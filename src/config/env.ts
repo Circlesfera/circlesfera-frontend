@@ -63,7 +63,7 @@ export const validateConfig = () => {
   }
 
   if (errors.length > 0) {
-    console.error('Configuration validation errors:', errors);
+
     throw new Error(`Configuration validation failed: ${errors.join(', ')}`);
   }
 

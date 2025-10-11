@@ -258,7 +258,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     try {
       socketService.sendComment(streamId, content.trim(), parentId);
     } catch (error) {
-      console.error('Error sending comment:', error);
+
       setError('Error al enviar comentario');
     } finally {
       setLoading(false);

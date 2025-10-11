@@ -19,13 +19,13 @@ export default function UserSuggestions() {
       if (Array.isArray(data)) {
         setSuggestions(data);
       } else {
-        console.error('getSuggestions no devolvió un array:', data);
+
         setError('Error al cargar sugerencias');
         setSuggestions([]);
       }
       setLoading(false);
     }).catch(error => {
-      console.error('Error al obtener sugerencias:', error);
+
       setError('Error al cargar sugerencias');
       setSuggestions([]);
       setLoading(false);

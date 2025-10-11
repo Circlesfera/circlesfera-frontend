@@ -18,7 +18,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
     // Validar que postId existe y no está vacío
     if (!postId || postId.trim() === '') {
-      console.warn('CommentsSection - postId inválido:', postId);
+
       setError('ID de publicación inválido');
       setLoading(false);
       return;
@@ -26,13 +26,12 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
     // Solo cargar comentarios si el usuario está autenticado
     if (!user || !token || authLoading) {
-      console.log('CommentsSection - Usuario no autenticado, omitiendo carga de comentarios');
+
       setLoading(false);
       return;
     }
 
     getComments(postId).then(data => {
-      console.log('Respuesta de getComments:', data);
 
       // Verificar si la respuesta es válida
       if (data && typeof data === 'object') {
@@ -42,18 +41,18 @@ export default function CommentsSection({ postId }: { postId: string }) {
           // Si devuelve directamente un array de comentarios
           setComments(data);
         } else {
-          console.error('getComments no devolvió datos válidos:', data);
+
           setError('Error al cargar comentarios');
           setComments([]);
         }
       } else {
-        console.error('getComments devolvió datos inválidos:', data);
+
         setError('Error al cargar comentarios');
         setComments([]);
       }
       setLoading(false);
     }).catch(err => {
-      console.error('Error al obtener comentarios:', err);
+
       setError('Error al cargar comentarios');
       setComments([]);
       setLoading(false);

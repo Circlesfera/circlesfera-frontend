@@ -78,7 +78,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
       };
 
       ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+
       };
 
       ws.onmessage = (event) => {
@@ -90,13 +90,13 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
             onMessage(message);
           }
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+
         }
       };
 
       wsRef.current = ws;
     } catch (error) {
-      console.error('Error connecting to WebSocket:', error);
+
     }
   }, [token, onConnect, onDisconnect, onMessage, reconnectInterval, maxReconnectAttempts]);
 
@@ -105,7 +105,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}): UseWebSocketRet
       const message: WebSocketMessage = { type, data };
       wsRef.current.send(JSON.stringify(message));
     } else {
-      console.warn('WebSocket is not connected');
+
     }
   }, []);
 

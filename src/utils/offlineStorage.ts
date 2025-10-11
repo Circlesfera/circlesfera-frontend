@@ -68,7 +68,7 @@ export const saveToIndexedDB = async (
       transaction.onerror = () => reject(transaction.error);
     });
   } catch (error) {
-    console.error('Error saving to IndexedDB:', error);
+
     throw error;
   }
 };
@@ -101,7 +101,7 @@ export const getFromIndexedDB = async <T>(
       });
     }
   } catch (error) {
-    console.error('Error getting from IndexedDB:', error);
+
     return null;
   }
 };
@@ -125,7 +125,7 @@ export const deleteFromIndexedDB = async (
       transaction.onerror = () => reject(transaction.error);
     });
   } catch (error) {
-    console.error('Error deleting from IndexedDB:', error);
+
     throw error;
   }
 };
@@ -146,7 +146,7 @@ export const clearStore = async (store: keyof typeof STORES): Promise<void> => {
       transaction.onerror = () => reject(transaction.error);
     });
   } catch (error) {
-    console.error('Error clearing store:', error);
+
     throw error;
   }
 };
@@ -191,12 +191,11 @@ export const syncPendingData = async (): Promise<void> => {
     }
 
     // Aquí se debería implementar la lógica de sincronización con el servidor
-    console.log('Sincronizando datos pendientes:', pendingSync.length);
 
     // Limpiar datos sincronizados
     await deleteFromIndexedDB('userData', 'pendingSync');
   } catch (error) {
-    console.error('Error syncing pending data:', error);
+
   }
 };
 

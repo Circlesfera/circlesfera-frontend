@@ -20,7 +20,7 @@ interface SearchResult {
 function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
-  const { user: _user } = useAuth(); // Mantenido para futuras funcionalidades
+  const { user } = useAuth();
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,9 +38,13 @@ function SearchContent() {
 
       try {
         const searchResults = await searchUsers(query);
-        setResults(searchResults);
+        // Filtrar resultados para excluir al usuario actual si está logueado
+        const filteredResults = user
+          ? searchResults.filter(result => result._id !== user._id)
+          : searchResults;
+        setResults(filteredResults);
       } catch (err) {
-        console.error('Error searching users:', err);
+
         setError('Error al buscar usuarios');
         setResults([]);
       } finally {
@@ -49,7 +53,7 @@ function SearchContent() {
     };
 
     performSearch();
-  }, [query]);
+  }, [query, user]);
 
   if (!query.trim()) {
     return (
@@ -127,7 +131,7 @@ function SearchContent() {
               <div className="text-sm text-gray-600 mb-4">
                 {results.length} {results.length === 1 ? 'usuario encontrado' : 'usuarios encontrados'}
               </div>
-              
+
               {results.map((user) => (
                 <Link
                   key={user._id}
@@ -136,19 +140,19 @@ function SearchContent() {
                 >
                   <div className="flex items-center space-x-4">
                     {user.avatar ? (
-                      <Image 
-                        src={user.avatar} 
-                        alt="avatar" 
+                      <Image
+                        src={user.avatar}
+                        alt="avatar"
                         width={48}
                         height={48}
-                        className="w-12 h-12 rounded-full object-cover" 
+                        className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
                         {user.username?.[0]?.toUpperCase() || 'U'}
                       </div>
                     )}
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-3 mb-1">
                         <span className="font-semibold text-gray-900 text-lg">
@@ -160,20 +164,20 @@ function SearchContent() {
                           </span>
                         )}
                       </div>
-                      
+
                       {user.fullName && (
                         <div className="text-gray-700 font-medium mb-1">
                           {user.fullName}
                         </div>
                       )}
-                      
+
                       {user.bio && (
                         <div className="text-gray-600 text-sm line-clamp-2">
                           {user.bio}
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="flex-shrink-0">
                       <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

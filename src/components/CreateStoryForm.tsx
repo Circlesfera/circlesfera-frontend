@@ -132,7 +132,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
       onStoryCreated?.(story);
       onClose?.();
     } catch (err: unknown) {
-      console.error('Error creating story:', err);
+
       setError(err instanceof Error ? err.message : 'Error al crear la story');
     } finally {
       setLoading(false);

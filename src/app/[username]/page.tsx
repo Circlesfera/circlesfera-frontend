@@ -27,7 +27,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
         const profileData = await getUserProfileByUsername(username);
         setProfile(profileData);
       } catch (err) {
-        console.error('Error loading profile:', err);
+
         setError(true);
       } finally {
         setLoading(false);

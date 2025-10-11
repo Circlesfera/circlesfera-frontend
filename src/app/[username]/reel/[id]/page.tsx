@@ -47,7 +47,7 @@ export default function UserReelPage({ params }: Props) {
           setError(true);
         }
       } catch (err) {
-        console.error('Error loading reel:', err);
+
         setError(true);
       } finally {
         setLoading(false);
@@ -84,12 +84,12 @@ export default function UserReelPage({ params }: Props) {
 
   const handleLike = () => {
     // Implementar lógica de like
-    console.log('Like reel:', reel._id);
+
   };
 
   const handleShare = () => {
     // Implementar lógica de compartir
-    console.log('Share reel:', reel._id);
+
   };
 
   return (

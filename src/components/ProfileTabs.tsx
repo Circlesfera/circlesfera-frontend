@@ -100,7 +100,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
           await loadStories();
         }
       } catch (error) {
-        console.error('Error loading tab content:', error);
+
         // No propagar el error, solo loggear
       }
     };
@@ -121,7 +121,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
       await loadContentCounts();
       
     } catch (error) {
-      console.error('Error loading initial content:', error);
+
       setError('Error al cargar el contenido');
     } finally {
       setLoading(false);
@@ -139,7 +139,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         stories: stories.length
       });
     } catch (error) {
-      console.error('Error loading content counts:', error);
+
     }
   };
 
@@ -157,7 +157,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         setPostsPage(page);
       }
     } catch (error) {
-      console.error('Error loading posts:', error);
+
       throw error;
     }
   };
@@ -176,7 +176,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         setReelsPage(page);
       }
     } catch (error: unknown) {
-      console.error('❌ Error loading reels:', error);
+
       console.error('❌ Error details:', {
         message: error instanceof Error ? error.message : 'Unknown error',
         status: error && typeof error === 'object' && 'response' in error ? (error as { response?: { status?: number } }).response?.status : undefined,
@@ -192,7 +192,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
     }
   };
 
-
   // Cargar stories
   const loadStories = async () => {
     try {
@@ -201,7 +200,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         setStories(response.stories);
       }
     } catch (error) {
-      console.error('Error loading stories:', error);
+
       // No propagar el error, solo establecer stories vacío
       setStories([]);
     }
@@ -220,7 +219,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
         await loadReels(reelsPage + 1, true);
       }
     } catch (error) {
-      console.error('Error loading more content:', error);
+
       // No establecer error global, solo loggear
       setError(null);
     } finally {
@@ -342,7 +341,6 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             ))}
           </div>
         );
-
 
       case 'stories':
         if (stories.length === 0) {

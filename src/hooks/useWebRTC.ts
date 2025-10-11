@@ -79,7 +79,6 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
         startStatsMonitoring();
       }
 
-      console.log('🎥 Captura iniciada');
       return stream;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
@@ -115,9 +114,9 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
       }));
 
       stopStatsMonitoring();
-      console.log('🛑 Captura detenida');
+
     } catch (error) {
-      console.error('❌ Error deteniendo captura:', error);
+
     }
   }, [isStreamer]);
 
@@ -138,7 +137,6 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
         isRecording: true,
       }));
 
-      console.log('🚀 Transmisión iniciada');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error iniciando transmisión';
       setState(prev => ({
@@ -161,11 +159,10 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
       }));
 
       stopStatsMonitoring();
-      console.log('🛑 Transmisión detenida');
 
       return recording;
     } catch (error) {
-      console.error('❌ Error deteniendo transmisión:', error);
+
       throw error;
     }
   }, []);
@@ -177,7 +174,6 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
 
       await webrtcService.current.joinStream(streamId, viewerId);
 
-      console.log('👀 Unido a transmisión como viewer');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error uniéndose a transmisión';
       setState(prev => ({
@@ -199,7 +195,7 @@ export const useWebRTC = (options: UseWebRTCOptions = {}) => {
           setState(prev => ({ ...prev, stats }));
         }
       } catch (error) {
-        console.error('❌ Error obteniendo estadísticas:', error);
+
       }
     }, 1000); // Actualizar cada segundo
   }, []);

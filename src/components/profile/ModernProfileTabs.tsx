@@ -86,13 +86,13 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
 
       switch (type) {
         case 'posts':
-          console.log('🔍 ModernProfileTabs - Cargando posts para:', username);
+
           const postsData = await getUserPosts(username, page, 12);
-          console.log('📊 ModernProfileTabs - Respuesta getUserPosts:', postsData);
+
           newContent = Array.isArray(postsData?.posts) ? postsData.posts : [];
           hasMore = postsData?.hasMore || false;
           setContentCounts(prev => ({ ...prev, posts: postsData?.pagination?.total || newContent.length }));
-          console.log('✅ ModernProfileTabs - Posts procesados:', newContent.length);
+
           break;
         case 'reels':
           const reelsData = await getUserReels(username, page, 12);
@@ -129,7 +129,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     } catch (err) {
       // Solo logear errores críticos
       if (err instanceof Error && err.message.includes('500')) {
-        console.error(`Error loading ${type}:`, err);
+
       }
       setError(`Error al cargar ${type}`);
     } finally {
@@ -148,14 +148,14 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && activeTab) {
-        console.log('🔄 Perfil visible, refrescando contenido...', activeTab);
+
         loadContent(activeTab);
       }
     };
 
     const handleFocus = () => {
       if (activeTab) {
-        console.log('🔄 Perfil enfocado, refrescando contenido...', activeTab);
+
         loadContent(activeTab);
       }
     };

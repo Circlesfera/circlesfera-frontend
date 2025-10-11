@@ -43,7 +43,7 @@ export function useReels(): UseReelsReturn {
         }
       } catch (err) {
         setError('Error al cargar reels')
-        console.error('Error loading reels:', err)
+
       } finally {
         setLoading(false)
       }
@@ -72,7 +72,7 @@ export function useReels(): UseReelsReturn {
         setPage(nextPage)
       }
     } catch (err) {
-      console.error('Error loading more reels:', err)
+
     }
   }, [hasMore, loading, page])
 

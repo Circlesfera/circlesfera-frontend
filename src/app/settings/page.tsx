@@ -127,7 +127,7 @@ export default function SettingsPage() {
       const profileData = await getUserProfile();
       setProfile(profileData);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+
     } finally {
       setLoading(false);
     }
@@ -142,7 +142,7 @@ export default function SettingsPage() {
         setSecuritySettings(response.settings.security);
       }
     } catch (error) {
-      console.error('Error fetching settings:', error);
+
     }
   };
 
@@ -153,7 +153,7 @@ export default function SettingsPage() {
       setShowEditForm(false);
       showMessage('success', 'Perfil actualizado correctamente');
     } catch (error) {
-      console.error('Error updating profile:', error);
+
       showMessage('error', 'Error al actualizar el perfil');
     }
   };
@@ -162,7 +162,7 @@ export default function SettingsPage() {
     try {
       await logout();
     } catch (error) {
-      console.error('Error logging out:', error);
+
     }
   };
 
@@ -202,7 +202,7 @@ export default function SettingsPage() {
       setSaving(true);
       await privacyValidation.handleSubmit(privacySettings);
     } catch (error) {
-      console.error('Error saving privacy settings:', error);
+
       showMessage('error', 'Error al guardar la configuración de privacidad');
     } finally {
       setSaving(false);
@@ -214,7 +214,7 @@ export default function SettingsPage() {
       setSaving(true);
       await notificationValidation.handleSubmit(notificationSettings);
     } catch (error) {
-      console.error('Error saving notification settings:', error);
+
       showMessage('error', 'Error al guardar la configuración de notificaciones');
     } finally {
       setSaving(false);
@@ -226,7 +226,7 @@ export default function SettingsPage() {
       setSaving(true);
       await securityValidation.handleSubmit(securitySettings);
     } catch (error) {
-      console.error('Error saving security settings:', error);
+
       showMessage('error', 'Error al guardar la configuración de seguridad');
     } finally {
       setSaving(false);
@@ -266,7 +266,7 @@ export default function SettingsPage() {
       setSecuritySettings(prev => ({ ...prev, twoFactorEnabled: enabled }));
       showMessage('success', enabled ? '2FA habilitado' : '2FA deshabilitado');
     } catch (error) {
-      console.error('Error toggling 2FA:', error);
+
       showMessage('error', 'Error al configurar 2FA');
     } finally {
       setSaving(false);

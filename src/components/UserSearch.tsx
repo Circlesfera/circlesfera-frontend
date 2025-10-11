@@ -36,7 +36,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
         const searchResults = await searchUsers(query);
         setResults(searchResults);
       } catch (err) {
-        console.error('Error searching users:', err);
+
         setError('Error al buscar usuarios');
       } finally {
         setLoading(false);

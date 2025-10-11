@@ -79,7 +79,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
           lastChecked: formData.username
         });
       } catch (error) {
-        console.error('Error verificando username:', error);
+
         setUsernameAvailability(prev => ({ ...prev, checking: false }));
       }
     };
@@ -170,7 +170,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       }
       
     } catch (error: unknown) {
-      console.error('Error uploading avatar:', error);
+
       const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen';
       setErrors(prev => ({ 
         ...prev, 
@@ -246,7 +246,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       
       await onSave(dataToSave);
     } catch (error) {
-      console.error('Error updating profile:', error);
+
     } finally {
       setLoading(false);
     }
