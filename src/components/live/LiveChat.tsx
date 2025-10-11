@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, MessageCircle, Eye, Wifi, WifiOff } from 'lucide-react';
 import { LiveComment } from './LiveComment';
 import { useLiveSocket } from '@/hooks/useLiveSocket';
+import logger from '@/utils/logger';
 
 interface LiveChatProps {
   streamId: string;
@@ -75,8 +76,12 @@ export function LiveChat({
       setMessage('');
       setReplyTo(null);
       stopTyping();
-    } catch (error) {
-
+      logger.debug('Live comment sent:', { streamId, message: message.trim() });
+    } catch (sendCommentError) {
+      logger.error('Error sending live comment:', {
+        error: sendCommentError instanceof Error ? sendCommentError.message : 'Unknown error',
+        streamId
+      });
     }
   };
 

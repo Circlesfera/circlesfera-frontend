@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { checkUsernameAvailability, editProfile } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
+import logger from '@/utils/logger';
 
 interface User {
   _id: string;

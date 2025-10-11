@@ -3,6 +3,7 @@ import { searchUsers, UserSuggestion } from '@/services/userService';
 import { createConversation, Conversation as ServiceConversation } from '@/services/conversationService';
 import { useAuth } from '@/features/auth/useAuth';
 import { motion, AnimatePresence } from 'framer-motion';
+import logger from '@/utils/logger';
 
 type User = UserSuggestion;
 

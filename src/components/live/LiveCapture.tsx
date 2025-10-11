@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWebRTC } from '@/hooks/useWebRTC';
 import { Camera, CameraOff, Mic, MicOff, Monitor, Phone, PhoneOff } from 'lucide-react';
+import logger from '@/utils/logger';
 
 interface LiveCaptureProps {
   streamId: string;
@@ -90,8 +91,10 @@ export function LiveCapture({
 
         // Usar directamente el servicio de socket
         socketService.on('webrtc:recording-ready', handleRecordingReady);
-      } catch (error) {
-
+      } catch (setupError) {
+        logger.error('Error setting up WebRTC listeners:', {
+          error: setupError instanceof Error ? setupError.message : 'Unknown error'
+        });
       }
     };
 
@@ -125,9 +128,11 @@ export function LiveCapture({
       // Iniciar transmisión
       await startStreaming();
       onStreamStart?.();
-
-    } catch (error) {
-
+      logger.info('Live stream started successfully');
+    } catch (startError) {
+      logger.error('Error starting live stream:', {
+        error: startError instanceof Error ? startError.message : 'Unknown error'
+      });
     }
   };
 
@@ -141,9 +146,11 @@ export function LiveCapture({
       }
 
       onStreamStop?.();
-
-    } catch (error) {
-
+      logger.info('Live stream stopped successfully');
+    } catch (stopError) {
+      logger.error('Error stopping live stream:', {
+        error: stopError instanceof Error ? stopError.message : 'Unknown error'
+      });
     }
   };
 
@@ -201,9 +208,11 @@ export function LiveCapture({
   const handleStopCapture = async () => {
     try {
       await stopCapture();
-
-    } catch (error) {
-
+      logger.info('Capture stopped completely');
+    } catch (captureError) {
+      logger.error('Error stopping capture:', {
+        error: captureError instanceof Error ? captureError.message : 'Unknown error'
+      });
     }
   };
 

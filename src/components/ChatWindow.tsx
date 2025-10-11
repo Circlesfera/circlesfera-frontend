@@ -3,6 +3,7 @@ import { getMessages, sendTextMessage, sendImageMessage, sendVideoMessage, sendL
 import { useAuth } from '@/features/auth/useAuth';
 import MessageSkeleton from './MessageSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+import logger from '@/utils/logger';
 
 // Iconos SVG
 const SendIcon = () => (

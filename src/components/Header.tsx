@@ -10,6 +10,7 @@ import CreateStoryForm from './CreateStoryForm';
 import CreateReelForm from './CreateReelForm';
 import UserSearch from './UserSearch';
 import ThemeToggle from './ThemeToggle';
+import logger from '@/utils/logger';
 
 // Iconos SVG modernos
 const HomeIcon = () => (
