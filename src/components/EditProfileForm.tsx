@@ -78,8 +78,11 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
           available: result.available,
           lastChecked: formData.username
         });
-      } catch (error) {
-
+      } catch (checkError) {
+        logger.error('Error checking username availability:', {
+          error: checkError instanceof Error ? checkError.message : 'Unknown error',
+          username: formData.username
+        });
         setUsernameAvailability(prev => ({ ...prev, checking: false }));
       }
     };
@@ -91,7 +94,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: newValue
@@ -156,24 +159,27 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       formData.append('avatar', avatarFile);
 
       const response = await editProfile(formData);
-      
+
       // Actualizar el perfil local
       setAvatarFile(null);
       setAvatarPreview(null);
-      
+
       // Actualizar el usuario en el contexto de autenticación
       await refreshUser();
-      
+
       // Notificar al componente padre sobre la actualización del avatar
       if (response.user && response.user.avatar) {
         await onSave({ avatar: response.user.avatar });
+        logger.info('Avatar uploaded successfully');
       }
-      
-    } catch (error: unknown) {
 
+    } catch (error: unknown) {
+      logger.error('Error uploading avatar:', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen';
-      setErrors(prev => ({ 
-        ...prev, 
+      setErrors(prev => ({
+        ...prev,
         avatar: errorMessage
       }));
     } finally {
@@ -221,7 +227,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -239,14 +245,17 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         gender: formData.gender,
         isPrivate: formData.isPrivate,
       };
-      
+
       if (formData.birthDate) {
         dataToSave.birthDate = formData.birthDate;
       }
-      
-      await onSave(dataToSave);
-    } catch (error) {
 
+      await onSave(dataToSave);
+      logger.info('Profile updated successfully');
+    } catch (saveError) {
+      logger.error('Error saving profile:', {
+        error: saveError instanceof Error ? saveError.message : 'Unknown error'
+      });
     } finally {
       setLoading(false);
     }
@@ -271,16 +280,16 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         <div className="flex items-center space-x-4">
           <div className="flex-shrink-0">
             {avatarPreview ? (
-              <img 
-                src={avatarPreview} 
-                alt="avatar preview" 
-                className="w-20 h-20 rounded-full object-cover ring-2 ring-blue-300" 
+              <img
+                src={avatarPreview}
+                alt="avatar preview"
+                className="w-20 h-20 rounded-full object-cover ring-2 ring-blue-300"
               />
             ) : profile.avatar ? (
-              <img 
-                src={profile.avatar} 
-                alt="avatar" 
-                className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-200" 
+              <img
+                src={profile.avatar}
+                alt="avatar"
+                className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-200"
               />
             ) : (
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-xl font-bold">
@@ -291,8 +300,8 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
           <div>
             <div className="font-semibold text-gray-900">{profile.username}</div>
             <div className="flex items-center space-x-2">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleChangePhotoClick}
                 disabled={avatarUploading}
                 className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:text-gray-400 disabled:cursor-not-allowed"

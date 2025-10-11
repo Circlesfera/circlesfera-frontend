@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getNotifications, markNotificationAsRead } from '@/services/notificationService';
 import type { Notification } from '@/types';
+import logger from '@/utils/logger';
 
 export default function NotificationList() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -36,8 +37,10 @@ export default function NotificationList() {
         setError('Error al cargar notificaciones');
         setNotifications([]);
       }
-    } catch (error) {
-
+    } catch (loadError) {
+      logger.error('Error loading notifications:', {
+        error: loadError instanceof Error ? loadError.message : 'Unknown error'
+      });
       setError('Error al cargar notificaciones');
       setNotifications([]);
     } finally {
@@ -54,8 +57,12 @@ export default function NotificationList() {
     try {
       await markNotificationAsRead(id);
       fetchNotifications();
-    } catch (error) {
-
+      logger.debug('Notification marked as read:', { notificationId: id });
+    } catch (markError) {
+      logger.error('Error marking notification as read:', {
+        error: markError instanceof Error ? markError.message : 'Unknown error',
+        notificationId: id
+      });
     }
   };
 
@@ -65,7 +72,7 @@ export default function NotificationList() {
         <h2 className="text-xl font-bold text-gray-900">Todas las notificaciones</h2>
         <p className="text-gray-600 text-sm mt-1">Gestiona tus notificaciones y mantente al día</p>
       </div>
-      
+
       <div className="p-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
@@ -98,8 +105,8 @@ export default function NotificationList() {
           <ul className="flex flex-col gap-4">
             {notifications.map(n => (
               <li key={n._id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
-                n.isRead 
-                  ? 'bg-gray-50 border-gray-200 hover:bg-gray-100' 
+                n.isRead
+                  ? 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                   : 'bg-blue-50 border-blue-200 shadow-sm hover:bg-blue-100'
               }`}>
                 {n.from?.avatar ? (
@@ -126,8 +133,8 @@ export default function NotificationList() {
                     </span>
                   </div>
                   {!n.isRead && (
-                    <button 
-                      onClick={() => handleMarkAsRead(n._id)} 
+                    <button
+                      onClick={() => handleMarkAsRead(n._id)}
                       className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-full transition-colors font-medium shadow-sm"
                     >
                       Marcar como leída

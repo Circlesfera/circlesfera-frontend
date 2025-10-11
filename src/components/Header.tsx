@@ -164,8 +164,11 @@ export default function Header() {
     try {
       await logout();
       router.push('/login');
-    } catch (error) {
-
+      logger.info('User logged out successfully');
+    } catch (logoutError) {
+      logger.error('Error during logout:', {
+        error: logoutError instanceof Error ? logoutError.message : 'Unknown error'
+      });
     }
   };
 
@@ -217,7 +220,7 @@ export default function Header() {
                 <SearchIcon />
               </div>
             </form>
-            
+
             {/* Resultados de búsqueda */}
             {showSearch && searchQuery && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50">
@@ -232,42 +235,42 @@ export default function Header() {
               <HomeIcon />
               <span className="sr-only">Inicio</span>
             </Link>
-            
+
             <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <MessageIcon />
               <span className="sr-only">Mensajes</span>
             </Link>
-            
+
             <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <ExploreIcon />
               <span className="sr-only">Explorar</span>
             </Link>
-            
+
             <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <ReelsIcon />
               <span className="sr-only">Reels</span>
             </Link>
-            
+
             <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <StoriesIcon />
               <span className="sr-only">Stories</span>
             </Link>
-            
+
             <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <SearchIcon />
               <span className="sr-only">Buscar</span>
             </Link>
-            
+
             <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <FeedIcon />
               <span className="sr-only">Feed</span>
             </Link>
-            
+
             <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <SettingsIcon />
               <span className="sr-only">Configuración</span>
             </Link>
-            
+
             <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
               <NotificationIcon />
               {unread > 0 && (
@@ -302,7 +305,7 @@ export default function Header() {
                       <PostIcon />
                       <span className="font-medium text-gray-900">Crear publicación</span>
                     </button>
-                    
+
                     <button
                       onClick={() => setShowStoryForm(true)}
                       className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
@@ -322,10 +325,10 @@ export default function Header() {
                 className="block group"
               >
                 {user?.avatar ? (
-                  <img 
-                    src={user.avatar} 
-                    alt="avatar" 
-                    className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200" 
+                  <img
+                    src={user.avatar}
+                    alt="avatar"
+                    className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
                   />
                 ) : (
                   <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs lg:text-sm shadow-lg group-hover:scale-110 transition-transform duration-200">
@@ -350,7 +353,7 @@ export default function Header() {
                         <div className="text-sm text-gray-500">Ver perfil</div>
                       </div>
                     </Link>
-                    
+
                     <Link
                       href="/settings"
                       className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
@@ -361,7 +364,7 @@ export default function Header() {
                       </svg>
                       <span className="font-medium text-gray-900">Configuración</span>
                     </Link>
-                    
+
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors text-red-600"
@@ -386,7 +389,7 @@ export default function Header() {
                 </span>
               )}
             </Link>
-            
+
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -406,37 +409,37 @@ export default function Header() {
               <HomeIcon />
               <span>Inicio</span>
             </Link>
-            
+
             <Link href="/messages" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <MessageIcon />
               <span>Mensajes</span>
             </Link>
-            
+
             <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <ExploreIcon />
               <span>Explorar</span>
             </Link>
-            
+
             <Link href="/reels" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <ReelsIcon />
               <span>Reels</span>
             </Link>
-            
+
             <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <StoriesIcon />
               <span>Stories</span>
             </Link>
-            
+
             <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <SearchIcon />
               <span>Buscar</span>
             </Link>
-            
+
             <Link href="/feed" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <FeedIcon />
               <span>Feed</span>
             </Link>
-            
+
             <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <SettingsIcon />
               <span>Configuración</span>
@@ -461,7 +464,7 @@ export default function Header() {
                   <PostIcon />
                   <span>Crear publicación</span>
                 </button>
-                
+
                 <button
                   onClick={() => setShowStoryForm(true)}
                   className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
@@ -482,10 +485,10 @@ export default function Header() {
 
             <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               {user?.avatar ? (
-                <img 
-                  src={user.avatar} 
-                  alt="avatar" 
-                  className="w-8 h-8 rounded-full object-cover" 
+                <img
+                  src={user.avatar}
+                  alt="avatar"
+                  className="w-8 h-8 rounded-full object-cover"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
