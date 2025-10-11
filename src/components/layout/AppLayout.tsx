@@ -43,6 +43,18 @@ const ReelsIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const CSTVIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h18M3 12h18M3 16h18M10 9l5 3-5 3V9z" />
+  </svg>
+);
+
+const LiveIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+);
+
 const StoriesIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -73,6 +85,7 @@ interface NavigationItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number | undefined;
+  specialBadge?: 'live' | 'new' | 'hot';
 }
 
 interface AppLayoutProps {
@@ -132,11 +145,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const mainNavigation: NavigationItem[] = [
     { name: 'Inicio', href: '/', icon: HomeIcon },
     { name: 'Explorar', href: '/explore', icon: ExploreIcon },
-    { name: 'Reels', href: '/reels', icon: ReelsIcon },
+    { name: 'Reels', href: '/reels', icon: ReelsIcon, specialBadge: 'hot' },
+    { name: 'Stories', href: '/stories', icon: StoriesIcon },
+    { name: 'CSTV', href: '/cstv', icon: CSTVIcon, specialBadge: 'new' },
+    { name: 'En Vivo', href: '/live', icon: LiveIcon, specialBadge: 'live' },
   ];
 
   const contentNavigation: NavigationItem[] = [
-    { name: 'Stories', href: '/stories', icon: StoriesIcon },
     { name: 'Mensajes', href: '/messages', icon: MessageIcon },
     { name: 'Notificaciones', href: '/notifications', icon: NotificationIcon, badge: unreadNotifications > 0 ? unreadNotifications : undefined },
   ];
@@ -206,6 +221,23 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         )}
                       />
                       <span className="truncate">{item.name}</span>
+                      {/* Special Badges */}
+                      {item.specialBadge === 'live' && (
+                        <span className="ml-auto flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded uppercase animate-pulse">
+                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                          LIVE
+                        </span>
+                      )}
+                      {item.specialBadge === 'hot' && (
+                        <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold rounded uppercase">
+                          🔥 HOT
+                        </span>
+                      )}
+                      {item.specialBadge === 'new' && (
+                        <span className="ml-auto px-2 py-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold rounded uppercase">
+                          ✨ NUEVO
+                        </span>
+                      )}
                     </Link>
                   </li>
                 ))}
@@ -371,15 +403,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg">
-        <div className="flex justify-around items-center py-3">
-          {[...mainNavigation, ...contentNavigation, ...userNavigation].slice(0, 5).map((item) => (
+      {/* Mobile Bottom Navigation - Expandido con scroll */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg overflow-x-auto">
+        <div className="flex items-center justify-start gap-2 px-2 py-3 min-w-max">
+          {[...mainNavigation, ...contentNavigation].map((item) => (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                "flex flex-col items-center p-2 rounded-xl transition-all duration-200",
+                "relative flex flex-col items-center p-2 rounded-xl transition-all duration-200 min-w-[70px]",
                 isActive(item.href)
                   ? "text-blue-600 bg-blue-50 shadow-sm"
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
@@ -387,13 +419,26 @@ export default function AppLayout({ children }: AppLayoutProps) {
             >
               <div className="relative">
                 <item.icon className="h-6 w-6" />
+                {/* Badge para notificaciones */}
                 {item.badge && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
                     {item.badge > 9 ? '9+' : item.badge}
                   </span>
                 )}
+                {/* Badge especial LIVE */}
+                {item.specialBadge === 'live' && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-white"></span>
+                )}
+                {/* Badge especial NEW */}
+                {item.specialBadge === 'new' && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full border border-white"></span>
+                )}
+                {/* Badge especial HOT */}
+                {item.specialBadge === 'hot' && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full border border-white"></span>
+                )}
               </div>
-              <span className="text-xs mt-1 font-medium">{item.name}</span>
+              <span className="text-xs mt-1 font-medium truncate max-w-[60px]">{item.name}</span>
             </Link>
           ))}
         </div>
