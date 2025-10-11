@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
 import LazyImage from './LazyImage';
 import ReportModal from './ReportModal';
+import logger from '@/utils/logger';
 
 // Iconos SVG modernos
 
