@@ -470,3 +470,5 @@ export interface AppEvent {
 
 // Re-exportar tipos específicos
 export * from './story';
+export * from './cstv';
+export * from './live';
