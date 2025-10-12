@@ -10,8 +10,16 @@
   "scope": "/",
   "lang": "es",
   "dir": "ltr",
-  "categories": ["social", "entertainment", "lifestyle"],
-  "features": ["offline_support", "push_notifications", "media_sharing"],
+  "categories": [
+    "social",
+    "entertainment",
+    "lifestyle"
+  ],
+  "features": [
+    "offline_support",
+    "push_notifications",
+    "media_sharing"
+  ],
   "icons": [
     {
       "src": "/icons/icon-72x72.svg",
@@ -83,10 +91,10 @@
       "name": "Crear Post",
       "short_name": "Nuevo Post",
       "description": "Crear una nueva publicación",
-      "url": "/create/post",
+      "url": "/post/create",
       "icons": [
         {
-          "src": "/icons/shortcut-create.svg",
+          "src": "/icons/icon-192x192.svg",
           "sizes": "96x96"
         }
       ]
@@ -95,10 +103,22 @@
       "name": "Crear Reel",
       "short_name": "Nuevo Reel",
       "description": "Crear un nuevo reel",
-      "url": "/create/reel",
+      "url": "/reels/create",
       "icons": [
         {
-          "src": "/icons/shortcut-reel.svg",
+          "src": "/icons/icon-192x192.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Crear Story",
+      "short_name": "Nueva Story",
+      "description": "Crear una nueva historia",
+      "url": "/stories/create",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.svg",
           "sizes": "96x96"
         }
       ]
@@ -110,7 +130,31 @@
       "url": "/messages",
       "icons": [
         {
-          "src": "/icons/shortcut-messages.svg",
+          "src": "/icons/icon-192x192.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Notificaciones",
+      "short_name": "Notif",
+      "description": "Ver notificaciones",
+      "url": "/notifications",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Explorar",
+      "short_name": "Explorar",
+      "description": "Descubrir contenido nuevo",
+      "url": "/explore",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.svg",
           "sizes": "96x96"
         }
       ]

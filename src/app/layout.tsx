@@ -79,13 +79,29 @@ export const metadata: Metadata = {
     apple: '/icons/icon-192x192.svg'
   },
 
-  manifest: '/manifest.json'
+  manifest: '/manifest.json',
+
+  // PWA Apple Web App
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'CircleSfera'
+  },
+
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false
+  }
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#0ea5e9',
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover'
 };
 
 export default function RootLayout({
