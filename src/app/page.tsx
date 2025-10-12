@@ -43,28 +43,30 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
         {/* Navegación */}
-        <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-6 py-4">
+        <nav className="border-b border-gray-200 bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center font-bold text-xl text-white shadow-md">
                   C
                 </div>
-                <span className="text-2xl font-bold text-gray-900">CircleSfera</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  CircleSfera
+                </span>
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="px-6 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all duration-200">
+                  className="px-5 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all duration-200 hidden sm:block">
                   Iniciar Sesión
                 </button>
                 <button
                   onClick={() => setShowRegisterModal(true)}
-                  className="px-6 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:opacity-90 transition-all duration-200">
-                  Registrarse
+                  className="px-6 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                  Comenzar
                 </button>
               </div>
             </div>
@@ -72,47 +74,63 @@ export default function LandingPage() {
         </nav>
 
         {/* Hero Section */}
-        <section className="px-6 py-20 bg-gradient-to-b from-white to-gray-50">
-          <div className="max-w-6xl mx-auto">
+        <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div className="absolute top-0 left-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+            <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="text-center"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white shadow-sm mb-8">
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-blue-200 bg-blue-50 mb-8 shadow-sm">
                 <span className="text-xl">✨</span>
-                <span className="text-sm text-gray-700 font-medium">La nueva red social de videos cortos</span>
-              </div>
+                <span className="text-sm text-blue-700 font-semibold">La nueva red social de videos cortos</span>
+              </motion.div>
 
-              <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-gray-900">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-[1.1] text-gray-900 px-4">
                 Crea, comparte e{' '}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   inspira
                 </span>
                 <br />
                 con videos cortos
               </h1>
 
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed px-4">
                 CircleSfera es la plataforma donde tu creatividad cobra vida en segundos.
-                <br />
-                Conecta con millones de creadores, descubre contenido único y haz que tu voz{' '}
+                Conecta con millones de creadores y haz que tu voz{' '}
                 <span className="font-semibold text-gray-900">se escuche en el mundo</span>.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                <button
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 px-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setShowRegisterModal(true)}
-                  className="px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 w-full sm:w-auto bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                  🚀 Comenzar Ahora
-                </button>
+                  className="px-8 py-4 rounded-xl text-white font-bold text-base sm:text-lg shadow-lg hover:shadow-2xl transition-all duration-300 w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    🚀 Comenzar Gratis
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </motion.button>
 
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => scrollToSection('features')}
-                  className="px-8 py-4 rounded-full border-2 border-gray-300 bg-white text-gray-900 hover:bg-gray-50 transition-all duration-200 font-semibold text-lg w-full sm:w-auto">
-                  ▶️ Ver Características
-                </button>
+                  className="px-8 py-4 rounded-xl border-2 border-gray-300 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold text-base sm:text-lg w-full sm:w-auto shadow-sm hover:shadow-md">
+                  Ver Características →
+                </motion.button>
               </div>
 
               {/* Mockup */}
@@ -120,25 +138,39 @@ export default function LandingPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="max-w-5xl mx-auto"
+                className="max-w-6xl mx-auto px-4"
               >
-                <div className="rounded-3xl border border-gray-200 bg-white p-4 shadow-2xl">
-                  <div className="rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-                    <div className="flex justify-center gap-2 mb-4">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <div className="aspect-video rounded-xl relative overflow-hidden flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                      <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-white/20 backdrop-blur-sm">
-                          @
-                        </div>
-                        <span className="text-sm font-semibold drop-shadow-lg">CircleSfera</span>
+                <div className="relative">
+                  {/* Glow effect */}
+                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-2xl opacity-20"></div>
+
+                  <div className="relative rounded-2xl border-2 border-gray-200 bg-white p-3 shadow-2xl">
+                    <div className="rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-3">
+                      <div className="flex justify-center gap-2 mb-3">
+                        <div className="w-3 h-3 rounded-full bg-red-500 shadow-sm"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-sm"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500 shadow-sm"></div>
                       </div>
-                      <div className="relative z-10 w-16 h-16 rounded-full bg-white/90 flex items-center justify-center text-3xl backdrop-blur-sm">
-                        ▶️
+                      <div className="aspect-video rounded-lg relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 shadow-inner">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+
+                        {/* Floating elements */}
+                        <motion.div
+                          animate={{ y: [-10, 10, -10] }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                          className="absolute top-6 left-6 flex items-center gap-2 text-white bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center text-xs font-bold">
+                            C
+                          </div>
+                          <span className="text-sm font-semibold">@CircleSfera</span>
+                        </motion.div>
+
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="relative z-10 w-20 h-20 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center text-4xl shadow-xl cursor-pointer group">
+                          <span className="group-hover:scale-110 transition-transform">▶️</span>
+                        </motion.div>
                       </div>
                     </div>
                   </div>
@@ -149,22 +181,29 @@ export default function LandingPage() {
         </section>
 
         {/* Features */}
-        <section id="features" className="px-6 py-24 bg-white">
+        <section id="features" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 bg-white">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-6xl font-bold mb-6 text-gray-900">
-                Una red social completa para{' '}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                  creadores
-                </span>
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Todas las herramientas que amas de Instagram, enfocadas en videos cortos y momentos que importan
-              </p>
+            <div className="text-center mb-16 sm:mb-20">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 px-4">
+                  Una red social completa para{' '}
+                  <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    creadores
+                  </span>
+                </h2>
+                <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+                  Todas las herramientas que amas de Instagram, enfocadas en videos cortos y momentos que importan
+                </p>
+              </motion.div>
             </div>
 
             {/* Features principales en grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
               {[
                 {
                   icon: '🎥',
@@ -203,13 +242,19 @@ export default function LandingPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="rounded-2xl border border-gray-200 bg-white p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                  whileHover={{ y: -8 }}
+                  className="relative rounded-2xl border-2 border-gray-200 bg-white p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:border-blue-200 transition-all duration-300 group overflow-hidden"
                 >
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl mb-5 transition-transform group-hover:scale-110 duration-300 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                    <span className="filter drop-shadow-lg">{feature.icon}</span>
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                  <div className="relative z-10">
+                    <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl mb-5 transition-all duration-300 group-hover:scale-110 bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg group-hover:shadow-xl">
+                      <span className="filter drop-shadow-lg">{feature.icon}</span>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors">{feature.title}</h3>
+                    <p className="text-gray-600 leading-relaxed text-sm sm:text-base">{feature.description}</p>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -264,64 +309,100 @@ export default function LandingPage() {
         </section>
 
         {/* CTA */}
-        <section id="cta" className="px-6 py-24 bg-gradient-to-b from-white to-gray-50">
-          <div className="max-w-4xl mx-auto">
+        <section id="cta" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+          </div>
+
+          <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="rounded-3xl border border-gray-200 bg-white p-12 text-center shadow-xl"
+              className="relative rounded-3xl border-2 border-gray-200 bg-white p-8 sm:p-12 lg:p-16 text-center shadow-2xl overflow-hidden"
             >
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-8 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                🚀
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50"></div>
+
+              <div className="relative z-10">
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-8 bg-gradient-to-br from-blue-600 to-purple-600 shadow-xl">
+                  🚀
+                </motion.div>
+
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+                  Únete a la{' '}
+                  <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    revolución
+                  </span>
+                </h2>
+
+                <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                  Crea tu cuenta gratis y comienza a compartir tu creatividad con el mundo.
+                  Únete a miles de creadores que ya están en CircleSfera.
+                </p>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowRegisterModal(true)}
+                  className="px-10 py-4 rounded-xl text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 relative overflow-hidden group"
+                >
+                  <span className="relative z-10">Crear Cuenta Gratis</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </motion.button>
+
+                <p className="text-sm text-gray-500 mt-6 flex items-center justify-center gap-2">
+                  <span className="text-xl">🎁</span>
+                  Gratis para siempre. Sin tarjeta de crédito requerida.
+                </p>
               </div>
-
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-                Únete a la{' '}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                  revolución
-                </span>
-              </h2>
-
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                Crea tu cuenta gratis y comienza a compartir tu creatividad con el mundo.
-                Únete a miles de creadores que ya están en CircleSfera.
-              </p>
-
-              <button
-                onClick={() => setShowRegisterModal(true)}
-                className="px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-              >
-                Crear Cuenta Gratis
-              </button>
-
-              <p className="text-sm text-gray-500 mt-6">
-                🎁 Gratis para siempre. Sin tarjeta de crédito requerida.
-              </p>
             </motion.div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-gray-200 bg-white px-6 py-12">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                C
+        <footer className="border-t-2 border-gray-200 bg-gradient-to-b from-white to-gray-50 px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center font-bold text-xl text-white shadow-lg">
+                  C
+                </div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  CircleSfera
+                </span>
               </div>
-              <span className="text-2xl font-bold text-gray-900">CircleSfera</span>
+
+              <p className="text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed text-sm sm:text-base">
+                La plataforma de videos cortos que potencia tu creatividad.
+                <br className="hidden sm:block" />
+                Donde cada segundo cuenta una historia.
+              </p>
+
+              <div className="flex justify-center gap-6 mb-8">
+                <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-blue-600 transition-colors text-sm font-medium">
+                  Características
+                </button>
+                <button onClick={() => setShowRegisterModal(true)} className="text-gray-600 hover:text-blue-600 transition-colors text-sm font-medium">
+                  Comenzar
+                </button>
+                <button onClick={() => setShowLoginModal(true)} className="text-gray-600 hover:text-blue-600 transition-colors text-sm font-medium">
+                  Iniciar Sesión
+                </button>
+              </div>
             </div>
 
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
-              La plataforma de videos cortos que potencia tu creatividad.
-              <br />
-              Donde cada segundo cuenta una historia.
-            </p>
-
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} CircleSfera. Todos los derechos reservados.
-            </p>
+            <div className="pt-8 border-t border-gray-200 text-center">
+              <p className="text-sm text-gray-500">
+                © {new Date().getFullYear()} CircleSfera. Todos los derechos reservados.
+              </p>
+            </div>
           </div>
         </footer>
       </div>

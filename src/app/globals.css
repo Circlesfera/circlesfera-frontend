@@ -12,28 +12,28 @@
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  
+
   /* Colores de texto */
   --color-text-primary: #262626;
   --color-text-secondary: #8e8e8e;
   --color-text-tertiary: #c7c7c7;
   --color-text-inverse: #ffffff;
-  
+
   /* Colores de fondo */
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #fafafa;
   --color-bg-tertiary: #efefef;
-  
+
   /* Colores de borde */
   --color-border-primary: #dbdbdb;
   --color-border-secondary: #efefef;
-  
+
   /* Gradientes Instagram */
   --gradient-primary: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
   --gradient-secondary: linear-gradient(45deg, #ffdc80, #fcaf45, #f77737, #fd1d1d, #c13584, #833ab4);
   --gradient-accent: linear-gradient(45deg, #4facfe, #00f2fe);
   --gradient-warm: linear-gradient(45deg, #fa709a, #fee140);
-  
+
   /* Sombras */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  
+
   /* Radios */
   --radius-sm: 0.375rem;
   --radius-base: 0.5rem;
@@ -50,7 +50,7 @@
   --radius-xl: 1.25rem;
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
-  
+
   /* Transiciones */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -67,15 +67,15 @@
   --color-success: #4ade80;
   --color-warning: #fbbf24;
   --color-error: #f87171;
-  
+
   --color-text-primary: #f8fafc;
   --color-text-secondary: #cbd5e1;
   --color-text-tertiary: #64748b;
-  
+
   --color-bg-primary: #0f172a;
   --color-bg-secondary: #1e293b;
   --color-bg-tertiary: #334155;
-  
+
   --color-border-primary: #334155;
   --color-border-secondary: #475569;
 }
@@ -136,35 +136,35 @@ body {
 
 /* Animaciones del sistema de diseño */
 @keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(10px); 
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @keyframes slideIn {
-  from { 
-    transform: translateX(-20px); 
-    opacity: 0; 
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
   }
-  to { 
-    transform: translateX(0); 
-    opacity: 1; 
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
 @keyframes slideInUp {
-  from { 
-    transform: translateY(20px); 
-    opacity: 0; 
+  from {
+    transform: translateY(20px);
+    opacity: 0;
   }
-  to { 
-    transform: translateY(0); 
-    opacity: 1; 
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -205,6 +205,21 @@ body {
   }
 }
 
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -50px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  75% {
+    transform: translate(50px, 50px) scale(1.05);
+  }
+}
+
 /* Clases de utilidad */
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
@@ -232,6 +247,18 @@ body {
   background: var(--gradient-primary);
   background-size: 400% 400%;
   animation: gradientShift 3s ease infinite;
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
 }
 
 /* Efectos de hover */
