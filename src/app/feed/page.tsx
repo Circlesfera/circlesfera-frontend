@@ -15,6 +15,7 @@ import logger from '@/utils/logger';
 const CommentsModal = lazy(() => import('@/components/CommentsModal'));
 const ShareModal = lazy(() => import('@/components/ShareModal'));
 import { ModalLoader } from '@/components/ui/LoadingSpinner';
+import { AnimatedPostList, AnimatedStoryList } from '@/components/ui/StaggeredList';
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
@@ -234,58 +235,62 @@ export default function HomePage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Stories Section */}
             <Card className="p-6">
-              <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
-                {/* Add Story Button */}
-                <div className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
-                  <div className="relative p-2">
-                    <Avatar
-                      src={user?.avatar}
-                      alt="Tu historia"
-                      size="xl"
-                      fallback={user?.fullName || user?.username || 'Tú'}
-                      interactive
-                      ring
-                      ringColor="blue"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center border-2 border-white">
-                      <PlusIcon />
-                    </div>
-                  </div>
-                  <span className="text-xs text-gray-600 font-medium">Tu historia</span>
-                </div>
-
-                {/* Stories */}
-                {stories.map((userWithStories) => (
-                  <div key={userWithStories._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
-                    <div className="relative p-2">
-                      <Avatar
-                        src={userWithStories.avatar}
-                        alt={userWithStories.username}
-                        size="xl"
-                        fallback={userWithStories.fullName || userWithStories.username}
-                        interactive
-                        ring={true}
-                        ringColor="purple"
-                      />
-                      {userWithStories.storiesCount > 1 && (
-                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                          <span className="text-xs font-bold text-gray-700">
-                            {userWithStories.storiesCount}
-                          </span>
+              <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
+                {(item) => {
+                  if (item.isAddStory) {
+                    return (
+                      <div key="add-story" className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
+                        <div className="relative p-2">
+                          <Avatar
+                            src={user?.avatar}
+                            alt="Tu historia"
+                            size="xl"
+                            fallback={user?.fullName || user?.username || 'Tú'}
+                            interactive
+                            ring
+                            ringColor="blue"
+                          />
+                          <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center border-2 border-white">
+                            <PlusIcon />
+                          </div>
                         </div>
-                      )}
+                        <span className="text-xs text-gray-600 font-medium">Tu historia</span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={item._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
+                      <div className="relative p-2">
+                        <Avatar
+                          src={item.avatar}
+                          alt={item.username}
+                          size="xl"
+                          fallback={item.fullName || item.username}
+                          interactive
+                          ring={true}
+                          ringColor="purple"
+                        />
+                        {item.storiesCount > 1 && (
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                            <span className="text-xs font-bold text-gray-700">
+                              {item.storiesCount}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-600 font-medium truncate max-w-16">
+                        {item.username}
+                      </span>
                     </div>
-                    <span className="text-xs text-gray-600 font-medium truncate max-w-16">
-                      {userWithStories.username}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  );
+                }}
+              </AnimatedStoryList>
             </Card>
 
             {/* Posts Feed */}
-            <div className="space-y-6">
-              {posts && posts.length > 0 && posts.map((post) => (
+            <AnimatedPostList posts={posts || []}>
+              {(post) => (
                 <PostCard
                   key={post._id}
                   post={{
@@ -341,8 +346,8 @@ export default function HomePage() {
                   }}
                   className="animate-fade-in"
                 />
-              ))}
-            </div>
+              )}
+            </AnimatedPostList>
 
             {/* Infinite Scroll Trigger */}
             {posts && posts.length > 0 && (
@@ -428,6 +433,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
+    </ProtectedRoute >
   );
 }
