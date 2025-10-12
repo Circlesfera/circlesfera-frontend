@@ -126,6 +126,21 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
                   </div>
                 </div>
 
+                {/* Enlace de recuperación de contraseña */}
+                <div className="text-right">
+                  <a
+                    href="/forgot-password"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onClose();
+                      window.location.href = '/forgot-password';
+                    }}
+                    className="text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </a>
+                </div>
+
                 <button
                   type="submit"
                   disabled={isLoading}
