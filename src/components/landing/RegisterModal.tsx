@@ -81,7 +81,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
               {/* Logo */}
               <div className="flex items-center justify-center mb-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl text-white bg-gradient-to-r from-blue-600 to-purple-600">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
                   C
                 </div>
               </div>

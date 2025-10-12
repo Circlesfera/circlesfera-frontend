@@ -69,8 +69,8 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               </button>
 
               {/* Logo */}
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
                   C
                 </div>
               </div>
