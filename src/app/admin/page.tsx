@@ -44,10 +44,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <Activity className="w-12 h-12 text-blue-500 animate-pulse mx-auto mb-4" />
-          <p className="text-gray-600">Cargando estadísticas reales del sistema...</p>
+      <div className="flex items-start justify-start min-h-[60vh] pt-20">
+        <div className="text-left">
+          <Activity className="w-12 h-12 text-blue-500 animate-pulse mb-4" />
+          <p className="text-gray-600 font-medium">Cargando estadísticas reales del sistema...</p>
         </div>
       </div>
     )
