@@ -19,26 +19,26 @@ const iconMap = {
 
 const colorMap = {
   success: {
-    bg: 'bg-green-500 dark:bg-green-600',
-    border: 'border-green-600 dark:border-green-500',
+    bg: 'bg-green-500',
+    border: 'border-green-600',
     text: 'text-white',
     icon: 'text-white',
   },
   error: {
-    bg: 'bg-red-500 dark:bg-red-600',
-    border: 'border-red-600 dark:border-red-500',
+    bg: 'bg-red-500',
+    border: 'border-red-600',
     text: 'text-white',
     icon: 'text-white',
   },
   warning: {
-    bg: 'bg-orange-500 dark:bg-orange-600',
-    border: 'border-orange-600 dark:border-orange-500',
+    bg: 'bg-orange-500',
+    border: 'border-orange-600',
     text: 'text-white',
     icon: 'text-white',
   },
   info: {
-    bg: 'bg-blue-500 dark:bg-blue-600',
-    border: 'border-blue-600 dark:border-blue-500',
+    bg: 'bg-blue-500',
+    border: 'border-blue-600',
     text: 'text-white',
     icon: 'text-white',
   },

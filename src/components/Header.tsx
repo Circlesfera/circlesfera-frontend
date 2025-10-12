@@ -196,7 +196,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 shadow-sm z-50">
+      <header className="sticky top-0 left-0 w-full bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
           <div className="flex items-center justify-between h-12 sm:h-14 lg:h-16">
             {/* Logo - Optimizado para móvil */}

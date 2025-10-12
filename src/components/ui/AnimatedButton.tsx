@@ -17,7 +17,7 @@ interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 const variants = {
   primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl',
   secondary: 'bg-gray-600 hover:bg-gray-700 text-white shadow-lg hover:shadow-xl',
-  ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300',
+  ghost: 'bg-transparent hover:bg-gray-100 text-gray-700',
   danger: 'bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl'
 };
 

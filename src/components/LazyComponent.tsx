@@ -10,9 +10,9 @@ interface LazyComponentProps {
   className?: string;
 }
 
-const DefaultFallback: React.FC<{ minHeight?: string; className?: string }> = ({ 
-  minHeight = '200px', 
-  className = '' 
+const DefaultFallback: React.FC<{ minHeight?: string; className?: string }> = ({
+  minHeight = '200px',
+  className = ''
 }) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -23,7 +23,7 @@ const DefaultFallback: React.FC<{ minHeight?: string; className?: string }> = ({
   >
     <div className="text-center">
       <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-gray-500 dark:text-gray-400 text-sm">Cargando...</p>
+      <p className="text-gray-500 text-sm">Cargando...</p>
     </div>
   </motion.div>
 );
@@ -54,15 +54,15 @@ export const createLazyComponent = <P extends object>(
   fallback?: React.ReactNode
 ) => {
   const LazyComponent = lazy(importFunc);
-  
+
   const ForwardedComponent = React.forwardRef<HTMLElement, P>((props, ref) => (
     <Suspense fallback={fallback || <DefaultFallback />}>
       <LazyComponent {...props} ref={ref} />
     </Suspense>
   ));
-  
+
   ForwardedComponent.displayName = `LazyComponent(Component)`;
-  
+
   return ForwardedComponent;
 };
 
