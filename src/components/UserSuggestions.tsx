@@ -123,15 +123,21 @@ export default function UserSuggestions() {
           {/* Enlaces principales */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
             {[
-              'Sobre nosotros', 'Ayuda', 'Prensa', 'API',
-              'Empleos', 'Privacidad', 'Términos', 'Ubicaciones'
+              { name: 'Sobre nosotros', href: '/about' },
+              { name: 'Ayuda', href: '/help' },
+              { name: 'Prensa', href: '/press' },
+              { name: 'API', href: '/api-docs' },
+              { name: 'Empleos', href: '/jobs' },
+              { name: 'Privacidad', href: '/privacy' },
+              { name: 'Términos', href: '/terms' },
+              { name: 'Ubicaciones', href: '/locations' }
             ].map((link) => (
               <a
-                key={link}
-                href="#"
+                key={link.name}
+                href={link.href}
                 className="hover:text-gray-600 transition-colors"
               >
-                {link}
+                {link.name}
               </a>
             ))}
           </div>
