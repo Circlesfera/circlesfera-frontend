@@ -102,10 +102,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
     setIsHydrated(true);
   }, []);
 
-  // Redirigir a login si no está autenticado y accede a una ruta protegida
+  // Redirigir a home si no está autenticado y accede a una ruta protegida
   useEffect(() => {
     if (!loading && !user && isProtectedRoute && isHydrated) {
-      router.replace('/login');
+      router.replace('/');
     }
   }, [loading, user, isProtectedRoute, router, isHydrated]);
 

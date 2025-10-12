@@ -131,8 +131,8 @@ export const VALIDATION = {
 // ============================================
 export const ROUTES = {
   HOME: '/',
-  LOGIN: '/login',
-  REGISTER: '/register',
+  LOGIN: '/',
+  REGISTER: '/',
   PROFILE: '/profile',
   USER_PROFILE: (username: string) => `/${username}`,
   POST: (id: string) => `/post/${id}`,
