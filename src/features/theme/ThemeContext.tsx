@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -86,18 +85,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setTheme: handleSetTheme,
       toggleTheme
     }}>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={resolvedTheme}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+      {children}
     </ThemeContext.Provider>
   );
 }
