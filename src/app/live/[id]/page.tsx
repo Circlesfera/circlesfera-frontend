@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState, use, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Users, Heart, Share2, MoreVertical } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useLiveStream, useStartLiveStream, useEndLiveStream } from '@/hooks/use
 import { LivePlayer } from '@/components/live/LivePlayer';
 import { useAuthContext } from '@/features/auth/AuthContext';
 import { useToast } from '@/components/Toast';
+import { liveStreamService } from '@/services/liveStreamService';
 
 interface LiveStreamPageProps {
   params: Promise<{
@@ -23,6 +24,8 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
   const toast = useToast();
 
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [likingLoading, setLikingLoading] = useState(false);
 
   const {
     stream,
@@ -37,6 +40,16 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
   const isOwner = user?._id === stream?.user._id;
   const isLive = stream?.status === 'live';
   const isScheduled = stream?.status === 'scheduled';
+
+  // Inicializar isLiked y likesCount cuando el stream cargue
+  useEffect(() => {
+    if (stream && user) {
+      // Verificar si el usuario actual dio like
+      const userLiked = stream.likes?.some((like: { user: string }) => like.user === user._id);
+      setIsLiked(userLiked || false);
+      setLikesCount(stream.likes?.length || 0);
+    }
+  }, [stream, user]);
 
   const handleStartStream = async () => {
     if (!stream || !user) return;
@@ -67,9 +80,34 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
     }
   };
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    // TODO: Implement like functionality
+  const handleLike = async () => {
+    if (!user) {
+      toast.error('Debes iniciar sesión para dar like');
+      return;
+    }
+
+    if (likingLoading) return;
+
+    setLikingLoading(true);
+
+    try {
+      if (isLiked) {
+        const response = await liveStreamService.unlikeLiveStream(id);
+        setIsLiked(false);
+        setLikesCount(response.likesCount);
+        toast.success('Like eliminado');
+      } else {
+        const response = await liveStreamService.likeLiveStream(id);
+        setIsLiked(true);
+        setLikesCount(response.likesCount);
+        toast.success('¡Te gusta esta transmisión!');
+      }
+    } catch (error) {
+      toast.error('Error al dar like. Intenta de nuevo.');
+      console.error('Error toggling like:', error);
+    } finally {
+      setLikingLoading(false);
+    }
   };
 
   const handleShare = () => {
@@ -152,12 +190,19 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
             <button
               onClick={handleLike}
-              className={`p-2 rounded-full transition-colors ${isLiked
+              disabled={likingLoading || !user}
+              className={`p-2 rounded-full transition-colors relative ${isLiked
                 ? 'bg-red-600 text-white'
                 : 'bg-white/20 text-white hover:bg-white/30'
-                }`}
+                } ${likingLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title={!user ? 'Inicia sesión para dar like' : isLiked ? 'Quitar like' : 'Me gusta'}
             >
               <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              {likesCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {likesCount > 99 ? '99+' : likesCount}
+                </span>
+              )}
             </button>
 
             <button

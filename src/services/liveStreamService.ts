@@ -92,6 +92,28 @@ export const liveStreamService = {
     });
     return response.data.data;
   },
+
+  // Dar like a una transmisión
+  async likeLiveStream(streamId: string): Promise<{
+    success: boolean;
+    message: string;
+    isLiked: boolean;
+    likesCount: number;
+  }> {
+    const response = await api.post(`/live-streams/${streamId}/like`);
+    return response.data;
+  },
+
+  // Quitar like de una transmisión
+  async unlikeLiveStream(streamId: string): Promise<{
+    success: boolean;
+    message: string;
+    isLiked: boolean;
+    likesCount: number;
+  }> {
+    const response = await api.delete(`/live-streams/${streamId}/like`);
+    return response.data;
+  },
 };
 
 export const liveCommentService = {

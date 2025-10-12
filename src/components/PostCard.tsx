@@ -11,6 +11,8 @@ import LazyImage from './LazyImage';
 import ReportModal from './ReportModal';
 import ImageModal from './ImageModal';
 import logger from '@/utils/logger';
+import { createReport, type ReportReason } from '@/services/reportService';
+import { useToast } from './Toast';
 
 // Iconos SVG modernos
 
@@ -66,6 +68,7 @@ export default function PostCard({
   onUserClick
 }: PostCardProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const likedByUser = post.likes.includes(user?._id || '');
   const [isSaved, setIsSaved] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -136,11 +139,30 @@ export default function PostCard({
   // Función para reportar post
   const handleReportPost = async (reason: string, description?: string) => {
     try {
-      // TODO: Implementar endpoint de reporte en el backend
+      const reportData: {
+        contentType: 'post';
+        contentId: string;
+        reason: ReportReason;
+        description?: string;
+      } = {
+        contentType: 'post',
+        contentId: post._id,
+        reason: reason as ReportReason
+      };
 
-      // Simular llamada a API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (description) {
+        reportData.description = description;
+      }
+
+      await createReport(reportData);
+
       setShowReportModal(false);
+      toast.success('Reporte enviado exitosamente. Gracias por ayudarnos a mantener la comunidad segura.');
+
+      logger.info('Post reported successfully:', {
+        postId: post._id,
+        reason
+      });
     } catch (reportError) {
       logger.error('Error reporting post:', {
         error: reportError instanceof Error ? reportError.message : 'Unknown error',
@@ -148,6 +170,7 @@ export default function PostCard({
         reason,
         description
       });
+      toast.error('Error al enviar el reporte. Por favor intenta de nuevo.');
       throw reportError;
     }
   };

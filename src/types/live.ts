@@ -15,6 +15,10 @@ export interface LiveStream {
     total: number;
     peak: number;
   };
+  likes: Array<{
+    user: string;
+    createdAt: string;
+  }>;
   startTime: string;
   endTime?: string;
   duration: number;
