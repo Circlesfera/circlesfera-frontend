@@ -26,7 +26,9 @@ export function ThemeToggle({ showLabel = false, size = 'md', className = '' }: 
     lg: 'w-6 h-6'
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('ThemeToggle clicked. Current theme:', theme);
     if (theme === 'light') {
       console.log('Changing to dark');
@@ -69,10 +71,12 @@ export function ThemeToggle({ showLabel = false, size = 'md', className = '' }: 
   return (
     <motion.button
       onClick={handleClick}
-      className={`${sizeClasses[size]} rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors duration-200 ${className}`}
+      className={`${sizeClasses[size]} rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors duration-200 cursor-pointer ${className}`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       title={getLabel()}
+      type="button"
+      aria-label={`Cambiar a tema ${getLabel()}`}
     >
       <motion.div
         key={theme}
