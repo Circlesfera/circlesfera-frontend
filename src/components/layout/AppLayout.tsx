@@ -10,6 +10,7 @@ import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
+import { ThemeToggle } from '@/features/theme/ThemeToggle';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -346,9 +347,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </ul>
             </div>
 
+            {/* Theme Toggle */}
+            <div className="mt-auto mb-3">
+              <div className="px-3">
+                <ThemeToggle size="md" className="w-full" />
+              </div>
+            </div>
+
             {/* User Profile */}
             {user && (
-              <div className="mt-auto pt-6 border-t border-gray-100">
+              <div className="pt-6 border-t border-gray-100">
                 <Link
                   href={`/${user.username}`}
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group cursor-pointer"
@@ -408,6 +416,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
 
           <div className="flex items-center gap-x-3">
+            <ThemeToggle size="sm" />
             <Link
               href="/notifications"
               className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"

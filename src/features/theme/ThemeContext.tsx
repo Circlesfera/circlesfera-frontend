@@ -1,126 +1,111 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Theme = 'light' | 'dark' | 'system';
 
 interface ThemeContextType {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
   resolvedTheme: 'light' | 'dark';
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
-
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-}
-
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-  children,
-  defaultTheme = 'system',
-  storageKey = 'circlesfera-theme',
-}) => {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<Theme>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
-  // Función para obtener el tema del sistema
-  const getSystemTheme = (): 'light' | 'dark' => {
-    if (typeof window !== 'undefined') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return 'light';
-  };
-
-  // Función para aplicar el tema al DOM
-  const applyTheme = (newTheme: 'light' | 'dark') => {
-    const root = document.documentElement;
-
-    if (newTheme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
-
-    // Actualizar meta theme-color
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', newTheme === 'dark' ? '#0f172a' : '#ffffff');
-    }
-  };
-
-  // Función para resolver el tema actual
-  const resolveTheme = useCallback((currentTheme: Theme): 'light' | 'dark' => {
-    if (currentTheme === 'system') {
-      return getSystemTheme();
-    }
-    return currentTheme;
-  }, []);
-
-  // Efecto para cargar el tema guardado
+  // Resolver el tema basado en la preferencia del sistema
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem(storageKey) as Theme;
-      if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
-        setTheme(savedTheme);
+    const resolveTheme = (): void => {
+      if (theme === 'system') {
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setResolvedTheme(systemPrefersDark ? 'dark' : 'light');
+      } else {
+        setResolvedTheme(theme);
       }
-    }
-  }, [storageKey]);
+    };
 
-  // Efecto para aplicar el tema cuando cambia
-  useEffect(() => {
-    const newResolvedTheme = resolveTheme(theme);
-    setResolvedTheme(newResolvedTheme);
-    applyTheme(newResolvedTheme);
-  }, [theme, resolveTheme]);
+    resolveTheme();
 
-  // Efecto para escuchar cambios en el tema del sistema
-  useEffect(() => {
+    // Escuchar cambios en la preferencia del sistema
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-      const handleChange = () => {
-        const newResolvedTheme = resolveTheme(theme);
-        setResolvedTheme(newResolvedTheme);
-        applyTheme(newResolvedTheme);
-      };
-
+      const handleChange = () => resolveTheme();
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
     }
 
     return undefined;
-  }, [theme, resolveTheme]);
+  }, [theme]);
 
-  // Función para cambiar el tema
+  // Aplicar tema al documento
+  useEffect(() => {
+    const root = document.documentElement;
+
+    // Remover clases anteriores
+    root.classList.remove('light', 'dark');
+
+    // Agregar nueva clase
+    root.classList.add(resolvedTheme);
+
+    // Actualizar meta theme-color para móviles
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', resolvedTheme === 'dark' ? '#1f2937' : '#ffffff');
+    }
+  }, [resolvedTheme]);
+
+  // Cargar tema guardado
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  // Guardar tema
   const handleSetTheme = (newTheme: Theme) => {
     setTheme(newTheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, newTheme);
-    }
+    localStorage.setItem('theme', newTheme);
   };
 
-  const value: ThemeContextType = {
-    theme,
-    setTheme: handleSetTheme,
-    resolvedTheme,
+  // Alternar entre light y dark
+  const toggleTheme = () => {
+    const newTheme = resolvedTheme === 'light' ? 'dark' : 'light';
+    handleSetTheme(newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
+    <ThemeContext.Provider value={{
+      theme,
+      resolvedTheme,
+      setTheme: handleSetTheme,
+      toggleTheme
+    }}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={resolvedTheme}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
     </ThemeContext.Provider>
   );
-};
+}
+
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}
