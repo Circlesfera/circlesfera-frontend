@@ -244,11 +244,10 @@ export default function CSTVPage() {
           <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setActiveTab('trending')}
-              className={`flex-1 px-4 py-2 rounded-md transition-colors ${
-                activeTab === 'trending'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`flex-1 px-4 py-2 rounded-md transition-colors ${activeTab === 'trending'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               <div className="flex items-center justify-center space-x-2">
                 <TrendingUp className="w-4 h-4" />
@@ -258,11 +257,10 @@ export default function CSTVPage() {
 
             <button
               onClick={() => setActiveTab('recent')}
-              className={`flex-1 px-4 py-2 rounded-md transition-colors ${
-                activeTab === 'recent'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`flex-1 px-4 py-2 rounded-md transition-colors ${activeTab === 'recent'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               <div className="flex items-center justify-center space-x-2">
                 <Clock className="w-4 h-4" />
@@ -272,11 +270,10 @@ export default function CSTVPage() {
 
             <button
               onClick={() => setActiveTab('search')}
-              className={`flex-1 px-4 py-2 rounded-md transition-colors ${
-                activeTab === 'search'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`flex-1 px-4 py-2 rounded-md transition-colors ${activeTab === 'search'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               <div className="flex items-center justify-center space-x-2">
                 <Search className="w-4 h-4" />
@@ -358,13 +355,13 @@ export default function CSTVPage() {
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               {activeTab === 'search' ? 'No se encontraron videos' :
-               activeTab === 'trending' ? 'No hay videos trending' :
-               'No hay videos recientes'}
+                activeTab === 'trending' ? 'No hay videos trending' :
+                  'No hay videos recientes'}
             </h3>
             <p className="text-gray-600 mb-6">
               {activeTab === 'search' ? 'Intenta con otros términos de búsqueda' :
-               activeTab === 'trending' ? 'Los videos trending aparecerán aquí' :
-               'Los videos más recientes aparecerán aquí'}
+                activeTab === 'trending' ? 'Los videos trending aparecerán aquí' :
+                  'Los videos más recientes aparecerán aquí'}
             </p>
             {user && activeTab !== 'search' && (
               <button
