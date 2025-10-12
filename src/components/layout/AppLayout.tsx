@@ -90,7 +90,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const unreadNotifications = useUnreadNotifications();
 
   // Rutas públicas (sin layout/sidebar)
-  const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
+  const publicRoutes = ['/', '/forgot-password', '/reset-password'];
   const isPublicRoute = pathname === '/' || publicRoutes.slice(1).some(route => pathname.startsWith(route));
 
   // Rutas que requieren autenticación

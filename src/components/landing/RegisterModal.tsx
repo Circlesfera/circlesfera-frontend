@@ -69,7 +69,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative"
             >
               {/* Close Button */}
               <button
@@ -80,20 +80,20 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               </button>
 
               {/* Logo */}
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl text-white bg-gradient-to-r from-blue-600 to-purple-600">
                   C
                 </div>
               </div>
 
-              <h2 className="text-3xl font-bold text-center mb-2 text-gray-900">
+              <h2 className="text-2xl font-bold text-center mb-1 text-gray-900">
                 Crear Cuenta
               </h2>
-              <p className="text-center text-gray-600 mb-8">
+              <p className="text-center text-gray-600 text-sm mb-5">
                 Únete a la comunidad de CircleSfera
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
                     Nombre Completo
@@ -105,7 +105,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                     value={formData.fullName}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
                     placeholder="Tu nombre"
                   />
                 </div>
@@ -121,7 +121,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                     value={formData.username}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
                     placeholder="@usuario"
                   />
                 </div>
@@ -137,7 +137,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
                     placeholder="tu@email.com"
                   />
                 </div>
@@ -155,7 +155,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                       onChange={handleChange}
                       required
                       minLength={8}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-10 text-sm"
                       placeholder="••••••••"
                     />
                     <button
@@ -170,20 +170,20 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Mínimo 8 caracteres</p>
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-2.5 rounded-lg text-white font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm mt-4"
                 >
                   {isLoading ? 'Creando cuenta...' : 'Crear Cuenta'}
                 </button>
               </form>
 
-              <div className="mt-6 text-center">
-                <p className="text-gray-600">
+              <div className="mt-4 text-center">
+                <p className="text-gray-600 text-sm">
                   ¿Ya tienes una cuenta?{' '}
                   <button
                     onClick={() => {
@@ -197,11 +197,11 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 </p>
               </div>
 
-              <p className="text-xs text-gray-500 text-center mt-6">
+              <p className="text-xs text-gray-500 text-center mt-4">
                 Al registrarte, aceptas nuestros{' '}
-                <a href="/terms" className="text-blue-600 hover:underline">Términos de Servicio</a>
+                <a href="/terms" className="text-blue-600 hover:underline">Términos</a>
                 {' '}y{' '}
-                <a href="/privacy" className="text-blue-600 hover:underline">Política de Privacidad</a>
+                <a href="/privacy" className="text-blue-600 hover:underline">Privacidad</a>
               </p>
             </motion.div>
           </div>
