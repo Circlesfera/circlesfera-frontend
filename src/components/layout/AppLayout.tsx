@@ -11,7 +11,6 @@ import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 import { ThemeToggle } from '@/features/theme/ThemeToggle';
-import { SimpleThemeToggle } from '@/features/theme/SimpleThemeToggle';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -417,7 +416,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
 
           <div className="flex items-center gap-x-3">
-            <SimpleThemeToggle />
             <ThemeToggle size="sm" />
             <Link
               href="/notifications"

@@ -55,8 +55,8 @@ export default function AnimatedCard({
       initial={motionProps.initial}
       animate={motionProps.animate}
       transition={motionProps.transition}
-      whileHover={motionProps.whileHover}
-      whileTap={motionProps.whileTap}
+      whileHover={motionProps.whileHover || {}}
+      whileTap={motionProps.whileTap || {}}
       className={combinedClassName}
     >
       {children}
