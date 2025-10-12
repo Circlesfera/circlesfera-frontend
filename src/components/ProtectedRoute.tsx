@@ -16,7 +16,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   useEffect(() => {
     if (!loading && !user && isHydrated) {
-      router.replace('/login');
+      router.replace('/');
     }
   }, [user, loading, router, isHydrated]);
 

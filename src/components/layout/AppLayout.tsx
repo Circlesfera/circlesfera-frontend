@@ -130,7 +130,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   // Navegación minimalista organizada por secciones
   const primaryNavigation: NavigationItem[] = [
-    { name: 'Inicio', href: '/', icon: HomeIcon },
+    { name: 'Inicio', href: '/feed', icon: HomeIcon },
     { name: 'Explorar', href: '/explore', icon: ExploreIcon },
     { name: 'Mensajes', href: '/messages', icon: MessageIcon, badge: 2 }, // Hardcoded por ahora
   ];
