@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '@/features/auth/useAuth'
 import { useRouter } from 'next/navigation'
-import { toast } from 'react-hot-toast'
+import { useToast } from '@/components/Toast/ToastContext'
 
 interface RegisterModalProps {
   isOpen: boolean
@@ -24,13 +24,14 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const [isLoading, setIsLoading] = useState(false)
   const { register } = useAuth()
   const router = useRouter()
+  const toast = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      await register(formData.email, formData.password, formData.username, formData.fullName)
+      await register(formData.username, formData.email, formData.password)
       toast.success('¡Cuenta creada! Bienvenido a CircleSfera')
       onClose()
       router.push('/feed')
