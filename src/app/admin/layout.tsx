@@ -24,9 +24,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     // Verificar si el usuario es admin o moderator
     if (!loading && user) {
-      // TODO: Verificar rol del usuario cuando el backend lo devuelva
-      // Por ahora asumimos que si está autenticado puede acceder
-      // En producción, verificar: user.role === 'admin' || user.role === 'moderator'
+      const isAdminOrModerator = user.role === 'admin' || user.role === 'moderator'
+
+      if (!isAdminOrModerator) {
+        // Si no es admin ni moderator, redirigir al feed
+        router.push('/feed')
+      }
     }
 
     if (!loading && !user) {
@@ -111,9 +114,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <p className="font-semibold text-gray-900 truncate">
                 {user.username}
               </p>
-              <p className="text-xs text-blue-600 font-medium">
-                {/* TODO: Mostrar rol real del usuario */}
-                Administrador
+              <p className="text-xs text-blue-600 font-medium capitalize">
+                {user.role === 'admin' ? 'Administrador' : user.role === 'moderator' ? 'Moderador' : 'Usuario'}
               </p>
             </div>
           </div>

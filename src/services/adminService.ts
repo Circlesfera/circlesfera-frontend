@@ -43,24 +43,30 @@ export const getDashboardStats = async (): Promise<DashboardResponse> => {
   return response.data;
 };
 
+export interface Activity {
+  type: string;
+  message: string;
+  timestamp: string;
+  user?: string;
+  relatedId?: string;
+  status?: string;
+  severity?: 'info' | 'low' | 'medium' | 'high';
+}
+
+export interface RecentActivityResponse {
+  success: boolean;
+  data: Activity[];
+  total: number;
+}
+
 /**
  * Obtener actividad reciente del sistema
- * TODO: Implementar endpoint en backend cuando sea necesario
+ * Conectado con endpoint real: GET /analytics/recent-activity
  */
-export const getRecentActivity = async (): Promise<{
-  success: boolean;
-  data: Array<{
-    type: string;
-    message: string;
-    timestamp: string;
-    user?: string;
-    relatedId?: string;
-  }>;
-}> => {
-  // Por ahora retorna actividad vacía, pero el endpoint puede implementarse en el backend
-  return {
-    success: true,
-    data: []
-  };
+export const getRecentActivity = async (limit = 20): Promise<RecentActivityResponse> => {
+  const response = await api.get('/analytics/recent-activity', {
+    params: { limit }
+  });
+  return response.data;
 };
 

@@ -15,7 +15,9 @@ export interface User {
   isPrivate?: boolean;
   isVerified?: boolean;
   isActive?: boolean;
+  role?: 'user' | 'moderator' | 'admin';
   lastSeen?: string;
+  lastLogin?: string;
   followers: string[];
   following: string[];
   posts: string[];

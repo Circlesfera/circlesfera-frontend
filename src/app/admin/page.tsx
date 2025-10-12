@@ -3,33 +3,41 @@
 import { useEffect, useState } from 'react'
 import { Flag, Users, AlertTriangle, CheckCircle, TrendingUp, Activity } from 'lucide-react'
 import Link from 'next/link'
-import { getDashboardStats, DashboardStats } from '@/services/adminService'
+import { getDashboardStats, DashboardStats, getRecentActivity, Activity as ActivityType } from '@/services/adminService'
 import logger from '@/utils/logger'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [activities, setActivities] = useState<ActivityType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchStats()
+    fetchDashboardData()
   }, [])
 
-  const fetchStats = async () => {
+  const fetchDashboardData = async () => {
     try {
       setLoading(true)
-      const response = await getDashboardStats()
 
-      if (response.success && response.data) {
-        setStats(response.data)
-      } else {
-        setError('Error al cargar estadísticas')
+      // Cargar estadísticas y actividad en paralelo
+      const [statsResponse, activityResponse] = await Promise.all([
+        getDashboardStats(),
+        getRecentActivity(10)
+      ])
+
+      if (statsResponse.success && statsResponse.data) {
+        setStats(statsResponse.data)
+      }
+
+      if (activityResponse.success && activityResponse.data) {
+        setActivities(activityResponse.data)
       }
 
       setLoading(false)
     } catch (err) {
-      logger.error('Error fetching dashboard stats:', err)
-      setError('Error al cargar estadísticas del sistema')
+      logger.error('Error fetching dashboard data:', err)
+      setError('Error al cargar datos del dashboard')
       setLoading(false)
     }
   }
@@ -56,13 +64,62 @@ export default function AdminDashboard() {
           </div>
         </div>
         <button
-          onClick={fetchStats}
+          onClick={fetchDashboardData}
           className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
         >
           Reintentar
         </button>
       </div>
     )
+  }
+
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'report':
+        return '🚩'
+      case 'user_join':
+        return '👤'
+      case 'content_post':
+        return '📷'
+      case 'content_reel':
+        return '🎬'
+      case 'live_stream':
+        return '📡'
+      default:
+        return '📋'
+    }
+  }
+
+  const getSeverityColor = (severity?: string) => {
+    switch (severity) {
+      case 'high':
+        return 'bg-red-500'
+      case 'medium':
+        return 'bg-yellow-500'
+      case 'low':
+        return 'bg-blue-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
+
+  const formatTimeAgo = (timestamp: string) => {
+    const now = new Date()
+    const activityDate = new Date(timestamp)
+    const diffMs = now.getTime() - activityDate.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMs / 3600000)
+    const diffDays = Math.floor(diffMs / 86400000)
+
+    if (diffMins < 1) return 'Ahora mismo'
+    if (diffMins < 60) return `Hace ${diffMins} min`
+    if (diffHours < 24) return `Hace ${diffHours}h`
+    if (diffDays < 7) return `Hace ${diffDays}d`
+
+    return activityDate.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'short'
+    })
   }
 
   const statCards = [
@@ -192,37 +249,83 @@ export default function AdminDashboard() {
       </div>
 
       {/* System Overview */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">
-          Vista General del Sistema
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Total de Usuarios</p>
-            <p className="text-3xl font-bold text-blue-600">{stats.users.total}</p>
-            <p className="text-xs text-gray-500 mt-1">
-              {stats.users.new24h} nuevos en 24h
-            </p>
-          </div>
-
-          <div className="p-4 bg-purple-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Contenido Total</p>
-            <p className="text-3xl font-bold text-purple-600">
-              {stats.content.posts + stats.content.reels}
-            </p>
-            <p className="text-xs text-gray-500 mt-1">
-              {stats.content.posts24h + stats.content.reels24h} nuevos en 24h
-            </p>
-          </div>
-
-          <div className="p-4 bg-green-50 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Transmisiones Activas</p>
-            <p className="text-3xl font-bold text-green-600">{stats.activity.liveStreams}</p>
-            <p className="text-xs text-gray-500 mt-1">
-              En vivo ahora
-            </p>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <p className="text-sm text-gray-600 mb-1">Total de Usuarios</p>
+          <p className="text-3xl font-bold text-blue-600">{stats.users.total.toLocaleString()}</p>
+          <p className="text-xs text-gray-500 mt-1">
+            {stats.users.new24h} nuevos en 24h
+          </p>
         </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <p className="text-sm text-gray-600 mb-1">Contenido Total</p>
+          <p className="text-3xl font-bold text-purple-600">
+            {(stats.content.posts + stats.content.reels).toLocaleString()}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            {stats.content.posts24h + stats.content.reels24h} nuevos en 24h
+          </p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <p className="text-sm text-gray-600 mb-1">Transmisiones Activas</p>
+          <p className="text-3xl font-bold text-green-600">{stats.activity.liveStreams}</p>
+          <p className="text-xs text-gray-500 mt-1">
+            En vivo ahora
+          </p>
+        </div>
+      </div>
+
+      {/* Actividad Reciente - DATOS REALES */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-gray-900">
+            Actividad Reciente del Sistema
+          </h2>
+          <button
+            onClick={fetchDashboardData}
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+          >
+            Actualizar
+          </button>
+        </div>
+
+        {activities.length === 0 ? (
+          <div className="text-center py-8">
+            <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-sm text-gray-500">No hay actividad reciente</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {activities.map((activity, index) => (
+              <div
+                key={`${activity.type}-${activity.relatedId}-${index}`}
+                className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className={`w-2 h-2 rounded-full ${getSeverityColor(activity.severity)}`}></div>
+                <div className="text-2xl">{getActivityIcon(activity.type)}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {activity.message}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {formatTimeAgo(activity.timestamp)}
+                    {activity.user && ` • ${activity.user}`}
+                  </p>
+                </div>
+                {activity.type === 'report' && (
+                  <Link
+                    href={`/admin/reports/${activity.relatedId}`}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-700 whitespace-nowrap"
+                  >
+                    Ver
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
