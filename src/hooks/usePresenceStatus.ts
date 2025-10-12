@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
+import { io, Socket } from 'socket.io-client';
+import { config } from '@/config/env';
+import logger from '@/utils/logger';
 
 export interface PresenceStatus {
   isOnline: boolean;
@@ -7,11 +10,40 @@ export interface PresenceStatus {
   status?: 'online' | 'away' | 'busy' | 'offline';
 }
 
+// Socket singleton para presencia
+let presenceSocket: Socket | null = null;
+
 /**
  * Hook para manejar el estado de presencia de usuarios
  * @param userId ID del usuario del cual obtener el estado
  * @returns Estado de presencia del usuario
  */
+// Inicializar socket de presencia
+const getPresenceSocket = (): Socket => {
+  if (!presenceSocket) {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+    presenceSocket = io(config.apiUrl, {
+      auth: { token },
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5
+    });
+
+    presenceSocket.on('connect', () => {
+      logger.info('Presence socket connected');
+    });
+
+    presenceSocket.on('disconnect', () => {
+      logger.info('Presence socket disconnected');
+    });
+  }
+
+  return presenceSocket;
+};
+
 export function usePresenceStatus(userId?: string): PresenceStatus {
   const [presence, setPresence] = useState<PresenceStatus>({
     isOnline: false,
@@ -29,36 +61,39 @@ export function usePresenceStatus(userId?: string): PresenceStatus {
       return;
     }
 
-    // TODO: Implementar WebSocket para estado de presencia en tiempo real
-    // Por ahora, simular estado basado en actividad reciente
-    const checkPresence = async () => {
-      try {
-        // Aquí iría la lógica para obtener el estado real del usuario
-        // Por ejemplo, desde un endpoint de API o WebSocket
-        // const response = await api.get(`/users/${userId}/presence`);
-        // setPresence(response.data);
+    // Conectar al WebSocket de presencia
+    const socket = getPresenceSocket();
 
-        // Simulación temporal - en producción esto vendría del backend
+    // Pedir estado inicial
+    socket.emit('presence:get', { userIds: [userId] });
+
+    // Escuchar cambios de estado
+    const handlePresenceChange = (data: { userId: string; status: string }) => {
+      if (data.userId === userId) {
         setPresence({
-          isOnline: Math.random() > 0.5, // Simulación aleatoria
-          status: Math.random() > 0.5 ? 'online' : 'offline',
-          lastSeen: new Date().toISOString()
-        });
-      } catch (error) {
-        console.error('Error checking presence status:', error);
-        setPresence({
-          isOnline: false,
-          status: 'offline'
+          isOnline: data.status === 'online',
+          status: data.status as 'online' | 'away' | 'offline'
         });
       }
     };
 
-    checkPresence();
+    // Escuchar respuesta bulk de presencia
+    const handlePresenceBulk = (data: Record<string, string>) => {
+      if (data[userId]) {
+        setPresence({
+          isOnline: data[userId] === 'online',
+          status: data[userId] as 'online' | 'away' | 'offline'
+        });
+      }
+    };
 
-    // Actualizar cada 30 segundos (en producción sería WebSocket)
-    const interval = setInterval(checkPresence, 30000);
+    socket.on('presence:change', handlePresenceChange);
+    socket.on('presence:bulk', handlePresenceBulk);
 
-    return () => clearInterval(interval);
+    return () => {
+      socket.off('presence:change', handlePresenceChange);
+      socket.off('presence:bulk', handlePresenceBulk);
+    };
   }, [userId, user?._id]);
 
   return presence;
@@ -73,40 +108,73 @@ export function useMultiplePresenceStatus(userIds: string[]): Record<string, Pre
   const [presenceMap, setPresenceMap] = useState<Record<string, PresenceStatus>>({});
   const { user } = useAuth();
 
-  useEffect(() => {
-    const updatePresenceMap = async () => {
-      const newMap: Record<string, PresenceStatus> = {};
-
-      for (const userId of userIds) {
-        if (userId === user?._id) {
-          newMap[userId] = {
-            isOnline: true,
-            status: 'online'
-          };
-        } else {
-          // TODO: Implementar consulta real de presencia
-          newMap[userId] = {
-            isOnline: Math.random() > 0.5,
-            status: Math.random() > 0.5 ? 'online' : 'offline',
-            lastSeen: new Date().toISOString()
-          };
-        }
+  const updatePresenceStatus = useCallback((userId: string, status: string) => {
+    setPresenceMap(prev => ({
+      ...prev,
+      [userId]: {
+        isOnline: status === 'online',
+        status: status as 'online' | 'away' | 'offline'
       }
+    }));
+  }, []);
 
-      setPresenceMap(newMap);
-    };
-
-    if (userIds.length > 0) {
-      updatePresenceMap();
-
-      // Actualizar cada 30 segundos
-      const interval = setInterval(updatePresenceMap, 30000);
-      return () => clearInterval(interval);
+  useEffect(() => {
+    if (userIds.length === 0) {
+      return;
     }
 
-    // Retornar undefined explícitamente cuando no hay userIds
-    return undefined;
-  }, [userIds, user?._id]);
+    // Inicializar presencia del usuario actual
+    const initialMap: Record<string, PresenceStatus> = {};
+    userIds.forEach(userId => {
+      if (userId === user?._id) {
+        initialMap[userId] = {
+          isOnline: true,
+          status: 'online'
+        };
+      } else {
+        initialMap[userId] = {
+          isOnline: false,
+          status: 'offline'
+        };
+      }
+    });
+    setPresenceMap(initialMap);
+
+    // Conectar al WebSocket
+    const socket = getPresenceSocket();
+
+    // Filtrar solo usuarios que no son el actual
+    const otherUserIds = userIds.filter(id => id !== user?._id);
+
+    if (otherUserIds.length > 0) {
+      // Pedir estados iniciales
+      socket.emit('presence:get', { userIds: otherUserIds });
+    }
+
+    // Escuchar cambios de estado
+    const handlePresenceChange = (data: { userId: string; status: string }) => {
+      if (userIds.includes(data.userId)) {
+        updatePresenceStatus(data.userId, data.status);
+      }
+    };
+
+    // Escuchar respuesta bulk
+    const handlePresenceBulk = (data: Record<string, string>) => {
+      Object.entries(data).forEach(([userId, status]) => {
+        if (userIds.includes(userId)) {
+          updatePresenceStatus(userId, status);
+        }
+      });
+    };
+
+    socket.on('presence:change', handlePresenceChange);
+    socket.on('presence:bulk', handlePresenceBulk);
+
+    return () => {
+      socket.off('presence:change', handlePresenceChange);
+      socket.off('presence:bulk', handlePresenceBulk);
+    };
+  }, [userIds, user?._id, updatePresenceStatus]);
 
   return presenceMap;
 }
