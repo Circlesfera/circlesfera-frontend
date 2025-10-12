@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { motion, MotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface AnimatedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -28,16 +28,14 @@ export default function AnimatedCard({
   direction = 'fade',
   hover = true,
   tap = true,
-  className = '',
-  ...props
+  className = ''
 }: AnimatedCardProps) {
-  const motionProps: MotionProps = {
+  const motionProps = {
     initial: directionVariants[direction],
     animate: { x: 0, y: 0, opacity: 1 },
     transition: {
       duration,
-      delay,
-      ease: [0.25, 0.46, 0.45, 0.94] // easeOutQuart
+      delay
     },
     whileHover: hover ? {
       y: -2,
@@ -48,11 +46,19 @@ export default function AnimatedCard({
       scale: 0.98,
       transition: { duration: 0.1 }
     } : undefined,
-    className: `bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ${className}`
   };
 
+  const combinedClassName = `bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ${className}`;
+
   return (
-    <motion.div {...motionProps} {...props}>
+    <motion.div
+      initial={motionProps.initial}
+      animate={motionProps.animate}
+      transition={motionProps.transition}
+      whileHover={motionProps.whileHover}
+      whileTap={motionProps.whileTap}
+      className={combinedClassName}
+    >
       {children}
     </motion.div>
   );
