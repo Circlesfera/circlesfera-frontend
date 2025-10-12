@@ -215,8 +215,8 @@ export default function AdminDashboard() {
                   </div>
                   {stat.change && (
                     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${stat.changeType === 'increase'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-green-100 text-green-700'
+                      ? 'bg-red-100 text-red-700'
+                      : 'bg-green-100 text-green-700'
                       }`}>
                       {stat.change}
                     </span>
