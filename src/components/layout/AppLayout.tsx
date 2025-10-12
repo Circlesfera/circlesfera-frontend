@@ -187,7 +187,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Navigation */}
           <nav className="flex flex-1 flex-col">
             {/* Navegación Principal */}
-            <div className="mb-4">
+            <div className="mb-2">
               <ul role="list" className="space-y-1">
                 {primaryNavigation.map((item) => (
                   <li key={item.name}>
@@ -222,13 +222,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
 
             {/* Separador */}
-            <div className="mx-3 mb-4">
+            <div className="mx-3 my-2">
               <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
             </div>
 
             {/* Navegación de Contenido */}
-            <div className="mb-4">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Contenido</h3>
+            <div className="mb-2">
+              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contenido</h3>
               <ul role="list" className="space-y-1">
                 {contentNavigation.map((item) => (
                   <li key={item.name}>
@@ -262,13 +262,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
 
             {/* Separador */}
-            <div className="mx-3 mb-4">
+            <div className="mx-3 my-2">
               <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
             </div>
 
             {/* Navegación de Notificaciones */}
-            <div className="mb-6">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Social</h3>
+            <div className="mb-2">
+              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Social</h3>
               <ul role="list" className="space-y-1">
                 {notificationsNavigation.map((item) => (
                   <li key={item.name}>
@@ -303,22 +303,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
 
             {/* Create Button */}
-            <div className="mt-auto mb-6">
+            <div className="mt-auto mb-3">
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+                className="w-full h-11 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
               >
-                <PlusIcon className="h-6 w-6" />
+                <PlusIcon className="h-5 w-5" />
               </button>
             </div>
 
             {/* Separador */}
-            <div className="mx-3 mb-6">
+            <div className="mx-3 my-2">
               <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
             </div>
 
             {/* Navegación de Usuario */}
-            <div className="mb-6">
+            <div className="mb-3">
               <ul role="list" className="space-y-1">
                 {userNavigation.map((item) => (
                   <li key={item.name}>
