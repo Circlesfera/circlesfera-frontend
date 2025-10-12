@@ -1,30 +1,14 @@
 import api from './axios';
+import type {
+  Report,
+  ReportReason,
+  ReportContentType,
+  ReportStatus,
+  ReportAction
+} from '@/types';
 
-export type ReportContentType =
-  | 'post'
-  | 'reel'
-  | 'story'
-  | 'comment'
-  | 'user'
-  | 'live_stream'
-  | 'message';
-
-export type ReportReason =
-  | 'spam'
-  | 'harassment'
-  | 'hate_speech'
-  | 'violence'
-  | 'nudity'
-  | 'false_information'
-  | 'copyright'
-  | 'suicide_or_self_harm'
-  | 'scam'
-  | 'terrorism'
-  | 'other';
-
-export type ReportStatus = 'pending' | 'reviewed' | 'resolved' | 'dismissed';
-
-export type ReportAction = 'none' | 'warning' | 'content_removed' | 'user_banned' | 'user_suspended';
+// Re-exportar tipos para uso externo
+export type { Report, ReportReason, ReportContentType, ReportStatus, ReportAction };
 
 export interface CreateReportData {
   contentType: ReportContentType;
@@ -33,42 +17,18 @@ export interface CreateReportData {
   description?: string;
 }
 
-export interface Report {
-  _id: string;
-  reportedBy: {
-    _id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-  };
-  contentType: ReportContentType;
-  contentId: string;
-  reason: ReportReason;
-  description?: string;
-  status: ReportStatus;
-  action: ReportAction;
-  reviewedBy?: {
-    _id: string;
-    username: string;
-    avatar?: string;
-  };
-  reviewedAt?: string;
-  moderatorNotes?: string;
-  reportedContent?: unknown;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface ReportResponse {
   success: boolean;
-  message: string;
-  report: Report;
+  message?: string;
+  data?: Report;
+  report?: Report;
 }
 
 export interface ReportsListResponse {
   success: boolean;
-  reports: Report[];
-  pagination: {
+  data?: Report[];
+  reports?: Report[];
+  pagination?: {
     page: number;
     limit: number;
     total: number;
@@ -95,7 +55,7 @@ export const getReports = async (params?: {
 };
 
 // Obtener un reporte específico (admin/moderador)
-export const getReportById = async (reportId: string): Promise<{ success: boolean; report: Report }> => {
+export const getReportById = async (reportId: string): Promise<ReportResponse> => {
   const response = await api.get(`/reports/${reportId}`);
   return response.data;
 };
@@ -105,10 +65,10 @@ export const updateReportStatus = async (
   reportId: string,
   data: {
     status: ReportStatus;
-    action?: ReportAction;
+    action?: string;
     moderatorNotes?: string;
   }
-): Promise<{ success: boolean; message: string; report: Report }> => {
+): Promise<ReportResponse> => {
   const response = await api.put(`/reports/${reportId}/status`, data);
   return response.data;
 };
@@ -116,10 +76,19 @@ export const updateReportStatus = async (
 // Obtener estadísticas de reportes (admin)
 export const getReportStats = async (): Promise<{
   success: boolean;
-  stats: {
-    byStatus: Record<ReportStatus, number>;
-    byReason: Array<{ _id: ReportReason; count: number }>;
-    byContentType: Array<{ _id: ReportContentType; count: number }>;
+  data?: {
+    total: number;
+    byStatus?: Record<string, number>;
+    byReason?: Record<string, number>;
+    byContentType?: Record<string, number>;
+    averageResolutionTime?: string;
+  };
+  stats?: {
+    total: number;
+    byStatus?: Record<string, number>;
+    byReason?: Array<{ _id: string; count: number }>;
+    byContentType?: Array<{ _id: string; count: number }>;
+    averageResolutionTime?: string;
   };
 }> => {
   const response = await api.get('/reports/stats');
@@ -133,7 +102,6 @@ export const getReportReasonLabel = (reason: ReportReason): string => {
     harassment: 'Acoso o intimidación',
     hate_speech: 'Discurso de odio',
     violence: 'Violencia o contenido peligroso',
-    nudity: 'Desnudez o contenido sexual',
     false_information: 'Información falsa',
     copyright: 'Infracción de derechos de autor',
     suicide_or_self_harm: 'Suicidio o autolesión',

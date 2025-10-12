@@ -16,7 +16,6 @@ const REPORT_REASONS = [
   { id: 'harassment', label: 'Acoso', description: 'Contenido que acosa o intimida' },
   { id: 'hate_speech', label: 'Discurso de odio', description: 'Contenido que promueve el odio' },
   { id: 'violence', label: 'Violencia', description: 'Contenido que muestra violencia' },
-  { id: 'nudity', label: 'Desnudos', description: 'Contenido sexual o desnudos inapropiados' },
   { id: 'fake_news', label: 'Información falsa', description: 'Noticias o información falsa' },
   { id: 'copyright', label: 'Derechos de autor', description: 'Violación de derechos de autor' },
   { id: 'other', label: 'Otro', description: 'Otra razón no listada' },

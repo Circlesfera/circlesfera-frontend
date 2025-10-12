@@ -608,6 +608,65 @@ export interface AppEvent {
   userId?: string;
 }
 
+// Tipos para sistema de reportes
+export type ReportReason =
+  | 'spam'
+  | 'harassment'
+  | 'hate_speech'
+  | 'violence'
+  | 'false_information'
+  | 'copyright'
+  | 'suicide_or_self_harm'
+  | 'scam'
+  | 'terrorism'
+  | 'other';
+
+export type ReportContentType =
+  | 'post'
+  | 'reel'
+  | 'story'
+  | 'comment'
+  | 'user'
+  | 'message'
+  | 'live_stream';
+
+export type ReportStatus =
+  | 'pending'
+  | 'under_review'
+  | 'resolved'
+  | 'rejected';
+
+export type ReportAction =
+  | 'none'
+  | 'content_removed'
+  | 'user_warned'
+  | 'user_suspended'
+  | 'user_banned';
+
+export interface Report {
+  _id: string;
+  reportedContent: string;
+  contentType: ReportContentType;
+  reason: ReportReason;
+  description?: string;
+  reportedBy: {
+    _id: string;
+    username: string;
+    avatar?: string;
+    fullName?: string;
+  };
+  status: ReportStatus;
+  moderatorNotes?: string;
+  actionTaken?: ReportAction;
+  resolvedBy?: {
+    _id: string;
+    username: string;
+  };
+  resolvedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Re-exportar tipos específicos
 export * from './cstv';
 export * from './live';
