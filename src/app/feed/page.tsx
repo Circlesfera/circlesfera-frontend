@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Card, PostCard, Avatar, Button } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
-import CommentsModal from '@/components/CommentsModal';
-import ShareModal from '@/components/ShareModal';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import UserSuggestions from '@/components/UserSuggestions';
 import { useRouter } from 'next/navigation';
 import { useFeed } from '@/hooks/useFeed';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import logger from '@/utils/logger';
+
+// Lazy load componentes pesados
+const CommentsModal = lazy(() => import('@/components/CommentsModal'));
+const ShareModal = lazy(() => import('@/components/ShareModal'));
+import { ModalLoader } from '@/components/ui/LoadingSpinner';
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
@@ -397,22 +400,26 @@ export default function HomePage() {
               </Card>
             )}
 
-            {/* Modals */}
-            <CommentsModal
-              isOpen={commentsModal.isOpen}
-              onClose={() => setCommentsModal({ isOpen: false, postId: '', postAuthor: '' })}
-              postId={commentsModal.postId}
-              postAuthor={commentsModal.postAuthor}
-              postImage={commentsModal.postImage}
-            />
+            {/* Modals con Lazy Loading */}
+            <Suspense fallback={<ModalLoader text="Cargando comentarios..." />}>
+              <CommentsModal
+                isOpen={commentsModal.isOpen}
+                onClose={() => setCommentsModal({ isOpen: false, postId: '', postAuthor: '' })}
+                postId={commentsModal.postId}
+                postAuthor={commentsModal.postAuthor}
+                postImage={commentsModal.postImage}
+              />
+            </Suspense>
 
-            <ShareModal
-              isOpen={shareModal.isOpen}
-              onClose={() => setShareModal({ isOpen: false, postId: '', postUrl: '', postCaption: '' })}
-              postId={shareModal.postId}
-              postUrl={shareModal.postUrl}
-              postCaption={shareModal.postCaption}
-            />
+            <Suspense fallback={<ModalLoader text="Cargando compartir..." />}>
+              <ShareModal
+                isOpen={shareModal.isOpen}
+                onClose={() => setShareModal({ isOpen: false, postId: '', postUrl: '', postCaption: '' })}
+                postId={shareModal.postId}
+                postUrl={shareModal.postUrl}
+                postCaption={shareModal.postCaption}
+              />
+            </Suspense>
           </div>
 
           {/* Sidebar */}

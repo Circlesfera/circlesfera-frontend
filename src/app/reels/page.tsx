@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from 'react';
+import React, { useCallback, Suspense, lazy } from 'react';
 import { Button, Avatar } from '@/design-system';
 import { useAuth } from '@/features/auth/useAuth';
 import { likeReel, unlikeReel } from '@/services/reelService';
@@ -8,9 +8,11 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { useRouter } from 'next/navigation';
 import { Video, Heart, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
 import { useReels } from '@/hooks/useReels';
-import VideoPlayer from '@/components/VideoPlayer';
 import logger from '@/utils/logger';
 import { useToast } from '@/components/Toast';
+
+// Lazy load VideoPlayer para mejor performance
+const VideoPlayer = lazy(() => import('@/components/VideoPlayer'));
 
 export default function ReelsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -142,7 +144,13 @@ export default function ReelsPage() {
       <div className="h-screen bg-black relative overflow-hidden">
         {/* Reel Video con VideoPlayer optimizado */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <VideoPlayer {...videoPlayerProps} />
+          <Suspense fallback={
+            <div className="w-full h-full bg-black flex items-center justify-center">
+              <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          }>
+            <VideoPlayer {...videoPlayerProps} />
+          </Suspense>
 
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
