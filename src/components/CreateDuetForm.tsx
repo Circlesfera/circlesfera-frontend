@@ -82,7 +82,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
       }
     } catch (error) {
       toast.error('Error al crear el duet. Intenta de nuevo.');
-      console.error('Error creating duet:', error);
+      // Error ya logueado por el interceptor de axios
     } finally {
       setUploading(false);
     }
