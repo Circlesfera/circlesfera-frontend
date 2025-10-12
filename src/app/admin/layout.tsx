@@ -172,15 +172,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main content */}
-      <main className={`
-          transition-all duration-300 pt-16 lg:pt-0
-          ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}
-          min-h-screen flex justify-center
-        `}>
-        <div className="w-full max-w-[1000px] p-4 lg:p-6">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8">
-            {children}
-          </div>
+      <main className="transition-all duration-300 pt-16 lg:pt-0 lg:ml-64 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {children}
         </div>
       </main>
 
