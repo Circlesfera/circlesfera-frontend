@@ -27,11 +27,15 @@ export function ThemeToggle({ showLabel = false, size = 'md', className = '' }: 
   };
 
   const handleClick = () => {
+    console.log('ThemeToggle clicked. Current theme:', theme);
     if (theme === 'light') {
+      console.log('Changing to dark');
       setTheme('dark');
     } else if (theme === 'dark') {
+      console.log('Changing to system');
       setTheme('system');
     } else {
+      console.log('Changing to light');
       setTheme('light');
     }
   };
@@ -107,8 +111,8 @@ export function ThemeMenu() {
           key={value}
           onClick={() => setTheme(value)}
           className={`w-full flex items-center px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${theme === value
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+            ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
             }`}
           whileHover={{ x: 4 }}
           transition={{ duration: 0.1 }}
