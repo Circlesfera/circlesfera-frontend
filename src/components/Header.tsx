@@ -10,7 +10,6 @@ import CreatePostForm from './CreatePostForm';
 import CreateStoryForm from './CreateStoryForm';
 import CreateReelForm from './CreateReelForm';
 import UserSearch from './UserSearch';
-import ThemeToggle from './ThemeToggle';
 import logger from '@/utils/logger';
 
 // Iconos SVG modernos
@@ -293,9 +292,6 @@ export default function Header() {
                 )}
                 <span className="sr-only">Notificaciones</span>
               </Link>
-
-              {/* Toggle de tema */}
-              <ThemeToggle size="md" />
 
               {/* Botón de crear contenido */}
               <div className="relative">
