@@ -7,7 +7,9 @@ import { useAuth } from '@/features/auth/useAuth';
 import { getReel, Reel } from '@/services/reelService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import CommentsModal from '@/components/CommentsModal';
-import { Video, Heart, MessageCircle, Share2, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import CreateDuetForm from '@/components/CreateDuetForm';
+import CreateStitchForm from '@/components/CreateStitchForm';
+import { Video, Heart, MessageCircle, Share2, MoreHorizontal, ArrowLeft, Copy, Scissors } from 'lucide-react';
 import logger from '@/utils/logger';
 
 export default function ReelPage() {
@@ -20,6 +22,8 @@ export default function ReelPage() {
     isOpen: false,
     reelId: ''
   });
+  const [showDuetForm, setShowDuetForm] = useState(false);
+  const [showStitchForm, setShowStitchForm] = useState(false);
 
   // Cargar reel específico
   useEffect(() => {
@@ -300,7 +304,7 @@ export default function ReelPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex justify-center space-x-8">
+            <div className="flex justify-center space-x-4 md:space-x-8">
               <Button
                 variant="ghost"
                 size="lg"
@@ -320,6 +324,34 @@ export default function ReelPage() {
                 <MessageCircle className="w-8 h-8 mb-2" />
                 <span className="text-sm">Comentar</span>
               </Button>
+
+              {/* Duet Button */}
+              {reel.allowDuets && (
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="flex flex-col items-center text-white hover:bg-white/10"
+                  onClick={() => setShowDuetForm(true)}
+                  title="Crear duet con este reel"
+                >
+                  <Copy className="w-8 h-8 mb-2" />
+                  <span className="text-sm">Duet</span>
+                </Button>
+              )}
+
+              {/* Stitch Button */}
+              {reel.allowStitches && (
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="flex flex-col items-center text-white hover:bg-white/10"
+                  onClick={() => setShowStitchForm(true)}
+                  title="Crear stitch con este reel"
+                >
+                  <Scissors className="w-8 h-8 mb-2" />
+                  <span className="text-sm">Stitch</span>
+                </Button>
+              )}
 
               <Button
                 variant="ghost"
@@ -342,6 +374,30 @@ export default function ReelPage() {
           postAuthor={reel.user.username}
           postImage={reel.video.thumbnail}
         />
+
+        {/* Duet Form Modal */}
+        {showDuetForm && (
+          <CreateDuetForm
+            originalReel={reel}
+            onClose={() => setShowDuetForm(false)}
+            onSuccess={() => {
+              setShowDuetForm(false);
+              router.push('/reels');
+            }}
+          />
+        )}
+
+        {/* Stitch Form Modal */}
+        {showStitchForm && (
+          <CreateStitchForm
+            originalReel={reel}
+            onClose={() => setShowStitchForm(false)}
+            onSuccess={() => {
+              setShowStitchForm(false);
+              router.push('/reels');
+            }}
+          />
+        )}
       </div>
     </ProtectedRoute>
   );

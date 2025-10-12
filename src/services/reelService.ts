@@ -210,3 +210,51 @@ export const viewReel = async (reelId: string): Promise<{ success: boolean; view
     throw error;
   }
 };
+
+// Crear un Duet
+export const createDuet = async (originalReelId: string, formData: FormData): Promise<CreateReelResponse> => {
+  try {
+    const response = await api.post(`/reels/${originalReelId}/duet`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};
+
+// Crear un Stitch
+export const createStitch = async (originalReelId: string, formData: FormData): Promise<CreateReelResponse> => {
+  try {
+    const response = await api.post(`/reels/${originalReelId}/stitch`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};
+
+// Obtener duets de un reel
+export const getReelDuets = async (reelId: string, page: number = 1, limit: number = 20): Promise<GetReelsResponse> => {
+  try {
+    const response = await api.get(`/reels/${reelId}/duets?page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};
+
+// Obtener stitches de un reel
+export const getReelStitches = async (reelId: string, page: number = 1, limit: number = 20): Promise<GetReelsResponse> => {
+  try {
+    const response = await api.get(`/reels/${reelId}/stitches?page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error: unknown) {
+    throw error;
+  }
+};

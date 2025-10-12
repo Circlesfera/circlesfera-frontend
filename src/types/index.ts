@@ -250,6 +250,25 @@ export interface Reel {
     user: string;
     createdAt: string;
   }>;
+  isDuet?: boolean;
+  isStitch?: boolean;
+  originalReel?: string | {
+    _id: string;
+    user: {
+      _id: string;
+      username: string;
+      avatar?: string;
+    };
+    caption?: string;
+    video: {
+      url: string;
+      thumbnail?: string;
+    };
+  };
+  stitchMetadata?: {
+    startTime: number;
+    duration: number;
+  };
   isDeleted: boolean;
   isArchived: boolean;
   createdAt: string;
