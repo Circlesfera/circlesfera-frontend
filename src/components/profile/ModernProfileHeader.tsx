@@ -52,8 +52,8 @@ export default function ModernProfileHeader({
       {/* Hero Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/20 rounded-2xl"></div>
 
-      <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 mb-6">
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+      <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-4 sm:p-6 lg:p-8 mb-6">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
           {/* Avatar Section */}
           <div className="flex-shrink-0 relative group">
             <div className="relative">
@@ -192,7 +192,7 @@ export default function ModernProfileHeader({
 
             {/* Additional Profile Info - Compact Grid */}
             {(hasAdditionalInfo || isOwnProfile) && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-gray-100">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 pt-4 border-t border-gray-100">
                 {/* Account Status */}
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-gradient-to-r from-green-100 to-emerald-100">

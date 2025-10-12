@@ -245,7 +245,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
     }
 
     return (
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-6 lg:p-8">
         {/* Header con navegación rápida */}
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -439,7 +439,7 @@ function ModernEmptyState({ tabType, isOwnProfile, router }: { tabType: TabType;
   const message = getEmptyMessage();
 
   return (
-    <div className="text-center py-12 px-6">
+    <div className="text-center py-12 px-4 sm:px-6 lg:px-8">
       <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${message.color} rounded-2xl flex items-center justify-center text-2xl shadow-md`}>
         {message.icon}
       </div>
@@ -494,7 +494,7 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
 
   if (type === 'stories') {
     return (
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 lg:gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
         {safeContent.map((story) => (
           <div
             key={story._id}
@@ -519,7 +519,7 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 lg:gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
       {safeContent.map((item) => {
         const post = item as Post;
         const reel = item as Reel;
@@ -598,7 +598,7 @@ function ModernContentGrid({ content, type, username }: { content: (Post | Reel 
 // Componente para el skeleton de carga compacto
 function ModernContentSkeleton() {
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
         {Array.from({ length: 8 }).map((_, index) => (
           <div key={index} className="aspect-square rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse shadow-md" />
