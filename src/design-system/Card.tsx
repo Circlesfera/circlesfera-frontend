@@ -5,15 +5,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/cn';
 
 const cardVariants = cva(
-  "rounded-2xl border bg-white transition-all duration-200",
+  "rounded-2xl border bg-white dark:bg-gray-800 transition-all duration-200",
   {
     variants: {
       variant: {
-        default: "border-gray-200 shadow-sm hover:shadow-md",
-        elevated: "border-gray-200 shadow-lg hover:shadow-xl",
-        outlined: "border-gray-300 shadow-none hover:border-gray-400",
-        ghost: "border-transparent shadow-none hover:bg-gray-50",
-        gradient: "border-transparent bg-gradient-to-br from-white to-gray-50 shadow-lg hover:shadow-xl",
+        default: "border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md",
+        elevated: "border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl",
+        outlined: "border-gray-300 dark:border-gray-600 shadow-none hover:border-gray-400 dark:hover:border-gray-500",
+        ghost: "border-transparent shadow-none hover:bg-gray-50 dark:hover:bg-gray-700",
+        gradient: "border-transparent bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-lg hover:shadow-xl",
       },
       padding: {
         none: "p-0",
@@ -37,7 +37,7 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
+  VariantProps<typeof cardVariants> {
   asChild?: boolean;
 }
 
@@ -50,7 +50,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         </React.Fragment>
       );
     }
-    
+
     return (
       <div
         ref={ref}
@@ -82,7 +82,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+    className={cn("text-2xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white", className)}
     {...props}
   />
 ));
@@ -95,7 +95,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-gray-600", className)}
+    className={cn("text-sm text-gray-600 dark:text-gray-400", className)}
     {...props}
   />
 ));
