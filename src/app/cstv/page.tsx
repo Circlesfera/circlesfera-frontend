@@ -301,7 +301,7 @@ export default function CSTVPage() {
               <select
                 value={selectedCategory}
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-white text-gray-900"
               >
                 <option value="all">Todas las categorías</option>
                 {CSTV_CATEGORIES.map((category) => (
@@ -315,7 +315,7 @@ export default function CSTVPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'views' | 'likes' | 'trending')}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-white text-gray-900"
               >
                 <option value="trending">Trending</option>
                 <option value="newest">Más recientes</option>

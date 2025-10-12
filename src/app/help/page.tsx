@@ -101,7 +101,7 @@ export default function HelpPage() {
             <input
               type="text"
               placeholder="Buscar en el centro de ayuda..."
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
             />
           </div>
         </div>

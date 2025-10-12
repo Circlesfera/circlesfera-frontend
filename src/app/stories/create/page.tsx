@@ -251,7 +251,7 @@ export default function CreateStoryPage() {
                       <select
                         value={formData.textStyle}
                         onChange={(e) => handleInputChange('textStyle', e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       >
                         <option value="default">Por defecto</option>
                         <option value="bold">Negrita</option>
