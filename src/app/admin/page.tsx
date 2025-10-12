@@ -3,82 +3,103 @@
 import { useEffect, useState } from 'react'
 import { Flag, Users, AlertTriangle, CheckCircle, TrendingUp, Activity } from 'lucide-react'
 import Link from 'next/link'
+import { getDashboardStats, DashboardStats } from '@/services/adminService'
+import logger from '@/utils/logger'
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalReports: 0,
-    pendingReports: 0,
-    resolvedReports: 0,
-    rejectedReports: 0,
-    totalUsers: 0,
-    activeUsers: 0,
-    reportsTrend: 0,
-  })
+  const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    // TODO: Cargar estadísticas reales del backend
-    // Por ahora, datos de ejemplo
-    setTimeout(() => {
-      setStats({
-        totalReports: 45,
-        pendingReports: 12,
-        resolvedReports: 28,
-        rejectedReports: 5,
-        totalUsers: 1250,
-        activeUsers: 890,
-        reportsTrend: 15,
-      })
-      setLoading(false)
-    }, 500)
+    fetchStats()
   }, [])
 
-  const statCards = [
-    {
-      name: 'Reportes Pendientes',
-      value: stats.pendingReports,
-      change: `+${stats.reportsTrend}%`,
-      changeType: 'increase',
-      icon: Flag,
-      color: 'blue',
-      href: '/admin/reports?status=pending',
-    },
-    {
-      name: 'Total Reportes',
-      value: stats.totalReports,
-      subtitle: 'Este mes',
-      icon: AlertTriangle,
-      color: 'yellow',
-      href: '/admin/reports',
-    },
-    {
-      name: 'Reportes Resueltos',
-      value: stats.resolvedReports,
-      subtitle: 'Este mes',
-      icon: CheckCircle,
-      color: 'green',
-      href: '/admin/reports?status=resolved',
-    },
-    {
-      name: 'Usuarios Activos',
-      value: stats.activeUsers,
-      subtitle: `de ${stats.totalUsers} total`,
-      icon: Users,
-      color: 'purple',
-      href: '/admin/users',
-    },
-  ]
+  const fetchStats = async () => {
+    try {
+      setLoading(true)
+      const response = await getDashboardStats()
+
+      if (response.success && response.data) {
+        setStats(response.data)
+      } else {
+        setError('Error al cargar estadísticas')
+      }
+
+      setLoading(false)
+    } catch (err) {
+      logger.error('Error fetching dashboard stats:', err)
+      setError('Error al cargar estadísticas del sistema')
+      setLoading(false)
+    }
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <Activity className="w-12 h-12 text-blue-500 animate-pulse mx-auto mb-4" />
-          <p className="text-gray-600">Cargando estadísticas...</p>
+          <p className="text-gray-600">Cargando estadísticas reales del sistema...</p>
         </div>
       </div>
     )
   }
+
+  if (error || !stats) {
+    return (
+      <div className="bg-red-50 rounded-xl border border-red-200 p-6">
+        <div className="flex items-center space-x-3">
+          <AlertTriangle className="w-6 h-6 text-red-600" />
+          <div>
+            <h3 className="font-semibold text-red-900">Error</h3>
+            <p className="text-sm text-red-700">{error || 'No se pudieron cargar las estadísticas'}</p>
+          </div>
+        </div>
+        <button
+          onClick={fetchStats}
+          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+        >
+          Reintentar
+        </button>
+      </div>
+    )
+  }
+
+  const statCards = [
+    {
+      name: 'Reportes Pendientes',
+      value: stats.reports.pending,
+      change: stats.reports.pending > 0 ? `${stats.reports.trend}% del total` : '0%',
+      changeType: stats.reports.pending > 5 ? 'increase' : 'normal',
+      icon: Flag,
+      color: 'blue',
+      href: '/admin/reports?status=pending',
+    },
+    {
+      name: 'Total Reportes',
+      value: stats.reports.total,
+      subtitle: `${stats.reports.underReview} en revisión`,
+      icon: AlertTriangle,
+      color: 'yellow',
+      href: '/admin/reports',
+    },
+    {
+      name: 'Reportes Resueltos',
+      value: stats.reports.resolved,
+      subtitle: `${stats.reports.rejected} rechazados`,
+      icon: CheckCircle,
+      color: 'green',
+      href: '/admin/reports?status=resolved',
+    },
+    {
+      name: 'Usuarios Activos',
+      value: stats.users.active,
+      subtitle: `${stats.users.activePercentage}% de ${stats.users.total}`,
+      icon: Users,
+      color: 'purple',
+      href: '/admin/users',
+    },
+  ]
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -170,46 +191,36 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* System Overview */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-lg font-bold text-gray-900 mb-4">
-          Actividad Reciente
+          Vista General del Sistema
         </h2>
-        <div className="space-y-4">
-          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                Nuevo reporte: Spam en post #12345
-              </p>
-              <p className="text-xs text-gray-500">Hace 5 minutos</p>
-            </div>
-            <Link
-              href="/admin/reports"
-              className="text-sm font-medium text-blue-600 hover:text-blue-700"
-            >
-              Ver
-            </Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Total de Usuarios</p>
+            <p className="text-3xl font-bold text-blue-600">{stats.users.total}</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {stats.users.new24h} nuevos en 24h
+            </p>
           </div>
 
-          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                Reporte resuelto: Contenido inapropiado
-              </p>
-              <p className="text-xs text-gray-500">Hace 1 hora</p>
-            </div>
+          <div className="p-4 bg-purple-50 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Contenido Total</p>
+            <p className="text-3xl font-bold text-purple-600">
+              {stats.content.posts + stats.content.reels}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              {stats.content.posts24h + stats.content.reels24h} nuevos en 24h
+            </p>
           </div>
 
-          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                Usuario suspendido: Violación de normas
-              </p>
-              <p className="text-xs text-gray-500">Hace 3 horas</p>
-            </div>
+          <div className="p-4 bg-green-50 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Transmisiones Activas</p>
+            <p className="text-3xl font-bold text-green-600">{stats.activity.liveStreams}</p>
+            <p className="text-xs text-gray-500 mt-1">
+              En vivo ahora
+            </p>
           </div>
         </div>
       </div>

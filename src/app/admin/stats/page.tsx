@@ -28,7 +28,37 @@ export default function StatsPage() {
 
       const statsData = response.data || response.stats
       if (response.success && statsData) {
-        setStats(statsData)
+        // Procesar datos del backend
+        // El backend devuelve arrays, necesitamos convertirlos a objetos
+        const processedStats = {
+          total: 0,
+          byStatus: statsData.byStatus || {},
+          byReason: {} as Record<string, number>,
+          byContentType: {} as Record<string, number>,
+          averageResolutionTime: statsData.averageResolutionTime || '0h'
+        }
+
+        // Convertir arrays de byReason a objeto
+        if (Array.isArray(statsData.byReason)) {
+          statsData.byReason.forEach((item: any) => {
+            processedStats.byReason[item._id] = item.count
+            processedStats.total += item.count
+          })
+        }
+
+        // Convertir arrays de byContentType a objeto
+        if (Array.isArray(statsData.byContentType)) {
+          statsData.byContentType.forEach((item: any) => {
+            processedStats.byContentType[item._id] = item.count
+          })
+        }
+
+        // Calcular total desde byStatus si no hay byReason
+        if (processedStats.total === 0 && statsData.byStatus) {
+          processedStats.total = Object.values(statsData.byStatus).reduce((sum: number, val: any) => sum + val, 0)
+        }
+
+        setStats(processedStats)
       }
 
       setLoading(false)
