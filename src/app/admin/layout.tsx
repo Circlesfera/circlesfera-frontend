@@ -45,12 +45,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="lg:ml-64 min-h-screen flex items-center justify-start pl-8">
-          <div className="text-left">
-            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-600 font-medium">Verificando permisos...</p>
+        {/* Sidebar visible durante carga */}
+        <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:z-40">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white/80 backdrop-blur-sm border-r border-gray-200 px-6 pb-4 shadow-xl">
+            <div className="flex h-16 shrink-0 items-center">
+              <div className="flex items-center gap-3">
+                <Shield className="w-8 h-8 text-blue-600" />
+                <div>
+                  <h1 className="font-bold text-gray-900">CircleSfera</h1>
+                  <p className="text-xs text-gray-500">Panel Admin</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                <p className="text-sm text-gray-500">Cargando...</p>
+              </div>
+            </div>
           </div>
-        </div>
+        </aside>
+
+        {/* Contenido principal con loading */}
+        <main className="lg:ml-64 min-h-screen flex items-start justify-start">
+          <div className="max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
+            <div className="pt-20">
+              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-600 font-medium text-lg">Verificando permisos de administrador...</p>
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
