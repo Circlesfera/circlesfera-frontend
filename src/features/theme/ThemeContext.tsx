@@ -14,8 +14,9 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>('light');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+  const [mounted, setMounted] = useState(false);
 
   // Resolver el tema basado en la preferencia del sistema
   useEffect(() => {
@@ -43,7 +44,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Aplicar tema al documento
   useEffect(() => {
+    if (!mounted) return;
+
     const root = document.documentElement;
+
+    console.log('Applying theme to document:', resolvedTheme);
+    console.log('Current classes:', root.className);
 
     // Remover clases anteriores
     root.classList.remove('light', 'dark');
@@ -51,23 +57,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Agregar nueva clase
     root.classList.add(resolvedTheme);
 
+    console.log('New classes:', root.className);
+
     // Actualizar meta theme-color para móviles
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', resolvedTheme === 'dark' ? '#1f2937' : '#ffffff');
     }
-  }, [resolvedTheme]);
+  }, [resolvedTheme, mounted]);
 
-  // Cargar tema guardado
+  // Cargar tema guardado e inicializar
   useEffect(() => {
+    setMounted(true);
     const savedTheme = localStorage.getItem('theme') as Theme;
     if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
       setTheme(savedTheme);
     }
+
+    // Log para debug
+    console.log('Theme loaded:', savedTheme || 'light (default)');
   }, []);
 
   // Guardar tema
   const handleSetTheme = (newTheme: Theme) => {
+    console.log('Setting theme to:', newTheme);
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
