@@ -111,7 +111,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Sidebar para md+ */}
-      <aside className="hidden md:flex flex-col w-60 h-screen pt-20 bg-white border-r border-gray-200 fixed left-0 top-0 z-40 shadow-sm">
+      <aside className="hidden md:flex flex-col w-60 h-screen pt-20 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed left-0 top-0 z-40 shadow-sm">
         {/* Logo y branding */}
         <div className="px-6 pb-6">
           <div className="flex items-center space-x-3">
@@ -119,8 +119,8 @@ export default function Sidebar() {
               <span className="text-white font-bold text-sm">C</span>
             </div>
             <div>
-              <h1 className="font-bold text-lg text-gray-900">CircleSfera</h1>
-              <p className="text-xs text-gray-500">Red Social</p>
+              <h1 className="font-bold text-lg text-gray-900 dark:text-white">CircleSfera</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
             </div>
           </div>
         </div>
@@ -136,11 +136,11 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all duration-200 group relative ${active
-                  ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600 border border-blue-100'
-                  : 'hover:bg-gray-50 text-gray-700'
+                  ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/50 dark:to-purple-900/50 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800'
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                   }`}
               >
-                <div className={`transition-colors ${active ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-700'}`}>
+                <div className={`transition-colors ${active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200'}`}>
                   <Icon filled={active} />
                 </div>
                 <span className="font-medium text-sm">{item.label}</span>
@@ -176,7 +176,7 @@ export default function Sidebar() {
         </div>
       </aside>
       {/* Menú inferior fijo para móvil - Expandido con scroll horizontal */}
-      <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 md:hidden shadow-lg overflow-x-auto">
+      <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50 md:hidden shadow-lg overflow-x-auto">
         <div className="flex items-center justify-start gap-2 px-2 py-3 min-w-max">
           {mobileNavigationItems.map((item) => {
             const active = isActive(item.href, item.exact);
@@ -189,7 +189,7 @@ export default function Sidebar() {
               >
                 {item.icon === 'profile' ? (
                   // Avatar del perfil - Instagram style
-                  <div className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${active ? 'border-black' : 'border-gray-300'
+                  <div className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${active ? 'border-black dark:border-white' : 'border-gray-300 dark:border-gray-600'
                     }`}>
                     {user?.avatar ? (
                       <Image
@@ -210,7 +210,7 @@ export default function Sidebar() {
                 ) : (
                   // Iconos normales
                   <div className="relative">
-                    <div className={`transition-transform duration-200 ${active ? 'scale-110 text-black' : 'text-gray-500'}`}>
+                    <div className={`transition-transform duration-200 ${active ? 'scale-110 text-black dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
                       <item.icon filled={active} />
                     </div>
 
