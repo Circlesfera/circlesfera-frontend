@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Heart, Users, Globe, Shield } from 'lucide-react'
+import { Heart, Users, Globe, Shield } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Sobre nosotros - CircleSfera',
@@ -10,22 +10,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center">
-            <Link
-              href="/feed"
-              className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Sobre nosotros</h1>
-          </div>
-        </div>
-      </div>
-
-      {/* Contenido */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -89,7 +73,7 @@ export default function AboutPage() {
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Nuestra Historia</h3>
           <div className="space-y-4 text-gray-600">
             <p>
-              CircleSfera nació en 2024 en España con la visión de crear una alternativa
+              CircleSfera nació en 2025 en España con la visión de crear una alternativa
               fresca y auténtica a las redes sociales tradicionales. Inspirados por la
               necesidad de un espacio más humano y creativo en el mundo digital.
             </p>
@@ -99,30 +83,38 @@ export default function AboutPage() {
               invisible y permite que la creatividad humana brille.
             </p>
             <p>
-              Desde nuestros inicios, hemos trabajado incansablemente para crear una
-              plataforma que priorice el bienestar de los usuarios, la autenticidad
-              del contenido y la construcción de comunidades significativas.
+              Estamos en las primeras etapas de desarrollo, trabajando incansablemente
+              para crear una plataforma que priorice el bienestar de los usuarios, la
+              autenticidad del contenido y la construcción de comunidades significativas.
             </p>
           </div>
         </div>
 
-        {/* Estadísticas */}
-        <div className="grid md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white text-center">
-            <div className="text-3xl font-bold mb-2">10K+</div>
-            <div className="text-blue-100">Usuarios activos</div>
-          </div>
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white text-center">
-            <div className="text-3xl font-bold mb-2">50K+</div>
-            <div className="text-purple-100">Videos compartidos</div>
-          </div>
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white text-center">
-            <div className="text-3xl font-bold mb-2">1M+</div>
-            <div className="text-green-100">Interacciones diarias</div>
-          </div>
-          <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white text-center">
-            <div className="text-3xl font-bold mb-2">100+</div>
-            <div className="text-orange-100">Países alcanzados</div>
+        {/* Estado Actual */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-12 border border-blue-200">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Estado Actual</h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                <span className="text-2xl font-bold text-white">🚀</span>
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">En Desarrollo</h4>
+              <p className="text-gray-600 text-sm">Plataforma en fase de construcción</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center">
+                <span className="text-2xl font-bold text-white">👥</span>
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Próximamente</h4>
+              <p className="text-gray-600 text-sm">Primeros usuarios en camino</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                <span className="text-2xl font-bold text-white">💡</span>
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">Innovación</h4>
+              <p className="text-gray-600 text-sm">Tecnología de vanguardia</p>
+            </div>
           </div>
         </div>
 
@@ -130,8 +122,9 @@ export default function AboutPage() {
         <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">Nuestro Equipo</h3>
           <p className="text-gray-600 mb-6">
-            Somos un equipo diverso de desarrolladores, diseñadores y creativos
-            apasionados por crear la mejor experiencia social digital.
+            Somos un pequeño equipo de desarrolladores, diseñadores y creativos
+            apasionados por crear la mejor experiencia social digital. Trabajamos
+            incansablemente para construir algo extraordinario.
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">

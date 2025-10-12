@@ -385,11 +385,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Main Content */}
       <div className="lg:pl-72">
-        {/* Top Navigation Mobile */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white/80 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
+        {/* Top Navigation Mobile - Mejorado */}
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white/95 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            className="-m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden transition-colors duration-200"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Abrir sidebar</span>
@@ -398,15 +398,28 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </svg>
           </button>
 
-          <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
-            CircleSfera
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">C</span>
+              </div>
+              <span className="text-lg font-bold text-gray-900">CircleSfera</span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-x-4 lg:gap-x-6">
-            <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+          <div className="flex items-center gap-x-3">
+            <Link
+              href="/notifications"
+              className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+            >
               <span className="sr-only">Ver notificaciones</span>
               <NotificationIcon className="h-6 w-6" />
-            </button>
+              {unreadNotifications > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                </span>
+              )}
+            </Link>
           </div>
         </div>
 
@@ -418,17 +431,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation - Expandido con scroll */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg overflow-x-auto">
-        <div className="flex items-center justify-start gap-2 px-2 py-3 min-w-max">
-          {[...primaryNavigation, ...contentNavigation, ...notificationsNavigation].map((item) => (
+      {/* Mobile Bottom Navigation - Optimizado para móviles */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg">
+        <div className="flex items-center justify-around px-1 py-2">
+          {/* Navegación principal optimizada para móviles */}
+          {primaryNavigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                "relative flex flex-col items-center p-2 rounded-xl transition-all duration-200 min-w-[70px]",
+                "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
-                  ? "text-blue-600 bg-blue-50 shadow-sm"
+                  ? "text-blue-600 bg-blue-50"
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               )}
             >
@@ -441,9 +455,81 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   </span>
                 )}
               </div>
-              <span className="text-xs mt-1 font-medium truncate max-w-[60px]">{item.name}</span>
+              <span className="text-xs mt-1 font-medium text-center leading-tight">
+                {item.name === 'Inicio' ? 'Inicio' :
+                  item.name === 'Explorar' ? 'Explorar' :
+                    item.name === 'Mensajes' ? 'Mensajes' : item.name}
+              </span>
             </Link>
           ))}
+
+          {/* Botón de crear contenido */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+          >
+            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+              <PlusIcon className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-xs mt-1 font-medium text-center leading-tight">Crear</span>
+          </button>
+
+          {/* Navegación de contenido */}
+          {contentNavigation.slice(0, 2).map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={cn(
+                "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
+                isActive(item.href)
+                  ? "text-blue-600 bg-blue-50"
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+              )}
+            >
+              <div className="relative">
+                <item.icon className="h-6 w-6" />
+                {/* Badge para notificaciones */}
+                {item.badge && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                    {item.badge > 9 ? '9+' : item.badge}
+                  </span>
+                )}
+              </div>
+              <span className="text-xs mt-1 font-medium text-center leading-tight">{item.name}</span>
+            </Link>
+          ))}
+
+          {/* Perfil del Usuario */}
+          {user && (
+            <Link
+              href={`/${user.username}`}
+              className={cn(
+                "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
+                isActive(`/${user.username}`)
+                  ? "text-blue-600 bg-blue-50"
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+              )}
+            >
+              <div className="relative">
+                {user.avatar ? (
+                  <Image
+                    src={user.avatar}
+                    alt={`Perfil de ${user.username}`}
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-xs">
+                      {user.username?.[0]?.toUpperCase()}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <span className="text-xs mt-1 font-medium text-center leading-tight">Perfil</span>
+            </Link>
+          )}
         </div>
       </nav>
 
@@ -451,9 +537,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {sidebarOpen && (
         <div className="relative z-50 lg:hidden">
           <div className="fixed inset-0 bg-gray-900/80" onClick={() => setSidebarOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto bg-white px-6 pb-4 shadow-xl">
-            {/* Mobile sidebar content - similar to desktop */}
-            <div className="flex h-16 shrink-0 items-center">
+          <div className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-white px-6 pb-4 shadow-xl">
+            {/* Mobile sidebar content - completo */}
+            <div className="flex h-16 shrink-0 items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                   <span className="text-white font-bold text-lg">C</span>
@@ -463,8 +549,206 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <p className="text-xs text-gray-500">Red Social</p>
                 </div>
               </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-            {/* Navigation items for mobile */}
+
+            {/* Navigation items for mobile - Completo */}
+            <nav className="flex flex-1 flex-col mt-6">
+              {/* Navegación Principal */}
+              <div className="mb-4">
+                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Principal</h3>
+                <ul role="list" className="space-y-1">
+                  {primaryNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={cn(
+                          "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                          isActive(item.href)
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 shrink-0 transition-colors duration-200",
+                            isActive(item.href)
+                              ? "text-blue-700"
+                              : "text-gray-400 group-hover:text-gray-600"
+                          )}
+                        />
+                        <span className="truncate">{item.name}</span>
+                        {/* Badge para notificaciones */}
+                        {item.badge && (
+                          <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                            {item.badge > 9 ? '9+' : item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Navegación de Contenido */}
+              <div className="mb-4">
+                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Contenido</h3>
+                <ul role="list" className="space-y-1">
+                  {contentNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={cn(
+                          "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                          isActive(item.href)
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 shrink-0 transition-colors duration-200",
+                            isActive(item.href)
+                              ? "text-blue-700"
+                              : "text-gray-400 group-hover:text-gray-600"
+                          )}
+                        />
+                        <span className="truncate">{item.name}</span>
+                        {item.badge && (
+                          <span className="ml-auto inline-flex items-center rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white min-w-[20px] justify-center">
+                            {item.badge > 9 ? '9+' : item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Navegación de Notificaciones */}
+              <div className="mb-4">
+                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Social</h3>
+                <ul role="list" className="space-y-1">
+                  {notificationsNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={cn(
+                          "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                          isActive(item.href)
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 shrink-0 transition-colors duration-200",
+                            isActive(item.href)
+                              ? "text-blue-700"
+                              : "text-gray-400 group-hover:text-gray-600"
+                          )}
+                        />
+                        <span className="truncate">{item.name}</span>
+                        {/* Badge para notificaciones */}
+                        {item.badge && (
+                          <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                            {item.badge > 9 ? '9+' : item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Create Button */}
+              <div className="mt-auto mb-3">
+                <button
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    setShowCreateModal(true);
+                  }}
+                  className="w-full h-11 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+                >
+                  <PlusIcon className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Navegación de Usuario */}
+              <div className="mb-3">
+                <ul role="list" className="space-y-1">
+                  {userNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={cn(
+                          "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
+                          isActive(item.href)
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 shrink-0 transition-colors duration-200",
+                            isActive(item.href)
+                              ? "text-blue-700"
+                              : "text-gray-400 group-hover:text-gray-600"
+                          )}
+                        />
+                        <span className="truncate">{item.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* User Profile */}
+              {user && (
+                <div className="mt-auto pt-6 border-t border-gray-100">
+                  <Link
+                    href={`/${user.username}`}
+                    onClick={() => setSidebarOpen(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group cursor-pointer"
+                  >
+                    {user.avatar ? (
+                      <Image
+                        src={user.avatar}
+                        alt={`Avatar de ${user.username}`}
+                        width={40}
+                        height={40}
+                        className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200">
+                        <span className="text-white font-semibold text-sm">
+                          {user.username?.[0]?.toUpperCase()}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {user.fullName || user.username}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        @{user.username}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </nav>
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Download, Mail, Calendar, FileText, Image, Users } from 'lucide-react'
+import { Download, Mail, Calendar, FileText, Image, Users } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Prensa - CircleSfera',
@@ -52,21 +52,6 @@ export default function PressPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center">
-            <Link
-              href="/feed"
-              className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Prensa</h1>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -196,24 +181,24 @@ export default function PressPage() {
               <h4 className="text-lg font-bold text-gray-900 mb-4">Estadísticas</h4>
               <div className="space-y-3">
                 <div>
-                  <span className="font-medium text-gray-900">Usuarios activos:</span>
-                  <span className="ml-2 text-gray-600">10,000+</span>
+                  <span className="font-medium text-gray-900">Estado:</span>
+                  <span className="ml-2 text-gray-600">En desarrollo</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900">Contenido compartido:</span>
-                  <span className="ml-2 text-gray-600">50,000+ videos</span>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-900">Países alcanzados:</span>
-                  <span className="ml-2 text-gray-600">100+</span>
+                  <span className="font-medium text-gray-900">Usuarios:</span>
+                  <span className="ml-2 text-gray-600">Próximamente</span>
                 </div>
                 <div>
                   <span className="font-medium text-gray-900">Idiomas:</span>
                   <span className="ml-2 text-gray-600">Español, Inglés</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900">Crecimiento mensual:</span>
-                  <span className="ml-2 text-gray-600">150%</span>
+                  <span className="font-medium text-gray-900">Enfoque:</span>
+                  <span className="ml-2 text-gray-600">Videos cortos y creatividad</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-900">Lanzamiento:</span>
+                  <span className="ml-2 text-gray-600">2025</span>
                 </div>
               </div>
             </div>
@@ -260,3 +245,4 @@ export default function PressPage() {
     </div>
   )
 }
+
