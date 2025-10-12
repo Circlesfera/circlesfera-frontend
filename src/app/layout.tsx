@@ -103,7 +103,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="CircleSfera" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
       </head>
-      <body className="antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+      <body className="antialiased bg-white text-gray-900 transition-colors duration-200">
         <ErrorBoundary>
           <ThemeProvider>
             <ToastProvider>
