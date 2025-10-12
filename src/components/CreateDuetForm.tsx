@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Play, Pause, Music, Hash, MapPin } from 'lucide-react';
+import { X, Upload, Music, Hash, MapPin } from 'lucide-react';
 import { createDuet } from '@/services/reelService';
 import { useToast } from './Toast';
 import type { Reel } from '@/types';
@@ -19,7 +19,6 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [formData, setFormData] = useState({
     caption: `Duet con @${originalReel.user.username}`,
     hashtags: '',
@@ -153,8 +152,6 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                       src={preview}
                       className="w-full h-full object-cover"
                       controls
-                      onPlay={() => setIsPlaying(true)}
-                      onPause={() => setIsPlaying(false)}
                     />
                     <button
                       onClick={() => {
