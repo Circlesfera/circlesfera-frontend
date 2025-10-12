@@ -152,7 +152,7 @@ export default function HomePage() {
     return (
       <div className="max-w-2xl mx-auto space-y-6 px-4">
         {/* Loading State */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
@@ -192,7 +192,7 @@ export default function HomePage() {
     return (
       <div className="max-w-2xl mx-auto space-y-6 px-4">
         {/* Stories Loading */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
@@ -234,7 +234,7 @@ export default function HomePage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Stories Section */}
-            <Card className="p-6">
+            <Card className="p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
               <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
                 {(item) => {
                   if (item.isAddStory) {
@@ -368,17 +368,17 @@ export default function HomePage() {
 
             {/* Empty State para cuando no hay posts */}
             {(!posts || posts.length === 0) && !loading && (
-              <Card className="p-12 text-center">
+              <Card className="p-12 text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                 <div className="max-w-sm mx-auto">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                     No hay publicaciones aún
                   </h3>
-                  <p className="text-base text-gray-600 mb-6">
+                  <p className="text-base text-gray-600 dark:text-gray-300 mb-6">
                     Sigue a algunas personas para ver sus publicaciones aquí, o crea tu primera publicación.
                   </p>
                   <div className="space-y-3">
