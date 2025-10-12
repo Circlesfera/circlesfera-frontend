@@ -60,13 +60,25 @@ export default function AnimatedButton({
     disabled: disabled || loading
   };
 
+  // Filtrar props que pueden causar conflictos con motion
+  const {
+    style: _style,
+    onAnimationStart: _onAnimationStart,
+    onAnimationEnd: _onAnimationEnd,
+    onAnimationIteration: _onAnimationIteration,
+    onDrag: _onDrag,
+    onDragStart: _onDragStart,
+    onDragEnd: _onDragEnd,
+    ...buttonProps
+  } = props;
+
   return (
     <motion.button
-      whileHover={motionProps.whileHover}
-      whileTap={motionProps.whileTap}
+      whileHover={motionProps.whileHover || {}}
+      whileTap={motionProps.whileTap || {}}
       disabled={motionProps.disabled}
       className={baseClasses}
-      {...props}
+      {...buttonProps}
     >
       {/* Ripple effect */}
       {ripple && (

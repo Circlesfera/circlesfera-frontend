@@ -8,7 +8,6 @@ interface StaggeredListProps {
   className?: string;
   staggerDelay?: number;
   animationType?: 'fadeUp' | 'fadeLeft' | 'fadeRight' | 'scale';
-  duration?: number;
 }
 
 const animationVariants = {
@@ -38,8 +37,7 @@ export default function StaggeredList({
   children,
   className = '',
   staggerDelay = 0.1,
-  animationType = 'fadeUp',
-  duration = 0.4
+  animationType = 'fadeUp'
 }: StaggeredListProps) {
   const variant = animationVariants[animationType];
 
@@ -90,7 +88,6 @@ export function AnimatedPostList({ posts, children }: { posts: any[], children: 
       className="space-y-6"
       staggerDelay={0.1}
       animationType="fadeUp"
-      duration={0.5}
     >
       {posts.map((post, index) => children(post, index))}
     </StaggeredList>
@@ -104,7 +101,6 @@ export function AnimatedStoryList({ stories, children }: { stories: any[], child
       className="flex space-x-4 overflow-x-auto scrollbar-hide"
       staggerDelay={0.05}
       animationType="fadeRight"
-      duration={0.3}
     >
       {stories.map((story, index) => children(story, index))}
     </StaggeredList>
