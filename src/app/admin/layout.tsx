@@ -66,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-500 via-yellow-500 to-green-500">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -177,8 +177,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}
           min-h-screen flex justify-center
         `}>
-        <div className="w-full max-w-[600px] p-4 lg:p-6">
-          <div className="bg-red-500 rounded-3xl shadow-2xl border-4 border-yellow-400 p-8 lg:p-10">
+        <div className="w-full max-w-[1000px] p-4 lg:p-6">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8">
             {children}
           </div>
         </div>
