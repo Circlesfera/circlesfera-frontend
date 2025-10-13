@@ -10,7 +10,7 @@ import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
-import TestThemeButton from '@/components/TestThemeButton';
+import ThemeSwitcherFinal from '@/components/ThemeSwitcherFinal';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -385,7 +385,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <div className="mt-4 px-3">
               <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
-                <TestThemeButton />
+                <ThemeSwitcherFinal />
               </div>
             </div>
           </nav>
@@ -762,7 +762,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <div className="mt-4 px-3">
                 <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
-                  <TestThemeButton />
+                  <ThemeSwitcherFinal />
                 </div>
               </div>
             </nav>
