@@ -15,6 +15,7 @@ import ThemeDebugger from '@/components/ThemeDebugger';
 import ThemeFixer from '@/components/ThemeFixer';
 import ThemeCleaner from '@/components/ThemeCleaner';
 import ThemeInspector from '@/components/ThemeInspector';
+import ThemeForcer from '@/components/ThemeForcer';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -879,6 +880,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       )}
 
       {/* Debugger temporal */}
+      <ThemeForcer />
       <ThemeInspector />
       <ThemeDebugger />
       <ThemeFixer />
