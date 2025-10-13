@@ -168,10 +168,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-50">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white/80 backdrop-blur-sm border-r border-gray-200 px-6 pb-4 shadow-xl">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
             <div className="flex items-center gap-3">
@@ -179,8 +179,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <span className="text-white font-bold text-lg">C</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">CircleSfera</h1>
-                <p className="text-xs text-gray-500">Red Social</p>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
               </div>
             </div>
           </div>
@@ -197,8 +197,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
                       <item.icon
@@ -224,12 +224,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Separador */}
             <div className="mx-3 my-2">
-              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
             </div>
 
             {/* Navegación de Contenido */}
             <div className="mb-2">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contenido</h3>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contenido</h3>
               <ul role="list" className="space-y-1">
                 {contentNavigation.map((item) => (
                   <li key={item.name}>
@@ -238,8 +238,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
                       <item.icon
@@ -264,12 +264,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Separador */}
             <div className="mx-3 my-2">
-              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
             </div>
 
             {/* Navegación de Notificaciones */}
             <div className="mb-2">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Social</h3>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Social</h3>
               <ul role="list" className="space-y-1">
                 {notificationsNavigation.map((item) => (
                   <li key={item.name}>
@@ -278,8 +278,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
                       <item.icon
@@ -315,7 +315,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Separador */}
             <div className="mx-3 my-2">
-              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
             </div>
 
             {/* Navegación de Usuario */}
@@ -328,8 +328,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
                       <item.icon
@@ -352,7 +352,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <div className="pt-6 border-t border-gray-100">
                 <Link
                   href={`/${user.username}`}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group cursor-pointer"
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 group cursor-pointer"
                 >
                   {user.avatar ? (
                     <Image
@@ -370,10 +370,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                       {user.fullName || user.username}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                       @{user.username}
                     </p>
                   </div>
@@ -395,10 +395,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Top Navigation Mobile - Mejorado */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white/95 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden transition-colors duration-200"
+            className="-m-2.5 p-2.5 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 lg:hidden transition-colors duration-200"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Abrir sidebar</span>
@@ -412,7 +412,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">C</span>
               </div>
-              <span className="text-lg font-bold text-gray-900">CircleSfera</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-gray-100">CircleSfera</span>
             </div>
           </div>
 
@@ -441,7 +441,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Mobile Bottom Navigation - Optimizado para móviles */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-gray-200 lg:hidden shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 lg:hidden shadow-lg">
         <div className="flex items-center justify-around px-1 py-2">
           {/* Navegación principal optimizada para móviles */}
           {primaryNavigation.map((item) => (
@@ -451,8 +451,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className={cn(
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
-                  ? "text-blue-600 bg-blue-50"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -491,8 +491,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className={cn(
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
-                  ? "text-blue-600 bg-blue-50"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -545,8 +545,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div className="relative z-50 lg:hidden">
-          <div className="fixed inset-0 bg-gray-900/80" onClick={() => setSidebarOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-white px-6 pb-4 shadow-xl">
+          <div className="fixed inset-0 bg-gray-900/80 dark:bg-black/80" onClick={() => setSidebarOpen(false)} />
+          <div className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-white dark:bg-gray-900 px-6 pb-4 shadow-xl">
             {/* Mobile sidebar content - completo */}
             <div className="flex h-16 shrink-0 items-center justify-between">
               <div className="flex items-center gap-3">
@@ -554,13 +554,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <span className="text-white font-bold text-lg">C</span>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">CircleSfera</h1>
-                  <p className="text-xs text-gray-500">Red Social</p>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
                 </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -729,7 +729,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Link
                     href={`/${user.username}`}
                     onClick={() => setSidebarOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group cursor-pointer"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 group cursor-pointer"
                   >
                     {user.avatar ? (
                       <Image
@@ -774,16 +774,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="fixed inset-0 bg-black/50" onClick={handleCloseCreateModal} />
-            <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-full">
+            <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={handleCloseCreateModal} />
+            <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full">
               {!createType ? (
                 // Modal de selección de tipo
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">Crear Contenido</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Contenido</h2>
                     <button
                       onClick={handleCloseCreateModal}
-                      className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -794,7 +794,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <div className="space-y-3">
                     <button
                       onClick={() => handleCreateContent('post')}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group"
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
                     >
                       <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
                         <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -802,8 +802,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-gray-900">Publicación</h3>
-                        <p className="text-sm text-gray-600">Comparte una foto o video</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">Publicación</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Comparte una foto o video</p>
                       </div>
                     </button>
 
@@ -817,8 +817,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-gray-900">Story</h3>
-                        <p className="text-sm text-gray-600">Comparte un momento efímero</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">Story</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Comparte un momento efímero</p>
                       </div>
                     </button>
 
@@ -832,8 +832,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-gray-900">Reel</h3>
-                        <p className="text-sm text-gray-600">Crea un video corto</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">Reel</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Crea un video corto</p>
                       </div>
                     </button>
                   </div>
@@ -842,12 +842,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 // Formulario específico
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                       Crear {createType === 'post' ? 'Publicación' : createType === 'story' ? 'Story' : 'Reel'}
                     </h2>
                     <button
                       onClick={handleCloseCreateModal}
-                      className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
