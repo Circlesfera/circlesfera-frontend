@@ -253,7 +253,7 @@ export default function HomePage() {
                             <PlusIcon />
                           </div>
                         </div>
-                        <span className="text-xs text-gray-600 font-medium">Tu historia</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">Tu historia</span>
                       </div>
                     );
                   }
@@ -277,7 +277,7 @@ export default function HomePage() {
                           </div>
                         )}
                       </div>
-                      <span className="text-xs text-gray-600 font-medium truncate max-w-16">
+                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium truncate max-w-16">
                         {item.username}
                       </span>
                     </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
                   </div>
                 )}
                 {!hasMore && !loadingMore && (
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">
                     Has visto todos los posts disponibles
                   </p>
                 )}
@@ -373,10 +373,10 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     No hay publicaciones aún
                   </h3>
-                  <p className="text-base text-gray-600 mb-6">
+                  <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
                     Sigue a algunas personas para ver sus publicaciones aquí, o crea tu primera publicación.
                   </p>
                   <div className="space-y-3">
