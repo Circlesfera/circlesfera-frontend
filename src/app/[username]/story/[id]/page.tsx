@@ -154,12 +154,12 @@ export default function UserStoryPage({ params }: Props) {
               {user.username}
             </button>
             <span>/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">Story</span>
+            <span className="text-gray-900 dark:text-gray-100 dark:text-gray-100 font-medium">Story</span>
           </div>
         </nav>
 
         {/* Story */}
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
           {/* Header */}
           <div className="p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -171,7 +171,7 @@ export default function UserStoryPage({ params }: Props) {
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
-                <p className="font-semibold text-gray-900 dark:text-gray-100">{user.username}</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">{user.username}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
                   {new Date(story.createdAt).toLocaleDateString('es-ES', {
                     day: 'numeric',

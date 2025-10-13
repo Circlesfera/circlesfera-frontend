@@ -25,14 +25,14 @@ export default function LocationsPage() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
             <MapPin className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
             Nuestras Ubicaciones
           </h2>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
@@ -43,19 +43,19 @@ export default function LocationsPage() {
 
         {/* Estadísticas */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl p-6 text-center shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
             <Building className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">1</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-1">1</div>
             <div className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Oficina Principal</div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl p-6 text-center shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
             <Users className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">15+</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-1">15+</div>
             <div className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Empleados totales</div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl p-6 text-center shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
             <Clock className="w-8 h-8 text-orange-500 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">9-18</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-1">9-18</div>
             <div className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Horario CET</div>
           </div>
         </div>
@@ -63,11 +63,11 @@ export default function LocationsPage() {
         {/* Oficinas */}
         <div className="space-y-8 mb-12">
           {locations.map((location, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+            <div key={index} className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
               <div className="flex items-start justify-between mb-6">
                 <div>
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{location.city}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{location.city}</h3>
                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
                       {location.type}
                     </span>
@@ -79,7 +79,7 @@ export default function LocationsPage() {
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Información de Contacto</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Información de Contacto</h4>
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3">
                       <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
@@ -89,17 +89,17 @@ export default function LocationsPage() {
                     </div>
                     <div className="flex items-center space-x-3">
                       <Mail className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
-                      <span className="text-gray-900 dark:text-gray-100">{location.email}</span>
+                      <span className="text-gray-900 dark:text-gray-100 dark:text-gray-100">{location.email}</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Clock className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
-                      <span className="text-gray-900 dark:text-gray-100">{location.hours}</span>
+                      <span className="text-gray-900 dark:text-gray-100 dark:text-gray-100">{location.hours}</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Departamentos</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Departamentos</h4>
                   <div className="grid grid-cols-2 gap-2">
                     {location.departments.map((dept, deptIndex) => (
                       <div key={deptIndex} className="flex items-center space-x-2">
@@ -129,7 +129,7 @@ export default function LocationsPage() {
               <p className="text-blue-100 text-sm mb-3">
                 Contacta con la oficina que te interesa visitar
               </p>
-              <button className="bg-white dark:bg-gray-900 dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
                 Solicitar Visita
               </button>
             </div>
@@ -139,7 +139,7 @@ export default function LocationsPage() {
               <p className="text-blue-100 text-sm mb-3">
                 Únete a nuestros eventos y meetups en diferentes ciudades
               </p>
-              <button className="bg-white dark:bg-gray-900 dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
                 Ver Eventos
               </button>
             </div>
@@ -147,9 +147,9 @@ export default function LocationsPage() {
         </div>
 
         {/* Mapa (placeholder) */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mt-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Ubicación de Nuestra Oficina</h3>
-          <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-lg h-64 flex items-center justify-center">
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mt-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Ubicación de Nuestra Oficina</h3>
+          <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-lg h-64 flex items-center justify-center">
             <div className="text-center text-gray-500 dark:text-gray-400 dark:text-gray-500">
               <MapPin className="w-12 h-12 mx-auto mb-3" />
               <p>Mapa interactivo de nuestra oficina en Valencia</p>
@@ -164,19 +164,19 @@ export default function LocationsPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/jobs"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Empleos
             </Link>
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/press"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Prensa
             </Link>

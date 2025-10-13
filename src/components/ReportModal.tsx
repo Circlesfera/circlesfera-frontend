@@ -83,15 +83,15 @@ export default function ReportModal({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] flex flex-col"
+          className="relative bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Reportar publicación</h2>
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Reportar publicación</h2>
             <button
               onClick={handleClose}
               disabled={submitting}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -117,7 +117,7 @@ export default function ReportModal({
                     onClick={() => setSelectedReason(reason.id)}
                     className={`w-full text-left p-3 rounded-lg border-2 transition-colors ${selectedReason === reason.id
                       ? 'border-red-200 bg-red-50'
-                      : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
+                      : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
                       }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -126,11 +126,11 @@ export default function ReportModal({
                         : 'border-gray-300 dark:border-gray-600 dark:border-gray-600'
                         }`}>
                         {selectedReason === reason.id && (
-                          <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full" />
+                          <div className="w-2 h-2 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900 dark:text-gray-100">{reason.label}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">{reason.label}</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{reason.description}</p>
                       </div>
                     </div>
@@ -149,7 +149,7 @@ export default function ReportModal({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Proporciona más detalles sobre el problema..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
                     rows={3}
                     maxLength={500}
                     disabled={submitting}
@@ -168,7 +168,7 @@ export default function ReportModal({
             </div>
 
             {/* Actions */}
-            <div className="flex space-x-3 p-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex space-x-3 p-4 border-t border-gray-200 dark:border-gray-700 dark:border-gray-700">
               <Button
                 type="button"
                 onClick={handleClose}

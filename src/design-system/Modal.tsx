@@ -174,7 +174,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {title && (
                   <h2
                     id={titleId}
-                    className="text-xl font-semibold text-gray-900 dark:text-gray-100"
+                    className="text-xl font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100"
                   >
                     {title}
                   </h2>
@@ -192,7 +192,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                   aria-label="Cerrar modal"
                 >
                   <CloseIcon aria-hidden="true" />

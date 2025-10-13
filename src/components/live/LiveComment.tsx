@@ -91,7 +91,7 @@ export function LiveComment({
       className={`relative group ${comment.isPinned ? 'bg-blue-50 border-l-4 border-blue-500' : ''} ${!comment.isVisible ? 'opacity-50' : ''
         }`}
     >
-      <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors">
+      <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors">
         {/* Avatar */}
         <div className="flex-shrink-0">
           <Image
@@ -106,7 +106,7 @@ export function LiveComment({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2 mb-1">
-            <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+            <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100">
               {comment.user.username}
             </span>
             {comment.user.isVerified && (
@@ -122,7 +122,7 @@ export function LiveComment({
             </span>
           </div>
 
-          <p className="text-sm text-gray-900 dark:text-gray-100 break-words">{comment.content}</p>
+          <p className="text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100 break-words">{comment.content}</p>
 
           {/* Reactions */}
           {hasReactions && (
@@ -190,20 +190,20 @@ export function LiveComment({
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="absolute right-0 top-8 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10 min-w-[120px]"
+                  className="absolute right-0 top-8 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 py-1 z-10 min-w-[120px]"
                 >
                   {canModerate && (
                     <>
                       <button
                         onClick={() => handleModerate(comment.isPinned ? 'unpin' : 'pin')}
-                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-2"
+                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-2"
                       >
                         <Pin className="w-4 h-4" />
                         <span>{comment.isPinned ? 'Desfijar' : 'Fijar'}</span>
                       </button>
                       <button
                         onClick={() => handleModerate('hide')}
-                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800"
+                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800"
                       >
                         Ocultar
                       </button>
@@ -237,13 +237,13 @@ export function LiveComment({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute bottom-16 left-12 bg-white dark:bg-gray-900 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 p-2 flex items-center space-x-2 z-20"
+            className="absolute bottom-16 left-12 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-2 flex items-center space-x-2 z-20"
           >
             {Object.entries(REACTION_EMOJIS).map(([type, emoji]) => (
               <button
                 key={type}
                 onClick={() => handleReaction(type as 'like' | 'love' | 'laugh' | 'wow' | 'angry')}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors text-lg"
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors text-lg"
                 title={type}
               >
                 {emoji}

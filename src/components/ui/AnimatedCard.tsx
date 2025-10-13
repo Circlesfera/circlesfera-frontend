@@ -71,7 +71,7 @@ export function AnimatedPostCard({ children, index, ...props }: AnimatedCardProp
       direction="up"
       delay={(index || 0) * 0.1}
       duration={0.4}
-      className="border border-gray-200 dark:border-gray-700"
+      className="border border-gray-200 dark:border-gray-700 dark:border-gray-700"
       {...props}
     >
       {children}

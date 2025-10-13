@@ -83,7 +83,7 @@ export const CardTitle = forwardRef<HTMLParagraphElement, React.HTMLAttributes<H
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-100 dark:text-gray-100', className)}
+      className={cn("text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-100 dark:text-gray-100 dark:text-gray-100", className)}
       {...props}
     />
   )

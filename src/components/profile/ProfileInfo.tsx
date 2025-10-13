@@ -24,7 +24,7 @@ export default function ProfileInfo({ user, isOwnProfile }: ProfileInfoProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-4 sm:p-6 mb-6 sm:mb-8">
+    <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-4 sm:p-6 mb-6 sm:mb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* Privacy Status */}
         <div className="flex items-center gap-3">

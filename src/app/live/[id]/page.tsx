@@ -193,7 +193,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
               disabled={likingLoading || !user}
               className={`p-2 rounded-full transition-colors relative ${isLiked
                 ? 'bg-red-600 text-white'
-                : 'bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/30'
+                : 'bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/30'
                 } ${likingLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               title={!user ? 'Inicia sesión para dar like' : isLiked ? 'Quitar like' : 'Me gusta'}
             >
@@ -207,12 +207,12 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors"
+              className="p-2 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors"
             >
               <Share2 className="w-5 h-5" />
             </button>
 
-            <button className="p-2 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors">
+            <button className="p-2 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors">
               <MoreVertical className="w-5 h-5" />
             </button>
           </div>
@@ -240,7 +240,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
                 <p className="text-gray-300 mb-6">{stream.description}</p>
               )}
 
-              <div className="bg-white dark:bg-gray-900 dark:bg-gray-900/10 rounded-lg p-6 mb-6">
+              <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10 rounded-lg p-6 mb-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <Image
                     src={stream.user.avatar || '/default-avatar.png'}
@@ -300,7 +300,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
               <h1 className="text-3xl font-bold mb-4">{stream.title}</h1>
               <p className="text-gray-300 mb-6">Esta transmisión ha finalizado</p>
 
-              <div className="bg-white dark:bg-gray-900 dark:bg-gray-900/10 rounded-lg p-6 mb-6">
+              <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10 rounded-lg p-6 mb-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <Image
                     src={stream.user.avatar || '/default-avatar.png'}

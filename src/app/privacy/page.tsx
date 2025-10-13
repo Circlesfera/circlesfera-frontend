@@ -56,14 +56,14 @@ export default function PrivacyPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
             Tu Privacidad es Importante
           </h2>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
@@ -76,8 +76,8 @@ export default function PrivacyPage() {
         </div>
 
         {/* Introducción */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Introducción</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Introducción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               Esta Política de Privacidad describe cómo CircleSfera ("nosotros", "nuestro" o "la empresa")
@@ -97,12 +97,12 @@ export default function PrivacyPage() {
         {/* Secciones principales */}
         <div className="space-y-8 mb-8">
           {sections.map((section, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+            <div key={index} className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
               <div className="flex items-start space-x-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
                   <section.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{section.title}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{section.title}</h3>
               </div>
               <ul className="space-y-3">
                 {section.content.map((item, itemIndex) => (
@@ -117,28 +117,28 @@ export default function PrivacyPage() {
         </div>
 
         {/* Cookies */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Uso de Cookies</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Uso de Cookies</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               Utilizamos cookies y tecnologías similares para mejorar tu experiencia, analizar
               el uso de la plataforma y personalizar el contenido.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Cookies Esenciales</h4>
+              <div className="border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Cookies Esenciales</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   Necesarias para el funcionamiento básico de la plataforma
                 </p>
               </div>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Cookies de Rendimiento</h4>
+              <div className="border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Cookies de Rendimiento</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   Nos ayudan a entender cómo usas la plataforma
                 </p>
               </div>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Cookies de Funcionalidad</h4>
+              <div className="border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Cookies de Funcionalidad</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   Permiten funcionalidades mejoradas y personalización
                 </p>
@@ -148,8 +148,8 @@ export default function PrivacyPage() {
         </div>
 
         {/* Compartir información */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Compartir Información</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Compartir Información</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               No vendemos, alquilamos ni compartimos tu información personal con terceros,
@@ -177,8 +177,8 @@ export default function PrivacyPage() {
         </div>
 
         {/* Retención de datos */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Retención de Datos</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Retención de Datos</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               Conservamos tu información personal solo durante el tiempo necesario para
@@ -187,13 +187,13 @@ export default function PrivacyPage() {
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Cuenta activa</h4>
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Cuenta activa</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   Mantenemos tu información mientras tu cuenta esté activa
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Después de eliminar cuenta</h4>
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Después de eliminar cuenta</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   Algunos datos pueden conservarse por razones legales o de seguridad
                 </p>
@@ -222,19 +222,19 @@ export default function PrivacyPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/terms"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Términos de Servicio
             </Link>
             <Link
               href="/help"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Centro de Ayuda
             </Link>
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>

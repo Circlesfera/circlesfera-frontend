@@ -240,7 +240,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Escribe una descripción..."
-          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900 dark:text-gray-100"
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100"
           rows={2}
           maxLength={2200}
         />

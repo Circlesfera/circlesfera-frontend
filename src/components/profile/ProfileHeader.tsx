@@ -37,7 +37,7 @@ export default function ProfileHeader({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+    <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
         {/* Avatar Section - Optimizado para móvil */}
         <div className="flex-shrink-0 relative">
@@ -71,7 +71,7 @@ export default function ProfileHeader({
           {/* Username and Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
             <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100">{user.username}</h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{user.username}</h1>
               {user.isVerified && (
                 <VerifiedIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
               )}
@@ -84,7 +84,7 @@ export default function ProfileHeader({
                 <>
                   <button
                     onClick={onEditClick}
-                    className="px-3 sm:px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 text-xs sm:text-sm font-semibold border border-gray-200 dark:border-gray-700 transition-all duration-200 shadow-sm dark:shadow-gray-900/50 hover:shadow-md flex items-center gap-1 sm:gap-2"
+                    className="px-3 sm:px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 text-xs sm:text-sm font-semibold border border-gray-200 dark:border-gray-700 dark:border-gray-700 transition-all duration-200 shadow-sm dark:shadow-gray-900/50 hover:shadow-md flex items-center gap-1 sm:gap-2"
                   >
                     <EditIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">Editar perfil</span>
@@ -92,7 +92,7 @@ export default function ProfileHeader({
                   </button>
                   <Link
                     href="/settings"
-                    className="p-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-all duration-200 shadow-sm dark:shadow-gray-900/50 hover:shadow-md"
+                    className="p-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-all duration-200 shadow-sm dark:shadow-gray-900/50 hover:shadow-md"
                     title="Configuración"
                   >
                     <SettingsIcon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -105,7 +105,7 @@ export default function ProfileHeader({
           {/* Personal Information */}
           <div className="mb-4 sm:mb-6 text-center sm:text-left">
             {user.fullName && (
-              <div className="font-semibold text-gray-900 dark:text-gray-100 mb-2 text-base sm:text-lg">{user.fullName}</div>
+              <div className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2 text-base sm:text-lg">{user.fullName}</div>
             )}
             {user.bio && (
               <div className="text-gray-700 dark:text-gray-300 mb-2 break-words leading-relaxed text-sm sm:text-base">{user.bio}</div>
@@ -152,18 +152,18 @@ export default function ProfileHeader({
               className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600"
               onClick={onFollowersClick}
             >
-              <span className="font-bold text-gray-900 dark:text-gray-100">{formatNumber(stats.followers)}</span>
+              <span className="font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{formatNumber(stats.followers)}</span>
               <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">seguidores</span>
             </button>
             <button
               className="hover:underline flex items-center gap-2 transition-colors duration-200 hover:text-blue-600"
               onClick={onFollowingClick}
             >
-              <span className="font-bold text-gray-900 dark:text-gray-100">{formatNumber(stats.following)}</span>
+              <span className="font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{formatNumber(stats.following)}</span>
               <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">siguiendo</span>
             </button>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-gray-900 dark:text-gray-100">{formatNumber(stats.comments)}</span>
+              <span className="font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{formatNumber(stats.comments)}</span>
               <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">comentarios</span>
             </div>
           </div>
@@ -214,7 +214,7 @@ function StatCard({ icon, count, label }: StatCardProps) {
       <div className="flex items-center justify-center mb-1 sm:mb-2 text-gray-600 dark:text-gray-400 dark:text-gray-500 group-hover:text-blue-600 transition-colors duration-200">
         {getIcon()}
       </div>
-      <div className="font-bold text-lg sm:text-xl text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors duration-200">
+      <div className="font-bold text-lg sm:text-xl text-gray-900 dark:text-gray-100 dark:text-gray-100 group-hover:text-blue-600 transition-colors duration-200">
         {formatNumber(count)}
       </div>
       <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{label}</div>

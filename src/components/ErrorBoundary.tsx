@@ -58,7 +58,7 @@ class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100 px-4">
-          <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 text-center">
+          <div className="max-w-md w-full bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-xl p-8 text-center">
             <div className="mb-6">
               <svg
                 className="mx-auto h-16 w-16 text-red-500"
@@ -75,7 +75,7 @@ class ErrorBoundary extends Component<Props, State> {
               </svg>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
               Algo salió mal
             </h1>
 
@@ -88,7 +88,7 @@ class ErrorBoundary extends Component<Props, State> {
                 <summary className="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Detalles del error (solo en desarrollo)
                 </summary>
-                <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded p-4 text-xs overflow-auto max-h-48">
+                <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded p-4 text-xs overflow-auto max-h-48">
                   <p className="font-bold text-red-600 mb-2">
                     {this.state.error.message}
                   </p>
@@ -102,7 +102,7 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleReset}
-                className="px-6 py-2.5 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="px-6 py-2.5 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 text-gray-900 dark:text-gray-100 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-medium"
               >
                 Intentar de nuevo
               </button>

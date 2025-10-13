@@ -76,7 +76,7 @@ export function Toast({ toast, onClose }: ToastProps) {
 
       <button
         onClick={() => onClose(toast.id)}
-        className={`flex-shrink-0 ${colors.text} hover:bg-white dark:bg-gray-900 dark:bg-gray-900/20 rounded-full p-1 -m-1 transition-colors`}
+        className={`flex-shrink-0 ${colors.text} hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 rounded-full p-1 -m-1 transition-colors`}
         aria-label="Cerrar notificación"
       >
         <X className="w-4 h-4" />

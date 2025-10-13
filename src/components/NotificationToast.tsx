@@ -82,7 +82,7 @@ export default function NotificationToast({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -50, scale: 0.9 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className={`fixed top-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-gray-900 dark:bg-gray-900 border rounded-lg shadow-lg ${getBackgroundColor()}`}
+          className={`fixed top-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900 border rounded-lg shadow-lg ${getBackgroundColor()}`}
         >
           <div className="p-4">
             <div className="flex items-start">
@@ -90,7 +90,7 @@ export default function NotificationToast({
                 {getIcon()}
               </div>
               <div className="ml-3 flex-1">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">
                   {title}
                 </h3>
                 {message && (

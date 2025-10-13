@@ -118,7 +118,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
 
               {/* Story count indicator */}
               {user.storiesCount > 1 && (
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
                   <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
                     {user.storiesCount}
                   </span>

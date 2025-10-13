@@ -270,7 +270,7 @@ export default function HomePage() {
                           interactive
                         />
                         {item.storiesCount > 1 && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
                             <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
                               {item.storiesCount}
                             </span>
@@ -373,7 +373,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
                     No hay publicaciones aún
                   </h3>
                   <p className="text-base text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">

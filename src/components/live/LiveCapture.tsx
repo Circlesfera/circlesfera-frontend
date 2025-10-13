@@ -276,7 +276,7 @@ export function LiveCapture({
               <div className="flex items-center space-x-4">
                 {isRecording && (
                   <div className="flex items-center space-x-2 bg-red-500 text-white px-3 py-1 rounded-full">
-                    <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full animate-pulse"></div>
                     <span className="text-sm font-medium">EN VIVO</span>
                   </div>
                 )}
@@ -339,7 +339,7 @@ export function LiveCapture({
                   className={`p-3 rounded-full transition-colors ${isCameraEnabled
                     ? 'bg-blue-500 hover:bg-blue-600 text-white'
                     : 'bg-red-500 hover:bg-red-600 text-white'
-                    } disabled:bg-gray-50 dark:bg-gray-8000 disabled:cursor-not-allowed`}
+                    } disabled:bg-gray-50 dark:bg-gray-800 dark:bg-gray-8000 disabled:cursor-not-allowed`}
                   title={isCameraEnabled ? 'Desactivar cámara' : 'Activar cámara'}
                 >
                   {isCameraEnabled ? (
@@ -356,7 +356,7 @@ export function LiveCapture({
                   className={`p-3 rounded-full transition-colors ${isMicrophoneEnabled
                     ? 'bg-blue-500 hover:bg-blue-600 text-white'
                     : 'bg-red-500 hover:bg-red-600 text-white'
-                    } disabled:bg-gray-50 dark:bg-gray-8000 disabled:cursor-not-allowed`}
+                    } disabled:bg-gray-50 dark:bg-gray-800 dark:bg-gray-8000 disabled:cursor-not-allowed`}
                   title={isMicrophoneEnabled ? 'Desactivar micrófono' : 'Activar micrófono'}
                 >
                   {isMicrophoneEnabled ? (
@@ -384,7 +384,7 @@ export function LiveCapture({
                   <button
                     onClick={handleStartStream}
                     disabled={isCapturing}
-                    className="flex items-center space-x-2 bg-red-500 hover:bg-red-600 disabled:bg-gray-50 dark:bg-gray-8000 text-white px-6 py-3 rounded-full font-medium transition-colors"
+                    className="flex items-center space-x-2 bg-red-500 hover:bg-red-600 disabled:bg-gray-50 dark:bg-gray-800 dark:bg-gray-8000 text-white px-6 py-3 rounded-full font-medium transition-colors"
                   >
                     <Phone className="w-5 h-5" />
                     <span>Iniciar Transmisión</span>

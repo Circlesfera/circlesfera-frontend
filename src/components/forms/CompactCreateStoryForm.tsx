@@ -227,7 +227,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Escribe tu story..."
-            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm"
             rows={3}
             maxLength={1000}
           />
@@ -239,7 +239,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
                 type="color"
                 value={textColor}
                 onChange={(e) => setTextColor(e.target.value)}
-                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700"
+                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700 dark:border-gray-700"
               />
             </div>
             <div className="flex-1">
@@ -248,7 +248,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
                 type="color"
                 value={backgroundColor}
                 onChange={(e) => setBackgroundColor(e.target.value)}
-                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700"
+                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700 dark:border-gray-700"
               />
             </div>
           </div>
@@ -318,7 +318,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Añade un texto (opcional)..."
-            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm mt-3"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm mt-3"
             rows={2}
             maxLength={500}
           />

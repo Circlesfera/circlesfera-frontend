@@ -127,12 +127,12 @@ function ResetPasswordContent() {
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-md"
         >
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 text-center">
+          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-xl p-8 text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
               ¡Contraseña Restablecida!
             </h1>
 
@@ -165,16 +165,16 @@ function ResetPasswordContent() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8">
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-xl p-8">
           {/* Header */}
           <div className="flex items-center mb-6">
             <button
               onClick={() => router.push('/')}
-              className="text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 transition-colors"
+              className="text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100 transition-colors"
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 ml-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 ml-4">
               Nueva Contraseña
             </h1>
           </div>
@@ -212,7 +212,7 @@ function ResetPasswordContent() {
                   value={password}
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   disabled={loading || !token}
                   required
                 />
@@ -249,7 +249,7 @@ function ResetPasswordContent() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   disabled={loading || !token}
                   required
                 />
@@ -299,8 +299,8 @@ function ResetPasswordContent() {
           </form>
 
           {/* Requisitos */}
-          <div className="mt-6 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+          <div className="mt-6 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
               La contraseña debe contener:
             </h3>
             <ul className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500 space-y-1">

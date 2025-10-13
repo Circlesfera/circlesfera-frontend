@@ -84,11 +84,11 @@ export default function ExplorePage() {
     <ProtectedRoute>
       <div className="max-w-6xl mx-auto mt-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Explorar</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Explorar</h1>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Descubre contenido increíble y conoce nuevas personas</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 mb-8">
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 mb-8">
           <UserSearch
             query={searchQuery}
             onResultClick={() => setSearchQuery('')}
@@ -101,7 +101,7 @@ export default function ExplorePage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <TrendingUp className="w-6 h-6 text-blue-600 mr-3" />
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Reels Trending</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Reels Trending</h2>
               </div>
               <Button
                 variant="ghost"
@@ -150,7 +150,7 @@ export default function ExplorePage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <TrendingUp className="w-6 h-6 text-green-600 mr-3" />
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Posts Trending</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Posts Trending</h2>
               </div>
               <Button
                 variant="ghost"
@@ -215,7 +215,7 @@ export default function ExplorePage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <Clock className="w-6 h-6 text-purple-600 mr-3" />
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Stories Recientes</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Stories Recientes</h2>
               </div>
               <Button
                 variant="ghost"
@@ -236,7 +236,7 @@ export default function ExplorePage() {
                 >
                   <div className="relative w-16 h-16 mx-auto mb-2">
                     <div className="w-full h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-600 p-0.5">
-                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
+                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900 p-0.5 relative">
                         <Image
                           src={user.avatar || '/default-avatar.png'}
                           alt={`Story de ${user.username}`}
@@ -265,7 +265,7 @@ export default function ExplorePage() {
         <div className="mb-8">
           <div className="flex items-center mb-6">
             <Users className="w-6 h-6 text-green-600 mr-3" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Descubrir Personas</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Descubrir Personas</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -273,7 +273,7 @@ export default function ExplorePage() {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Video className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Explorar Reels</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Explorar Reels</h3>
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                 Descubre videos cortos increíbles de la comunidad
               </p>
@@ -291,7 +291,7 @@ export default function ExplorePage() {
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Clock className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Ver Stories</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Ver Stories</h3>
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                 Mantente al día con las historias de tus amigos
               </p>
@@ -309,7 +309,7 @@ export default function ExplorePage() {
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Buscar Personas</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Buscar Personas</h3>
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                 Encuentra nuevos amigos y personas interesantes
               </p>
@@ -329,7 +329,7 @@ export default function ExplorePage() {
         <div className="mb-8">
           <div className="flex items-center mb-6">
             <Radio className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Contenido en Vivo</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Contenido en Vivo</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -341,7 +341,7 @@ export default function ExplorePage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg">CSTV</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-lg">CSTV</h3>
                     <span className="px-2 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold rounded-full">
                       ✨ NUEVO
                     </span>
@@ -367,7 +367,7 @@ export default function ExplorePage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg">En Vivo</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-lg">En Vivo</h3>
                     <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse">
                       🔴 LIVE
                     </span>

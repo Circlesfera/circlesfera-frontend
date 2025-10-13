@@ -170,7 +170,7 @@ export default function ReelPage() {
               variant="ghost"
               size="sm"
               onClick={() => router.back()}
-              className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+              className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Volver
@@ -181,14 +181,14 @@ export default function ReelPage() {
                 variant="ghost"
                 size="sm"
                 onClick={() => handleShare(reel._id)}
-                className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
               >
                 Compartir
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
               >
                 <MoreHorizontal className="w-5 h-5" />
               </Button>
@@ -238,7 +238,7 @@ export default function ReelPage() {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-white dark:bg-gray-900 text-black hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700"
+                className="bg-white dark:bg-gray-900 dark:bg-gray-900 text-black hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700"
               >
                 Seguir
               </Button>
@@ -308,7 +308,7 @@ export default function ReelPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
                 onClick={() => handleLike(reel._id)}
               >
                 <Heart className="w-8 h-8 mb-2" fill="currentColor" />
@@ -318,7 +318,7 @@ export default function ReelPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
                 onClick={() => handleComment(reel._id)}
               >
                 <MessageCircle className="w-8 h-8 mb-2" />
@@ -330,7 +330,7 @@ export default function ReelPage() {
                 <Button
                   variant="ghost"
                   size="lg"
-                  className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                  className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
                   onClick={() => setShowDuetForm(true)}
                   title="Crear duet con este reel"
                 >
@@ -344,7 +344,7 @@ export default function ReelPage() {
                 <Button
                   variant="ghost"
                   size="lg"
-                  className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                  className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
                   onClick={() => setShowStitchForm(true)}
                   title="Crear stitch con este reel"
                 >
@@ -356,7 +356,7 @@ export default function ReelPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
+                className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
                 onClick={() => handleShare(reel._id)}
               >
                 <Share2 className="w-8 h-8 mb-2" />

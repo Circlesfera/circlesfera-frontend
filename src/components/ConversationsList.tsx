@@ -121,7 +121,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-white to-gray-50 dark:to-gray-900/50">
       {/* Header mejorado */}
-      <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm">
+      <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 dark:border-gray-700/50 bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -137,7 +137,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
               onClick={() => setFilter(filter === 'all' ? 'unread' : filter === 'unread' ? 'groups' : 'all')}
               className={`p-2.5 rounded-xl transition-all duration-200 ${filter !== 'all'
                 ? 'bg-blue-100 text-blue-600'
-                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800'
                 }`}
               title={filter === 'all' ? 'Mostrar no leídos' : filter === 'unread' ? 'Mostrar grupos' : 'Mostrar todos'}
             >
@@ -165,7 +165,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             placeholder="Buscar conversaciones..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm bg-gray-50 dark:bg-gray-800 dark:bg-gray-800/50 hover:bg-white dark:bg-gray-900 transition-all !text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400 dark:text-gray-500"
+            className="w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800/50 hover:bg-white dark:bg-gray-900 dark:bg-gray-900 transition-all !text-gray-900 dark:text-gray-100 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400 dark:text-gray-500"
           />
         </div>
 
@@ -199,7 +199,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                   </svg>
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 dark:text-gray-200 mb-2">
                 {searchQuery ? 'No se encontraron conversaciones' : 'No tienes conversaciones'}
               </h3>
               <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm leading-relaxed mb-4">
@@ -232,7 +232,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                   <button
                     className={`group w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${selectedId === conversation._id
                       ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 shadow-sm dark:shadow-gray-900/50'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
+                      : 'hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
                       }`}
                     onClick={() => onSelect(conversation)}
                   >
@@ -275,7 +275,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                     {/* Información mejorada */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h3 className={`font-semibold truncate text-base ${conversation.unreadCount > 0 ? 'text-gray-900 dark:text-gray-100 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300 dark:text-gray-300'
+                        <h3 className={`font-semibold truncate text-base ${conversation.unreadCount > 0 ? 'text-gray-900 dark:text-gray-100 dark:text-gray-100 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300 dark:text-gray-300'
                           }`}>
                           {getConversationName(conversation)}
                         </h3>
@@ -289,7 +289,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
 
                       {conversation.lastMessage && (
                         <div className="flex items-center gap-1.5">
-                          <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-gray-900 dark:text-gray-100 dark:text-gray-100 font-medium' : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400'
+                          <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-gray-900 dark:text-gray-100 dark:text-gray-100 dark:text-gray-100 font-medium' : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400'
                             }`}>
                             {conversation.lastMessage.type === 'text'
                               ? conversation.lastMessage.content?.text || 'Mensaje de texto'

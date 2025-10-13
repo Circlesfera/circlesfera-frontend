@@ -108,10 +108,10 @@ export default function CommentsSection({ postId }: { postId: string }) {
         <div className="mb-2">
           {comments.slice(0, 1).map(c => (
             <div key={c._id} className="mb-1">
-              <span className="font-semibold text-gray-900 dark:text-gray-100 text-base mr-2">
+              <span className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-base mr-2">
                 {c.user.username}
               </span>
-              <span className="text-gray-900 dark:text-gray-100 text-base">{c.content}</span>
+              <span className="text-gray-900 dark:text-gray-100 dark:text-gray-100 text-base">{c.content}</span>
             </div>
           ))}
           {comments.length > 1 && (
@@ -123,11 +123,11 @@ export default function CommentsSection({ postId }: { postId: string }) {
       )}
 
       {/* Formulario de comentario */}
-      <form onSubmit={handleSubmit} className="flex items-center border-t border-gray-200 dark:border-gray-700 pt-2">
+      <form onSubmit={handleSubmit} className="flex items-center border-t border-gray-200 dark:border-gray-700 dark:border-gray-700 pt-2">
         <input
           type="text"
           placeholder="Añade un comentario..."
-          className="flex-1 text-gray-900 dark:text-gray-100 text-base bg-transparent border-none outline-none py-2"
+          className="flex-1 text-gray-900 dark:text-gray-100 dark:text-gray-100 text-base bg-transparent border-none outline-none py-2"
           value={text}
           onChange={e => setText(e.target.value)}
           disabled={sending}

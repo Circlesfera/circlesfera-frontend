@@ -83,7 +83,7 @@ export default function AnimatedButton({
       {/* Ripple effect */}
       {ripple && (
         <motion.div
-          className="absolute inset-0 bg-white dark:bg-gray-900 dark:bg-gray-900/20 rounded-lg"
+          className="absolute inset-0 bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 rounded-lg"
           initial={{ scale: 0, opacity: 0 }}
           whileTap={{
             scale: 1,

@@ -166,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">C</span>
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-gray-100 hidden sm:block">
+              <span className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 hidden sm:block">
                 CircleSfera
               </span>
             </button>
@@ -184,7 +184,7 @@ const Header: React.FC<HeaderProps> = ({
                   placeholder="Buscar"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-800 focus:bg-white dark:bg-gray-900 transition-all duration-200 !text-gray-900 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 focus:bg-white dark:bg-gray-900 dark:bg-gray-900 transition-all duration-200 !text-gray-900 dark:text-gray-100 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-500"
                 />
               </div>
             </form>
@@ -206,20 +206,20 @@ const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={() => setShowCreateMenu(!showCreateMenu)}
-                className="sm:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
+                className="sm:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
               >
                 <CreateIcon />
               </button>
 
               {/* Create Menu Dropdown */}
               {showCreateMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 py-2 z-50">
                   <button
                     onClick={() => {
                       router.push('/post/create');
                       setShowCreateMenu(false);
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                   >
                     <PostIcon />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Publicación</span>
@@ -230,7 +230,7 @@ const Header: React.FC<HeaderProps> = ({
                       router.push('/create/story');
                       setShowCreateMenu(false);
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                   >
                     <StoryIcon />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Historia</span>
@@ -241,7 +241,7 @@ const Header: React.FC<HeaderProps> = ({
                       router.push('/create/reel');
                       setShowCreateMenu(false);
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                   >
                     <ReelIcon />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Reel</span>
@@ -255,7 +255,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
+                  className="flex items-center space-x-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
                 >
                   <Avatar
                     src={user.avatar}
@@ -268,9 +268,9 @@ const Header: React.FC<HeaderProps> = ({
 
                 {/* User Menu Dropdown */}
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 py-2 z-50">
                     <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">
                         {user.fullName || user.username}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">@{user.username}</p>
@@ -281,7 +281,7 @@ const Header: React.FC<HeaderProps> = ({
                         router.push('/profile');
                         setShowUserMenu(false);
                       }}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                     >
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Perfil</span>
                     </button>
@@ -291,7 +291,7 @@ const Header: React.FC<HeaderProps> = ({
                         router.push('/settings');
                         setShowUserMenu(false);
                       }}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                     >
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Configuración</span>
                     </button>
@@ -302,7 +302,7 @@ const Header: React.FC<HeaderProps> = ({
                           onLogout?.();
                           setShowUserMenu(false);
                         }}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200 text-red-600"
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200 text-red-600"
                       >
                         <LogoutIcon />
                         <span className="text-sm font-medium">Cerrar sesión</span>

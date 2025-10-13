@@ -65,7 +65,7 @@ export function PostCardActions({
           {/* Comment button */}
           <button
             onClick={() => onComment?.(post._id, post.user.username, post.content?.images?.[0]?.url)}
-            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
             {...getButtonA11yProps(ARIA_LABELS.post.comment)}
           >
             <CommentIcon
@@ -77,7 +77,7 @@ export function PostCardActions({
           {/* Share button */}
           <button
             onClick={() => onShare?.(post._id, postUrl, post.caption)}
-            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
             {...getButtonA11yProps(ARIA_LABELS.post.share)}
           >
             <ShareIcon
@@ -90,7 +90,7 @@ export function PostCardActions({
         {/* Save button */}
         <button
           onClick={onSave}
-          className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+          className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
           {...getButtonA11yProps(ARIA_LABELS.post.save(isSaved), { pressed: isSaved })}
         >
           <BookmarkIcon
@@ -107,7 +107,7 @@ export function PostCardActions({
           {/* Likes count */}
           {post.likes.length > 0 && (
             <button
-              className="font-semibold text-gray-900 dark:text-gray-100 text-sm hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors focus-visible:outline-none focus-visible:underline"
+              className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors focus-visible:outline-none focus-visible:underline"
               aria-label={ARIA_LABELS.post.likeCount(post.likes.length)}
             >
               {formatCount(post.likes.length)} me gusta
@@ -117,10 +117,10 @@ export function PostCardActions({
           {/* Caption */}
           {post.caption && !isEditing && (
             <div className="mt-1">
-              <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm mr-2">
+              <span className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm mr-2">
                 {post.user.username}
               </span>
-              <span className="text-gray-900 dark:text-gray-100 text-sm">
+              <span className="text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">
                 {post.caption.length > 80 && !showFullCaption ? (
                   <>
                     {post.caption.substring(0, 80)}...
@@ -156,7 +156,7 @@ export function PostCardActions({
               <textarea
                 value={editCaption}
                 onChange={(e) => onEditCaption(e.target.value)}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 rows={3}
                 placeholder="Escribe tu caption..."
                 aria-label="Caption del post"

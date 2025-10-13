@@ -251,10 +251,10 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Editar perfil</h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Editar perfil</h2>
         <button
           onClick={onCancel}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -289,7 +289,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             )}
           </div>
           <div>
-            <div className="font-semibold text-gray-900 dark:text-gray-100">{profile.username}</div>
+            <div className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">{profile.username}</div>
             <div className="flex items-center space-x-2">
               <button
                 type="button"
@@ -523,7 +523,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             name="isPrivate"
             checked={formData.isPrivate}
             onChange={handleChange}
-            className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded focus:ring-blue-500"
           />
           <label htmlFor="isPrivate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Cuenta privada
@@ -531,7 +531,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         </div>
 
         {/* Botones */}
-        <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700 dark:border-gray-700">
           <button
             type="button"
             onClick={onCancel}

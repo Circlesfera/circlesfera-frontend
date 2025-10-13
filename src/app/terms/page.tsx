@@ -55,14 +55,14 @@ export default function TermsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
             <FileText className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
             Términos de Servicio
           </h2>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
@@ -75,8 +75,8 @@ export default function TermsPage() {
         </div>
 
         {/* Introducción */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Introducción</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Introducción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               Bienvenido a CircleSfera. Estos Términos de Servicio ("Términos") constituyen
@@ -98,12 +98,12 @@ export default function TermsPage() {
         {/* Secciones principales */}
         <div className="space-y-8 mb-8">
           {sections.map((section, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+            <div key={index} className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
               <div className="flex items-start space-x-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
                   <section.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{section.title}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">{section.title}</h3>
               </div>
               <ul className="space-y-3">
                 {section.content.map((item, itemIndex) => (
@@ -118,8 +118,8 @@ export default function TermsPage() {
         </div>
 
         {/* Suspensión y Terminación */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Suspensión y Terminación</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Suspensión y Terminación</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               Nos reservamos el derecho de suspender o terminar tu cuenta si violas estos
@@ -127,7 +127,7 @@ export default function TermsPage() {
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Violaciones que pueden resultar en suspensión:</h4>
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Violaciones que pueden resultar en suspensión:</h4>
                 <ul className="space-y-1 text-sm">
                   <li>• Comportamiento abusivo o acoso</li>
                   <li>• Compartir contenido inapropiado</li>
@@ -136,7 +136,7 @@ export default function TermsPage() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Proceso de apelación:</h4>
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Proceso de apelación:</h4>
                 <ul className="space-y-1 text-sm">
                   <li>• Puedes apelar decisiones de moderación</li>
                   <li>• Revisaremos tu caso en un plazo razonable</li>
@@ -149,8 +149,8 @@ export default function TermsPage() {
         </div>
 
         {/* Limitación de Responsabilidad */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Limitación de Responsabilidad</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Limitación de Responsabilidad</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               CircleSfera se proporciona "tal como está" sin garantías de ningún tipo.
@@ -169,8 +169,8 @@ export default function TermsPage() {
         </div>
 
         {/* Ley Aplicable */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Ley Aplicable y Jurisdicción</h3>
+        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Ley Aplicable y Jurisdicción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
               Estos términos se rigen por las leyes de España, sin consideración a los
@@ -217,19 +217,19 @@ export default function TermsPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/privacy"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Política de Privacidad
             </Link>
             <Link
               href="/help"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Centro de Ayuda
             </Link>
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
