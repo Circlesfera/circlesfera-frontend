@@ -76,7 +76,7 @@ export default function ReportDetailPage() {
     try {
       setUpdating(true)
 
-      const updateData: Record<string, unknown> = {
+      const updateData: { status: string; moderatorNotes?: string; action?: string } = {
         status: newStatus,
         moderatorNotes: notes,
       }

@@ -236,8 +236,9 @@ export default function HomePage() {
             {/* Stories Section */}
             <Card className="p-6">
               <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
-                {(item: { _id: string; isAddStory?: boolean;[key: string]: unknown }) => {
-                  if (item.isAddStory) {
+                {(item: unknown) => {
+                  const typedItem = item as { _id: string; isAddStory?: boolean; avatar?: string; username?: string; fullName?: string; storiesCount?: number };
+                  if (typedItem.isAddStory) {
                     return (
                       <div key="add-story" className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
                         <div className="relative p-2">
@@ -258,7 +259,7 @@ export default function HomePage() {
                     );
                   }
 
-                  const storyItem = item as { _id: string; avatar?: string; username: string; fullName?: string; storiesCount?: number };
+                  const storyItem = typedItem;
                   return (
                     <div key={storyItem._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
                       <div className="relative p-2">
@@ -289,63 +290,68 @@ export default function HomePage() {
 
             {/* Posts Feed */}
             <AnimatedPostList posts={posts || []}>
-              {(post: { _id: string; user: { _id: string; username: string; avatar?: string; fullName?: string }; type: string; content: { images?: Array<{ url: string }>; video?: { url: string }; text?: string }; caption: string; likes: Array<unknown>; comments: Array<unknown> }) => (
-                <PostCard
-                  key={post._id}
-                  post={{
-                    id: post._id,
-                    user: {
-                      id: post.user._id,
-                      username: post.user.username,
-                      ...(post.user.avatar && { avatar: post.user.avatar }),
-                      ...(post.user.fullName && { fullName: post.user.fullName }),
-                    },
-                    content: {
-                      type: post.type,
-                      url: post.content.images?.[0]?.url || post.content.video?.url || '',
-                      ...(post.content.text && { text: post.content.text }),
-                    },
-                    caption: post.caption,
-                    likes: post.likes.length,
-                    comments: post.comments.length,
-                    isLiked: post.isLiked || false,
-                    createdAt: post.createdAt,
-                  }}
-                  onLike={handleLike}
-                  onComment={(postId) => {
-                    if (!posts || !Array.isArray(posts)) return;
-                    const post = posts.find(p => p._id === postId);
-                    if (post) {
-                      handleComment(postId, post.user.username, post.content?.images?.[0]?.url);
-                    }
-                  }}
-                  onShare={(postId) => {
-                    if (!posts || !Array.isArray(posts)) return;
-                    const post = posts.find(p => p._id === postId);
-                    if (post) {
-                      handleShare(postId, `${window.location.origin}/${post.user.username}/post/${postId}`, post.caption);
-                    }
-                  }}
-                  onUserClick={(userId) => {
-                    if (!posts || !Array.isArray(posts)) return;
-                    const post = posts.find(p => p.user._id === userId);
-                    if (post) {
-                      handleUserClick(post.user._id);
-                    }
-                  }}
-                  onDelete={(postId) => {
-                    handlePostDeleted(postId);
-                  }}
-                  onPostClick={(postId) => {
-                    if (!posts || !Array.isArray(posts)) return;
-                    const post = posts.find(p => p._id === postId);
-                    if (post) {
-                      handlePostClick(postId, post.user.username);
-                    }
-                  }}
-                  className="animate-fade-in"
-                />
-              )}
+              {(post: unknown) => {
+                const typedPost = post as { _id: string; user: { _id: string; username: string; avatar?: string; fullName?: string }; type: 'image' | 'video' | 'text'; content: { images?: Array<{ url: string }>; video?: { url: string }; text?: string }; caption: string; likes: Array<unknown>; comments: Array<unknown>; isLiked?: boolean; createdAt: string };
+                return (
+                  <PostCard
+                    key={typedPost._id}
+                    post={{
+                      id: typedPost._id,
+                      user: {
+                        id: typedPost.user._id,
+                        username: typedPost.user.username,
+                        ...(typedPost.user.avatar && { avatar: typedPost.user.avatar }),
+                        ...(typedPost.user.fullName && { fullName: typedPost.user.fullName }),
+                      },
+                      content: {
+                        type: typedPost.type,
+                        url: typedPost.content.images?.[0]?.url || typedPost.content.video?.url || '',
+                        ...(typedPost.content.text && { text: typedPost.content.text }),
+                      },
+                      caption: typedPost.caption,
+                      likes: typedPost.likes.length,
+                      comments: typedPost.comments.length,
+                      isLiked: typedPost.isLiked || false,
+                      createdAt: typedPost.createdAt,
+                    }}
+                    onLike={handleLike}
+                    onComment={(postId) => {
+                      if (!posts || !Array.isArray(posts)) return;
+                      const foundPost = posts.find(p => p._id === postId);
+                      if (foundPost) {
+                        const typedFoundPost = foundPost as { user: { username: string }; content?: { images?: Array<{ url: string }> } };
+                        handleComment(postId, typedFoundPost.user.username, typedFoundPost.content?.images?.[0]?.url);
+                      }
+                    }}
+                    onShare={(postId) => {
+                      if (!posts || !Array.isArray(posts)) return;
+                      const foundPost = posts.find(p => p._id === postId);
+                      if (foundPost) {
+                        const typedFoundPost = foundPost as { user: { username: string }; caption: string };
+                        handleShare(postId, `${window.location.origin}/${typedFoundPost.user.username}/post/${postId}`, typedFoundPost.caption);
+                      }
+                    }}
+                    onUserClick={(userId) => {
+                      if (!posts || !Array.isArray(posts)) return;
+                      const post = posts.find(p => p.user._id === userId);
+                      if (post) {
+                        handleUserClick(post.user._id);
+                      }
+                    }}
+                    onDelete={(postId) => {
+                      handlePostDeleted(postId);
+                    }}
+                    onPostClick={(postId) => {
+                      if (!posts || !Array.isArray(posts)) return;
+                      const post = posts.find(p => p._id === postId);
+                      if (post) {
+                        handlePostClick(postId, post.user.username);
+                      }
+                    }}
+                    className="animate-fade-in"
+                  />
+                )
+              }
             </AnimatedPostList>
 
             {/* Infinite Scroll Trigger */}
