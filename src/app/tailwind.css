@@ -1,0 +1,25 @@
+/**
+ * 🎨 TAILWIND CSS 4.x CUSTOM CONFIGURATION
+ * ========================================
+ * Configuración de dark mode y variantes personalizadas
+ */
+
+@import "tailwindcss";
+
+/* Habilitar dark mode basado en clase */
+@variant dark (&:where(.dark, .dark *));
+
+/* Responsive variants */
+@variant sm (@media (min-width: 640px));
+@variant md (@media (min-width: 768px));
+@variant lg (@media (min-width: 1024px));
+@variant xl (@media (min-width: 1280px));
+@variant 2xl (@media (min-width: 1536px));
+
+/* State variants */
+@variant hover (&:hover);
+@variant focus (&:focus);
+@variant active (&:active);
+@variant disabled (&:disabled);
+@variant focus-visible (&:focus-visible);
+

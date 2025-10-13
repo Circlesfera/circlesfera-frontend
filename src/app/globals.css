@@ -9,7 +9,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-@import "tailwindcss";
+/* Import Tailwind CSS 4.x with custom dark mode configuration */
+@import "./tailwind.css";
 
 /* ==========================================
    🎯 VARIABLES CSS ESENCIALES
