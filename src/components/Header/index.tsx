@@ -33,6 +33,7 @@ import {
   SettingsIcon,
 } from '@/components/icons/NavigationIcons'
 import { ARIA_LABELS, getMenuButtonA11yProps, TOUCH_TARGET_CLASSES } from '@/utils/accessibilityHelpers'
+import ThemeSwitcher from '@/components/ThemeSwitcher'
 
 export default function Header() {
   const { user, logout } = useAuth()
@@ -191,6 +192,13 @@ export default function Header() {
                     <span className="font-medium text-gray-900">Ver perfil</span>
                   </Link>
 
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">Tema</span>
+                      <ThemeSwitcher variant="icon" className="scale-75" />
+                    </div>
+                  </div>
+
                   <Link
                     href="/settings"
                     className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100"
@@ -214,6 +222,8 @@ export default function Header() {
 
             {/* Mobile Menu Toggle */}
             <div className="md:hidden flex items-center gap-2">
+              <ThemeSwitcher variant="icon" className="scale-75" />
+
               <Link
                 href="/notifications"
                 className={`${TOUCH_TARGET_CLASSES.min} relative p-2 hover:bg-gray-100 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
