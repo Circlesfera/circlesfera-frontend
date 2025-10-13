@@ -383,7 +383,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Theme Switcher */}
             <div className="mt-4 px-3">
-              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
+              <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
                 <ThemeSwitcher />
               </div>
@@ -760,7 +760,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Theme Switcher */}
               <div className="mt-4 px-3">
-                <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
+                <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
                   <ThemeSwitcher />
                 </div>

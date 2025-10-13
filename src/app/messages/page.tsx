@@ -132,7 +132,7 @@ export default function MessagesPage() {
                 {selected ? (
                   <ChatWindow conversationId={selected} />
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-blue-50/50 via-indigo-50/50 to-purple-50/50 p-6">
+                  <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-blue-50/50 via-indigo-50/50 to-purple-50/50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 p-6">
                     <div className="text-center max-w-md mx-auto">
                       {/* Ilustración mejorada */}
                       <div className="relative mb-8">
@@ -144,10 +144,10 @@ export default function MessagesPage() {
                         </div>
                       </div>
 
-                      <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3">
+                      <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent mb-3">
                         ¡Comienza a chatear!
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-base sm:text-lg leading-relaxed mb-6">
+                      <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-6">
                         Selecciona una conversación o crea una nueva para comenzar a conectar con tus amigos
                       </p>
 

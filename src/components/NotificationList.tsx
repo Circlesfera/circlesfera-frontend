@@ -106,8 +106,8 @@ export default function NotificationList() {
           <ul className="flex flex-col gap-4">
             {notifications.map(n => (
               <li key={n._id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${n.isRead
-                  ? 'bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800'
-                  : 'bg-blue-50 border-blue-200 shadow-sm dark:shadow-gray-900/50 hover:bg-blue-100'
+                ? 'bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800'
+                : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 shadow-sm hover:bg-blue-100 dark:hover:bg-blue-900/30'
                 }`}>
                 {n.from?.avatar ? (
                   <Image
