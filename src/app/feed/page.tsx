@@ -237,7 +237,7 @@ export default function HomePage() {
             <Card className="p-6">
               <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
                 {(item: unknown) => {
-                  const typedItem = item as { _id: string; isAddStory?: boolean; avatar?: string; username?: string; fullName?: string; storiesCount?: number };
+                  const typedItem = item as { _id: string; isAddStory?: boolean; avatar?: string | null; username?: string; fullName?: string; storiesCount?: number };
                   if (typedItem.isAddStory) {
                     return (
                       <div key="add-story" className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
