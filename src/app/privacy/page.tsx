@@ -80,7 +80,7 @@ export default function PrivacyPage() {
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Introducción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
-              Esta Política de Privacidad describe cómo CircleSfera ("nosotros", "nuestro" o "la empresa")
+              Esta Política de Privacidad describe cómo CircleSfera (&quot;nosotros&quot;, &quot;nuestro&quot; o &quot;la empresa&quot;)
               recopila, usa, almacena y protege tu información cuando utilizas nuestra plataforma.
             </p>
             <p>

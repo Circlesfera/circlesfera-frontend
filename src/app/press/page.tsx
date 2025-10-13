@@ -87,7 +87,7 @@ export default function PressPage() {
               <p className="text-blue-100">Lunes a Viernes</p>
               <p className="text-blue-100">9:00 - 18:00 CET</p>
               <p className="text-blue-100 text-sm mt-2">
-                Para urgencias fuera del horario, incluye "URGENTE" en el asunto del email.
+                Para urgencias fuera del horario, incluye &quot;URGENTE&quot; en el asunto del email.
               </p>
             </div>
           </div>

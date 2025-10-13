@@ -79,8 +79,8 @@ export default function TermsPage() {
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Introducción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
-              Bienvenido a CircleSfera. Estos Términos de Servicio ("Términos") constituyen
-              un acuerdo legal entre tú y CircleSfera ("nosotros", "nuestro" o "la empresa")
+              Bienvenido a CircleSfera. Estos Términos de Servicio (&quot;Términos&quot;) constituyen
+              un acuerdo legal entre tú y CircleSfera (&quot;nosotros&quot;, &quot;nuestro&quot; o &quot;la empresa&quot;)
               respecto al uso de nuestra plataforma.
             </p>
             <p>
