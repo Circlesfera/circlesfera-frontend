@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/features/auth/AuthContext';
-import { ThemeProvider } from '@/features/theme/ThemeContext';
+import { ThemeProvider } from '@/features/theme/ThemeProvider';
 import { ToastProvider } from '@/components/Toast';
 import { ToastContainer } from '@/components/Toast';
 import AppLayout from '@/components/layout/AppLayout';
@@ -119,7 +119,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="CircleSfera" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
       </head>
-      <body className="antialiased bg-white text-gray-900 transition-colors duration-200" suppressHydrationWarning>
+      <body className="antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200" suppressHydrationWarning>
         <ErrorBoundary>
           <ThemeProvider>
             <ToastProvider>
