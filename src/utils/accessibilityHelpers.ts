@@ -158,7 +158,7 @@ export function getMenuA11yProps(id: string, isOpen: boolean) {
 export function getMenuButtonA11yProps(label: string, menuId: string, isOpen: boolean) {
   return {
     ...getButtonA11yProps(label, { expanded: isOpen, controls: menuId }),
-    'aria-haspopup': 'true',
+    'aria-haspopup': 'menu' as const,
   }
 }
 
