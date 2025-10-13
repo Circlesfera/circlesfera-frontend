@@ -152,13 +152,13 @@ export default function HomePage() {
     return (
       <div className="max-w-2xl mx-auto space-y-6 px-4">
         {/* Loading State */}
-        <Card className="p-6 bg-white text-gray-900">
+        <Card className="p-6">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
               <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-                <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse p-2"></div>
-                <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
+                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
+                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               </div>
             ))}
           </div>
@@ -170,15 +170,15 @@ export default function HomePage() {
             <Card key={index} className="p-6">
               <div className="animate-pulse">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
                   </div>
                 </div>
-                <div className="h-64 bg-gray-200 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
             </Card>
           ))}
@@ -192,13 +192,13 @@ export default function HomePage() {
     return (
       <div className="max-w-2xl mx-auto space-y-6 px-4">
         {/* Stories Loading */}
-        <Card className="p-6 bg-white text-gray-900">
+        <Card className="p-6">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
               <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-                <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse p-2"></div>
-                <div className="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
+                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
+                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               </div>
             ))}
           </div>
@@ -210,15 +210,15 @@ export default function HomePage() {
             <Card key={index} className="p-6">
               <div className="animate-pulse">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
                   </div>
                 </div>
-                <div className="h-64 bg-gray-200 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
             </Card>
           ))}
@@ -234,7 +234,7 @@ export default function HomePage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Stories Section */}
-            <Card className="p-6 bg-white text-gray-900">
+            <Card className="p-6">
               <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
                 {(item) => {
                   if (item.isAddStory) {
@@ -366,7 +366,7 @@ export default function HomePage() {
 
             {/* Empty State para cuando no hay posts */}
             {(!posts || posts.length === 0) && !loading && (
-              <Card className="p-12 text-center bg-white text-gray-900">
+              <Card className="p-12 text-center">
                 <div className="max-w-sm mx-auto">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
