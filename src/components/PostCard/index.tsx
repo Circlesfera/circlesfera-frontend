@@ -92,7 +92,7 @@ export default function PostCard({
       animate={isInView ? fadeInUp.animate : fadeInUp.initial}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={cardAnimation.whileHover}
-      className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 mb-6 animate-fade-in"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 mb-6 animate-fade-in"
       aria-label={`Publicación de ${post.user.username}`}
     >
       {/* Header */}
