@@ -13,7 +13,7 @@
 import React, { useState, useRef } from 'react'
 import LazyImage from '@/components/LazyImage'
 import ImageModal from '@/components/ImageModal'
-import { PlayIcon, ChevronLeftIcon, ChevronRightIcon, ZoomIcon } from '@/components/icons/PostIcons'
+import { PlayIconLarge, ChevronLeftIcon, ChevronRightIcon, ZoomIcon } from '@/components/icons/PostIcons'
 import { formatDuration } from '@/utils/formatters'
 import { ARIA_LABELS, getButtonA11yProps, TOUCH_TARGET_CLASSES } from '@/utils/accessibilityHelpers'
 import type { Post } from '@/services/postService'
@@ -216,7 +216,7 @@ export function PostCardMedia({ post }: PostCardMediaProps) {
               {...getButtonA11yProps(ARIA_LABELS.media.video)}
             >
               <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <PlayIcon aria-hidden="true" className="text-white" />
+                <PlayIconLarge aria-hidden="true" className="text-white" />
               </div>
             </button>
           )}

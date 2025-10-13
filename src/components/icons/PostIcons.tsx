@@ -77,7 +77,7 @@ export const MoreIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 )
 
-export const PlayIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const PlayIconLarge: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     className="w-12 h-12"
     fill="currentColor"
