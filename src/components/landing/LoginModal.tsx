@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '@/features/auth/useAuth'
@@ -128,17 +129,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
 
                 {/* Enlace de recuperación de contraseña */}
                 <div className="text-right">
-                  <a
+                  <Link
                     href="/forgot-password"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onClose();
-                      window.location.href = '/forgot-password';
-                    }}
+                    onClick={onClose}
                     className="text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors"
                   >
                     ¿Olvidaste tu contraseña?
-                  </a>
+                  </Link>
                 </div>
 
                 <button

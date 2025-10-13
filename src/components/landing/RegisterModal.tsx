@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '@/features/auth/useAuth'
@@ -197,11 +198,11 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 </p>
               </div>
 
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center mt-4">
+              <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
                 Al registrarte, aceptas nuestros{' '}
-                <a href="/terms" className="text-blue-600 hover:underline">Términos</a>
+                <Link href="/terms" className="text-blue-600 hover:underline">Términos</Link>
                 {' '}y{' '}
-                <a href="/privacy" className="text-blue-600 hover:underline">Privacidad</a>
+                <Link href="/privacy" className="text-blue-600 hover:underline">Privacidad</Link>
               </p>
             </motion.div>
           </div>
