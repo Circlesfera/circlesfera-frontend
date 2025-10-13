@@ -12,6 +12,7 @@ import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 import ThemeSwitcher from '@/components/ThemeSwitcher.v3';
 import ThemeDebugger from '@/components/ThemeDebugger';
+import ThemeFixer from '@/components/ThemeFixer';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -877,6 +878,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Debugger temporal */}
       <ThemeDebugger />
+      <ThemeFixer />
     </div>
   );
 }

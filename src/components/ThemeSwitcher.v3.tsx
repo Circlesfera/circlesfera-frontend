@@ -22,7 +22,18 @@ export default function ThemeSwitcher() {
 
   // Función para obtener el tema inicial
   const getInitialTheme = (): 'light' | 'dark' => {
-    // Primero verificar localStorage
+    // Primero verificar el estado actual del DOM
+    if (typeof window !== 'undefined') {
+      const html = document.documentElement
+      const hasDarkClass = html.classList.contains('dark')
+
+      // Si el DOM ya tiene la clase dark, usar dark
+      if (hasDarkClass) {
+        return 'dark'
+      }
+    }
+
+    // Luego verificar localStorage
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
     if (savedTheme === 'light' || savedTheme === 'dark') {
       return savedTheme
@@ -41,6 +52,14 @@ export default function ThemeSwitcher() {
     setMounted(true)
 
     const initialTheme = getInitialTheme()
+
+    console.log('🔍 Initial theme detection:', {
+      htmlClasses: document.documentElement.className,
+      localStorage: localStorage.getItem('theme'),
+      systemPrefersDark: window.matchMedia('(prefers-color-scheme: dark)').matches,
+      detectedTheme: initialTheme
+    })
+
     setTheme(initialTheme)
     applyTheme(initialTheme)
 
