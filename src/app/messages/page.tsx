@@ -58,9 +58,9 @@ export default function MessagesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-blue-50 to-indigo-50">
+      <div className="h-screen">
         {/* Header mejorado con glassmorphism */}
-        <div className="backdrop-blur-xl bg-white dark:bg-gray-900 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 shadow-sm dark:shadow-gray-900/50 px-4 sm:px-6 py-4">
+        <div className="backdrop-blur-xl bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 px-4 sm:px-6 py-4">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3 sm:space-x-4">
@@ -87,7 +87,7 @@ export default function MessagesPage() {
                     <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                       Mensajes
                     </h1>
-                    <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Chat en tiempo real</p>
+                    <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400">Chat en tiempo real</p>
                   </div>
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function MessagesPage() {
                   <span className="text-sm">Nuevo</span>
                 </button>
 
-                <button className="p-2.5 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                <button className="p-2.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                   </svg>
@@ -116,10 +116,10 @@ export default function MessagesPage() {
 
         {/* Contenido principal mejorado */}
         <div className="max-w-7xl mx-auto h-[calc(100vh-88px)] p-2 sm:p-4">
-          <div className="backdrop-blur-xl bg-white dark:bg-gray-900 dark:bg-gray-900/90 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 dark:border-gray-700/50 overflow-hidden h-full">
+          <div className="backdrop-blur-xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden h-full">
             <div className="flex h-full">
               {/* Sidebar mejorado */}
-              <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-gradient-to-b from-gray-50 dark:from-gray-900/50 to-white/50`}>
+              <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200 dark:border-gray-700`}>
                 <ConversationsList
                   onSelect={handleSelectConversation}
                   selectedId={selected}
@@ -128,11 +128,11 @@ export default function MessagesPage() {
               </div>
 
               {/* Área de chat mejorada */}
-              <div className={`${!showChat ? 'hidden md:flex' : 'flex'} flex-1 flex-col bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900`}>
+              <div className={`${!showChat ? 'hidden md:flex' : 'flex'} flex-1 flex-col bg-white dark:bg-gray-900`}>
                 {selected ? (
                   <ChatWindow conversationId={selected} />
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-blue-50/50 via-indigo-50/50 to-purple-50/50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 p-6">
+                  <div className="flex-1 flex flex-col items-center justify-center p-6">
                     <div className="text-center max-w-md mx-auto">
                       {/* Ilustración mejorada */}
                       <div className="relative mb-8">
