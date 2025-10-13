@@ -1,14 +1,22 @@
 "use client"
 
 import { useTheme } from '@/features/theme/ThemeProvider'
+import { cn } from '@/utils/cn'
 
-export default function ThemeSwitcher() {
+interface ThemeSwitcherProps {
+  className?: string
+}
+
+export default function ThemeSwitcher({ className }: ThemeSwitcherProps = {}) {
   const { theme, toggleTheme } = useTheme()
 
   return (
     <button
       onClick={toggleTheme}
-      className="min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+      className={cn(
+        "min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+        className
+      )}
       aria-label={`Cambiar a tema ${theme === 'light' ? 'oscuro' : 'claro'}`}
       type="button"
     >

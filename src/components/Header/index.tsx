@@ -195,7 +195,7 @@ export default function Header() {
                   <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
-                      <ThemeSwitcher variant="icon" className="scale-75" />
+                      <ThemeSwitcher className="scale-75" />
                     </div>
                   </div>
 
@@ -222,7 +222,7 @@ export default function Header() {
 
             {/* Mobile Menu Toggle */}
             <div className="md:hidden flex items-center gap-2">
-              <ThemeSwitcher variant="icon" className="scale-75" />
+              <ThemeSwitcher className="scale-75" />
 
               <Link
                 href="/notifications"
