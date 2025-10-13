@@ -8,6 +8,7 @@ import { ToastContainer } from '@/components/Toast';
 import AppLayout from '@/components/layout/AppLayout';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import OfflineIndicator from '@/components/OfflineIndicator';
+import TestThemeButton from '@/components/TestThemeButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -128,6 +129,10 @@ export default function RootLayout({
                 <AppLayout>
                   {children}
                 </AppLayout>
+                {/* Test Theme Button - Temporal para debugging */}
+                <div className="fixed top-4 right-4 z-[9999]">
+                  <TestThemeButton />
+                </div>
                 <ToastContainer />
               </AuthProvider>
             </ToastProvider>
