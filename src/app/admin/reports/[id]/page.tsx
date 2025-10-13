@@ -58,6 +58,7 @@ export default function ReportDetailPage() {
     if (reportId) {
       fetchReport()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportId])
 
   const handleUpdateStatus = async (newStatus: ReportStatus, action?: string | undefined) => {
