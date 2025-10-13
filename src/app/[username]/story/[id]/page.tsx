@@ -91,12 +91,12 @@ export default function UserStoryPage({ params }: Props) {
       <ProtectedRoute>
         <div className="max-w-2xl mx-auto px-4 py-8">
           <div className="animate-pulse">
-            <div className="aspect-[9/16] bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
+            <div className="aspect-[9/16] bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-lg mb-4"></div>
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/6"></div>
               </div>
             </div>
           </div>
@@ -142,14 +142,14 @@ export default function UserStoryPage({ params }: Props) {
           <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             <button
               onClick={() => router.push('/')}
-              className="hover:text-gray-700 dark:text-gray-300 transition-colors"
+              className="hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors"
             >
               Inicio
             </button>
             <span>/</span>
             <button
               onClick={() => router.push(`/${user.username}`)}
-              className="hover:text-gray-700 dark:text-gray-300 transition-colors"
+              className="hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors"
             >
               {user.username}
             </button>

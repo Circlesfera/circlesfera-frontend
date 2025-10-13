@@ -98,7 +98,7 @@ export default function JobsPage() {
           <div className="flex items-center">
             <Link
               href="/feed"
-              className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
             </Link>
@@ -232,7 +232,7 @@ export default function JobsPage() {
             Siempre estamos buscando talento excepcional. Envíanos tu CV y te contactaremos
             cuando tengamos una oportunidad que se ajuste a tu perfil.
           </p>
-          <button className="bg-white dark:bg-gray-900 text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 dark:bg-gray-800 transition-colors">
+          <button className="bg-white dark:bg-gray-900 text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors">
             Enviar CV Espontáneo
           </button>
         </div>
@@ -266,19 +266,19 @@ export default function JobsPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/press"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Prensa
             </Link>
             <Link
               href="/help"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Ayuda
             </Link>

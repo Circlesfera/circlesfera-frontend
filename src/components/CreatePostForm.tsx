@@ -219,7 +219,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             onClick={() => setPostType('image')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${postType === 'image'
               ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
               }`}
           >
             <ImageIcon />
@@ -231,7 +231,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             onClick={() => setPostType('video')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${postType === 'video'
               ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
               }`}
           >
             <VideoIcon />
@@ -254,7 +254,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 whileTap={{ scale: 0.98 }}
                 className={`flex-1 p-4 rounded-xl border-2 transition-all ${aspectRatio === '1:1'
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900'
+                  : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600 bg-white dark:bg-gray-900 dark:bg-gray-900'
                   }`}
               >
                 <div className="flex flex-col items-center space-y-2">
@@ -264,11 +264,11 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                       scale: aspectRatio === '1:1' ? 1.05 : 1
                     }}
                     transition={{ duration: 0.2 }}
-                    className={`w-16 h-16 rounded border-2 ${aspectRatio === '1:1' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800'
+                    className={`w-16 h-16 rounded border-2 ${aspectRatio === '1:1' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 dark:border-gray-600 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800'
                       }`}
                   />
                   <div className="text-center">
-                    <div className={`font-semibold ${aspectRatio === '1:1' ? 'text-blue-700' : 'text-gray-700 dark:text-gray-300'}`}>
+                    <div className={`font-semibold ${aspectRatio === '1:1' ? 'text-blue-700' : 'text-gray-700 dark:text-gray-300 dark:text-gray-300'}`}>
                       Cuadrado
                     </div>
                     <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">1:1</div>
@@ -300,7 +300,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 whileTap={{ scale: 0.98 }}
                 className={`flex-1 p-4 rounded-xl border-2 transition-all ${aspectRatio === '4:5'
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900'
+                  : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600 bg-white dark:bg-gray-900 dark:bg-gray-900'
                   }`}
               >
                 <div className="flex flex-col items-center space-y-2">
@@ -310,11 +310,11 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                       scale: aspectRatio === '4:5' ? 1.05 : 1
                     }}
                     transition={{ duration: 0.2 }}
-                    className={`w-12 h-16 rounded border-2 ${aspectRatio === '4:5' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800'
+                    className={`w-12 h-16 rounded border-2 ${aspectRatio === '4:5' ? 'border-blue-500 bg-blue-100' : 'border-gray-300 dark:border-gray-600 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800'
                       }`}
                   />
                   <div className="text-center">
-                    <div className={`font-semibold ${aspectRatio === '4:5' ? 'text-blue-700' : 'text-gray-700 dark:text-gray-300'}`}>
+                    <div className={`font-semibold ${aspectRatio === '4:5' ? 'text-blue-700' : 'text-gray-700 dark:text-gray-300 dark:text-gray-300'}`}>
                       Vertical
                     </div>
                     <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">4:5</div>
@@ -353,7 +353,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               <div
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${isDragOver
                   ? 'border-blue-400 bg-blue-50'
-                  : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                  : 'border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:border-gray-400 dark:border-gray-500'
                   }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -487,7 +487,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             <button
               type="button"
               onClick={resetForm}
-              className="px-6 py-2 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:text-gray-200 transition-colors"
+              className="px-6 py-2 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-200 transition-colors"
               disabled={loading}
             >
               Cancelar

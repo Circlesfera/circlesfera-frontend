@@ -118,23 +118,23 @@ export function generateDarkClasses(lightClass: string, darkClass: string): stri
  */
 export const darkClassMap = {
   // Backgrounds
-  'bg-white dark:bg-gray-900': 'dark:bg-gray-900',
-  'bg-gray-50 dark:bg-gray-800': 'dark:bg-gray-800',
-  'bg-gray-100 dark:bg-gray-800': 'dark:bg-gray-700',
+  'bg-white dark:bg-gray-900 dark:bg-gray-900': 'dark:bg-gray-900',
+  'bg-gray-50 dark:bg-gray-800 dark:bg-gray-800': 'dark:bg-gray-800',
+  'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800': 'dark:bg-gray-700',
 
   // Text
-  'text-gray-900 dark:text-gray-100': 'dark:text-gray-100',
-  'text-gray-800 dark:text-gray-200': 'dark:text-gray-200',
-  'text-gray-700 dark:text-gray-300': 'dark:text-gray-300',
-  'text-gray-600 dark:text-gray-400 dark:text-gray-500': 'dark:text-gray-400 dark:text-gray-500',
-  'text-gray-500 dark:text-gray-400 dark:text-gray-500': 'dark:text-gray-500 dark:text-gray-400 dark:text-gray-500',
+  'text-gray-900 dark:text-gray-100 dark:text-gray-100': 'dark:text-gray-100',
+  'text-gray-800 dark:text-gray-200 dark:text-gray-200': 'dark:text-gray-200',
+  'text-gray-700 dark:text-gray-300 dark:text-gray-300': 'dark:text-gray-300',
+  'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400': 'dark:text-gray-400 dark:text-gray-500 dark:text-gray-400',
+  'text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400': 'dark:text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400',
 
   // Borders
-  'border-gray-200 dark:border-gray-700': 'dark:border-gray-700',
-  'border-gray-300 dark:border-gray-600': 'dark:border-gray-600',
+  'border-gray-200 dark:border-gray-700 dark:border-gray-700': 'dark:border-gray-700',
+  'border-gray-300 dark:border-gray-600 dark:border-gray-600': 'dark:border-gray-600',
 
   // Hover states
-  'hover:bg-gray-50 dark:bg-gray-800': 'dark:hover:bg-gray-800',
-  'hover:bg-gray-100 dark:bg-gray-800': 'dark:hover:bg-gray-700',
+  'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800': 'dark:hover:bg-gray-800',
+  'hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800': 'dark:hover:bg-gray-700',
 } as const
 

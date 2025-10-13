@@ -23,7 +23,7 @@ import { TOUCH_TARGET_CLASSES } from '@/utils/accessibilityHelpers'
 
 const modalVariants = cva(
   // Base styles
-  "relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700",
+  "relative bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700 dark:border-gray-700",
   {
     variants: {
       size: {
@@ -192,7 +192,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                   aria-label="Cerrar modal"
                 >
                   <CloseIcon aria-hidden="true" />

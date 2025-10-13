@@ -26,7 +26,7 @@ const TextIcon = () => (
 );
 
 const LocationIcon = () => (
-  <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
@@ -159,7 +159,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Story</h2>
         <button
           onClick={handleClose}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
         >
           <CloseIcon />
         </button>
@@ -184,7 +184,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 onClick={() => handleTypeChange(type)}
                 className={`p-4 rounded-xl border-2 transition-all ${storyType === type
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600'
+                  : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600'
                   }`}
               >
                 <Icon />
@@ -218,7 +218,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {storyType === 'image' ? 'Imagen' : 'Video'}
               </label>
-              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-gray-400 dark:border-gray-500 transition-colors">
                 {preview ? (
                   <div className="space-y-4">
                     {storyType === 'image' ? (
@@ -253,7 +253,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                     <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium">
                       {storyType === 'image' ? 'Sube una imagen' : 'Sube un video'}
                     </p>
-                    <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+                    <p className="text-gray-400 dark:text-gray-500 dark:text-gray-400 text-sm mt-1">
                       {storyType === 'image'
                         ? 'JPG, PNG hasta 10MB'
                         : 'MP4 hasta 50MB'
@@ -327,7 +327,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Cancelar
             </button>

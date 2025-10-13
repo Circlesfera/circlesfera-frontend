@@ -8,44 +8,64 @@ export default function ThemeSwitcher() {
 
   useEffect(() => {
     setMounted(true)
-    // Leer tema actual
+
+    // Leer tema actual del localStorage o detectar preferencia del sistema
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
-    const initialTheme = savedTheme || 'light'
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light')
+
     setTheme(initialTheme)
 
-    // Aplicar tema
+    // Aplicar tema inmediatamente
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark')
     } else {
       document.documentElement.classList.remove('dark')
     }
+
+    // Guardar en localStorage
+    localStorage.setItem('theme', initialTheme)
   }, [])
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
 
+    // Actualizar estado
+    setTheme(newTheme)
+
+    // Aplicar tema al DOM
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark')
     } else {
       document.documentElement.classList.remove('dark')
     }
 
+    // Guardar en localStorage
+    localStorage.setItem('theme', newTheme)
+
+    // Forzar re-render de toda la página para asegurar que los estilos se apliquen
+    window.dispatchEvent(new Event('storage'))
+
     // Log para debugging
-    console.log('Theme changed to:', newTheme)
-    console.log('HTML classes:', document.documentElement.className)
+    console.log('🌓 Theme changed to:', newTheme)
+    console.log('🏷️ HTML classes:', document.documentElement.className)
+    console.log('💾 Stored in localStorage:', localStorage.getItem('theme'))
   }
 
   if (!mounted) {
-    return <div className="w-10 h-10" />
+    return (
+      <div className="w-10 h-10 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+      </div>
+    )
   }
 
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      className="min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
       aria-label={`Cambiar a tema ${theme === 'light' ? 'oscuro' : 'claro'}`}
+      type="button"
     >
       {theme === 'light' ? (
         // Luna para modo claro
@@ -61,4 +81,3 @@ export default function ThemeSwitcher() {
     </button>
   )
 }
-

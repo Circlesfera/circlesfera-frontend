@@ -78,7 +78,7 @@ export default function APIDocsPage() {
           <div className="flex items-center">
             <Link
               href="/feed"
-              className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
             </Link>
@@ -201,17 +201,17 @@ export default function APIDocsPage() {
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">JavaScript/Node.js</h4>
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-3">SDK oficial para aplicaciones web y Node.js</p>
-              <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">npm install @circlesfera/sdk</code>
+              <code className="text-xs bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 px-2 py-1 rounded">npm install @circlesfera/sdk</code>
             </div>
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Python</h4>
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-3">Librería para aplicaciones Python</p>
-              <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">pip install circlesfera-sdk</code>
+              <code className="text-xs bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 px-2 py-1 rounded">pip install circlesfera-sdk</code>
             </div>
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">PHP</h4>
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-3">SDK para aplicaciones PHP</p>
-              <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">composer require circlesfera/sdk</code>
+              <code className="text-xs bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 px-2 py-1 rounded">composer require circlesfera/sdk</code>
             </div>
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function APIDocsPage() {
               <p className="text-blue-100 text-sm mb-3">
                 Accede a la documentación detallada con ejemplos y casos de uso.
               </p>
-              <button className="bg-white dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-white dark:bg-gray-900 dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
                 Ver Documentación
               </button>
             </div>
@@ -263,7 +263,7 @@ export default function APIDocsPage() {
               <p className="text-blue-100 text-sm mb-3">
                 Contacta con nuestro equipo para soporte técnico especializado.
               </p>
-              <button className="bg-white dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-white dark:bg-gray-900 dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
                 Contactar Soporte
               </button>
             </div>
@@ -276,19 +276,19 @@ export default function APIDocsPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/press"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Prensa
             </Link>
             <Link
               href="/terms"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Términos de API
             </Link>

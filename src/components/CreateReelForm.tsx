@@ -199,7 +199,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Reel</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
           >
             <svg className="w-6 h-6 text-gray-500 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -221,7 +221,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
               >
-                <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M4 7h16M4 4h16M4 16h16" />
                 </svg>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
@@ -405,7 +405,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 <span>Subiendo video...</span>
                 <span>{uploadProgress}%</span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full h-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
@@ -427,7 +427,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               type="button"
               onClick={handleReset}
               disabled={isUploading}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors disabled:opacity-50"
             >
               Limpiar
             </button>

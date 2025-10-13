@@ -117,7 +117,7 @@ export default function StoriesBar() {
 
         <button
           onClick={handleCreateStory}
-          className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:bg-gray-700 transition-all duration-200 group"
+          className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-all duration-200 group"
         >
           <CameraIcon />
         </button>
@@ -135,7 +135,7 @@ export default function StoriesBar() {
                 onClick={() => openViewer(currentUserStory)}
               >
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
-                  <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
+                  <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r p-0.5 group-hover:scale-105 transition-all duration-200">
                     <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                       {user?.avatar ? (
                         <Image
@@ -236,7 +236,7 @@ export default function StoriesBar() {
                   onClick={() => openViewer(userWithStories)}
                 >
                   <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
-                    <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
+                    <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r p-0.5 group-hover:scale-105 transition-all duration-200">
                       <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                         <Image
                           src={`${(userWithStories.avatar && userWithStories.avatar.startsWith('http'))

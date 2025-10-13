@@ -69,7 +69,7 @@ export default function Header() {
   return (
     <>
       <header
-        className="sticky top-0 left-0 w-full bg-white dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 z-50"
+        className="sticky top-0 left-0 w-full bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 z-50"
         role="banner"
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
@@ -123,7 +123,7 @@ export default function Header() {
                       setShowPostForm(true)
                       setShowCreateMenu(false)
                     }}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                     role="menuitem"
                   >
                     <PostIcon aria-hidden="true" />
@@ -135,7 +135,7 @@ export default function Header() {
                       setShowStoryForm(true)
                       setShowCreateMenu(false)
                     }}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                     role="menuitem"
                   >
                     <StoryIcon aria-hidden="true" />
@@ -147,7 +147,7 @@ export default function Header() {
                       setShowReelForm(true)
                       setShowCreateMenu(false)
                     }}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                     role="menuitem"
                   >
                     <ReelIcon aria-hidden="true" />
@@ -185,7 +185,7 @@ export default function Header() {
                 <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-2 min-w-[220px] z-50 animate-fade-in" id="user-menu" role="menu">
                   <Link
                     href={`/${user?.username}`}
-                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                     role="menuitem"
                     onClick={() => setShowUserMenu(false)}
                   >
@@ -201,7 +201,7 @@ export default function Header() {
 
                   <Link
                     href="/settings"
-                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                     role="menuitem"
                   >
                     <SettingsIcon aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
@@ -210,7 +210,7 @@ export default function Header() {
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-red-600 focus-visible:outline-none focus-visible:bg-red-50"
+                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors text-red-600 focus-visible:outline-none focus-visible:bg-red-50"
                     role="menuitem"
                   >
                     <LogoutIcon aria-hidden="true" />
@@ -226,7 +226,7 @@ export default function Header() {
 
               <Link
                 href="/notifications"
-                className={`${TOUCH_TARGET_CLASSES.min} relative p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                className={`${TOUCH_TARGET_CLASSES.min} relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                 aria-label={ARIA_LABELS.navigation.notifications}
               >
                 <NotificationIcon aria-hidden="true" />
@@ -239,7 +239,7 @@ export default function Header() {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                 {...getMenuButtonA11yProps(ARIA_LABELS.menu.toggle(mobileMenuOpen), 'mobile-menu', mobileMenuOpen)}
               >
                 <MenuIcon aria-hidden="true" />
@@ -270,7 +270,7 @@ export default function Header() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Crear publicación</h2>
                 <button
                   onClick={() => setShowPostForm(false)}
-                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
                   aria-label="Cerrar modal"
                 >
                   <CloseIcon aria-hidden="true" />
@@ -290,7 +290,7 @@ export default function Header() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Crear story</h2>
                 <button
                   onClick={() => setShowStoryForm(false)}
-                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
                   aria-label="Cerrar modal"
                 >
                   <CloseIcon aria-hidden="true" />

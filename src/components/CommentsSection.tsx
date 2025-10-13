@@ -115,7 +115,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
             </div>
           ))}
           {comments.length > 1 && (
-            <button className="text-gray-400 dark:text-gray-500 text-sm hover:opacity-70 transition-opacity">
+            <button className="text-gray-400 dark:text-gray-500 dark:text-gray-400 text-sm hover:opacity-70 transition-opacity">
               Ver los {comments.length} comentarios
             </button>
           )}

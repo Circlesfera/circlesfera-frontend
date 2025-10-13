@@ -230,7 +230,7 @@ export default function CSTVPage() {
                 placeholder="Buscar videos CSTV..."
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
             </div>
             <button
               onClick={handleSearch}
@@ -241,12 +241,12 @@ export default function CSTVPage() {
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-lg p-1">
             <button
               onClick={() => setActiveTab('trending')}
               className={`flex-1 px-4 py-2 rounded-md transition-colors ${activeTab === 'trending'
-                ? 'bg-white dark:bg-gray-900 text-purple-600 shadow-sm dark:shadow-gray-900/50'
-                : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100'
+                ? 'bg-white dark:bg-gray-900 dark:bg-gray-900 text-purple-600 shadow-sm dark:shadow-gray-900/50'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100'
                 }`}
             >
               <div className="flex items-center justify-center space-x-2">
@@ -258,8 +258,8 @@ export default function CSTVPage() {
             <button
               onClick={() => setActiveTab('recent')}
               className={`flex-1 px-4 py-2 rounded-md transition-colors ${activeTab === 'recent'
-                ? 'bg-white dark:bg-gray-900 text-purple-600 shadow-sm dark:shadow-gray-900/50'
-                : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100'
+                ? 'bg-white dark:bg-gray-900 dark:bg-gray-900 text-purple-600 shadow-sm dark:shadow-gray-900/50'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100'
                 }`}
             >
               <div className="flex items-center justify-center space-x-2">
@@ -271,8 +271,8 @@ export default function CSTVPage() {
             <button
               onClick={() => setActiveTab('search')}
               className={`flex-1 px-4 py-2 rounded-md transition-colors ${activeTab === 'search'
-                ? 'bg-white dark:bg-gray-900 text-purple-600 shadow-sm dark:shadow-gray-900/50'
-                : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100'
+                ? 'bg-white dark:bg-gray-900 dark:bg-gray-900 text-purple-600 shadow-sm dark:shadow-gray-900/50'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100'
                 }`}
             >
               <div className="flex items-center justify-center space-x-2">
@@ -350,8 +350,8 @@ export default function CSTVPage() {
           </div>
         ) : videos.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Play className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Play className="w-12 h-12 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {activeTab === 'search' ? 'No se encontraron videos' :
@@ -400,7 +400,7 @@ export default function CSTVPage() {
                 <button
                   onClick={loadMoreFunc}
                   disabled={loading}
-                  className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-200 dark:bg-gray-700 disabled:opacity-50 transition-colors"
+                  className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 disabled:opacity-50 transition-colors"
                 >
                   {loading ? 'Cargando...' : 'Cargar más'}
                 </button>

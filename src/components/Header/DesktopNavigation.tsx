@@ -42,7 +42,7 @@ export function DesktopNavigation({
       {/* Home */}
       <Link
         href="/"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.home}
       >
         <HomeIcon aria-hidden="true" />
@@ -51,7 +51,7 @@ export function DesktopNavigation({
       {/* Messages */}
       <Link
         href="/messages"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.messages}
       >
         <MessageIcon aria-hidden="true" />
@@ -60,7 +60,7 @@ export function DesktopNavigation({
       {/* Explore */}
       <Link
         href="/explore"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.explore}
       >
         <ExploreIcon aria-hidden="true" />
@@ -69,7 +69,7 @@ export function DesktopNavigation({
       {/* Reels */}
       <Link
         href="/reels"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.reels}
       >
         <ReelsIcon aria-hidden="true" />
@@ -78,7 +78,7 @@ export function DesktopNavigation({
       {/* Stories */}
       <Link
         href="/stories"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.stories}
       >
         <StoriesIcon aria-hidden="true" />
@@ -87,7 +87,7 @@ export function DesktopNavigation({
       {/* Search */}
       <Link
         href="/search"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.search}
       >
         <SearchIcon aria-hidden="true" />
@@ -96,7 +96,7 @@ export function DesktopNavigation({
       {/* Feed */}
       <Link
         href="/feed"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.feed}
       >
         <FeedIcon aria-hidden="true" />
@@ -105,7 +105,7 @@ export function DesktopNavigation({
       {/* Settings */}
       <Link
         href="/settings"
-        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.settings}
       >
         <SettingsIcon aria-hidden="true" />
@@ -114,7 +114,7 @@ export function DesktopNavigation({
       {/* Notifications */}
       <Link
         href="/notifications"
-        className={`${TOUCH_TARGET_CLASSES.min} relative p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+        className={`${TOUCH_TARGET_CLASSES.min} relative p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
         aria-label={ARIA_LABELS.navigation.notifications}
       >
         <NotificationIcon aria-hidden="true" />
@@ -133,7 +133,7 @@ export function DesktopNavigation({
       <div className="relative">
         <button
           onClick={onToggleCreateMenu}
-          className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
+          className={`${TOUCH_TARGET_CLASSES.min} p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group`}
           {...getMenuButtonA11yProps(ARIA_LABELS.menu.create, menuId, showCreateMenu)}
         >
           <PlusIcon aria-hidden="true" />

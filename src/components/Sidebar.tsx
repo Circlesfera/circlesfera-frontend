@@ -138,10 +138,10 @@ export default function Sidebar() {
                 href={item.href}
                 className={`flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all duration-200 group relative ${active
                   ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600 border border-blue-100'
-                  : 'hover:bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300'
                   }`}
               >
-                <div className={`transition-colors ${active ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500 group-hover:text-gray-700 dark:text-gray-300'}`}>
+                <div className={`transition-colors ${active ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 dark:text-gray-300'}`}>
                   <Icon filled={active} />
                 </div>
                 <span className="font-medium text-sm">{item.label}</span>
@@ -198,7 +198,7 @@ export default function Sidebar() {
               >
                 {item.icon === 'profile' ? (
                   // Avatar del perfil - Instagram style
-                  <div className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${active ? 'border-black' : 'border-gray-300 dark:border-gray-600'
+                  <div className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${active ? 'border-black' : 'border-gray-300 dark:border-gray-600 dark:border-gray-600'
                     }`}>
                     {user?.avatar ? (
                       <Image
@@ -219,7 +219,7 @@ export default function Sidebar() {
                 ) : (
                   // Iconos normales
                   <div className="relative">
-                    <div className={`transition-transform duration-200 ${active ? 'scale-110 text-black' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'}`}>
+                    <div className={`transition-transform duration-200 ${active ? 'scale-110 text-black' : 'text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400'}`}>
                       <item.icon filled={active} />
                     </div>
 

@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100">
         {/* Sidebar visible durante carga */}
         <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:z-40">
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
             <div className="flex h-16 shrink-0 items-center">
               <div className="flex items-center gap-3">
                 <Shield className="w-8 h-8 text-blue-600" />
@@ -101,7 +101,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
         >
           {sidebarOpen ? (
             <X className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
@@ -116,7 +116,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         className={`
           fixed top-0 left-0 z-40 h-screen transition-transform
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
+          lg:translate-x-0 w-64 bg-white dark:bg-gray-900 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 dark:border-gray-700
         `}
       >
         {/* Logo */}
@@ -161,7 +161,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all
                   ${isActive
                     ? 'bg-blue-50 text-blue-600 font-medium'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
+                    : 'text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800'
                   }
                 `}
                 onClick={() => {
@@ -181,7 +181,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <Link
             href="/feed"
-            className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800 transition-all mb-2"
+            className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-all mb-2"
           >
             <Home className="w-5 h-5" />
             <span>Volver al Inicio</span>

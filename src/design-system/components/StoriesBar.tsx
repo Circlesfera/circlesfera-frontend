@@ -66,8 +66,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
           {/* Loading skeletons */}
           {[...Array(8)].map((_, index) => (
             <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
-              <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
+              <div className="w-12 h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded animate-pulse"></div>
             </div>
           ))}
         </div>

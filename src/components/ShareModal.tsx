@@ -117,7 +117,7 @@ export default function ShareModal({
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Compartir publicación</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -131,10 +131,10 @@ export default function ShareModal({
             <button
               onClick={() => setShareMethod('copy')}
               className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-colors ${
-                shareMethod === 'copy' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:bg-gray-800 border-2 border-transparent'
+                shareMethod === 'copy' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
               }`}
             >
-              <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
@@ -156,7 +156,7 @@ export default function ShareModal({
             <button
               onClick={() => setShareMethod('whatsapp')}
               className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-colors ${
-                shareMethod === 'whatsapp' ? 'bg-green-50 border-2 border-green-200' : 'hover:bg-gray-50 dark:bg-gray-800 border-2 border-transparent'
+                shareMethod === 'whatsapp' ? 'bg-green-50 border-2 border-green-200' : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
               }`}
             >
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -181,7 +181,7 @@ export default function ShareModal({
             <button
               onClick={() => setShareMethod('twitter')}
               className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-colors ${
-                shareMethod === 'twitter' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:bg-gray-800 border-2 border-transparent'
+                shareMethod === 'twitter' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
               }`}
             >
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -206,7 +206,7 @@ export default function ShareModal({
             <button
               onClick={() => setShareMethod('facebook')}
               className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-colors ${
-                shareMethod === 'facebook' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:bg-gray-800 border-2 border-transparent'
+                shareMethod === 'facebook' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
               }`}
             >
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -231,7 +231,7 @@ export default function ShareModal({
             <button
               onClick={() => setShareMethod('telegram')}
               className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-colors ${
-                shareMethod === 'telegram' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:bg-gray-800 border-2 border-transparent'
+                shareMethod === 'telegram' ? 'bg-blue-50 border-2 border-blue-200' : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 border-2 border-transparent'
               }`}
             >
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">

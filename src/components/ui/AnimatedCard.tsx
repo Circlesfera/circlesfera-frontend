@@ -48,7 +48,7 @@ export default function AnimatedCard({
     } : undefined,
   };
 
-  const combinedClassName = `bg-white dark:bg-gray-900 rounded-lg shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 ${className}`;
+  const combinedClassName = `bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-lg shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 ${className}`;
 
   return (
     <motion.div

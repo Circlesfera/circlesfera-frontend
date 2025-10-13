@@ -53,12 +53,12 @@ export default function UserSuggestions() {
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex items-center space-x-3 animate-pulse">
-              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
               <div className="flex-1 space-y-1">
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-20"></div>
+                <div className="h-2 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-24"></div>
               </div>
-              <div className="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div className="w-12 h-6 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded"></div>
             </div>
           ))}
         </div>
@@ -75,7 +75,7 @@ export default function UserSuggestions() {
           {suggestions.map((suggestion) => (
             <div
               key={suggestion._id}
-              className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               {/* Avatar */}
               <div className="relative">
@@ -119,7 +119,7 @@ export default function UserSuggestions() {
 
       {/* Footer con enlaces */}
       <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
-        <div className="text-gray-400 dark:text-gray-500 text-xs">
+        <div className="text-gray-400 dark:text-gray-500 dark:text-gray-400 text-xs">
           {/* Enlaces principales */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
             {[

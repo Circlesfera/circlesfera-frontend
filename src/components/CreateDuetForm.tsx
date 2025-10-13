@@ -113,7 +113,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -168,10 +168,10 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                     onClick={() => videoInputRef.current?.click()}
                     className="aspect-[9/16] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 transition-colors"
                   >
-                    <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 mb-4" />
+                    <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 dark:text-gray-400 mb-4" />
                     <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium">Sube tu video</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-2">Formato 9:16 (vertical)</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Máx. 100MB</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-1">Máx. 100MB</p>
                   </div>
                 )}
                 <input
@@ -279,7 +279,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+                  className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
                 >
                   Cancelar
                 </button>

@@ -306,16 +306,16 @@ export default function SettingsPage() {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-white dark:via-gray-900 to-gray-50 dark:to-gray-900">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-8"></div>
+              <div className="h-8 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/4 mb-8"></div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="md:col-span-1">
-                  <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                  <div className="h-64 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-lg"></div>
                 </div>
                 <div className="md:col-span-2">
                   <div className="space-y-4">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/2"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-2/3"></div>
                   </div>
                 </div>
               </div>
@@ -363,7 +363,7 @@ export default function SettingsPage() {
                     onClick={() => setActiveSection('account')}
                     className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'account'
                       ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : 'hover:bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -377,7 +377,7 @@ export default function SettingsPage() {
                     onClick={() => setActiveSection('security')}
                     className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'security'
                       ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : 'hover:bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -391,7 +391,7 @@ export default function SettingsPage() {
                     onClick={() => setActiveSection('privacy')}
                     className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'privacy'
                       ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : 'hover:bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -405,7 +405,7 @@ export default function SettingsPage() {
                     onClick={() => setActiveSection('notifications')}
                     className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'notifications'
                       ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : 'hover:bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -419,7 +419,7 @@ export default function SettingsPage() {
                     onClick={() => setActiveSection('help')}
                     className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${activeSection === 'help'
                       ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : 'hover:bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -495,7 +495,7 @@ export default function SettingsPage() {
                         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Actualiza tu contraseña para mantener tu cuenta segura</p>
                         <button
                           onClick={() => setShowPasswordForm(true)}
-                          className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors"
+                          className="px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors"
                         >
                           Cambiar contraseña
                         </button>
@@ -756,7 +756,7 @@ export default function SettingsPage() {
                       <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Centro de ayuda</h3>
                         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Encuentra respuestas a tus preguntas</p>
-                        <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors">
+                        <button className="px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors">
                           Ver ayuda
                         </button>
                       </div>
@@ -764,7 +764,7 @@ export default function SettingsPage() {
                       <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Contactar soporte</h3>
                         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">¿Necesitas ayuda? Contáctanos</p>
-                        <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors">
+                        <button className="px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors">
                           Contactar
                         </button>
                       </div>
@@ -845,7 +845,7 @@ export default function SettingsPage() {
                     setShowPasswordForm(false);
                     setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors"
+                  className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors"
                 >
                   Cancelar
                 </button>

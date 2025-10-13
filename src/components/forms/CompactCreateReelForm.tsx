@@ -203,21 +203,21 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
               "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
               isDragOver
                 ? 'border-pink-400 bg-pink-50'
-                : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 hover:bg-gray-50 dark:bg-gray-800'
+                : 'border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:border-gray-400 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <VideoIcon className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+            <VideoIcon className="w-8 h-8 text-gray-400 dark:text-gray-500 dark:text-gray-400 mx-auto mb-2" />
             <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">
               Arrastra un video aquí
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               o haz clic para seleccionar
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+            <p className="text-xs text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-2">
               MP4, AVI, MOV hasta 100MB
             </p>
           </div>

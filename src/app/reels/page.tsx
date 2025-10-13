@@ -182,7 +182,7 @@ export default function ReelsPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-auto text-white hover:bg-white dark:bg-gray-900/10"
+                  className="ml-auto text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
                 >
                   Seguir
                 </Button>
@@ -327,7 +327,7 @@ export default function ReelsPage() {
             {reels.slice(0, Math.min(10, reels.length)).map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white dark:bg-gray-900' : 'bg-white dark:bg-gray-900/30'
+                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white dark:bg-gray-900 dark:bg-gray-900' : 'bg-white dark:bg-gray-900 dark:bg-gray-900/30'
                   }`}
               />
             ))}

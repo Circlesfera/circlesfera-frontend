@@ -23,7 +23,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         // Default - Gris
-        default: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700",
+        default: "bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 border border-gray-200 dark:border-gray-700 dark:border-gray-700",
 
         // Primary - Azul
         primary: "bg-blue-100 text-blue-700 border border-blue-200",

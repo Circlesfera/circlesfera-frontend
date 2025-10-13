@@ -98,7 +98,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-2xl font-bold mb-4">Video no encontrado</h1>
-          <p className="text-gray-400 dark:text-gray-500 mb-6">{error || 'El video que buscas no existe'}</p>
+          <p className="text-gray-400 dark:text-gray-500 dark:text-gray-400 mb-6">{error || 'El video que buscas no existe'}</p>
           <button
             onClick={() => router.push('/cstv')}
             className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
@@ -128,7 +128,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={likeLoading || !isAuthenticated}
               className={`p-2 rounded-full transition-colors ${video.isLikedByUser
                 ? 'bg-red-600 text-white'
-                : 'bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30'
+                : 'bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/30'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Heart className={`w-5 h-5 ${video.isLikedByUser ? 'fill-current' : ''}`} />
@@ -139,7 +139,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={saveLoading || !isAuthenticated}
               className={`p-2 rounded-full transition-colors ${video.isSavedByUser
                 ? 'bg-blue-600 text-white'
-                : 'bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30'
+                : 'bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/30'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Bookmark className={`w-5 h-5 ${video.isSavedByUser ? 'fill-current' : ''}`} />
@@ -147,12 +147,12 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-full bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors"
+              className="p-2 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors"
             >
               <Share2 className="w-5 h-5" />
             </button>
 
-            <button className="p-2 rounded-full bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors">
+            <button className="p-2 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors">
               <MoreVertical className="w-5 h-5" />
             </button>
           </div>
@@ -200,7 +200,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
                 {video.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="bg-white dark:bg-gray-900/20 text-white text-xs px-2 py-1 rounded-full"
+                    className="bg-white dark:bg-gray-900 dark:bg-gray-900/20 text-white text-xs px-2 py-1 rounded-full"
                   >
                     #{tag}
                   </span>
@@ -308,7 +308,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={likeLoading || !isAuthenticated}
               className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${video.isLikedByUser
                 ? 'bg-red-100 text-red-600'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Heart className={`w-4 h-4 ${video.isLikedByUser ? 'fill-current' : ''}`} />
@@ -320,7 +320,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={saveLoading || !isAuthenticated}
               className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${video.isSavedByUser
                 ? 'bg-blue-100 text-blue-600'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Bookmark className={`w-4 h-4 ${video.isSavedByUser ? 'fill-current' : ''}`} />
@@ -329,7 +329,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             <button
               onClick={handleShare}
-              className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700 transition-colors"
+              className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors"
             >
               <Share2 className="w-4 h-4" />
               <span>Compartir</span>

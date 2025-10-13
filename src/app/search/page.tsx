@@ -65,7 +65,7 @@ function SearchContent() {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-white dark:via-gray-900 to-gray-50 dark:to-gray-900">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-gray-600 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -99,10 +99,10 @@ function SearchContent() {
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-4 animate-pulse">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/4"></div>
+                      <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/2"></div>
                     </div>
                   </div>
                 </div>
@@ -120,7 +120,7 @@ function SearchContent() {
             </div>
           ) : results.length === 0 ? (
             <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-8 text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-gray-600 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -163,7 +163,7 @@ function SearchContent() {
                           {user.username}
                         </span>
                         {user.isFollowing && (
-                          <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 px-2 py-1 rounded-full">
                             Siguiendo
                           </span>
                         )}
@@ -183,7 +183,7 @@ function SearchContent() {
                     </div>
 
                     <div className="flex-shrink-0">
-                      <svg className="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>

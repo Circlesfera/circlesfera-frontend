@@ -52,12 +52,12 @@ export default function ModernProfileHeader({
       {/* Hero Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/20 rounded-2xl"></div>
 
-      <div className="relative bg-white dark:bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700/50 p-4 sm:p-6 lg:p-8 mb-6">
+      <div className="relative bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700/50 p-4 sm:p-6 lg:p-8 mb-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
           {/* Avatar Section */}
           <div className="flex-shrink-0 relative group">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full shadow-lg overflow-hidden bg-gray-100 dark:bg-gray-800 relative">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full shadow-lg overflow-hidden bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 relative">
                 {user.avatar && !imageError ? (
                   <Image
                     src={user.avatar}
@@ -134,7 +134,7 @@ export default function ModernProfileHeader({
                     </button>
                     <Link
                       href="/settings"
-                      className="p-2 bg-white dark:bg-gray-900/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-white dark:bg-gray-900 transition-all duration-300 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700/50"
+                      className="p-2 bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-white transition-all duration-300 shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700/50"
                       title="Configuración"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

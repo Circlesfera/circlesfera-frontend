@@ -102,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-all duration-200",
-        filled ? "text-red-500 scale-110" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+        filled ? "text-red-500 scale-110" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
       )}
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
@@ -160,7 +160,7 @@ const PostCard: React.FC<PostCardProps> = ({
   );
 
   return (
-    <div className={cn("bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm dark:shadow-gray-900/50", className)}>
+    <div className={cn("bg-white dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm dark:shadow-gray-900/50", className)}>
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div
@@ -187,7 +187,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="relative" ref={menuRef}>
           <button
             onClick={handleMenuToggle}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
           >
             <MoreIcon />
           </button>
@@ -253,7 +253,7 @@ const PostCard: React.FC<PostCardProps> = ({
               onClick={handleLike}
               className={cn(
                 "p-1 rounded-full transition-all duration-200",
-                isLiked ? "hover:bg-red-50" : "hover:bg-gray-100 dark:bg-gray-800"
+                isLiked ? "hover:bg-red-50" : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800"
               )}
             >
               <LikeIcon filled={isLiked} />
@@ -261,14 +261,14 @@ const PostCard: React.FC<PostCardProps> = ({
 
             <button
               onClick={() => onComment?.(post.id)}
-              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
             >
               <CommentIcon />
             </button>
 
             <button
               onClick={() => onShare?.(post.id)}
-              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
             >
               <ShareIcon />
             </button>
@@ -296,7 +296,7 @@ const PostCard: React.FC<PostCardProps> = ({
         {post.comments > 0 && (
           <button
             onClick={() => onComment?.(post.id)}
-            className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm hover:text-gray-700 dark:text-gray-300 transition-colors duration-200"
+            className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors duration-200"
           >
             Ver {post.comments} {post.comments === 1 ? 'comentario' : 'comentarios'}
           </button>

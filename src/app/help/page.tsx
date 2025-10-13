@@ -82,7 +82,7 @@ export default function HelpPage() {
         {/* Barra de búsqueda */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
             <input
               type="text"
               placeholder="Buscar en el centro de ayuda..."
@@ -106,7 +106,7 @@ export default function HelpPage() {
                     {category.topics.map((topic, topicIndex) => (
                       <span
                         key={topicIndex}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
                       >
                         {topic}
                       </span>
@@ -140,7 +140,7 @@ export default function HelpPage() {
 
           <div className="grid md:grid-cols-3 gap-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-900/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-900 dark:bg-gray-900/20 flex items-center justify-center">
                 <MessageCircle className="w-5 h-5" />
               </div>
               <div>
@@ -150,7 +150,7 @@ export default function HelpPage() {
             </div>
 
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-900/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-900 dark:bg-gray-900/20 flex items-center justify-center">
                 <Mail className="w-5 h-5" />
               </div>
               <div>
@@ -160,7 +160,7 @@ export default function HelpPage() {
             </div>
 
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-900/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-900 dark:bg-gray-900/20 flex items-center justify-center">
                 <Phone className="w-5 h-5" />
               </div>
               <div>
@@ -177,19 +177,19 @@ export default function HelpPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/privacy"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Política de privacidad
             </Link>
             <Link
               href="/terms"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Términos de servicio
             </Link>

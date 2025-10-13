@@ -40,8 +40,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary: gradient
         ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl focus:ring-blue-300'
         : 'bg-blue-500 text-white hover:bg-blue-600 shadow-lg hover:shadow-xl focus:ring-blue-300',
-      secondary: 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 hover:shadow-lg focus:ring-gray-200',
-      ghost: 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:bg-gray-800 focus:ring-gray-200',
+      secondary: 'bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 dark:text-gray-300 border-2 border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:shadow-lg focus:ring-gray-200',
+      ghost: 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 focus:ring-gray-200',
       danger: 'bg-red-500 text-white hover:bg-red-600 shadow-lg hover:shadow-xl focus:ring-red-300',
       success: 'bg-green-500 text-white hover:bg-green-600 shadow-lg hover:shadow-xl focus:ring-green-300',
     };

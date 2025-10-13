@@ -94,8 +94,8 @@ export default function NotificationList() {
           </div>
         ) : notifications.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-6H4v6zM4 5h6V4a1 1 0 00-1-1H5a1 1 0 00-1 1v1zm0 6h6V9H4v2zm0 4h6v-2H4v2z" />
               </svg>
             </div>
@@ -106,7 +106,7 @@ export default function NotificationList() {
           <ul className="flex flex-col gap-4">
             {notifications.map(n => (
               <li key={n._id} className={`flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${n.isRead
-                  ? 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:bg-gray-800'
+                  ? 'bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800'
                   : 'bg-blue-50 border-blue-200 shadow-sm dark:shadow-gray-900/50 hover:bg-blue-100'
                 }`}>
                 {n.from?.avatar ? (
@@ -129,7 +129,7 @@ export default function NotificationList() {
                         <span className="font-semibold text-gray-900 dark:text-gray-100">{n.from?.username}</span> {getNotificationMessage(n)}
                       </span>
                     </div>
-                    <span className="text-xs text-gray-400 dark:text-gray-500 ml-4 flex-shrink-0">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 dark:text-gray-400 ml-4 flex-shrink-0">
                       {new Date(n.createdAt).toLocaleString('es-ES', {
                         month: 'short',
                         day: 'numeric',

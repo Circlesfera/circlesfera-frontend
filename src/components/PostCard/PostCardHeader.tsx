@@ -105,7 +105,7 @@ export function PostCardHeader({
       <div className="relative" ref={moreMenuRef}>
         <button
           onClick={onToggleMore}
-          className="min-w-[44px] min-h-[44px] p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          className="min-w-[44px] min-h-[44px] p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           {...getMenuButtonA11yProps(ARIA_LABELS.post.more, menuId, showMore)}
         >
           <MoreIcon aria-hidden="true" />
@@ -125,7 +125,7 @@ export function PostCardHeader({
                     onEdit()
                     onToggleMore()
                   }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                   role="menuitem"
                   {...getButtonA11yProps(ARIA_LABELS.post.edit)}
                 >
@@ -138,7 +138,7 @@ export function PostCardHeader({
                     onTogglePin()
                     onToggleMore()
                   }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                   role="menuitem"
                   {...getButtonA11yProps(isPinned ? 'Desfijar publicación' : 'Fijar publicación')}
                 >
@@ -171,7 +171,7 @@ export function PostCardHeader({
                   onReport()
                   onToggleMore()
                 }}
-                className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
+                className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                 role="menuitem"
                 {...getButtonA11yProps(ARIA_LABELS.post.report)}
               >

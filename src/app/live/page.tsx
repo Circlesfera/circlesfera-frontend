@@ -110,7 +110,7 @@ export default function LivePage() {
               onClick={() => setFilter('live')}
               className={`px-4 py-2 rounded-lg transition-colors ${filter === 'live'
                 ? 'bg-red-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
                 }`}
             >
               <div className="flex items-center space-x-2">
@@ -123,7 +123,7 @@ export default function LivePage() {
               onClick={() => setFilter('scheduled')}
               className={`px-4 py-2 rounded-lg transition-colors ${filter === 'scheduled'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
                 }`}
             >
               <div className="flex items-center space-x-2">
@@ -136,7 +136,7 @@ export default function LivePage() {
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all'
                 ? 'bg-gray-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700'
                 }`}
             >
               <TrendingUp className="w-4 h-4" />
@@ -167,8 +167,8 @@ export default function LivePage() {
           </div>
         ) : streams.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Camera className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Camera className="w-12 h-12 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {filter === 'live' ? 'No hay transmisiones en vivo' :
@@ -200,7 +200,7 @@ export default function LivePage() {
                 onClick={() => router.push(`/live/${stream._id}`)}
               >
                 {/* Thumbnail */}
-                <div className="relative aspect-video bg-gray-200 dark:bg-gray-700">
+                <div className="relative aspect-video bg-gray-200 dark:bg-gray-600 dark:bg-gray-700">
                   {stream.thumbnailUrl ? (
                     <Image
                       src={stream.thumbnailUrl}
@@ -285,7 +285,7 @@ export default function LivePage() {
             <button
               onClick={loadMore}
               disabled={loading}
-              className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-200 dark:bg-gray-700 disabled:opacity-50 transition-colors"
+              className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>

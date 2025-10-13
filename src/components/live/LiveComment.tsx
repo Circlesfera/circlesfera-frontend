@@ -91,7 +91,7 @@ export function LiveComment({
       className={`relative group ${comment.isPinned ? 'bg-blue-50 border-l-4 border-blue-500' : ''} ${!comment.isVisible ? 'opacity-50' : ''
         }`}
     >
-      <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+      <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors">
         {/* Avatar */}
         <div className="flex-shrink-0">
           <Image
@@ -149,7 +149,7 @@ export function LiveComment({
           <div className="flex items-center space-x-4 mt-2">
             <button
               onClick={toggleLike}
-              className={`flex items-center space-x-1 text-xs hover:text-blue-500 transition-colors ${isLiked ? 'text-blue-500' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'
+              className={`flex items-center space-x-1 text-xs hover:text-blue-500 transition-colors ${isLiked ? 'text-blue-500' : 'text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400'
                 }`}
             >
               <ThumbsUp className="w-3 h-3" />
@@ -179,7 +179,7 @@ export function LiveComment({
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="opacity-0 group-hover:opacity-100 p-1 rounded-full hover:bg-gray-200 dark:bg-gray-700 transition-all"
+              className="opacity-0 group-hover:opacity-100 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700 transition-all"
             >
               <MoreHorizontal className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
             </button>
@@ -196,14 +196,14 @@ export function LiveComment({
                     <>
                       <button
                         onClick={() => handleModerate(comment.isPinned ? 'unpin' : 'pin')}
-                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-2"
+                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-2"
                       >
                         <Pin className="w-4 h-4" />
                         <span>{comment.isPinned ? 'Desfijar' : 'Fijar'}</span>
                       </button>
                       <button
                         onClick={() => handleModerate('hide')}
-                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800"
+                        className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800"
                       >
                         Ocultar
                       </button>
@@ -243,7 +243,7 @@ export function LiveComment({
               <button
                 key={type}
                 onClick={() => handleReaction(type as 'like' | 'love' | 'laugh' | 'wow' | 'angry')}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-lg"
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors text-lg"
                 title={type}
               >
                 {emoji}

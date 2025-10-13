@@ -47,12 +47,12 @@ export function HeaderSearch({
             onChange={(e) => onSearchChange(e.target.value)}
             onFocus={onSearchFocus}
             onBlur={onSearchBlur}
-            className={`w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-center text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus-visible:outline-none focus-visible:border-blue-500 focus-visible:bg-white dark:bg-gray-900 focus-visible:shadow-lg transition-all duration-200 ${searchFocused ? 'border-blue-400 bg-white dark:bg-gray-900 shadow-lg' : 'hover:border-gray-300 dark:border-gray-600'
+            className={`w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl text-center text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400 focus-visible:outline-none focus-visible:border-blue-500 focus-visible:bg-white dark:bg-gray-900 dark:bg-gray-900 focus-visible:shadow-lg transition-all duration-200 ${searchFocused ? 'border-blue-400 bg-white dark:bg-gray-900 dark:bg-gray-900 shadow-lg' : 'hover:border-gray-300 dark:border-gray-600 dark:border-gray-600'
               }`}
             aria-label={ARIA_LABELS.navigation.search}
             autoComplete="off"
           />
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none">
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 dark:text-gray-400 pointer-events-none">
             <SearchIcon aria-hidden="true" />
           </div>
         </div>

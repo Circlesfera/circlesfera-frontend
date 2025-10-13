@@ -17,7 +17,7 @@ interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 const variants = {
   primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl',
   secondary: 'bg-gray-600 hover:bg-gray-700 text-white shadow-lg hover:shadow-xl',
-  ghost: 'bg-transparent hover:bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300',
+  ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300',
   danger: 'bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl'
 };
 
@@ -83,7 +83,7 @@ export default function AnimatedButton({
       {/* Ripple effect */}
       {ripple && (
         <motion.div
-          className="absolute inset-0 bg-white dark:bg-gray-900/20 rounded-lg"
+          className="absolute inset-0 bg-white dark:bg-gray-900 dark:bg-gray-900/20 rounded-lg"
           initial={{ scale: 0, opacity: 0 }}
           whileTap={{
             scale: 1,

@@ -59,10 +59,10 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex items-center space-x-3 animate-pulse">
-              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
             </div>
           ))}
@@ -95,7 +95,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
             key={user._id}
             href={`/${user.username}`}
             onClick={onResultClick}
-            className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
           >
             {user.avatar ? (
               <Image
@@ -116,7 +116,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
                   {user.username}
                 </span>
                 {user.isFollowing && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 px-2 py-1 rounded-full">
                     Siguiendo
                   </span>
                 )}

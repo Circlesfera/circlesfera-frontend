@@ -181,7 +181,7 @@ export default function FollowButton({
 
           <button
             onClick={handleMute}
-            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center gap-3 transition-all duration-200"
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center gap-3 transition-all duration-200"
           >
             <MuteIcon />
             <span className="font-medium">Silenciar</span>
@@ -189,7 +189,7 @@ export default function FollowButton({
 
           <button
             onClick={handleRestrict}
-            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center gap-3 transition-all duration-200"
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center gap-3 transition-all duration-200"
           >
             <RestrictIcon />
             <span className="font-medium">Restringir</span>

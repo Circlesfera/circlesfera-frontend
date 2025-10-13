@@ -92,7 +92,7 @@ export default function PostCard({
       animate={isInView ? fadeInUp.animate : fadeInUp.initial}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={cardAnimation.whileHover}
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 mb-6 animate-fade-in"
+      className="bg-white dark:bg-gray-900 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 mb-6 animate-fade-in"
       aria-label={`Publicación de ${post.user.username}`}
     >
       {/* Header */}
@@ -169,7 +169,7 @@ export default function PostCard({
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
+                className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
               >
                 Cancelar
               </button>

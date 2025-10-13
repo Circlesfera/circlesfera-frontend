@@ -223,7 +223,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             <button
               onClick={handleLoadMore}
               disabled={loading}
-              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>
@@ -244,7 +244,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-all duration-200 ${activeTab === tab.id
                 ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
                 }`}
             >
               {tab.icon}
@@ -252,7 +252,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               <span className="sm:hidden">
                 {tab.id === 'posts' ? 'Posts' : tab.id === 'reels' ? 'Reels' : 'Stories'}
               </span>
-              <span className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 dark:text-gray-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
+              <span className="bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 text-gray-600 dark:text-gray-400 dark:text-gray-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
                 {formatNumber(tab.count)}
               </span>
             </button>
@@ -365,7 +365,7 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
         const isVideo = type === 'posts' && post.type === 'video';
 
         return (
-          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 relative group cursor-pointer">
+          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 relative group cursor-pointer">
             {type === 'posts' ? (
               <Image
                 src={post.content?.images?.[0]?.url || '/placeholder.png'}
@@ -414,7 +414,7 @@ function ContentSkeleton() {
     <div className="p-3 sm:p-4 lg:p-6">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
         {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="aspect-square rounded-xl sm:rounded-2xl bg-gray-200 dark:bg-gray-700 animate-pulse" />
+          <div key={index} className="aspect-square rounded-xl sm:rounded-2xl bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 animate-pulse" />
         ))}
       </div>
     </div>

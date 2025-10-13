@@ -88,7 +88,7 @@ class ErrorBoundary extends Component<Props, State> {
                 <summary className="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Detalles del error (solo en desarrollo)
                 </summary>
-                <div className="bg-gray-100 dark:bg-gray-800 rounded p-4 text-xs overflow-auto max-h-48">
+                <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded p-4 text-xs overflow-auto max-h-48">
                   <p className="font-bold text-red-600 mb-2">
                     {this.state.error.message}
                   </p>
@@ -102,7 +102,7 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleReset}
-                className="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="px-6 py-2.5 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-medium"
               >
                 Intentar de nuevo
               </button>

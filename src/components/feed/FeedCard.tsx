@@ -118,7 +118,7 @@ export default function FeedCard({
                   Eliminar
                 </button>
               )}
-              <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
+              <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors duration-200">
                 <ShareIcon className="h-4 w-4" />
                 Compartir
               </button>
@@ -159,7 +159,7 @@ export default function FeedCard({
             onClick={handleLike}
             className={cn(
               "flex items-center gap-2 transition-colors duration-200",
-              isLiked ? "text-red-500" : "text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-red-500"
+              isLiked ? "text-red-500" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-red-500"
             )}
           >
             <HeartIcon
@@ -210,7 +210,7 @@ export default function FeedCard({
               </div>
             ))}
             {post.comments.length > 2 && (
-              <button className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 transition-colors duration-200">
+              <button className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors duration-200">
                 Ver {post.comments.length - 2} comentarios más
               </button>
             )}

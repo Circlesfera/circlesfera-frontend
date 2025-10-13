@@ -91,7 +91,7 @@ export default function ReportModal({
             <button
               onClick={handleClose}
               disabled={submitting}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -117,13 +117,13 @@ export default function ReportModal({
                     onClick={() => setSelectedReason(reason.id)}
                     className={`w-full text-left p-3 rounded-lg border-2 transition-colors ${selectedReason === reason.id
                       ? 'border-red-200 bg-red-50'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800'
+                      : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
                       }`}
                   >
                     <div className="flex items-start space-x-3">
                       <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5 ${selectedReason === reason.id
                         ? 'border-red-500 bg-red-500'
-                        : 'border-gray-300 dark:border-gray-600'
+                        : 'border-gray-300 dark:border-gray-600 dark:border-gray-600'
                         }`}>
                         {selectedReason === reason.id && (
                           <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full" />

@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const SearchIcon = () => (
     <svg
-      className="w-5 h-5 text-gray-400 dark:text-gray-500"
+      className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -152,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className={cn(
-      "sticky top-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 backdrop-blur-sm bg-white dark:bg-gray-900/95",
+      "sticky top-0 z-30 bg-white dark:bg-gray-900 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 backdrop-blur-sm bg-white dark:bg-gray-900 dark:bg-gray-900/95",
       className
     )}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,7 +184,7 @@ const Header: React.FC<HeaderProps> = ({
                   placeholder="Buscar"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-800 focus:bg-white dark:bg-gray-900 transition-all duration-200 !text-gray-900 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-800 focus:bg-white dark:bg-gray-900 transition-all duration-200 !text-gray-900 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-500"
                 />
               </div>
             </form>
@@ -206,7 +206,7 @@ const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={() => setShowCreateMenu(!showCreateMenu)}
-                className="sm:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+                className="sm:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
               >
                 <CreateIcon />
               </button>
@@ -219,7 +219,7 @@ const Header: React.FC<HeaderProps> = ({
                       router.push('/post/create');
                       setShowCreateMenu(false);
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                   >
                     <PostIcon />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Publicación</span>
@@ -230,7 +230,7 @@ const Header: React.FC<HeaderProps> = ({
                       router.push('/create/story');
                       setShowCreateMenu(false);
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                   >
                     <StoryIcon />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Historia</span>
@@ -241,7 +241,7 @@ const Header: React.FC<HeaderProps> = ({
                       router.push('/create/reel');
                       setShowCreateMenu(false);
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                   >
                     <ReelIcon />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Reel</span>
@@ -255,7 +255,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+                  className="flex items-center space-x-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
                 >
                   <Avatar
                     src={user.avatar}
@@ -281,7 +281,7 @@ const Header: React.FC<HeaderProps> = ({
                         router.push('/profile');
                         setShowUserMenu(false);
                       }}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                     >
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Perfil</span>
                     </button>
@@ -291,7 +291,7 @@ const Header: React.FC<HeaderProps> = ({
                         router.push('/settings');
                         setShowUserMenu(false);
                       }}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200"
                     >
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Configuración</span>
                     </button>
@@ -302,7 +302,7 @@ const Header: React.FC<HeaderProps> = ({
                           onLogout?.();
                           setShowUserMenu(false);
                         }}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors duration-200 text-red-600"
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors duration-200 text-red-600"
                       >
                         <LogoutIcon />
                         <span className="text-sm font-medium">Cerrar sesión</span>

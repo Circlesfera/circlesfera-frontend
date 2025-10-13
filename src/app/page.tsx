@@ -45,7 +45,7 @@ export default function LandingPage() {
     <>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-white dark:via-gray-900 to-blue-50">
         {/* Navegación */}
-        <nav className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm dark:shadow-gray-900/50">
+        <nav className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm dark:shadow-gray-900/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -60,7 +60,7 @@ export default function LandingPage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="px-5 py-2 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800 transition-all duration-200 hidden sm:block">
+                  className="px-5 py-2 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-all duration-200 hidden sm:block">
                   Iniciar Sesión
                 </button>
                 <button
@@ -128,7 +128,7 @@ export default function LandingPage() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => scrollToSection('features')}
-                  className="px-8 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 hover:border-gray-400 transition-all duration-200 font-semibold text-base sm:text-lg w-full sm:w-auto shadow-sm dark:shadow-gray-900/50 hover:shadow-md">
+                  className="px-8 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 hover:border-gray-400 dark:border-gray-500 transition-all duration-200 font-semibold text-base sm:text-lg w-full sm:w-auto shadow-sm dark:shadow-gray-900/50 hover:shadow-md">
                   Ver Características →
                 </motion.button>
               </div>
@@ -158,7 +158,7 @@ export default function LandingPage() {
                         <motion.div
                           animate={{ y: [-10, 10, -10] }}
                           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                          className="absolute top-6 left-6 flex items-center gap-2 text-white bg-white dark:bg-gray-900/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                          className="absolute top-6 left-6 flex items-center gap-2 text-white bg-white dark:bg-gray-900 dark:bg-gray-900/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center text-xs font-bold">
                             C
                           </div>
@@ -168,7 +168,7 @@ export default function LandingPage() {
                         <motion.div
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          className="relative z-10 w-20 h-20 rounded-full bg-white dark:bg-gray-900/95 backdrop-blur-sm flex items-center justify-center text-4xl shadow-xl cursor-pointer group">
+                          className="relative z-10 w-20 h-20 rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm flex items-center justify-center text-4xl shadow-xl cursor-pointer group">
                           <span className="group-hover:scale-110 transition-transform">▶️</span>
                         </motion.div>
                       </div>

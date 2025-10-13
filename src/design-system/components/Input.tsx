@@ -32,25 +32,25 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       border-2 rounded-xl
       transition-all duration-200 ease-out
       focus:outline-none focus:ring-4
-      placeholder:text-gray-400 dark:text-gray-500
+      placeholder:text-gray-400 dark:text-gray-500 dark:text-gray-400
       disabled:opacity-50 disabled:cursor-not-allowed
     `;
 
     const variants = {
       default: `
-        bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 
+        bg-white dark:bg-gray-900 dark:bg-gray-900 border-gray-200 dark:border-gray-700 dark:border-gray-700 
         focus:border-blue-500 focus:ring-blue-100
-        hover:border-gray-300 dark:border-gray-600
+        hover:border-gray-300 dark:border-gray-600 dark:border-gray-600
       `,
       filled: `
-        bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 
-        focus:border-blue-500 focus:ring-blue-100 focus:bg-white dark:bg-gray-900
-        hover:bg-gray-100 dark:bg-gray-800
+        bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:border-gray-700 
+        focus:border-blue-500 focus:ring-blue-100 focus:bg-white dark:bg-gray-900 dark:bg-gray-900
+        hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800
       `,
       outlined: `
-        bg-transparent border-2 border-gray-300 dark:border-gray-600 
+        bg-transparent border-2 border-gray-300 dark:border-gray-600 dark:border-gray-600 
         focus:border-blue-500 focus:ring-blue-100
-        hover:border-gray-400
+        hover:border-gray-400 dark:border-gray-500
       `,
     };
 
@@ -75,7 +75,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {leftIcon && (
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <span className="text-gray-400 dark:text-gray-500">
+              <span className="text-gray-400 dark:text-gray-500 dark:text-gray-400">
                 {leftIcon}
               </span>
             </div>
@@ -98,7 +98,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           
           {rightIcon && (
             <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-              <span className="text-gray-400 dark:text-gray-500">
+              <span className="text-gray-400 dark:text-gray-500 dark:text-gray-400">
                 {rightIcon}
               </span>
             </div>

@@ -124,7 +124,7 @@ export default function ReportDetailPage() {
       resolved: { label: 'Resuelto', color: 'bg-green-100 text-green-800', icon: CheckCircle },
       rejected: { label: 'Rechazado', color: 'bg-red-100 text-red-800', icon: XCircle },
     }
-    const badge = badges[status] || { label: status, color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200', icon: Flag }
+    const badge = badges[status] || { label: status, color: 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 dark:text-gray-200', icon: Flag }
     const Icon = badge.icon
 
     return (
@@ -225,7 +225,7 @@ export default function ReportDetailPage() {
             <div className="space-y-4">
               {/* Tipo de Contenido */}
               <div className="flex items-start space-x-3">
-                <ContentIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                <ContentIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Tipo de Contenido
@@ -238,7 +238,7 @@ export default function ReportDetailPage() {
 
               {/* Razón */}
               <div className="flex items-start space-x-3">
-                <Flag className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                <Flag className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Razón del Reporte
@@ -252,7 +252,7 @@ export default function ReportDetailPage() {
               {/* Descripción */}
               {report.description && (
                 <div className="flex items-start space-x-3">
-                  <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                  <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Descripción Adicional
@@ -266,7 +266,7 @@ export default function ReportDetailPage() {
 
               {/* Reportado por */}
               <div className="flex items-start space-x-3">
-                <User className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                <User className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Reportado Por
@@ -282,7 +282,7 @@ export default function ReportDetailPage() {
                           className="w-10 h-10 rounded-full"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 dark:text-gray-500">
+                        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 dark:text-gray-500">
                           {report.reportedBy.username?.[0]?.toUpperCase()}
                         </div>
                       )}
@@ -304,7 +304,7 @@ export default function ReportDetailPage() {
               {/* Fechas */}
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-start space-x-3">
-                  <Calendar className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                  <Calendar className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
                   <div>
                     <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                       Fecha de Reporte
@@ -323,7 +323,7 @@ export default function ReportDetailPage() {
 
                 {report.updatedAt && report.updatedAt !== report.createdAt && (
                   <div className="flex items-start space-x-3">
-                    <Clock className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                    <Clock className="w-5 h-5 text-gray-400 dark:text-gray-500 dark:text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                         Última Actualización
@@ -360,7 +360,7 @@ export default function ReportDetailPage() {
               </p>
               <Link
                 href={`/${report.contentType}/${report.reportedContent}`}
-                className="mt-4 inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 text-sm font-medium"
+                className="mt-4 inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 text-sm font-medium"
                 target="_blank"
               >
                 <span>Ver Contenido Original</span>

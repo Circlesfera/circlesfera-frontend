@@ -61,14 +61,14 @@ export default function ThemeSwitcherFinal() {
   // Evitar flash de contenido sin estilo
   if (!mounted) {
     return (
-      <div className="min-w-[44px] min-h-[44px] p-2 rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse" />
+      <div className="min-w-[44px] min-h-[44px] p-2 rounded-lg bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 animate-pulse" />
     )
   }
 
   return (
     <button
       onClick={toggleTheme}
-      className="min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+      className="min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
       aria-label={isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
       aria-pressed={isDark}
       type="button"

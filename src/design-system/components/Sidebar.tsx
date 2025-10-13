@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-colors duration-200",
-        active ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+        active ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
       )}
       fill={active ? "currentColor" : "none"}
       stroke="currentColor"
@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-colors duration-200",
-        active ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+        active ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
       )}
       fill="none"
       stroke="currentColor"
@@ -76,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-colors duration-200",
-        active ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+        active ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
       )}
       fill="none"
       stroke="currentColor"
@@ -95,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-colors duration-200",
-        active ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+        active ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
       )}
       fill="none"
       stroke="currentColor"
@@ -114,7 +114,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-colors duration-200",
-        active ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+        active ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
       )}
       fill="none"
       stroke="currentColor"
@@ -195,7 +195,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Sidebar */}
       <aside className={cn(
-        "hidden lg:flex flex-col w-64 h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 fixed left-0 top-0 z-40",
+        "hidden lg:flex flex-col w-64 h-screen bg-white dark:bg-gray-900 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 dark:border-gray-700 fixed left-0 top-0 z-40",
         className
       )}>
         {/* Logo */}
@@ -221,15 +221,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                 className={cn(
                   "flex items-center justify-between px-3 py-3 rounded-xl transition-all duration-200 group",
                   isActive
-                    ? "bg-gray-100 dark:bg-gray-800"
-                    : "hover:bg-gray-50 dark:bg-gray-800"
+                    ? "bg-gray-100 dark:bg-gray-700 dark:bg-gray-800"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800"
                 )}
               >
                 <div className="flex items-center space-x-3">
                   {isActive ? item.activeIcon || item.icon : item.icon}
                   <span className={cn(
                     "font-medium text-sm transition-colors duration-200",
-                    isActive ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:text-gray-100"
+                    isActive ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:text-gray-100 dark:text-gray-100"
                   )}>
                     {item.label}
                   </span>
@@ -256,7 +256,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* User Profile */}
         {user && (
           <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+            <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors duration-200">
               <Avatar
                 src={user.avatar}
                 alt={user.username}
@@ -274,7 +274,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
               <button
                 onClick={onLogout}
-                className="p-1 hover:bg-gray-200 dark:bg-gray-700 rounded-full transition-colors duration-200"
+                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700 rounded-full transition-colors duration-200"
               >
                 <MoreIcon />
               </button>
@@ -296,7 +296,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-200 relative",
-                  isActive ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+                  isActive ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
                 )}
               >
                 <div className="relative">
@@ -309,7 +309,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 <span className={cn(
                   "text-xs font-medium",
-                  isActive ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+                  isActive ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
                 )}>
                   {item.label}
                 </span>
@@ -323,7 +323,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               href="/profile"
               className={cn(
                 "flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-200",
-                pathname === '/profile' ? "text-gray-900 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
+                pathname === '/profile' ? "text-gray-900 dark:text-gray-100 dark:text-gray-100" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
               )}
             >
               <Avatar

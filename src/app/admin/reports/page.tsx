@@ -102,7 +102,7 @@ export default function ReportsPage() {
       resolved: { label: 'Resuelto', color: 'bg-green-100 text-green-800' },
       rejected: { label: 'Rechazado', color: 'bg-red-100 text-red-800' },
     }
-    const badge = badges[status] || { label: status, color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200' }
+    const badge = badges[status] || { label: status, color: 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 dark:text-gray-200' }
 
     return (
       <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${badge.color}`}>
@@ -227,7 +227,7 @@ export default function ReportsPage() {
               Buscar
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
               <input
                 type="text"
                 value={search}
@@ -320,7 +320,7 @@ export default function ReportsPage() {
                   {reports.map((report) => (
                     <tr
                       key={report._id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
                     >
                       {/* ID */}
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -333,7 +333,7 @@ export default function ReportsPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
-                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 flex items-center justify-center">
                               {report.contentType === 'post' && <span className="text-xl">📷</span>}
                               {report.contentType === 'reel' && <span className="text-xl">🎬</span>}
                               {report.contentType === 'story' && <span className="text-xl">⭐</span>}
@@ -373,7 +373,7 @@ export default function ReportsPage() {
                               className="w-6 h-6 rounded-full"
                             />
                           ) : (
-                            <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">
+                            <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">
                               {report.reportedBy?.username?.[0]?.toUpperCase() || '?'}
                             </div>
                           )}
@@ -420,7 +420,7 @@ export default function ReportsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -430,7 +430,7 @@ export default function ReportsPage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>

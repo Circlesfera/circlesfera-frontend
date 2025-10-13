@@ -220,7 +220,7 @@ export default function CreateStoryPage() {
                         onClick={() => setStoryType(type.type)}
                         className={`p-4 rounded-lg border-2 transition-all ${storyType === type.type
                           ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600'
+                          : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600'
                           }`}
                       >
                         <type.icon className="w-8 h-8 mx-auto mb-2 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
@@ -277,11 +277,11 @@ export default function CreateStoryPage() {
                           className="hidden"
                         />
 
-                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                           {storyType === 'image' ? (
-                            <ImageIcon className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                            <ImageIcon className="w-8 h-8 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
                           ) : (
-                            <Camera className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                            <Camera className="w-8 h-8 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
                           )}
                         </div>
 
@@ -360,7 +360,7 @@ export default function CreateStoryPage() {
                       Ubicación (opcional)
                     </label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 dark:text-gray-400" />
                       <Input
                         value={formData.location}
                         onChange={(e) => handleInputChange('location', e.target.value)}
@@ -395,7 +395,7 @@ export default function CreateStoryPage() {
                         )
                       ) : (
                         <div className="text-center">
-                          <div className="w-12 h-12 bg-white dark:bg-gray-900/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <div className="w-12 h-12 bg-white dark:bg-gray-900 dark:bg-gray-900/20 rounded-full flex items-center justify-center mx-auto mb-2">
                             <Camera className="w-6 h-6" />
                           </div>
                           <p className="text-sm">Tu story aparecerá aquí</p>

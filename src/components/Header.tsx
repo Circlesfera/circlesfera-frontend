@@ -196,7 +196,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 left-0 w-full bg-white dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 z-50">
+      <header className="sticky top-0 left-0 w-full bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
           <div className="flex items-center justify-between h-12 sm:h-14 lg:h-16">
             {/* Logo - Optimizado para móvil */}
@@ -224,10 +224,10 @@ export default function Header() {
                     setShowSearch(true);
                   }}
                   onBlur={() => setSearchFocused(false)}
-                  className={`w-full px-12 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-center text-sm !text-gray-900 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-200 ${searchFocused ? 'border-blue-400 bg-white dark:bg-gray-900 shadow-lg !text-gray-900 dark:text-gray-100' : 'hover:border-gray-300 dark:border-gray-600'
+                  className={`w-full px-12 py-2 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl text-center text-sm !text-gray-900 dark:text-gray-100 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-200 ${searchFocused ? 'border-blue-400 bg-white dark:bg-gray-900 dark:bg-gray-900 shadow-lg !text-gray-900 dark:text-gray-100 dark:text-gray-100' : 'hover:border-gray-300 dark:border-gray-600 dark:border-gray-600'
                     }`}
                 />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 dark:text-gray-400">
                   <SearchIcon />
                 </div>
               </form>
@@ -242,47 +242,47 @@ export default function Header() {
 
             {/* Navegación derecha - Desktop */}
             <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-              <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <HomeIcon />
                 <span className="sr-only">Inicio</span>
               </Link>
 
-              <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <MessageIcon />
                 <span className="sr-only">Mensajes</span>
               </Link>
 
-              <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <ExploreIcon />
                 <span className="sr-only">Explorar</span>
               </Link>
 
-              <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <ReelsIcon />
                 <span className="sr-only">Reels</span>
               </Link>
 
-              <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <StoriesIcon />
                 <span className="sr-only">Stories</span>
               </Link>
 
-              <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <SearchIcon />
                 <span className="sr-only">Buscar</span>
               </Link>
 
-              <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <FeedIcon />
                 <span className="sr-only">Feed</span>
               </Link>
 
-              <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <SettingsIcon />
                 <span className="sr-only">Configuración</span>
               </Link>
 
-              <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
+              <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <NotificationIcon />
                 {unread > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center font-bold animate-pulse">
@@ -296,7 +296,7 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setShowCreateMenu(!showCreateMenu)}
-                  className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group"
+                  className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-xl transition-all duration-200 group"
                 >
                   <PlusIcon />
                   <span className="sr-only">Crear contenido</span>
@@ -308,7 +308,7 @@ export default function Header() {
                     <div className="space-y-1">
                       <button
                         onClick={() => setShowPostForm(true)}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                       >
                         <PostIcon />
                         <span className="font-medium text-gray-900 dark:text-gray-100">Crear publicación</span>
@@ -316,7 +316,7 @@ export default function Header() {
 
                       <button
                         onClick={() => setShowStoryForm(true)}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                       >
                         <StoryIcon />
                         <span className="font-medium text-gray-900 dark:text-gray-100">Crear story</span>
@@ -354,7 +354,7 @@ export default function Header() {
                     <div className="space-y-1">
                       <Link
                         href={`/${user?.username}`}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                       >
                         {user?.avatar ? (
                           <Image
@@ -383,7 +383,7 @@ export default function Header() {
 
                       <Link
                         href="/settings"
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                       >
                         <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -394,7 +394,7 @@ export default function Header() {
 
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-red-600"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors text-red-600"
                       >
                         <LogoutIcon />
                         <span className="font-medium">Cerrar sesión</span>
@@ -408,7 +408,7 @@ export default function Header() {
             {/* Menú móvil - Optimizado */}
             <div className="md:hidden flex items-center gap-2">
               {/* Notificaciones en móvil */}
-              <Link href="/notifications" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+              <Link href="/notifications" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors">
                 <NotificationIcon />
                 {unread > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold animate-pulse">
@@ -419,7 +419,7 @@ export default function Header() {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors"
               >
                 <MenuIcon />
               </button>
@@ -432,27 +432,27 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed top-12 sm:top-14 lg:top-16 left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-40 animate-slide-in">
           <div className="px-4 py-2 space-y-1">
-            <Link href="/" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <HomeIcon />
               <span>Inicio</span>
             </Link>
 
-            <Link href="/messages" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/messages" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <MessageIcon />
               <span>Mensajes</span>
             </Link>
 
-            <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <ExploreIcon />
               <span>Explorar</span>
             </Link>
 
-            <Link href="/reels" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/reels" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <ReelsIcon />
               <span>Reels</span>
             </Link>
 
-            <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <StoriesIcon />
               <span>Stories</span>
             </Link>
@@ -478,17 +478,17 @@ export default function Header() {
               </span>
             </Link>
 
-            <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <SearchIcon />
               <span>Buscar</span>
             </Link>
 
-            <Link href="/feed" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/feed" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <FeedIcon />
               <span>Feed</span>
             </Link>
 
-            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <SettingsIcon />
               <span>Configuración</span>
             </Link>
@@ -496,7 +496,7 @@ export default function Header() {
             {/* Botón de crear contenido en móvil */}
             <button
               onClick={() => setShowCreateMenu(!showCreateMenu)}
-              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
             >
               <PlusIcon />
               <span>Crear contenido</span>
@@ -507,7 +507,7 @@ export default function Header() {
               <div className="ml-4 space-y-1">
                 <button
                   onClick={() => setShowPostForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                 >
                   <PostIcon />
                   <span>Crear publicación</span>
@@ -515,7 +515,7 @@ export default function Header() {
 
                 <button
                   onClick={() => setShowStoryForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                 >
                   <StoryIcon />
                   <span>Crear story</span>
@@ -523,7 +523,7 @@ export default function Header() {
 
                 <button
                   onClick={() => setShowReelForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
                 >
                   <ReelIcon />
                   <span>Crear reel</span>
@@ -531,7 +531,7 @@ export default function Header() {
               </div>
             )}
 
-            <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               {user?.avatar ? (
                 <Image
                   src={user.avatar}
@@ -548,7 +548,7 @@ export default function Header() {
               <span>Perfil</span>
             </Link>
 
-            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors">
               <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -558,7 +558,7 @@ export default function Header() {
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-red-600"
+              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors text-red-600"
             >
               <LogoutIcon />
               <span>Cerrar sesión</span>
@@ -576,7 +576,7 @@ export default function Header() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Crear publicación</h2>
                 <button
                   onClick={() => setShowPostForm(false)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors"
                 >
                   <CloseIcon />
                 </button>
@@ -596,7 +596,7 @@ export default function Header() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Crear story</h2>
                 <button
                   onClick={() => setShowStoryForm(false)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors"
                 >
                   <CloseIcon />
                 </button>
