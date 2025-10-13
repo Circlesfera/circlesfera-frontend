@@ -24,17 +24,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary - Azul principal (desde tokens)
-        primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 shadow-sm hover:shadow-md",
+        // Primary - Azul principal (con dark mode)
+        primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 shadow-sm hover:shadow-md dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700",
 
-        // Secondary - Gris
-        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 focus-visible:ring-gray-500 border border-gray-200",
+        // Secondary - Gris (con dark mode)
+        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 focus-visible:ring-gray-500 border border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:border-gray-700",
 
-        // Outline - Borde
-        outline: "border-2 border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 focus-visible:ring-gray-500",
+        // Outline - Borde (con dark mode)
+        outline: "border-2 border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 focus-visible:ring-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800",
 
-        // Ghost - Transparente
-        ghost: "text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:ring-gray-500",
+        // Ghost - Transparente (con dark mode)
+        ghost: "text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:active:bg-gray-700",
 
         // Destructive - Rojo (desde tokens)
         destructive: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500 shadow-sm",

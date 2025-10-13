@@ -23,7 +23,7 @@ import { TOUCH_TARGET_CLASSES } from '@/utils/accessibilityHelpers'
 
 const modalVariants = cva(
   // Base styles
-  "relative bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden",
+  "relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700",
   {
     variants: {
       size: {
@@ -174,7 +174,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {title && (
                   <h2
                     id={titleId}
-                    className="text-xl font-semibold text-gray-900"
+                    className="text-xl font-semibold text-gray-900 dark:text-gray-100"
                   >
                     {title}
                   </h2>
@@ -182,7 +182,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {description && (
                   <p
                     id={descId}
-                    className="text-sm text-gray-500 mt-1"
+                    className="text-sm text-gray-500 dark:text-gray-400 mt-1"
                   >
                     {description}
                   </p>
@@ -192,7 +192,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                  className={`${TOUCH_TARGET_CLASSES.min} p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                   aria-label="Cerrar modal"
                 >
                   <CloseIcon aria-hidden="true" />
