@@ -126,17 +126,17 @@ export default function CreateConversationModal({
             className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Nueva conversación</h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Busca usuarios para comenzar a chatear
                   </p>
                 </div>
                 <button
                   onClick={handleClose}
-                  className="p-2 text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 hover:bg-white dark:bg-gray-900 dark:bg-gray-900/50 rounded-lg transition-colors"
+                  className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

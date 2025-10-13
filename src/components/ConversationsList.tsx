@@ -124,7 +124,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
       <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
               Conversaciones
             </h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

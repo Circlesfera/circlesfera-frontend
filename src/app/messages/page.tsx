@@ -84,7 +84,7 @@ export default function MessagesPage() {
                     </svg>
                   </div>
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                       Mensajes
                     </h1>
                     <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400">Chat en tiempo real</p>
@@ -144,7 +144,7 @@ export default function MessagesPage() {
                         </div>
                       </div>
 
-                      <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent mb-3">
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
                         ¡Comienza a chatear!
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-6">
