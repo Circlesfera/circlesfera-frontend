@@ -253,7 +253,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       messageSocketService.off('user_online', handleUserOnline);
       messageSocketService.off('user_offline', handleUserOffline);
     };
-  }, [conversationId, messageSocketService, user]);
+  }, [conversationId, messageSocketService, user, getOtherParticipant]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();

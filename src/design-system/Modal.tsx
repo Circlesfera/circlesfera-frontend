@@ -111,7 +111,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
       document.addEventListener('keydown', handleTab)
       return () => document.removeEventListener('keydown', handleTab)
-    }, [isOpen])
+    }, [isOpen, modalRef])
 
     // Close on Esc
     useEffect(() => {

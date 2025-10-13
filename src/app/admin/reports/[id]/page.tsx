@@ -38,7 +38,7 @@ export default function ReportDetailPage() {
     if (reportId) {
       fetchReport()
     }
-  }, [reportId])
+  }, [reportId, fetchReport])
 
   const fetchReport = async () => {
     try {
