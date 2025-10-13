@@ -100,7 +100,7 @@ export default function ThemeInspector() {
   }, [])
 
   return (
-    <div className="fixed top-4 right-4 z-50 max-w-md">
+    <div className="fixed top-4 right-80 z-50 max-w-md">
       <div className="bg-white dark:bg-gray-900 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg p-4 shadow-lg">
         <div className="text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-3">
           Theme Inspector

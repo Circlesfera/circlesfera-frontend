@@ -118,7 +118,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   // Solo mostrar loading en el cliente durante la hidratación
   if (!isHydrated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-white dark:via-gray-900 to-blue-50">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -173,7 +173,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-50">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 dark:border-gray-700 px-6 pb-4 shadow-xl">
@@ -880,11 +880,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
       )}
 
       {/* Debugger temporal */}
-      <ThemeForcer />
       <ThemeInspector />
       <ThemeDebugger />
       <ThemeFixer />
       <ThemeCleaner />
+      <ThemeForcer />
     </div>
   );
 }

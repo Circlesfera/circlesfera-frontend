@@ -35,7 +35,7 @@ export default function ThemeDebugger() {
   }, [])
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white dark:bg-gray-900 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg p-3 text-xs font-mono shadow-lg z-50">
+    <div className="fixed bottom-4 right-80 bg-white dark:bg-gray-900 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg p-3 text-xs font-mono shadow-lg z-50 max-w-xs">
       <div className="text-gray-600 dark:text-gray-400">
         <div><strong>Tema:</strong> {theme}</div>
         <div><strong>HTML Classes:</strong> {htmlClasses}</div>

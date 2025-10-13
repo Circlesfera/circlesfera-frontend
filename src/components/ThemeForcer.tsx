@@ -143,7 +143,7 @@ export default function ThemeForcer() {
   }
 
   return (
-    <div className="fixed top-20 right-4 z-50 max-w-sm">
+    <div className="fixed bottom-32 right-4 z-50 max-w-sm">
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-lg">
         <div className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-3">
           🚨 Theme Forcer
