@@ -243,10 +243,10 @@ export default function LandingPage() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                   whileHover={{ y: -8 }}
-                  className="relative rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 sm:p-8 shadow-sm dark:shadow-gray-900/50 hover:shadow-2xl hover:border-blue-200 transition-all duration-300 group overflow-hidden"
+                  className="relative rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 sm:p-8 shadow-sm dark:shadow-gray-900/50 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-400 transition-all duration-300 group overflow-hidden"
                 >
                   {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                   <div className="relative z-10">
                     <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl mb-5 transition-all duration-300 group-hover:scale-110 bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg group-hover:shadow-xl">

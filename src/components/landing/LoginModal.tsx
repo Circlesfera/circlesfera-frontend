@@ -59,7 +59,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-8 relative border border-gray-200 dark:border-gray-700"
             >
               {/* Close Button */}
               <button

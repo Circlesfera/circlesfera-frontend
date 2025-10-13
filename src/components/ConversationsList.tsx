@@ -231,8 +231,8 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                 >
                   <button
                     className={`group w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${selectedId === conversation._id
-                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 shadow-sm dark:shadow-gray-900/50'
-                      : 'hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800 border-2 border-transparent'
+                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border-2 border-blue-200 dark:border-blue-400 shadow-sm dark:shadow-gray-900/50'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800 border-2 border-transparent'
                       }`}
                     onClick={() => onSelect(conversation)}
                   >
