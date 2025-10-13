@@ -78,7 +78,14 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     showStatus = false,
     loading = 'lazy',
     priority = false,
-    ...props
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+    onFocus,
+    onBlur,
+    tabIndex,
+    role = "img",
+    'aria-label': ariaLabel,
   }, ref) => {
     // Generar fallback de iniciales
     const getFallbackText = () => {
@@ -116,9 +123,14 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(avatarVariants({ size, variant, interactive }), className)}
-        role="img"
-        aria-label={alt || 'Avatar de usuario'}
-        {...props}
+        role={role}
+        aria-label={ariaLabel || alt || 'Avatar de usuario'}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        tabIndex={tabIndex}
       >
         {src ? (
           // Imagen de avatar

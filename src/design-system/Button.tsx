@@ -99,6 +99,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     disabled,
     loadingText,
     'aria-label': ariaLabel,
+    type = 'button',
     ...props
   }, ref) => {
     // Generar aria-label si está loading y no se proporciona
@@ -109,6 +110,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
+        type={type}
         className={cn(buttonVariants({ variant, size, fullWidth }), className)}
         disabled={disabled || loading}
         aria-label={computedAriaLabel}
