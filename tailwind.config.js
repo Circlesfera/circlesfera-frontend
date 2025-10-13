@@ -1,6 +1,17 @@
-/** @type {import('@tailwindcss/postcss').Config} */
+/**
+ * 🎨 TAILWIND CSS CONFIGURATION - CIRCLESFERA
+ * ===========================================
+ * Configuración unificada usando design tokens
+ * @see src/design-system/tokens/index.ts
+ */
+
+// Importar design tokens (única fuente de verdad)
+const designTokens = require('./src/design-system/tokens/index.ts')
+
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // Habilitar dark mode con clase
+  darkMode: 'class',
+
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -8,50 +19,51 @@ module.exports = {
     './src/features/**/*.{js,ts,jsx,tsx,mdx}',
     './src/design-system/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+
   theme: {
     extend: {
+      // ✅ Colores desde tokens (WCAG 2.1 AA compliant)
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-        },
-        secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-        },
-        accent: {
-          50: '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#d946ef',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-        },
+        ...designTokens.colors,
+        // Aliases para compatibilidad
+        gray: designTokens.colors.gray,
       },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+
+      // ✅ Spacing desde tokens
+      spacing: designTokens.spacing,
+
+      // ✅ Tipografía desde tokens
+      fontFamily: designTokens.typography.fontFamily,
+      fontSize: designTokens.typography.fontSize,
+      fontWeight: designTokens.typography.fontWeight,
+      lineHeight: designTokens.typography.lineHeight,
+      letterSpacing: designTokens.typography.letterSpacing,
+
+      // ✅ Border radius desde tokens
+      borderRadius: designTokens.borderRadius,
+
+      // ✅ Shadows desde tokens
+      boxShadow: {
+        ...designTokens.shadows,
+        // Aliases custom
+        base: designTokens.shadows.DEFAULT,
+        soft: designTokens.shadows.soft,
+        medium: designTokens.shadows.lg,
+        large: designTokens.shadows.xl,
       },
+
+      // ✅ Z-index desde tokens
+      zIndex: designTokens.zIndex,
+
+      // ✅ Max width desde tokens
+      maxWidth: designTokens.layout.maxWidth,
+
+      // Backdrop blur
+      backdropBlur: {
+        xs: '2px',
+      },
+
+      // Animaciones (mantener las existentes)
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
         'slide-in': 'slideIn 0.3s ease-out',
@@ -61,7 +73,9 @@ module.exports = {
         'scale': 'scale 0.3s ease-in-out',
         'shimmer': 'shimmer 1.5s infinite',
         'gradient-shift': 'gradientShift 3s ease infinite',
+        'blob': 'blob 7s infinite',
       },
+
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
@@ -89,35 +103,23 @@ module.exports = {
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
         },
-      },
-      boxShadow: {
-        'base': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        'large': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        'glow': '0 0 20px rgba(59, 130, 246, 0.3)',
-        'glow-lg': '0 0 30px rgba(59, 130, 246, 0.4)',
-      },
-      backdropBlur: {
-        xs: '2px',
-      },
-      spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
-      },
-      maxWidth: {
-        '8xl': '88rem',
-        '9xl': '96rem',
-      },
-      zIndex: {
-        '60': '60',
-        '70': '70',
-        '80': '80',
-        '90': '90',
-        '100': '100',
+        blob: {
+          '0%, 100%': {
+            transform: 'translate(0, 0) scale(1)',
+          },
+          '25%': {
+            transform: 'translate(20px, -50px) scale(1.1)',
+          },
+          '50%': {
+            transform: 'translate(-20px, 20px) scale(0.9)',
+          },
+          '75%': {
+            transform: 'translate(50px, 50px) scale(1.05)',
+          },
+        },
       },
     },
   },
+
   plugins: [],
 }
