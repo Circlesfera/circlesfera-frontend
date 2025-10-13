@@ -68,7 +68,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const [showAttachments, setShowAttachments] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [conversationInfo, setConversationInfo] = useState<Conversation | null>(null);
+  const [conversationInfo, setConversationInfo] = useState<{
+    _id: string;
+    participants: Array<{ _id: string; username: string; avatar?: string; fullName?: string; }>;
+    lastMessage?: { content: string; createdAt: string; senderId: string };
+  } | null>(null);
   const [isUserOnline, setIsUserOnline] = useState(false);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -88,7 +92,17 @@ export default function ChatWindow({ conversationId, conversationName, participa
       if (response && response.conversations) {
         const conversation = response.conversations.find((c: { _id: string }) => c._id === conversationId);
         if (conversation) {
-          setConversationInfo(conversation);
+          setConversationInfo({
+            _id: conversation._id,
+            participants: conversation.participants,
+            ...(conversation.lastMessage && {
+              lastMessage: {
+                content: conversation.lastMessage.content.text || '',
+                createdAt: conversation.lastMessage.createdAt,
+                senderId: conversation.lastMessage.sender._id
+              }
+            })
+          });
         }
       }
     } catch (error) {
@@ -108,7 +122,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
     // Si no, usar la información de la conversación
     if (conversationInfo && conversationInfo.participants) {
-      return conversationInfo.participants.find(p => p._id !== user?._id) || conversationInfo.participants[0];
+      return conversationInfo.participants.find((p: { _id: string }) => p._id !== user?._id) || conversationInfo.participants[0];
     }
 
     return null;
