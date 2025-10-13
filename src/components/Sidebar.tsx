@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/features/auth/useAuth';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -168,11 +169,19 @@ export default function Sidebar() {
         </nav>
 
         {/* Botón de crear contenido */}
-        <div className="px-4 pb-6">
+        <div className="px-4 pb-4">
           <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-xl font-medium text-sm hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
             <CreateIcon />
             Crear Contenido
           </button>
+        </div>
+
+        {/* Theme Switcher */}
+        <div className="px-4 pb-6">
+          <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
+            <ThemeSwitcher variant="icon" />
+          </div>
         </div>
       </aside>
       {/* Menú inferior fijo para móvil - Expandido con scroll horizontal */}
