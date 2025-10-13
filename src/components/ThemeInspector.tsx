@@ -2,13 +2,24 @@
 
 import { useState, useEffect } from 'react'
 
+type InspectedElement = {
+  selector: string;
+  tagName: string;
+  className: string;
+  backgroundColor: string;
+  color: string;
+  borderColor: string;
+  hasDarkClass: boolean;
+  htmlHasDarkClass: boolean;
+}
+
 export default function ThemeInspector() {
-  const [inspectedElements, setInspectedElements] = useState<any[]>([])
+  const [inspectedElements, setInspectedElements] = useState<InspectedElement[]>([])
 
   const inspectThemeElements = () => {
     console.log('🔍 Inspecting theme elements...')
 
-    const elements = []
+    const elements: InspectedElement[] = []
 
     // Buscar elementos con clases que deberían cambiar con el tema
     const selectors = [
