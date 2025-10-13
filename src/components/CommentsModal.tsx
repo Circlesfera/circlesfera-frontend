@@ -133,14 +133,14 @@ export default function CommentsModal({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] flex flex-col"
+          className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Comentarios</h2>
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Comentarios</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -149,7 +149,7 @@ export default function CommentsModal({
           </div>
 
           {/* Post Info */}
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
+          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <div className="flex items-center space-x-3">
               {postImage && (
                 <Image
@@ -161,7 +161,7 @@ export default function CommentsModal({
                 />
               )}
               <div>
-                <p className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">@{postAuthor}</p>
+                <p className="font-medium text-gray-900 dark:text-gray-100">@{postAuthor}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">Publicación</p>
               </div>
             </div>
@@ -190,16 +190,16 @@ export default function CommentsModal({
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-2xl px-3 py-2">
+                      <div className="bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-2xl px-3 py-2">
                         <div className="flex items-baseline space-x-2">
-                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
                             {comment.user.username}
                           </span>
                           <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             {formatTimeAgo(comment.createdAt)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100 mt-1 break-words">
+                        <p className="text-sm text-gray-900 dark:text-gray-100 mt-1 break-words">
                           {comment.content}
                         </p>
                       </div>
@@ -227,7 +227,7 @@ export default function CommentsModal({
 
           {/* Comment Form */}
           {user && (
-            <div className="border-t border-gray-200 dark:border-gray-700 dark:border-gray-700 p-4">
+            <div className="border-t border-gray-200 dark:border-gray-700 p-4">
               <form onSubmit={handleSubmit} className="flex items-center space-x-3">
                 <Image
                   src={user.avatar || '/default-avatar.png'}
@@ -240,7 +240,7 @@ export default function CommentsModal({
                   <input
                     type="text"
                     placeholder="Añade un comentario..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     disabled={sending}

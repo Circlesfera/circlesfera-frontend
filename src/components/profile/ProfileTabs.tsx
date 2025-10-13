@@ -193,7 +193,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">Error al cargar contenido</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Error al cargar contenido</h3>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">{error}</p>
           <button
             onClick={() => loadContent(activeTab)}
@@ -223,7 +223,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             <button
               onClick={handleLoadMore}
               disabled={loading}
-              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>
@@ -234,9 +234,9 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
       {/* Pestañas */}
-      <div className="border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
+      <div className="border-b border-gray-200 dark:border-gray-700">
         <div className="flex">
           {tabs.map((tab) => (
             <button
@@ -244,7 +244,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-all duration-200 ${activeTab === tab.id
                 ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800'
                 }`}
             >
               {tab.icon}
@@ -319,7 +319,7 @@ function EmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnProfile:
   return (
     <div className="text-center py-16 px-6">
       <div className="text-6xl mb-4">{message.icon}</div>
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">{message.title}</h3>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{message.title}</h3>
       <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">{message.subtitle}</p>
       {isOwnProfile && (
         <div className="flex justify-center gap-4">
@@ -365,7 +365,7 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
         const isVideo = type === 'posts' && post.type === 'video';
 
         return (
-          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 relative group cursor-pointer">
+          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 relative group cursor-pointer">
             {type === 'posts' ? (
               <Image
                 src={post.content?.images?.[0]?.url || '/placeholder.png'}

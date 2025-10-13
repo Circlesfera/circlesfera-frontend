@@ -51,14 +51,14 @@ export default function PressPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
             <FileText className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Sala de Prensa
           </h2>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
@@ -94,8 +94,8 @@ export default function PressPage() {
         </div>
 
         {/* Comunicados de Prensa */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-6">Últimos Comunicados</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Últimos Comunicados</h3>
           <div className="space-y-6">
             {pressReleases.map((release, index) => (
               <div key={index} className="border-b border-gray-100 dark:border-gray-700 pb-6 last:border-b-0">
@@ -110,7 +110,7 @@ export default function PressPage() {
                     </div>
                   </div>
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">{release.title}</h4>
+                <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{release.title}</h4>
                 <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">{release.summary}</p>
                 <button className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
                   <FileText className="w-4 h-4 mr-2" />
@@ -122,15 +122,15 @@ export default function PressPage() {
         </div>
 
         {/* Recursos de Prensa */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-6">Recursos de Prensa</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Recursos de Prensa</h3>
           <div className="grid md:grid-cols-3 gap-6">
             {resources.map((resource, index) => (
-              <div key={index} className="border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl p-6 hover:shadow-md transition-shadow">
+              <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mb-4">
                   <resource.icon className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">{resource.title}</h4>
+                <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{resource.title}</h4>
                 <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4 text-sm">{resource.description}</p>
                 <div className="space-y-2">
                   {resource.files.map((file, fileIndex) => (
@@ -148,56 +148,56 @@ export default function PressPage() {
         </div>
 
         {/* Información de la Empresa */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-6">Información de la Empresa</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Información de la Empresa</h3>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Datos Básicos</h4>
+              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Datos Básicos</h4>
               <div className="space-y-3">
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Nombre:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Nombre:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">CircleSfera</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Fundada:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Fundada:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">2024</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Ubicación:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Ubicación:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">España</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Sector:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Sector:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">Redes Sociales / Tecnología</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Empleados:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Empleados:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">15-20</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Estadísticas</h4>
+              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Estadísticas</h4>
               <div className="space-y-3">
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Estado:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Estado:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">En desarrollo</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Usuarios:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Usuarios:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">Próximamente</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Idiomas:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Idiomas:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">Español, Inglés</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Enfoque:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Enfoque:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">Videos cortos y creatividad</span>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">Lanzamiento:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Lanzamiento:</span>
                   <span className="ml-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">2025</span>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export default function PressPage() {
 
         {/* Declaración de Misión */}
         <div className="bg-gradient-to-r from-gray-50 dark:from-gray-900 to-blue-50 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">Declaración de Misión</h3>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Declaración de Misión</h3>
           <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
             CircleSfera nació con la visión de crear un espacio digital auténtico donde la creatividad
             florezca sin las presiones de las redes sociales tradicionales. Creemos en el poder de
@@ -223,19 +223,19 @@ export default function PressPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/jobs"
-              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Empleos
             </Link>
             <Link
               href="/api"
-              className="px-4 py-2 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               API
             </Link>

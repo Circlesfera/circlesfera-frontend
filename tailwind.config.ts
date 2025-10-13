@@ -1,16 +1,13 @@
 /**
- * 🎨 TAILWIND CSS CONFIGURATION - CIRCLESFERA
- * ===========================================
- * Configuración unificada usando design tokens
- * @see src/design-system/tokens/index.ts
+ * 🎨 TAILWIND CSS 4.x CONFIGURATION - CIRCLESFERA
+ * ===============================================
+ * Configuración para Tailwind CSS 4.x
  */
 
-// Importar design tokens (única fuente de verdad)
-const designTokens = require('./src/design-system/tokens/index.ts')
+import { type Config } from 'tailwindcss'
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: 'class',
+const config: Config = {
+  darkMode: 'class', // 🌙 Modo oscuro con clase .dark
 
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -22,48 +19,12 @@ module.exports = {
 
   theme: {
     extend: {
-      // ✅ Colores desde tokens (WCAG 2.1 AA compliant)
-      colors: {
-        ...designTokens.colors,
-        // Aliases para compatibilidad
-        gray: designTokens.colors.gray,
-      },
-
-      // ✅ Spacing desde tokens
-      spacing: designTokens.spacing,
-
-      // ✅ Tipografía desde tokens
-      fontFamily: designTokens.typography.fontFamily,
-      fontSize: designTokens.typography.fontSize,
-      fontWeight: designTokens.typography.fontWeight,
-      lineHeight: designTokens.typography.lineHeight,
-      letterSpacing: designTokens.typography.letterSpacing,
-
-      // ✅ Border radius desde tokens
-      borderRadius: designTokens.borderRadius,
-
-      // ✅ Shadows desde tokens
-      boxShadow: {
-        ...designTokens.shadows,
-        // Aliases custom
-        base: designTokens.shadows.DEFAULT,
-        soft: designTokens.shadows.soft,
-        medium: designTokens.shadows.lg,
-        large: designTokens.shadows.xl,
-      },
-
-      // ✅ Z-index desde tokens
-      zIndex: designTokens.zIndex,
-
-      // ✅ Max width desde tokens
-      maxWidth: designTokens.layout.maxWidth,
-
       // Backdrop blur
       backdropBlur: {
         xs: '2px',
       },
 
-      // Animaciones (mantener las existentes)
+      // Animaciones personalizadas
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
         'slide-in': 'slideIn 0.3s ease-out',
@@ -120,6 +81,6 @@ module.exports = {
       },
     },
   },
-
-  plugins: [],
 }
+
+export default config

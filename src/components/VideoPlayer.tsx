@@ -170,7 +170,7 @@ export default function VideoPlayer({
         }`}
       >
         <div
-          className="h-full bg-white dark:bg-gray-900 dark:bg-gray-900 transition-all duration-100"
+          className="h-full bg-white dark:bg-gray-900 transition-all duration-100"
           style={{ width: `${progress}%` }}
         />
       </div>

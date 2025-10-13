@@ -60,7 +60,7 @@ export default function MessagesPage() {
     <ProtectedRoute>
       <div className="h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-blue-50 to-indigo-50">
         {/* Header mejorado con glassmorphism */}
-        <div className="backdrop-blur-xl bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 dark:border-gray-700/50 shadow-sm dark:shadow-gray-900/50 px-4 sm:px-6 py-4">
+        <div className="backdrop-blur-xl bg-white dark:bg-gray-900 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 shadow-sm dark:shadow-gray-900/50 px-4 sm:px-6 py-4">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3 sm:space-x-4">
@@ -116,7 +116,7 @@ export default function MessagesPage() {
 
         {/* Contenido principal mejorado */}
         <div className="max-w-7xl mx-auto h-[calc(100vh-88px)] p-2 sm:p-4">
-          <div className="backdrop-blur-xl bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/90 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 dark:border-gray-700 dark:border-gray-700/50 overflow-hidden h-full">
+          <div className="backdrop-blur-xl bg-white dark:bg-gray-900 dark:bg-gray-900/90 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 dark:border-gray-700/50 overflow-hidden h-full">
             <div className="flex h-full">
               {/* Sidebar mejorado */}
               <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-gradient-to-b from-gray-50 dark:from-gray-900/50 to-white/50`}>

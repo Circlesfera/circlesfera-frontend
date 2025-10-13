@@ -200,7 +200,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     return (
       <div className="max-w-3xl mx-auto mt-10 px-2">
         <div className="text-center text-gray-500 dark:text-gray-400 dark:text-gray-500">
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
@@ -213,7 +213,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         {/* Header del perfil moderno */}
         <ModernProfileHeader
@@ -241,7 +241,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           <div className="mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-purple-50/20 rounded-xl"></div>
-              <div className="relative bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 dark:border-gray-700/50 p-4 sm:p-6">
+              <div className="relative bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 dark:border-gray-700/50 p-4 sm:p-6">
                 <EditProfileForm
                   profile={convertToFormData(profileData)}
                   onSave={async (updatedData) => {

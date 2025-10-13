@@ -276,7 +276,7 @@ export function LiveCapture({
               <div className="flex items-center space-x-4">
                 {isRecording && (
                   <div className="flex items-center space-x-2 bg-red-500 text-white px-3 py-1 rounded-full">
-                    <div className="w-2 h-2 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full animate-pulse"></div>
                     <span className="text-sm font-medium">EN VIVO</span>
                   </div>
                 )}

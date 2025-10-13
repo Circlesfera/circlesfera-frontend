@@ -12,12 +12,11 @@
 
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
-type Theme = 'light' | 'dark' | 'system'
-type ResolvedTheme = 'light' | 'dark'
+type Theme = 'light' | 'dark'
 
 interface ThemeContextType {
   theme: Theme
-  resolvedTheme: ResolvedTheme
+  resolvedTheme: Theme
   setTheme: (theme: Theme) => void
   toggleTheme: () => void
 }
@@ -33,81 +32,71 @@ export interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   defaultTheme = 'light',
-  storageKey = 'circlesfera-theme',
+  storageKey = 'theme',
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(defaultTheme)
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>('light')
-
-  // Obtener tema inicial
-  useEffect(() => {
-    const stored = localStorage.getItem(storageKey) as Theme | null
-    if (stored) {
-      setThemeState(stored)
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return defaultTheme
+    const savedTheme = localStorage.getItem(storageKey) as Theme | null
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme
     }
-  }, [storageKey])
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return systemPrefersDark ? 'dark' : 'light'
+  })
 
-  // Resolver tema basado en preferencias
+  // Aplicar tema inmediatamente cuando cambie
   useEffect(() => {
-    const root = window.document.documentElement
+    const root = document.documentElement
 
-    // Remover clases anteriores
-    root.classList.remove('light', 'dark')
-
-    let resolved: ResolvedTheme
-
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      resolved = systemTheme
+    // Aplicar clases
+    if (theme === 'dark') {
+      root.classList.add('dark')
+      root.classList.remove('light')
     } else {
-      resolved = theme
+      root.classList.add('light')
+      root.classList.remove('dark')
     }
 
-    setResolvedTheme(resolved)
-    root.classList.add(resolved)
+    // Aplicar colorScheme
+    root.style.colorScheme = theme
 
-    // Actualizar color-scheme del meta tag
-    const metaTheme = document.querySelector('meta[name="color-scheme"]')
-    if (metaTheme) {
-      metaTheme.setAttribute('content', resolved)
-    }
-  }, [theme])
-
-  // Escuchar cambios en preferencias del sistema
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
-    const handleChange = () => {
-      if (theme === 'system') {
-        const resolved = mediaQuery.matches ? 'dark' : 'light'
-        setResolvedTheme(resolved)
-
-        const root = window.document.documentElement
-        root.classList.remove('light', 'dark')
-        root.classList.add(resolved)
-      }
+    // Actualizar meta theme-color
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#111827' : '#ffffff')
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [theme])
+    // Guardar en localStorage
+    localStorage.setItem(storageKey, theme)
 
-  // Setear tema
-  const setTheme = (newTheme: Theme) => {
-    localStorage.setItem(storageKey, newTheme)
+    // Forzar un repaint del DOM
+    void root.offsetHeight
+
+    console.log('🎨 TEMA APLICADO:', {
+      tema: theme,
+      htmlClasses: root.className,
+      hasDark: root.classList.contains('dark'),
+      hasLight: root.classList.contains('light'),
+      colorScheme: root.style.colorScheme,
+      localStorage: localStorage.getItem(storageKey)
+    })
+  }, [theme, storageKey])
+
+  const handleSetTheme = (newTheme: Theme) => {
+    console.log('🔄 Cambiando tema a:', newTheme)
     setThemeState(newTheme)
   }
 
-  // Toggle entre light y dark
   const toggleTheme = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    console.log('🔄 Toggle tema:', theme, '→', newTheme)
+    setThemeState(newTheme)
   }
 
   const value: ThemeContextType = {
     theme,
-    resolvedTheme,
-    setTheme,
+    resolvedTheme: theme,
+    setTheme: handleSetTheme,
     toggleTheme,
   }
 

@@ -198,7 +198,7 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt = 'Imagen' }
           {/* Botón cerrar */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10 hover:bg-white dark:bg-gray-900/20 rounded-full transition-colors backdrop-blur-sm z-10"
+            className="absolute top-4 right-4 p-2 bg-white dark:bg-gray-900 dark:bg-gray-900/10 hover:bg-white dark:bg-gray-900/20 rounded-full transition-colors backdrop-blur-sm z-10"
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -206,11 +206,11 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt = 'Imagen' }
           </button>
 
           {/* Controles de zoom */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10 backdrop-blur-sm rounded-full px-4 py-2">
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 bg-white dark:bg-gray-900 dark:bg-gray-900/10 backdrop-blur-sm rounded-full px-4 py-2">
             <button
               onClick={handleZoomOut}
               disabled={scale <= 1}
-              className="p-2 hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 hover:bg-white dark:bg-gray-900 dark:bg-gray-900/20 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -224,7 +224,7 @@ export default function ImageModal({ isOpen, onClose, imageUrl, alt = 'Imagen' }
             <button
               onClick={handleZoomIn}
               disabled={scale >= 4}
-              className="p-2 hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/20 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 hover:bg-white dark:bg-gray-900 dark:bg-gray-900/20 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

@@ -75,7 +75,7 @@ export function PostCardHeader({
           <div className="flex items-center space-x-2">
             <button
               onClick={() => onUserClick?.(post.user._id)}
-              className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm hover:text-blue-600 transition-colors focus-visible:outline-none focus-visible:underline truncate max-w-[150px]"
+              className="font-semibold text-gray-900 dark:text-gray-100 text-sm hover:text-blue-600 transition-colors focus-visible:outline-none focus-visible:underline truncate max-w-[150px]"
               {...getButtonA11yProps(ARIA_LABELS.user.profile(post.user.username))}
             >
               {post.user.username}
@@ -105,7 +105,7 @@ export function PostCardHeader({
       <div className="relative" ref={moreMenuRef}>
         <button
           onClick={onToggleMore}
-          className="min-w-[44px] min-h-[44px] p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          className="min-w-[44px] min-h-[44px] p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           {...getMenuButtonA11yProps(ARIA_LABELS.post.more, menuId, showMore)}
         >
           <MoreIcon aria-hidden="true" />
@@ -115,7 +115,7 @@ export function PostCardHeader({
         {showMore && (
           <div
             {...getMenuA11yProps(menuId, showMore)}
-            className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl shadow-xl z-50 py-1 animate-fade-in"
+            className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 py-1 animate-fade-in"
           >
             {isOwner ? (
               <>
@@ -125,7 +125,7 @@ export function PostCardHeader({
                     onEdit()
                     onToggleMore()
                   }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700 dark:bg-gray-700"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                   role="menuitem"
                   {...getButtonA11yProps(ARIA_LABELS.post.edit)}
                 >
@@ -138,7 +138,7 @@ export function PostCardHeader({
                     onTogglePin()
                     onToggleMore()
                   }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700 dark:bg-gray-700"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                   role="menuitem"
                   {...getButtonA11yProps(isPinned ? 'Desfijar publicación' : 'Fijar publicación')}
                 >
@@ -171,7 +171,7 @@ export function PostCardHeader({
                   onReport()
                   onToggleMore()
                 }}
-                className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700 dark:bg-gray-700"
+                className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-700"
                 role="menuitem"
                 {...getButtonA11yProps(ARIA_LABELS.post.report)}
               >

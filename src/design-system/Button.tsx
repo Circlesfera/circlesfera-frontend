@@ -25,28 +25,28 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // Primary - Azul principal (con dark mode)
-        primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 shadow-sm dark:shadow-gray-900/50 hover:shadow-md dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700",
+        primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 shadow-sm hover:shadow-md dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700",
 
         // Secondary - Gris (con dark mode)
-        secondary: "bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-900 dark:text-gray-100 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700 active:bg-gray-300 focus-visible:ring-gray-500 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:border-gray-700",
+        secondary: "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600 focus-visible:ring-gray-500 border border-gray-200 dark:border-gray-700",
 
         // Outline - Borde (con dark mode)
-        outline: "border-2 border-gray-300 dark:border-gray-600 dark:border-gray-600 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 focus-visible:ring-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800",
+        outline: "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 focus-visible:ring-gray-500",
 
         // Ghost - Transparente (con dark mode)
-        ghost: "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 active:bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 focus-visible:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:active:bg-gray-700",
+        ghost: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 active:bg-gray-200 dark:active:bg-gray-700 focus-visible:ring-gray-500",
 
-        // Destructive - Rojo (desde tokens)
-        destructive: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500 shadow-sm dark:shadow-gray-900/50",
+        // Destructive - Rojo
+        destructive: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500 shadow-sm",
 
-        // Success - Verde (desde tokens)
-        success: "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 focus-visible:ring-green-500 shadow-sm dark:shadow-gray-900/50",
+        // Success - Verde
+        success: "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 focus-visible:ring-green-500 shadow-sm",
 
         // Gradient - Instagram-like
         gradient: "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 active:from-blue-800 active:to-purple-800 focus-visible:ring-blue-500 shadow-lg hover:shadow-xl",
 
         // Link - Estilo enlace
-        link: "text-blue-600 hover:text-blue-700 active:text-blue-800 underline-offset-4 hover:underline focus-visible:ring-blue-500",
+        link: "text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 active:text-blue-800 dark:active:text-blue-600 underline-offset-4 hover:underline focus-visible:ring-blue-500",
       },
       size: {
         // Small - Compacto
@@ -107,6 +107,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ? ariaLabel || `${loadingText || children} - Cargando`
       : ariaLabel
 
+    // Filtrar props no válidas para el DOM
+    const { gradient, ...validProps } = props as any
+
     return (
       <button
         ref={ref}
@@ -115,7 +118,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         aria-label={computedAriaLabel}
         aria-busy={loading}
-        {...props}
+        {...validProps}
       >
         {/* Loading spinner */}
         {loading && (

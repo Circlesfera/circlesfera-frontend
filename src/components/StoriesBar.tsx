@@ -110,14 +110,14 @@ export default function StoriesBar() {
             <StoryIcon />
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">Historias</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Historias</h2>
             <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs">Momentos que duran 24 horas</p>
           </div>
         </div>
 
         <button
           onClick={handleCreateStory}
-          className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-all duration-200 group"
+          className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-all duration-200 group"
         >
           <CameraIcon />
         </button>
@@ -136,7 +136,7 @@ export default function StoriesBar() {
               >
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                   <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r p-0.5 group-hover:scale-105 transition-all duration-200">
-                    <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900 p-0.5 relative">
+                    <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                       {user?.avatar ? (
                         <Image
                           src={`${user.avatar.startsWith('http') ? user.avatar : `https://dev-api.circlesfera.com${user.avatar}`}?v=${user?.updatedAt || ''}`}
@@ -153,12 +153,12 @@ export default function StoriesBar() {
                     </div>
                   </div>
                   {/* Indicador de tiempo */}
-                  <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm dark:shadow-gray-900/50">
+                  <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm dark:shadow-gray-900/50">
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                   </div>
                 </div>
                 <div className="text-center">
-                  <span className="text-xs font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 truncate max-w-[56px] sm:max-w-[64px] block">
+                  <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate max-w-[56px] sm:max-w-[64px] block">
                     Tu historia
                   </span>
                   <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
@@ -169,7 +169,7 @@ export default function StoriesBar() {
             ) : (
               <div className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0">
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
-                  <div className="w-full h-full rounded-full border-2 border-gray-300 dark:border-gray-600 dark:border-gray-600 bg-white dark:bg-gray-900 dark:bg-gray-900 p-0.5">
+                  <div className="w-full h-full rounded-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-0.5">
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center relative">
                       {user?.avatar ? (
                         <Image
@@ -237,7 +237,7 @@ export default function StoriesBar() {
                 >
                   <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                     <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r p-0.5 group-hover:scale-105 transition-all duration-200">
-                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 dark:bg-gray-900 p-0.5 relative">
+                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                         <Image
                           src={`${(userWithStories.avatar && userWithStories.avatar.startsWith('http'))
                             ? userWithStories.avatar
@@ -252,12 +252,12 @@ export default function StoriesBar() {
                       </div>
                     </div>
                     {/* Indicador de tiempo */}
-                    <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm dark:shadow-gray-900/50">
+                    <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm dark:shadow-gray-900/50">
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                     </div>
                   </div>
                   <div className="text-center">
-                    <span className="text-xs font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 truncate max-w-[56px] sm:max-w-[64px] block">
+                    <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate max-w-[56px] sm:max-w-[64px] block">
                       {userWithStories.username}
                     </span>
                     <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
@@ -270,12 +270,12 @@ export default function StoriesBar() {
         </div>
 
         {/* Indicadores de scroll */}
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-900 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <svg className="w-4 h-4 text-gray-600 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </div>
-        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-900 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <svg className="w-4 h-4 text-gray-600 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

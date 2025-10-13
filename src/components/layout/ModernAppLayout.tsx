@@ -86,7 +86,7 @@ const ModernAppLayout: React.FC<ModernAppLayoutProps> = ({ children }) => {
   } : undefined;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Sidebar para desktop */}
       {transformedUser && (
         <Sidebar

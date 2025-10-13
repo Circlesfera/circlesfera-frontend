@@ -157,8 +157,8 @@ export default function HomePage() {
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
               <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
-                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
+                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               </div>
             ))}
           </div>
@@ -170,15 +170,15 @@ export default function HomePage() {
             <Card key={index} className="p-6">
               <div className="animate-pulse">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
                   </div>
                 </div>
-                <div className="h-64 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/2"></div>
+                <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
             </Card>
           ))}
@@ -197,8 +197,8 @@ export default function HomePage() {
             {/* Loading skeletons */}
             {[...Array(8)].map((_, index) => (
               <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
-                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
+                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               </div>
             ))}
           </div>
@@ -210,15 +210,15 @@ export default function HomePage() {
             <Card key={index} className="p-6">
               <div className="animate-pulse">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/6"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
                   </div>
                 </div>
-                <div className="h-64 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/2"></div>
+                <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
             </Card>
           ))}
@@ -270,7 +270,7 @@ export default function HomePage() {
                           interactive
                         />
                         {item.storiesCount > 1 && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
                             <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
                               {item.storiesCount}
                             </span>
@@ -373,7 +373,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     No hay publicaciones aún
                   </h3>
                   <p className="text-base text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">

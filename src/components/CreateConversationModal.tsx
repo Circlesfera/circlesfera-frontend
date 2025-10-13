@@ -123,20 +123,20 @@ export default function CreateConversationModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-md bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 dark:border-gray-700 overflow-hidden"
+            className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Nueva conversación</h2>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Nueva conversación</h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">
                     Busca usuarios para comenzar a chatear
                   </p>
                 </div>
                 <button
                   onClick={handleClose}
-                  className="p-2 text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/50 rounded-lg transition-colors"
+                  className="p-2 text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 hover:bg-white dark:bg-gray-900 dark:bg-gray-900/50 rounded-lg transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -195,7 +195,7 @@ export default function CreateConversationModal({
                   placeholder="Buscar usuarios..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm !text-gray-900 dark:text-gray-100 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-500 bg-white dark:bg-gray-900 dark:bg-gray-900"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm !text-gray-900 dark:text-gray-100 !placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-900"
                 />
               </div>
 
@@ -215,7 +215,7 @@ export default function CreateConversationModal({
                   </div>
                 ) : users.length === 0 && searchQuery.length >= 2 ? (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
                       <svg className="w-8 h-8 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                       </svg>
@@ -232,7 +232,7 @@ export default function CreateConversationModal({
                           onClick={() => handleUserSelect(user)}
                           className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${isSelected
                             ? 'bg-blue-50 border border-blue-200'
-                            : 'hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
+                            : 'hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800'
                             }`}
                         >
                           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 relative">
@@ -245,7 +245,7 @@ export default function CreateConversationModal({
                             )}
                           </div>
                           <div className="flex-1 text-left">
-                            <p className="font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">
+                            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
                               {user.fullName || user.username}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
@@ -268,11 +268,11 @@ export default function CreateConversationModal({
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
               <div className="flex gap-3">
                 <button
                   onClick={handleClose}
-                  className="flex-1 px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+                  className="flex-1 px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
                 >
                   Cancelar
                 </button>

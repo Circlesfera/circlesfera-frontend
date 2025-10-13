@@ -184,7 +184,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
             storyType === 'image'
               ? 'bg-purple-100 text-purple-700 border border-purple-300'
-              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700 border border-transparent'
+              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 border border-transparent'
           )}
         >
           <CameraIcon className="w-4 h-4" />
@@ -198,7 +198,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
             storyType === 'video'
               ? 'bg-purple-100 text-purple-700 border border-purple-300'
-              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700 border border-transparent'
+              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 border border-transparent'
           )}
         >
           <VideoIcon className="w-4 h-4" />
@@ -212,7 +212,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
             storyType === 'text'
               ? 'bg-purple-100 text-purple-700 border border-purple-300'
-              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 dark:bg-gray-700 border border-transparent'
+              : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 border border-transparent'
           )}
         >
           <TextIcon className="w-4 h-4" />
@@ -227,7 +227,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Escribe tu story..."
-            className="w-full p-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm"
             rows={3}
             maxLength={1000}
           />
@@ -239,7 +239,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
                 type="color"
                 value={textColor}
                 onChange={(e) => setTextColor(e.target.value)}
-                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700 dark:border-gray-700"
+                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700"
               />
             </div>
             <div className="flex-1">
@@ -248,7 +248,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
                 type="color"
                 value={backgroundColor}
                 onChange={(e) => setBackgroundColor(e.target.value)}
-                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700 dark:border-gray-700"
+                className="w-full h-8 rounded border border-gray-200 dark:border-gray-700"
               />
             </div>
           </div>
@@ -261,7 +261,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
                 "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
                 isDragOver
                   ? 'border-purple-400 bg-purple-50'
-                  : 'border-gray-300 dark:border-gray-600 dark:border-gray-600 hover:border-gray-400 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800'
+                  : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800'
               )}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -318,7 +318,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Añade un texto (opcional)..."
-            className="w-full p-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm mt-3"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm mt-3"
             rows={2}
             maxLength={500}
           />

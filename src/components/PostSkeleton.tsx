@@ -8,7 +8,7 @@ export default function PostSkeleton({ aspectRatio = '1:1' }: PostSkeletonProps)
   const aspectClass = aspectRatio === '4:5' ? 'aspect-[4/5]' : 'aspect-square';
 
   return (
-    <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded shadow mb-6 animate-pulse">
+    <div className="bg-white dark:bg-gray-900 rounded shadow mb-6 animate-pulse">
       {/* Header usuario */}
       <div className="flex items-center gap-3 px-4 py-2">
         <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700" />

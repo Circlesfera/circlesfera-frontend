@@ -107,7 +107,7 @@ export function PostCardActions({
           {/* Likes count */}
           {post.likes.length > 0 && (
             <button
-              className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors focus-visible:outline-none focus-visible:underline"
+              className="font-semibold text-gray-900 dark:text-gray-100 text-sm hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 transition-colors focus-visible:outline-none focus-visible:underline"
               aria-label={ARIA_LABELS.post.likeCount(post.likes.length)}
             >
               {formatCount(post.likes.length)} me gusta
@@ -117,10 +117,10 @@ export function PostCardActions({
           {/* Caption */}
           {post.caption && !isEditing && (
             <div className="mt-1">
-              <span className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm mr-2">
+              <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm mr-2">
                 {post.user.username}
               </span>
-              <span className="text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">
+              <span className="text-gray-900 dark:text-gray-100 text-sm">
                 {post.caption.length > 80 && !showFullCaption ? (
                   <>
                     {post.caption.substring(0, 80)}...
@@ -156,7 +156,7 @@ export function PostCardActions({
               <textarea
                 value={editCaption}
                 onChange={(e) => onEditCaption(e.target.value)}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 rows={3}
                 placeholder="Escribe tu caption..."
                 aria-label="Caption del post"

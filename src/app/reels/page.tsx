@@ -108,15 +108,14 @@ export default function ReelsPage() {
           <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <Video className="w-12 h-12 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             No hay reels disponibles
           </h2>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-8">
             Crea tu primer reel para comenzar a compartir videos cortos con la comunidad.
           </p>
           <Button
-            variant="primary"
-            gradient
+            variant="gradient"
             size="lg"
             onClick={() => router.push('/reels/create')}
             className="w-full"
@@ -182,7 +181,7 @@ export default function ReelsPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-auto text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900/10"
+                  className="ml-auto text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
                 >
                   Seguir
                 </Button>
@@ -285,8 +284,7 @@ export default function ReelsPage() {
             {/* Create reel button */}
             <div className="mt-8">
               <Button
-                variant="primary"
-                gradient
+                variant="gradient"
                 size="lg"
                 onClick={() => router.push('/reels/create')}
                 className="w-12 h-12 rounded-full"
@@ -327,7 +325,7 @@ export default function ReelsPage() {
             {reels.slice(0, Math.min(10, reels.length)).map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900' : 'bg-white dark:bg-gray-900 dark:bg-gray-900/30'
+                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white dark:bg-gray-900' : 'bg-white dark:bg-gray-900 dark:bg-gray-900/30'
                   }`}
               />
             ))}

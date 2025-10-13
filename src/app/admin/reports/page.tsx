@@ -102,7 +102,7 @@ export default function ReportsPage() {
       resolved: { label: 'Resuelto', color: 'bg-green-100 text-green-800' },
       rejected: { label: 'Rechazado', color: 'bg-red-100 text-red-800' },
     }
-    const badge = badges[status] || { label: status, color: 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200 dark:text-gray-200' }
+    const badge = badges[status] || { label: status, color: 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-800 dark:text-gray-200' }
 
     return (
       <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${badge.color}`}>
@@ -151,7 +151,7 @@ export default function ReportsPage() {
     <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Gestión de Reportes
         </h1>
         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">
@@ -160,10 +160,10 @@ export default function ReportsPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <div className="flex items-center space-x-2 mb-4">
           <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Filtros</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100">Filtros</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -175,7 +175,7 @@ export default function ReportsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-900 dark:text-gray-100 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
             >
               {statusOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -193,7 +193,7 @@ export default function ReportsPage() {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-900 dark:text-gray-100 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
             >
               {typeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -211,7 +211,7 @@ export default function ReportsPage() {
             <select
               value={reasonFilter}
               onChange={(e) => setReasonFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-900 dark:text-gray-100 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
             >
               {reasonOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -233,7 +233,7 @@ export default function ReportsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="ID, usuario..."
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 dark:bg-gray-900 text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function ReportsPage() {
 
       {/* Reports List */}
       {loading ? (
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-12">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-12">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando reportes...</p>
@@ -275,10 +275,10 @@ export default function ReportsPage() {
           </div>
         </div>
       ) : reports.length === 0 ? (
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-12">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-12">
           <div className="text-center">
             <Flag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
               No hay reportes
             </h3>
             <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">
@@ -288,10 +288,10 @@ export default function ReportsPage() {
         </div>
       ) : (
         <>
-          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-gray-800 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       ID
@@ -320,11 +320,11 @@ export default function ReportsPage() {
                   {reports.map((report) => (
                     <tr
                       key={report._id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+                      className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
                     >
                       {/* ID */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-mono text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                        <div className="text-sm font-mono text-gray-900 dark:text-gray-100">
                           #{report._id.slice(-6)}
                         </div>
                       </td>
@@ -333,7 +333,7 @@ export default function ReportsPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
-                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 flex items-center justify-center">
                               {report.contentType === 'post' && <span className="text-xl">📷</span>}
                               {report.contentType === 'reel' && <span className="text-xl">🎬</span>}
                               {report.contentType === 'story' && <span className="text-xl">⭐</span>}
@@ -344,7 +344,7 @@ export default function ReportsPage() {
                             </div>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 capitalize">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                               {report.contentType}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate max-w-xs">
@@ -377,7 +377,7 @@ export default function ReportsPage() {
                               {report.reportedBy?.username?.[0]?.toUpperCase() || '?'}
                             </div>
                           )}
-                          <span className="text-sm text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                          <span className="text-sm text-gray-900 dark:text-gray-100">
                             {report.reportedBy?.username || 'Anónimo'}
                           </span>
                         </div>
@@ -420,7 +420,7 @@ export default function ReportsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -430,7 +430,7 @@ export default function ReportsPage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>

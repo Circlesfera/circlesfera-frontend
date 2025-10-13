@@ -54,7 +54,7 @@ export default function LoadingSpinner({
 // Componente específico para páginas completas
 export function PageLoader({ text = 'Cargando...' }: { text?: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 dark:bg-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
       <LoadingSpinner size="xl" color="primary" text={text} />
     </div>
   );

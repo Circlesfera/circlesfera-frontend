@@ -165,7 +165,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
         {remainingCount > 0 && (
           <div
             className={cn(
-              'relative inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 font-medium border-2 border-white',
+              'relative inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium border-2 border-white',
               size === 'xs' && 'w-6 h-6 text-xs',
               size === 'sm' && 'w-8 h-8 text-sm',
               size === 'md' && 'w-10 h-10 text-base',

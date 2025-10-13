@@ -106,9 +106,9 @@ export function CSTVVideoCard({
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileHover={{ scale: 1.1 }}
-            className="bg-white dark:bg-gray-900 dark:bg-gray-900 bg-opacity-90 rounded-full p-4 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="bg-white dark:bg-gray-900 bg-opacity-90 rounded-full p-4 opacity-0 group-hover:opacity-100 transition-opacity"
           >
-            <Play className="w-6 h-6 text-gray-900 dark:text-gray-100 dark:text-gray-100 ml-1" />
+            <Play className="w-6 h-6 text-gray-900 dark:text-gray-100 ml-1" />
           </motion.div>
         </div>
 
@@ -133,7 +133,7 @@ export function CSTVVideoCard({
       {/* Content */}
       <div className="p-4">
         {/* Title */}
-        <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm mb-2 line-clamp-2 leading-tight">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2 line-clamp-2 leading-tight">
           {video.title}
         </h3>
 
@@ -154,7 +154,7 @@ export function CSTVVideoCard({
               height={24}
               className="w-6 h-6 rounded-full object-cover"
             />
-            <span className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {video.user.username}
             </span>
             {video.user.isVerified && (
@@ -190,7 +190,7 @@ export function CSTVVideoCard({
               onClick={handleLike}
               className={`p-2 rounded-full transition-colors ${isLiked
                 ? 'bg-red-100 text-red-600'
-                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:bg-red-100 hover:text-red-600'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-red-100 hover:text-red-600'
                 }`}
             >
               <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
@@ -200,7 +200,7 @@ export function CSTVVideoCard({
               onClick={handleSave}
               className={`p-2 rounded-full transition-colors ${isSaved
                 ? 'bg-blue-100 text-blue-600'
-                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600'
+                : 'bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-blue-100 hover:text-blue-600'
                 }`}
             >
               <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
@@ -208,7 +208,7 @@ export function CSTVVideoCard({
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-green-100 hover:text-green-600 transition-colors"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-green-100 hover:text-green-600 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -221,17 +221,17 @@ export function CSTVVideoCard({
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors"
+                className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors"
               >
                 <MoreVertical className="w-4 h-4" />
               </button>
 
               {showMenu && (
-                <div className="absolute right-0 top-10 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 py-1 z-10 min-w-[120px]">
-                  <button className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800">
+                <div className="absolute right-0 top-10 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10 min-w-[120px]">
+                  <button className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800">
                     Editar
                   </button>
-                  <button className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800">
+                  <button className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800">
                     Estadísticas
                   </button>
                   <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50">

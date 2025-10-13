@@ -10,8 +10,7 @@ import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
-import ThemeSwitcher from '@/components/ThemeSwitcher.v3';
-import ThemeDebugger from '@/components/ThemeDebugger';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -172,7 +171,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-50">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 dark:border-gray-700 px-6 pb-4 shadow-xl">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900/95 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
             <div className="flex items-center gap-3">
@@ -180,8 +179,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <span className="text-white font-bold text-lg">C</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">CircleSfera</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Red Social</p>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">CircleSfera</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
               </div>
             </div>
           </div>
@@ -198,16 +197,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
-                          : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-100"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                       )}
                     >
                       <item.icon
                         className={cn(
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
-                            ? "text-blue-700"
-                            : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                            ? "text-blue-700 dark:text-blue-400"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -230,7 +229,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Navegación de Contenido */}
             <div className="mb-2">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Contenido</h3>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contenido</h3>
               <ul role="list" className="space-y-1">
                 {contentNavigation.map((item) => (
                   <li key={item.name}>
@@ -239,16 +238,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
-                          : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-100"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                       )}
                     >
                       <item.icon
                         className={cn(
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
-                            ? "text-blue-700"
-                            : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                            ? "text-blue-700 dark:text-blue-400"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -270,7 +269,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Navegación de Notificaciones */}
             <div className="mb-2">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Social</h3>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Social</h3>
               <ul role="list" className="space-y-1">
                 {notificationsNavigation.map((item) => (
                   <li key={item.name}>
@@ -279,16 +278,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
-                          : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-100"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                       )}
                     >
                       <item.icon
                         className={cn(
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
-                            ? "text-blue-700"
-                            : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                            ? "text-blue-700 dark:text-blue-400"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -329,16 +328,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
-                          : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-100"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                       )}
                     >
                       <item.icon
                         className={cn(
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
-                            ? "text-blue-700"
-                            : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                            ? "text-blue-700 dark:text-blue-400"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -353,7 +352,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <div className="pt-6 border-t border-gray-100 dark:border-gray-700">
                 <Link
                   href={`/${user.username}`}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors duration-200 group cursor-pointer"
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 group cursor-pointer"
                 >
                   {user.avatar ? (
                     <Image
@@ -361,20 +360,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       alt={`Avatar de ${user.username}`}
                       width={40}
                       height={40}
-                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200"
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white dark:ring-gray-700 shadow-sm group-hover:ring-blue-100 transition-all duration-200"
                     />
                   ) : (
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-gray-700 shadow-sm group-hover:ring-blue-100 transition-all duration-200">
                       <span className="text-white font-semibold text-sm">
                         {user.username?.[0]?.toUpperCase()}
                       </span>
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 truncate">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                       {user.fullName || user.username}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                       @{user.username}
                     </p>
                   </div>
@@ -384,7 +383,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Theme Switcher */}
             <div className="mt-4 px-3">
-              <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-xl p-3">
+              <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
                 <ThemeSwitcher />
               </div>
@@ -396,10 +395,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Top Navigation Mobile - Mejorado */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700 bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/95 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100 dark:hover:text-gray-100 lg:hidden transition-colors duration-200"
+            className="-m-2.5 p-2.5 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white lg:hidden transition-colors duration-200"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Abrir sidebar</span>
@@ -413,14 +412,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">C</span>
               </div>
-              <span className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">CircleSfera</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">CircleSfera</span>
             </div>
           </div>
 
           <div className="flex items-center gap-x-3">
             <Link
               href="/notifications"
-              className="relative p-2 text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              className="relative p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
             >
               <span className="sr-only">Ver notificaciones</span>
               <NotificationIcon className="h-6 w-6" />
@@ -442,7 +441,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Mobile Bottom Navigation - Optimizado para móviles */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 dark:border-gray-700 lg:hidden shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 lg:hidden shadow-lg">
         <div className="flex items-center justify-around px-1 py-2">
           {/* Navegación principal optimizada para móviles */}
           {primaryNavigation.map((item) => (
@@ -453,7 +452,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
                   ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
-                  : "text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -476,7 +475,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Botón de crear contenido */}
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800"
+            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
               <PlusIcon className="h-4 w-4 text-white" />
@@ -493,7 +492,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
                   ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
-                  : "text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -516,8 +515,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className={cn(
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(`/${user.username}`)
-                  ? "text-blue-600 bg-blue-50"
-                  : "text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800"
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -547,7 +546,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {sidebarOpen && (
         <div className="relative z-50 lg:hidden">
           <div className="fixed inset-0 bg-gray-900/80 dark:bg-black/80" onClick={() => setSidebarOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-white dark:bg-gray-900 dark:bg-gray-900 px-6 pb-4 shadow-xl">
+          <div className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-white dark:bg-gray-900 px-6 pb-4 shadow-xl">
             {/* Mobile sidebar content - completo */}
             <div className="flex h-16 shrink-0 items-center justify-between">
               <div className="flex items-center gap-3">
@@ -555,13 +554,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <span className="text-white font-bold text-lg">C</span>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">CircleSfera</h1>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Red Social</p>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">CircleSfera</h1>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
                 </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -573,7 +572,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <nav className="flex flex-1 flex-col mt-6">
               {/* Navegación Principal */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Principal</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Principal</h3>
                 <ul role="list" className="space-y-1">
                   {primaryNavigation.map((item) => (
                     <li key={item.name}>
@@ -583,16 +582,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
-                            : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                         )}
                       >
                         <item.icon
                           className={cn(
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
-                              ? "text-blue-700"
-                              : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                              ? "text-blue-700 dark:text-blue-400"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -610,7 +609,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Navegación de Contenido */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Contenido</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Contenido</h3>
                 <ul role="list" className="space-y-1">
                   {contentNavigation.map((item) => (
                     <li key={item.name}>
@@ -620,16 +619,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
-                            : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                         )}
                       >
                         <item.icon
                           className={cn(
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
-                              ? "text-blue-700"
-                              : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                              ? "text-blue-700 dark:text-blue-400"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -646,7 +645,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Navegación de Notificaciones */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Social</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Social</h3>
                 <ul role="list" className="space-y-1">
                   {notificationsNavigation.map((item) => (
                     <li key={item.name}>
@@ -656,16 +655,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
-                            : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                         )}
                       >
                         <item.icon
                           className={cn(
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
-                              ? "text-blue-700"
-                              : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                              ? "text-blue-700 dark:text-blue-400"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -705,16 +704,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
-                            : "text-gray-700 dark:text-gray-300 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                         )}
                       >
                         <item.icon
                           className={cn(
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
-                              ? "text-blue-700"
-                              : "text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+                              ? "text-blue-700 dark:text-blue-400"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -730,7 +729,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Link
                     href={`/${user.username}`}
                     onClick={() => setSidebarOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors duration-200 group cursor-pointer"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 group cursor-pointer"
                   >
                     {user.avatar ? (
                       <Image
@@ -738,20 +737,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         alt={`Avatar de ${user.username}`}
                         width={40}
                         height={40}
-                        className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200"
+                        className="w-10 h-10 rounded-full object-cover ring-2 ring-white dark:ring-gray-700 shadow-sm group-hover:ring-blue-100 transition-all duration-200"
                       />
                     ) : (
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-gray-700 shadow-sm group-hover:ring-blue-100 transition-all duration-200">
                         <span className="text-white font-semibold text-sm">
                           {user.username?.[0]?.toUpperCase()}
                         </span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100 truncate">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         {user.fullName || user.username}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         @{user.username}
                       </p>
                     </div>
@@ -761,7 +760,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Theme Switcher */}
               <div className="mt-4 px-3">
-                <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-xl p-3">
+                <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tema</span>
                   <ThemeSwitcher />
                 </div>
@@ -776,15 +775,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={handleCloseCreateModal} />
-            <div className="relative bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full">
+            <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full">
               {!createType ? (
                 // Modal de selección de tipo
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Crear Contenido</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Crear Contenido</h2>
                     <button
                       onClick={handleCloseCreateModal}
-                      className="text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -795,46 +794,46 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <div className="space-y-3">
                     <button
                       onClick={() => handleCreateContent('post')}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
                     >
-                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
-                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/40 transition-colors duration-200">
+                        <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Publicación</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Comparte una foto o video</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Publicación</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Comparte una foto o video</p>
                       </div>
                     </button>
 
                     <button
                       onClick={() => handleCreateContent('story')}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 group"
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200 group"
                     >
-                      <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200">
-                        <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/40 transition-colors duration-200">
+                        <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Story</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Comparte un momento efímero</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Story</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Comparte un momento efímero</p>
                       </div>
                     </button>
 
                     <button
                       onClick={() => handleCreateContent('reel')}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-pink-300 hover:bg-pink-50 transition-all duration-200 group"
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-all duration-200 group"
                     >
-                      <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center group-hover:bg-pink-200 transition-colors duration-200">
-                        <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center group-hover:bg-pink-200 dark:group-hover:bg-pink-900/40 transition-colors duration-200">
+                        <svg className="w-6 h-6 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                       </div>
                       <div className="text-left">
-                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">Reel</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Crea un video corto</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Reel</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Crea un video corto</p>
                       </div>
                     </button>
                   </div>
@@ -843,12 +842,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 // Formulario específico
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                       Crear {createType === 'post' ? 'Publicación' : createType === 'story' ? 'Story' : 'Reel'}
                     </h2>
                     <button
                       onClick={handleCloseCreateModal}
-                      className="text-gray-400 dark:text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -873,13 +872,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
           </div>
         </div>
-      )}
-
-      {/* Theme debugging - Temporal */}
-      {process.env.NODE_ENV === 'development' && (
-        <>
-          <ThemeDebugger />
-        </>
       )}
     </div>
   );

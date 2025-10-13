@@ -5,14 +5,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/cn';
 
 const cardVariants = cva(
-  "rounded-2xl border bg-white dark:bg-gray-900 dark:bg-gray-900 transition-all duration-200",
+  "rounded-2xl border bg-white dark:bg-gray-900 transition-all duration-200",
   {
     variants: {
       variant: {
-        default: "border-gray-200 dark:border-gray-700 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 hover:shadow-md",
-        elevated: "border-gray-200 dark:border-gray-700 dark:border-gray-700 shadow-lg hover:shadow-xl",
-        outlined: "border-gray-300 dark:border-gray-600 dark:border-gray-600 shadow-none hover:border-gray-400 dark:border-gray-500 dark:hover:border-gray-500",
-        ghost: "border-transparent shadow-none hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800",
+        default: "border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 hover:shadow-md",
+        elevated: "border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl",
+        outlined: "border-gray-300 dark:border-gray-600 shadow-none hover:border-gray-400 dark:border-gray-500 dark:hover:border-gray-500",
+        ghost: "border-transparent shadow-none hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800",
         gradient: "border-transparent bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-lg hover:shadow-xl",
       },
       padding: {
@@ -82,7 +82,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn("text-2xl font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-100 dark:text-gray-100 dark:text-gray-100", className)}
+    className={cn("text-2xl font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-100", className)}
     {...props}
   />
 ));
@@ -95,7 +95,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400", className)}
+    className={cn("text-sm text-gray-600 dark:text-gray-400", className)}
     {...props}
   />
 ));

@@ -23,7 +23,7 @@ import { TOUCH_TARGET_CLASSES } from '@/utils/accessibilityHelpers'
 
 const modalVariants = cva(
   // Base styles
-  "relative bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700 dark:border-gray-700",
+  "relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700",
   {
     variants: {
       size: {
@@ -174,7 +174,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {title && (
                   <h2
                     id={titleId}
-                    className="text-xl font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                    className="text-xl font-semibold text-gray-900 dark:text-gray-100"
                   >
                     {title}
                   </h2>

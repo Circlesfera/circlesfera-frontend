@@ -119,13 +119,22 @@ export default function RootLayout({
                 try {
                   const theme = localStorage.getItem('theme');
                   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  const root = document.documentElement;
 
-                  // Solo manejar la clase 'dark', nunca 'light'
-                  if (theme === 'dark' || (!theme && systemPrefersDark)) {
-                    document.documentElement.classList.add('dark');
+                  // Determinar el tema a aplicar
+                  const resolvedTheme = theme || (systemPrefersDark ? 'dark' : 'light');
+
+                  // Aplicar clase correspondiente
+                  if (resolvedTheme === 'dark') {
+                    root.classList.add('dark');
+                    root.classList.remove('light');
                   } else {
-                    document.documentElement.classList.remove('dark');
+                    root.classList.add('light');
+                    root.classList.remove('dark');
                   }
+
+                  // Aplicar colorScheme
+                  root.style.colorScheme = resolvedTheme;
                 } catch (e) {
                   console.error('Error initializing theme:', e);
                 }

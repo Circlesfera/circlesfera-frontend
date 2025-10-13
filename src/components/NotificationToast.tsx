@@ -90,7 +90,7 @@ export default function NotificationToast({
                 {getIcon()}
               </div>
               <div className="ml-3 flex-1">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   {title}
                 </h3>
                 {message && (

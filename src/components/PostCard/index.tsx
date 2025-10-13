@@ -92,7 +92,7 @@ export default function PostCard({
       animate={isInView ? fadeInUp.animate : fadeInUp.initial}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={cardAnimation.whileHover}
-      className="bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-2xl shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 mb-6 animate-fade-in"
+      className="bg-white dark:bg-gray-900 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 mb-6 animate-fade-in"
       aria-label={`Publicación de ${post.user.username}`}
     >
       {/* Header */}
@@ -148,10 +148,10 @@ export default function PostCard({
           aria-modal="true"
           aria-labelledby="delete-dialog-title"
         >
-          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
             <h3
               id="delete-dialog-title"
-              className="text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4"
+              className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4"
             >
               ¿Eliminar publicación?
             </h3>

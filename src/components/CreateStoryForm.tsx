@@ -153,13 +153,13 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">Crear Story</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Story</h2>
         <button
           onClick={handleClose}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
+          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
         >
           <CloseIcon />
         </button>
@@ -184,7 +184,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 onClick={() => handleTypeChange(type)}
                 className={`p-4 rounded-xl border-2 transition-all ${storyType === type
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
-                  : 'border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 dark:border-gray-600'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600'
                   }`}
               >
                 <Icon />
@@ -205,7 +205,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
                 placeholder="Escribe tu story..."
-                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 dark:text-gray-100"
                 rows={6}
                 maxLength={500}
               />
@@ -218,7 +218,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {storyType === 'image' ? 'Imagen' : 'Video'}
               </label>
-              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 dark:border-gray-600 rounded-xl p-6 text-center hover:border-gray-400 dark:border-gray-500 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-gray-400 dark:border-gray-500 transition-colors">
                 {preview ? (
                   <div className="space-y-4">
                     {storyType === 'image' ? (
@@ -288,7 +288,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Añade una descripción..."
-              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 dark:text-gray-100 dark:text-gray-100"
+              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 dark:text-gray-100"
               rows={3}
               maxLength={200}
             />
@@ -309,7 +309,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="¿Dónde estás?"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 dark:text-gray-100"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                 maxLength={100}
               />
             </div>
@@ -327,7 +327,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
+              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
             >
               Cancelar
             </button>

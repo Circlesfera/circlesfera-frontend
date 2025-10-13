@@ -213,7 +213,7 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
         {/* Live Badge */}
         <div className="absolute top-4 left-4 z-10">
           <div className="bg-red-600 text-white px-3 py-1 rounded-full flex items-center space-x-2">
-            <div className="w-2 h-2 bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full animate-pulse"></div>
             <span className="text-sm font-medium">EN VIVO</span>
           </div>
         </div>
@@ -255,7 +255,7 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
               <div className="absolute inset-0 flex items-center justify-center">
                 <button
                   onClick={togglePlay}
-                  className="bg-white dark:bg-gray-900 dark:bg-gray-900 bg-opacity-20 backdrop-blur-sm rounded-full p-4 hover:bg-opacity-30 transition-all"
+                  className="bg-white dark:bg-gray-900 bg-opacity-20 backdrop-blur-sm rounded-full p-4 hover:bg-opacity-30 transition-all"
                 >
                   {isPlaying ? (
                     <Pause className="w-8 h-8 text-white" />
@@ -340,7 +340,7 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
             className={`p-3 rounded-full transition-all ${
               showChat
                 ? 'bg-red-600 text-white'
-                : 'bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900 bg-opacity-20 backdrop-blur-sm text-white hover:bg-opacity-30'
+                : 'bg-white dark:bg-gray-900 bg-opacity-20 backdrop-blur-sm text-white hover:bg-opacity-30'
             }`}
           >
             <Users className="w-5 h-5" />

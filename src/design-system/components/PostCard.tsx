@@ -102,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-all duration-200",
-        filled ? "text-red-500 scale-110" : "text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400"
+        filled ? "text-red-500 scale-110" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
       )}
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
@@ -160,7 +160,7 @@ const PostCard: React.FC<PostCardProps> = ({
   );
 
   return (
-    <div className={cn("bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm dark:shadow-gray-900/50", className)}>
+    <div className={cn("bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm dark:shadow-gray-900/50", className)}>
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div
@@ -175,7 +175,7 @@ const PostCard: React.FC<PostCardProps> = ({
             interactive
           />
           <div>
-            <p className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">
+            <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
               {post.user.username}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
@@ -187,13 +187,13 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="relative" ref={menuRef}>
           <button
             onClick={handleMenuToggle}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-full transition-colors duration-200"
           >
             <MoreIcon />
           </button>
 
           {showMenu && (
-            <div className="absolute right-0 top-8 bg-white dark:bg-gray-900 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:border-gray-700 rounded-lg shadow-lg py-1 z-10 min-w-32">
+            <div className="absolute right-0 top-8 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-10 min-w-32">
               <button
                 onClick={handleDelete}
                 className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center gap-2"
@@ -237,7 +237,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
           {post.content.type === 'text' && (
             <div className="absolute inset-0 flex items-center justify-center p-6 bg-gradient-to-br from-blue-50 to-purple-50">
-              <p className="text-gray-800 dark:text-gray-200 dark:text-gray-200 text-base leading-relaxed text-center">
+              <p className="text-gray-800 dark:text-gray-200 text-base leading-relaxed text-center">
                 {post.content.text}
               </p>
             </div>
@@ -261,14 +261,14 @@ const PostCard: React.FC<PostCardProps> = ({
 
             <button
               onClick={() => onComment?.(post.id)}
-              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
             >
               <CommentIcon />
             </button>
 
             <button
               onClick={() => onShare?.(post.id)}
-              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
             >
               <ShareIcon />
             </button>
@@ -277,7 +277,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
         {/* Likes count */}
         {likesCount > 0 && (
-          <p className="font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">
+          <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
             {likesCount.toLocaleString()} {likesCount === 1 ? 'me gusta' : 'me gustas'}
           </p>
         )}
@@ -285,7 +285,7 @@ const PostCard: React.FC<PostCardProps> = ({
         {/* Caption */}
         {post.caption && (
           <div className="space-y-1">
-            <p className="text-gray-900 dark:text-gray-100 dark:text-gray-100 text-sm">
+            <p className="text-gray-900 dark:text-gray-100 text-sm">
               <span className="font-semibold mr-2">{post.user.username}</span>
               {post.caption}
             </p>
@@ -314,7 +314,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <input
               type="text"
               placeholder="Añade un comentario..."
-              className="w-full px-3 py-2 text-sm bg-transparent border-none outline-none placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-3 py-2 text-sm bg-transparent border-none outline-none placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
           <Button

@@ -71,7 +71,7 @@ export default function StatsPage() {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-12">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-12">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando estadísticas...</p>
@@ -130,7 +130,7 @@ export default function StatsPage() {
     <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Estadísticas de Reportes
         </h1>
         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">
@@ -140,42 +140,42 @@ export default function StatsPage() {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
             <Flag className="w-8 h-8 text-blue-500" />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Total Reportes</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.total}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
             <Clock className="w-8 h-8 text-yellow-500" />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Pendientes</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.byStatus?.pending || 0}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Resueltos</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.byStatus?.resolved || 0}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
             <XCircle className="w-8 h-8 text-red-500" />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Rechazados</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.byStatus?.rejected || 0}
           </p>
         </div>
@@ -183,8 +183,8 @@ export default function StatsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Reportes por Razón */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4 flex items-center space-x-2">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center space-x-2">
             <BarChart3 className="w-5 h-5" />
             <span>Reportes por Razón</span>
           </h2>
@@ -197,7 +197,7 @@ export default function StatsPage() {
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {getReasonLabel(reason)}
                     </span>
-                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       {count}
                     </span>
                   </div>
@@ -214,8 +214,8 @@ export default function StatsPage() {
         </div>
 
         {/* Reportes por Tipo de Contenido */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4 flex items-center space-x-2">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center space-x-2">
             <TrendingUp className="w-5 h-5" />
             <span>Por Tipo de Contenido</span>
           </h2>
@@ -228,7 +228,7 @@ export default function StatsPage() {
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
                       {getContentTypeLabel(type)}
                     </span>
-                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       {count}
                     </span>
                   </div>
@@ -245,8 +245,8 @@ export default function StatsPage() {
         </div>
 
         {/* Reportes por Estado */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
             Estado de Reportes
           </h2>
           <div className="space-y-4">
@@ -268,11 +268,11 @@ export default function StatsPage() {
                 <div key={status} className="flex items-center space-x-4">
                   <div className={`w-3 h-3 rounded-full ${statusColors[status]}`}></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {statusLabels[status]}
                     </p>
                   </div>
-                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100">
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
                     {count}
                   </p>
                 </div>
@@ -282,8 +282,8 @@ export default function StatsPage() {
         </div>
 
         {/* Usuarios con Más Reportes */}
-        <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
             Contenido Más Reportado
           </h2>
           <div className="text-center py-8">
@@ -297,12 +297,12 @@ export default function StatsPage() {
 
       {/* Tendencias */}
       <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-6">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-gray-100 mb-4 flex items-center space-x-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center space-x-2">
           <TrendingUp className="w-5 h-5 text-blue-600" />
           <span>Resumen General</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-lg p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
             <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Tasa de Resolución</p>
             <p className="text-2xl font-bold text-green-600">
               {stats.total > 0
@@ -310,13 +310,13 @@ export default function StatsPage() {
                 : 0}%
             </p>
           </div>
-          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-lg p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
             <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Tiempo Promedio</p>
             <p className="text-2xl font-bold text-blue-600">
               {stats.averageResolutionTime || '0h'}
             </p>
           </div>
-          <div className="bg-white dark:bg-gray-900 dark:bg-gray-900 rounded-lg p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
             <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">En Revisión</p>
             <p className="text-2xl font-bold text-yellow-600">
               {stats.byStatus?.under_review || 0}

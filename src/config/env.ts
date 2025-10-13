@@ -4,13 +4,19 @@
 const requireEnv = (key: string, fallback?: string): string => {
   const value = process.env[key];
 
-  // En producción, no usar fallback
-  if (process.env.NODE_ENV === 'production' && !value) {
+  // Si hay valor, usarlo
+  if (value) return value;
+
+  // Si hay fallback, usarlo
+  if (fallback) return fallback;
+
+  // Solo lanzar error en runtime de producción si no hay fallback
+  // Durante el build (compile time), permitir valores vacíos
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
     throw new Error(`Variable de entorno requerida en producción: ${key}`);
   }
 
-  // En desarrollo, permitir fallback
-  return value || fallback || '';
+  return '';
 };
 
 export const config = {
