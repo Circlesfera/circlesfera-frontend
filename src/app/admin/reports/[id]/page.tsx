@@ -22,7 +22,7 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import { getReportById, updateReportStatus } from '@/services/reportService'
-import type { Report } from '@/types'
+import type { Report, ReportStatus } from '@/types'
 
 export default function ReportDetailPage() {
   const params = useParams()
@@ -60,7 +60,7 @@ export default function ReportDetailPage() {
     }
   }, [reportId])
 
-  const handleUpdateStatus = async (newStatus: string, action?: string | undefined) => {
+  const handleUpdateStatus = async (newStatus: ReportStatus, action?: string | undefined) => {
     if (!report) return
 
     const confirmMessages: Record<string, string> = {
@@ -76,7 +76,7 @@ export default function ReportDetailPage() {
     try {
       setUpdating(true)
 
-      const updateData: { status: string; moderatorNotes?: string; action?: string } = {
+      const updateData: { status: ReportStatus; moderatorNotes?: string | undefined; action?: string | undefined } = {
         status: newStatus,
         moderatorNotes: notes,
       }

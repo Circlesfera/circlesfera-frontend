@@ -56,13 +56,13 @@ const avatarVariants = cva(
 export interface AvatarProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'>,
   VariantProps<typeof avatarVariants> {
-  src?: string | null
-  alt?: string
-  fallback?: string
-  status?: 'online' | 'offline' | 'busy' | 'away'
-  showStatus?: boolean
-  loading?: 'lazy' | 'eager'
-  priority?: boolean
+  src?: string | null | undefined
+  alt?: string | undefined
+  fallback?: string | undefined
+  status?: 'online' | 'offline' | 'busy' | 'away' | undefined
+  showStatus?: boolean | undefined
+  loading?: 'lazy' | 'eager' | undefined
+  priority?: boolean | undefined
 }
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(

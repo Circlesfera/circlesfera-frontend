@@ -65,8 +65,8 @@ export const updateReportStatus = async (
   reportId: string,
   data: {
     status: ReportStatus;
-    action?: string;
-    moderatorNotes?: string;
+    action?: string | undefined;
+    moderatorNotes?: string | undefined;
   }
 ): Promise<ReportResponse> => {
   const response = await api.put(`/reports/${reportId}/status`, data);
