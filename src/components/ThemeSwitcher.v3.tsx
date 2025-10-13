@@ -69,10 +69,36 @@ export default function ThemeSwitcher() {
     }
   }, [])
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
+  // Efecto para sincronizar cuando el tema cambie externamente
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const currentDomTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+      console.log('🔄 External theme change detected:', currentDomTheme)
+      setTheme(currentDomTheme)
+    }
 
-    console.log('🔄 Toggle theme:', { from: theme, to: newTheme })
+    // Escuchar cambios de tema
+    window.addEventListener('themeChanged', handleThemeChange)
+
+    // También escuchar cambios en localStorage
+    window.addEventListener('storage', handleThemeChange)
+
+    return () => {
+      window.removeEventListener('themeChanged', handleThemeChange)
+      window.removeEventListener('storage', handleThemeChange)
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    // Obtener el tema actual del DOM para asegurar sincronización
+    const currentDomTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+    const newTheme = currentDomTheme === 'light' ? 'dark' : 'light'
+
+    console.log('🔄 Toggle theme:', {
+      currentState: theme,
+      domTheme: currentDomTheme,
+      newTheme: newTheme
+    })
 
     // Actualizar estado
     setTheme(newTheme)
