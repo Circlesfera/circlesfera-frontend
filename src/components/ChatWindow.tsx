@@ -656,7 +656,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
   return (
     <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 rounded-none md:rounded-r-2xl shadow-lg">
       {/* Header mejorado del chat */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-gradient-to-r from-white to-gray-50 dark:to-gray-900/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
         <button
           onClick={handleHeaderClick}
           className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
@@ -732,7 +732,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       {/* Área de mensajes mejorada */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-gray-50 dark:from-gray-900/50 to-white/50"
+        className="flex-1 overflow-y-auto p-4"
       >
         {loading ? (
           <div className="space-y-4">
@@ -811,7 +811,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       </div>
 
       {/* Formulario de envío mejorado */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-gradient-to-t from-white to-gray-50 dark:to-gray-900/50 backdrop-blur-sm">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
         <form onSubmit={handleSend} className="flex items-end space-x-3">
           {/* Botón de adjuntos mejorado */}
           <div className="relative flex-shrink-0">

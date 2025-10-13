@@ -119,7 +119,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
   };
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-b from-white to-gray-50 dark:to-gray-900/50">
+    <div className="h-full flex flex-col">
       {/* Header mejorado */}
       <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm">
         <div className="flex items-center justify-between mb-4">
