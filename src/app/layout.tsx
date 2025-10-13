@@ -120,18 +120,11 @@ export default function RootLayout({
                   const theme = localStorage.getItem('theme');
                   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-                  // Solo aplicar tema si está guardado en localStorage
-                  if (theme === 'dark') {
+                  // Solo manejar la clase 'dark', nunca 'light'
+                  if (theme === 'dark' || (!theme && systemPrefersDark)) {
                     document.documentElement.classList.add('dark');
-                  } else if (theme === 'light') {
-                    document.documentElement.classList.remove('dark');
                   } else {
-                    // Si no hay tema guardado, usar preferencia del sistema
-                    if (systemPrefersDark) {
-                      document.documentElement.classList.add('dark');
-                    } else {
-                      document.documentElement.classList.remove('dark');
-                    }
+                    document.documentElement.classList.remove('dark');
                   }
                 } catch (e) {
                   console.error('Error initializing theme:', e);

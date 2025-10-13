@@ -13,6 +13,7 @@ import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifi
 import ThemeSwitcher from '@/components/ThemeSwitcher.v3';
 import ThemeDebugger from '@/components/ThemeDebugger';
 import ThemeFixer from '@/components/ThemeFixer';
+import ThemeCleaner from '@/components/ThemeCleaner';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -879,6 +880,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Debugger temporal */}
       <ThemeDebugger />
       <ThemeFixer />
+      <ThemeCleaner />
     </div>
   );
 }

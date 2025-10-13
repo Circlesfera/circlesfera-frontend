@@ -22,30 +22,27 @@ export default function ThemeSwitcher() {
 
   // Función para obtener el tema inicial
   const getInitialTheme = (): 'light' | 'dark' => {
-    // Primero verificar el estado actual del DOM
-    if (typeof window !== 'undefined') {
-      const html = document.documentElement
-      const hasDarkClass = html.classList.contains('dark')
-
-      // Si el DOM ya tiene la clase dark, usar dark
-      if (hasDarkClass) {
-        return 'dark'
-      }
+    if (typeof window === 'undefined') {
+      return 'light'
     }
 
-    // Luego verificar localStorage
+    // PRIMERO: Verificar el estado actual del DOM (más confiable)
+    const html = document.documentElement
+    const hasDarkClass = html.classList.contains('dark')
+
+    if (hasDarkClass) {
+      return 'dark'
+    }
+
+    // SEGUNDO: Verificar localStorage
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
     if (savedTheme === 'light' || savedTheme === 'dark') {
       return savedTheme
     }
 
-    // Si no hay tema guardado, usar preferencia del sistema
-    if (typeof window !== 'undefined') {
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      return systemPrefersDark ? 'dark' : 'light'
-    }
-
-    return 'light'
+    // TERCERO: Usar preferencia del sistema
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return systemPrefersDark ? 'dark' : 'light'
   }
 
   useEffect(() => {
