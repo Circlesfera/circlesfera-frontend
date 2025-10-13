@@ -12,10 +12,6 @@ import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 import ThemeSwitcher from '@/components/ThemeSwitcher.v3';
 import ThemeDebugger from '@/components/ThemeDebugger';
-import ThemeFixer from '@/components/ThemeFixer';
-import ThemeCleaner from '@/components/ThemeCleaner';
-import ThemeInspector from '@/components/ThemeInspector';
-import ThemeForcer from '@/components/ThemeForcer';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -879,12 +875,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </div>
       )}
 
-      {/* Debugger temporal */}
-      <ThemeInspector />
-      <ThemeDebugger />
-      <ThemeFixer />
-      <ThemeCleaner />
-      <ThemeForcer />
+      {/* Theme debugging - Temporal */}
+      {process.env.NODE_ENV === 'development' && (
+        <>
+          <ThemeDebugger />
+        </>
+      )}
     </div>
   );
 }
