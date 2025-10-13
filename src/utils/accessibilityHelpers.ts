@@ -132,7 +132,7 @@ export function getLinkA11yProps(label: string, options?: {
 }) {
   return {
     'aria-label': label,
-    ...(options?.current && { 'aria-current': 'page' }),
+    ...(options?.current && { 'aria-current': 'page' as const }),
     ...(options?.external && {
       rel: 'noopener noreferrer',
       target: '_blank',
