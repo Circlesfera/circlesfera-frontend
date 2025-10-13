@@ -108,7 +108,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       : ariaLabel
 
     // Filtrar props no válidas para el DOM
-    const { gradient, ...validProps } = props as any
+    const { gradient, ...validProps } = props as Record<string, unknown>
 
     return (
       <button

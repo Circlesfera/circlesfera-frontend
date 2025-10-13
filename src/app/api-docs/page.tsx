@@ -134,8 +134,8 @@ export default function APIDocsPage() {
               </p>
               <div className="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
                 <div>curl -X POST https://api.circlesfera.com/auth/login \</div>
-                <div className="ml-4">-H "Content-Type: application/json" \</div>
-                <div className="ml-4">-d '{"{"}"username": "tu_usuario", "password": "tu_password"{"}"}'</div>
+                <div className="ml-4">-H &quot;Content-Type: application/json&quot; \</div>
+                <div className="ml-4">-d &apos;{&quot;username&quot;: &quot;tu_usuario&quot;, &quot;password&quot;: &quot;tu_password&quot;}&apos;</div>
               </div>
             </div>
 

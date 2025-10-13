@@ -68,7 +68,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const [showAttachments, setShowAttachments] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [conversationInfo, setConversationInfo] = useState<any>(null);
+  const [conversationInfo, setConversationInfo] = useState<{
+    id: string;
+    participants: Array<{ id: string; username: string; avatar?: string; isOnline?: boolean }>;
+    lastMessage?: { content: string; createdAt: string; senderId: string };
+  } | null>(null);
   const [isUserOnline, setIsUserOnline] = useState(false);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -86,7 +90,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
     try {
       const response = await getConversations();
       if (response && response.conversations) {
-        const conversation = response.conversations.find((c: any) => c._id === conversationId);
+        const conversation = response.conversations.find((c: { _id: string }) => c._id === conversationId);
         if (conversation) {
           setConversationInfo(conversation);
         }
@@ -108,7 +112,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
     // Si no, usar la información de la conversación
     if (conversationInfo && conversationInfo.participants) {
-      return conversationInfo.participants.find((p: any) => p._id !== user?._id) || conversationInfo.participants[0];
+      return conversationInfo.participants.find((p: { _id: string }) => p._id !== user?._id) || conversationInfo.participants[0];
     }
 
     return null;

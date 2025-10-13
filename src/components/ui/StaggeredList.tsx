@@ -82,7 +82,7 @@ export default function StaggeredList({
 }
 
 // Componente específico para el feed de posts
-export function AnimatedPostList({ posts, children }: { posts: any[], children: (post: any, index: number) => React.ReactNode }) {
+export function AnimatedPostList({ posts, children }: { posts: unknown[], children: (post: unknown, index: number) => React.ReactNode }) {
   return (
     <StaggeredList
       className="space-y-6"
@@ -95,7 +95,7 @@ export function AnimatedPostList({ posts, children }: { posts: any[], children: 
 }
 
 // Componente para stories horizontales
-export function AnimatedStoryList({ stories, children }: { stories: any[], children: (story: any, index: number) => React.ReactNode }) {
+export function AnimatedStoryList({ stories, children }: { stories: unknown[], children: (story: unknown, index: number) => React.ReactNode }) {
   return (
     <StaggeredList
       className="flex space-x-4 overflow-x-auto scrollbar-hide"
