@@ -132,10 +132,10 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Crear Stitch</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Crear Stitch</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">
                 Usa un clip de @{originalReel.user.username} y agrega tu reacción
               </p>
             </div>
@@ -184,7 +184,7 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                       step="0.1"
                       value={stitchStartTime}
                       onChange={(e) => setStitchStartTime(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
                     />
                   </div>
 
@@ -199,12 +199,12 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                       step="0.5"
                       value={stitchDuration}
                       onChange={(e) => setStitchDuration(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
                     />
                   </div>
 
-                  <div className="bg-white dark:bg-gray-900 border border-gray-200 rounded-lg p-3">
-                    <p className="text-xs text-gray-600">
+                  <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">
                       <strong>Clip seleccionado:</strong> {formatTime(stitchStartTime)} - {formatTime(stitchStartTime + stitchDuration)}
                     </p>
                   </div>
@@ -236,10 +236,10 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                     onClick={() => videoInputRef.current?.click()}
                     className="aspect-[9/16] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 transition-colors"
                   >
-                    <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">Sube tu reacción</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">El clip se mostrará primero</p>
-                    <p className="text-xs text-gray-400 mt-1">Máx. 100MB</p>
+                    <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 mb-4" />
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium">Sube tu reacción</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-2">El clip se mostrará primero</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Máx. 100MB</p>
                   </div>
                 )}
                 <input
@@ -302,9 +302,9 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <div className="flex items-center space-x-2 mb-2">
                   <Music className="w-5 h-5 text-purple-600" />
-                  <span className="font-medium text-gray-900">Audio Original</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">Audio Original</span>
                 </div>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
                   {formData.audioTitle || 'Sin título'} - {formData.audioArtist || 'Artista desconocido'}
                 </p>
               </div>
@@ -318,7 +318,7 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                     onChange={(e) => setFormData({ ...formData, allowComments: e.target.checked })}
                     className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
                   />
-                  <span className="text-sm text-gray-700">Permitir comentarios</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Permitir comentarios</span>
                 </label>
 
                 <label className="flex items-center space-x-2 cursor-pointer">
@@ -328,7 +328,7 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                     onChange={(e) => setFormData({ ...formData, allowDuets: e.target.checked })}
                     className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
                   />
-                  <span className="text-sm text-gray-700">Permitir duets en este video</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Permitir duets en este video</span>
                 </label>
 
                 <label className="flex items-center space-x-2 cursor-pointer">
@@ -338,7 +338,7 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                     onChange={(e) => setFormData({ ...formData, allowStitches: e.target.checked })}
                     className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
                   />
-                  <span className="text-sm text-gray-700">Permitir stitches en este video</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Permitir stitches en este video</span>
                 </label>
               </div>
 
@@ -355,7 +355,7 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:bg-gray-800 transition-colors"
                 >
                   Cancelar
                 </button>

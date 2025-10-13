@@ -94,7 +94,7 @@ export function PostCardHeader({
 
           <time
             dateTime={new Date(post.createdAt).toISOString()}
-            className="text-gray-500 dark:text-gray-400 text-xs"
+            className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs"
           >
             {formatTimeAgo(post.createdAt)}
           </time>
@@ -115,7 +115,7 @@ export function PostCardHeader({
         {showMore && (
           <div
             {...getMenuA11yProps(menuId, showMore)}
-            className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-gray-900 border border-gray-200 rounded-xl shadow-xl z-50 py-1 animate-fade-in"
+            className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 py-1 animate-fade-in"
           >
             {isOwner ? (
               <>
@@ -125,7 +125,7 @@ export function PostCardHeader({
                     onEdit()
                     onToggleMore()
                   }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
                   role="menuitem"
                   {...getButtonA11yProps(ARIA_LABELS.post.edit)}
                 >
@@ -138,7 +138,7 @@ export function PostCardHeader({
                     onTogglePin()
                     onToggleMore()
                   }}
-                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
                   role="menuitem"
                   {...getButtonA11yProps(isPinned ? 'Desfijar publicación' : 'Fijar publicación')}
                 >
@@ -147,7 +147,7 @@ export function PostCardHeader({
                 </button>
 
                 {/* Separador */}
-                <div className="border-t border-gray-100 my-1" role="separator" />
+                <div className="border-t border-gray-100 dark:border-gray-700 my-1" role="separator" />
 
                 <button
                   onClick={() => {
@@ -171,7 +171,7 @@ export function PostCardHeader({
                   onReport()
                   onToggleMore()
                 }}
-                className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100"
+                className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-3 transition-colors focus-visible:outline-none focus-visible:bg-gray-100 dark:bg-gray-800"
                 role="menuitem"
                 {...getButtonA11yProps(ARIA_LABELS.post.report)}
               >

@@ -117,7 +117,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando...</p>
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando...</p>
           </div>
         </div>
       </div>
@@ -171,7 +171,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-50">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900/80 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
             <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Red Social</p>
               </div>
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
@@ -206,7 +206,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
                             ? "text-blue-700"
-                            : "text-gray-400 group-hover:text-gray-600"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -229,7 +229,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Navegación de Contenido */}
             <div className="mb-2">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contenido</h3>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Contenido</h3>
               <ul role="list" className="space-y-1">
                 {contentNavigation.map((item) => (
                   <li key={item.name}>
@@ -238,7 +238,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
@@ -247,7 +247,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
                             ? "text-blue-700"
-                            : "text-gray-400 group-hover:text-gray-600"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -269,7 +269,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Navegación de Notificaciones */}
             <div className="mb-2">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Social</h3>
+              <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Social</h3>
               <ul role="list" className="space-y-1">
                 {notificationsNavigation.map((item) => (
                   <li key={item.name}>
@@ -278,7 +278,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
@@ -287,7 +287,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
                             ? "text-blue-700"
-                            : "text-gray-400 group-hover:text-gray-600"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -328,7 +328,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       className={cn(
                         "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800"
+                          ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-400 shadow-sm dark:shadow-gray-900/50 border border-blue-100 dark:border-blue-800"
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                       )}
                     >
@@ -337,7 +337,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                           "h-5 w-5 shrink-0 transition-colors duration-200",
                           isActive(item.href)
                             ? "text-blue-700"
-                            : "text-gray-400 group-hover:text-gray-600"
+                            : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                         )}
                       />
                       <span className="truncate">{item.name}</span>
@@ -349,7 +349,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* User Profile */}
             {user && (
-              <div className="pt-6 border-t border-gray-100">
+              <div className="pt-6 border-t border-gray-100 dark:border-gray-700">
                 <Link
                   href={`/${user.username}`}
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 group cursor-pointer"
@@ -360,10 +360,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       alt={`Avatar de ${user.username}`}
                       width={40}
                       height={40}
-                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200"
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200"
                     />
                   ) : (
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200">
                       <span className="text-white font-semibold text-sm">
                         {user.username?.[0]?.toUpperCase()}
                       </span>
@@ -373,7 +373,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                       {user.fullName || user.username}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate">
                       @{user.username}
                     </p>
                   </div>
@@ -395,7 +395,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Top Navigation Mobile - Mejorado */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/95 dark:bg-gray-900/95 backdrop-blur-sm px-4 shadow-sm dark:shadow-gray-900/50 sm:gap-x-6 sm:px-6 lg:hidden">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 lg:hidden transition-colors duration-200"
@@ -419,7 +419,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center gap-x-3">
             <Link
               href="/notifications"
-              className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              className="relative p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-200"
             >
               <span className="sr-only">Ver notificaciones</span>
               <NotificationIcon className="h-6 w-6" />
@@ -441,7 +441,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Mobile Bottom Navigation - Optimizado para móviles */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 lg:hidden shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900/95 dark:bg-gray-900/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 lg:hidden shadow-lg">
         <div className="flex items-center justify-around px-1 py-2">
           {/* Navegación principal optimizada para móviles */}
           {primaryNavigation.map((item) => (
@@ -452,7 +452,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
                   ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  : "text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -475,7 +475,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Botón de crear contenido */}
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 dark:text-gray-400 hover:text-gray-700 hover:bg-gray-50"
+            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800"
           >
             <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
               <PlusIcon className="h-4 w-4 text-white" />
@@ -492,7 +492,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(item.href)
                   ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  : "text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -516,7 +516,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px]",
                 isActive(`/${user.username}`)
                   ? "text-blue-600 bg-blue-50"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  : "text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800"
               )}
             >
               <div className="relative">
@@ -555,12 +555,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Red Social</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Red Social</p>
                 </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                className="text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -572,7 +572,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <nav className="flex flex-1 flex-col mt-6">
               {/* Navegación Principal */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Principal</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Principal</h3>
                 <ul role="list" className="space-y-1">
                   {primaryNavigation.map((item) => (
                     <li key={item.name}>
@@ -582,8 +582,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100"
                         )}
                       >
                         <item.icon
@@ -591,7 +591,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
                               ? "text-blue-700"
-                              : "text-gray-400 group-hover:text-gray-600"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -609,7 +609,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Navegación de Contenido */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Contenido</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Contenido</h3>
                 <ul role="list" className="space-y-1">
                   {contentNavigation.map((item) => (
                     <li key={item.name}>
@@ -619,8 +619,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100"
                         )}
                       >
                         <item.icon
@@ -628,7 +628,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
                               ? "text-blue-700"
-                              : "text-gray-400 group-hover:text-gray-600"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -645,7 +645,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Navegación de Notificaciones */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Social</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Social</h3>
                 <ul role="list" className="space-y-1">
                   {notificationsNavigation.map((item) => (
                     <li key={item.name}>
@@ -655,8 +655,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100"
                         )}
                       >
                         <item.icon
@@ -664,7 +664,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
                               ? "text-blue-700"
-                              : "text-gray-400 group-hover:text-gray-600"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -704,8 +704,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         className={cn(
                           "group flex gap-x-3 rounded-xl p-3 text-sm font-semibold leading-6 transition-all duration-200",
                           isActive(item.href)
-                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm border border-blue-100"
-                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 shadow-sm dark:shadow-gray-900/50 border border-blue-100"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 hover:text-gray-900 dark:text-gray-100"
                         )}
                       >
                         <item.icon
@@ -713,7 +713,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             "h-5 w-5 shrink-0 transition-colors duration-200",
                             isActive(item.href)
                               ? "text-blue-700"
-                              : "text-gray-400 group-hover:text-gray-600"
+                              : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:text-gray-500"
                           )}
                         />
                         <span className="truncate">{item.name}</span>
@@ -725,7 +725,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* User Profile */}
               {user && (
-                <div className="mt-auto pt-6 border-t border-gray-100">
+                <div className="mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
                   <Link
                     href={`/${user.username}`}
                     onClick={() => setSidebarOpen(false)}
@@ -737,10 +737,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         alt={`Avatar de ${user.username}`}
                         width={40}
                         height={40}
-                        className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200"
+                        className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200"
                       />
                     ) : (
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-200">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center ring-2 ring-white shadow-sm dark:shadow-gray-900/50 group-hover:ring-blue-100 transition-all duration-200">
                         <span className="text-white font-semibold text-sm">
                           {user.username?.[0]?.toUpperCase()}
                         </span>
@@ -750,7 +750,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                         {user.fullName || user.username}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate">
                         @{user.username}
                       </p>
                     </div>
@@ -783,7 +783,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Contenido</h2>
                     <button
                       onClick={handleCloseCreateModal}
-                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                      className="text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -803,7 +803,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       </div>
                       <div className="text-left">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100">Publicación</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Comparte una foto o video</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Comparte una foto o video</p>
                       </div>
                     </button>
 
@@ -818,7 +818,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       </div>
                       <div className="text-left">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100">Story</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Comparte un momento efímero</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Comparte un momento efímero</p>
                       </div>
                     </button>
 
@@ -833,7 +833,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       </div>
                       <div className="text-left">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100">Reel</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Crea un video corto</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Crea un video corto</p>
                       </div>
                     </button>
                   </div>
@@ -847,7 +847,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     </h2>
                     <button
                       onClick={handleCloseCreateModal}
-                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                      className="text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

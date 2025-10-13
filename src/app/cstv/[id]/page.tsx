@@ -98,7 +98,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-2xl font-bold mb-4">Video no encontrado</h1>
-          <p className="text-gray-400 mb-6">{error || 'El video que buscas no existe'}</p>
+          <p className="text-gray-400 dark:text-gray-500 mb-6">{error || 'El video que buscas no existe'}</p>
           <button
             onClick={() => router.push('/cstv')}
             className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
@@ -128,7 +128,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={likeLoading || !isAuthenticated}
               className={`p-2 rounded-full transition-colors ${video.isLikedByUser
                 ? 'bg-red-600 text-white'
-                : 'bg-white/20 text-white hover:bg-white/30'
+                : 'bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Heart className={`w-5 h-5 ${video.isLikedByUser ? 'fill-current' : ''}`} />
@@ -139,7 +139,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={saveLoading || !isAuthenticated}
               className={`p-2 rounded-full transition-colors ${video.isSavedByUser
                 ? 'bg-blue-600 text-white'
-                : 'bg-white/20 text-white hover:bg-white/30'
+                : 'bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Bookmark className={`w-5 h-5 ${video.isSavedByUser ? 'fill-current' : ''}`} />
@@ -147,12 +147,12 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+              className="p-2 rounded-full bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors"
             >
               <Share2 className="w-5 h-5" />
             </button>
 
-            <button className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors">
+            <button className="p-2 rounded-full bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors">
               <MoreVertical className="w-5 h-5" />
             </button>
           </div>
@@ -200,7 +200,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
                 {video.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="bg-white/20 text-white text-xs px-2 py-1 rounded-full"
+                    className="bg-white dark:bg-gray-900/20 text-white text-xs px-2 py-1 rounded-full"
                   >
                     #{tag}
                   </span>
@@ -234,7 +234,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
       {/* Side Panel */}
       <div className="absolute top-0 right-0 bottom-0 w-80 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300">
         {/* User Info */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3 mb-4">
             <Image
               src={video.user.avatar || '/default-avatar.png'}
@@ -244,10 +244,10 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
-              <h3 className="font-semibold text-gray-900">{video.user.username}</h3>
-              <p className="text-sm text-gray-600">{video.user.fullName}</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">{video.user.username}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{video.user.fullName}</p>
               {video.user.followers && (
-                <p className="text-xs text-gray-500">{formatViewCount(video.user.followers)} seguidores</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatViewCount(video.user.followers)} seguidores</p>
               )}
             </div>
             {video.user.isVerified && (
@@ -270,36 +270,36 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Categoría:</span>
+              <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Categoría:</span>
               <span className="text-gray-900 dark:text-gray-100 capitalize">{video.category}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="text-gray-600">Duración:</span>
-              <span className="text-gray-900">{video.formattedDuration}</span>
+              <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Duración:</span>
+              <span className="text-gray-900 dark:text-gray-100">{video.formattedDuration}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="text-gray-600">Calidad:</span>
-              <span className="text-gray-900">{video.quality}</span>
+              <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Calidad:</span>
+              <span className="text-gray-900 dark:text-gray-100">{video.quality}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="text-gray-600">Visibilidad:</span>
+              <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Visibilidad:</span>
               <span className="text-gray-900 dark:text-gray-100 capitalize">{video.visibility.replace('_', ' ')}</span>
             </div>
 
             {video.isFromLiveStream && (
               <div className="flex justify-between">
-                <span className="text-gray-600">Origen:</span>
-                <span className="text-gray-900">Live Stream</span>
+                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Origen:</span>
+                <span className="text-gray-900 dark:text-gray-100">Live Stream</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="p-6 border-t border-gray-200">
+        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
           <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Acciones</h4>
 
           <div className="space-y-2">
@@ -308,7 +308,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={likeLoading || !isAuthenticated}
               className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${video.isLikedByUser
                 ? 'bg-red-100 text-red-600'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Heart className={`w-4 h-4 ${video.isLikedByUser ? 'fill-current' : ''}`} />
@@ -320,7 +320,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
               disabled={saveLoading || !isAuthenticated}
               className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${video.isSavedByUser
                 ? 'bg-blue-100 text-blue-600'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Bookmark className={`w-4 h-4 ${video.isSavedByUser ? 'fill-current' : ''}`} />
@@ -329,7 +329,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             <button
               onClick={handleShare}
-              className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 hover:bg-gray-200 transition-colors"
+              className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700 transition-colors"
             >
               <Share2 className="w-4 h-4" />
               <span>Compartir</span>
@@ -353,7 +353,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-sm mx-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">¡Enlace copiado!</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">El enlace del video se ha copiado al portapapeles.</p>
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">El enlace del video se ha copiado al portapapeles.</p>
             <button
               onClick={() => setShowShareModal(false)}
               className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"

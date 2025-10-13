@@ -253,7 +253,7 @@ export default function HomePage() {
                             <PlusIcon />
                           </div>
                         </div>
-                        <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">Tu historia</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium">Tu historia</span>
                       </div>
                     );
                   }
@@ -270,14 +270,14 @@ export default function HomePage() {
                           interactive
                         />
                         {item.storiesCount > 1 && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                            <span className="text-xs font-bold text-gray-700">
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
+                            <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
                               {item.storiesCount}
                             </span>
                           </div>
                         )}
                       </div>
-                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium truncate max-w-16">
+                      <span className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium truncate max-w-16">
                         {item.username}
                       </span>
                     </div>
@@ -351,13 +351,13 @@ export default function HomePage() {
             {posts && posts.length > 0 && (
               <div ref={observerRef} className="flex justify-center pt-6">
                 {loadingMore && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">
                     <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                     <span>Cargando más publicaciones...</span>
                   </div>
                 )}
                 {!hasMore && !loadingMore && (
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">
                     Has visto todos los posts disponibles
                   </p>
                 )}
@@ -376,7 +376,7 @@ export default function HomePage() {
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     No hay publicaciones aún
                   </h3>
-                  <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+                  <p className="text-base text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
                     Sigue a algunas personas para ver sus publicaciones aquí, o crea tu primera publicación.
                   </p>
                   <div className="space-y-3">

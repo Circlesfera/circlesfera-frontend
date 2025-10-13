@@ -86,8 +86,8 @@ export default function ReportModal({
           className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Reportar publicación</h2>
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Reportar publicación</h2>
             <button
               onClick={handleClose}
               disabled={submitting}
@@ -103,7 +103,7 @@ export default function ReportModal({
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">
                   ¿Por qué quieres reportar esta publicación? Esto nos ayuda a mantener CircleSfera seguro.
                 </p>
               </div>
@@ -117,21 +117,21 @@ export default function ReportModal({
                     onClick={() => setSelectedReason(reason.id)}
                     className={`w-full text-left p-3 rounded-lg border-2 transition-colors ${selectedReason === reason.id
                       ? 'border-red-200 bg-red-50'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800'
                       }`}
                   >
                     <div className="flex items-start space-x-3">
                       <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mt-0.5 ${selectedReason === reason.id
                         ? 'border-red-500 bg-red-500'
-                        : 'border-gray-300'
+                        : 'border-gray-300 dark:border-gray-600'
                         }`}>
                         {selectedReason === reason.id && (
                           <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">{reason.label}</p>
-                        <p className="text-sm text-gray-500">{reason.description}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{reason.label}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{reason.description}</p>
                       </div>
                     </div>
                   </button>
@@ -154,7 +154,7 @@ export default function ReportModal({
                     maxLength={500}
                     disabled={submitting}
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                     {description.length}/500 caracteres
                   </p>
                 </div>
@@ -168,7 +168,7 @@ export default function ReportModal({
             </div>
 
             {/* Actions */}
-            <div className="flex space-x-3 p-4 border-t border-gray-200">
+            <div className="flex space-x-3 p-4 border-t border-gray-200 dark:border-gray-700">
               <Button
                 type="button"
                 onClick={handleClose}

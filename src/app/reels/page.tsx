@@ -95,7 +95,7 @@ export default function ReelsPage() {
       <div className="h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando reels...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando reels...</p>
         </div>
       </div>
     );
@@ -111,7 +111,7 @@ export default function ReelsPage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             No hay reels disponibles
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-8">
             Crea tu primer reel para comenzar a compartir videos cortos con la comunidad.
           </p>
           <Button
@@ -182,7 +182,7 @@ export default function ReelsPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-auto text-white hover:bg-white/10"
+                  className="ml-auto text-white hover:bg-white dark:bg-gray-900/10"
                 >
                   Seguir
                 </Button>
@@ -327,7 +327,7 @@ export default function ReelsPage() {
             {reels.slice(0, Math.min(10, reels.length)).map((_, index) => (
               <div
                 key={index}
-                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white' : 'bg-white/30'
+                className={`w-1 h-1 rounded-full transition-colors ${index === currentIndex ? 'bg-white dark:bg-gray-900' : 'bg-white dark:bg-gray-900/30'
                   }`}
               />
             ))}

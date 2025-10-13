@@ -209,16 +209,16 @@ export const utilityClasses = {
       focus:outline-none focus:ring-4 focus:ring-blue-300
     `,
     secondary: `
-      bg-white text-gray-700 font-medium px-6 py-3 
-      rounded-xl border-2 border-gray-200 
-      hover:border-gray-300 hover:shadow-lg 
+      bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-medium px-6 py-3 
+      rounded-xl border-2 border-gray-200 dark:border-gray-700 
+      hover:border-gray-300 dark:border-gray-600 hover:shadow-lg 
       transition-all duration-300 ease-out 
       hover:scale-105 active:scale-95
       focus:outline-none focus:ring-4 focus:ring-gray-200
     `,
     ghost: `
-      text-gray-600 font-medium px-4 py-2 
-      rounded-lg hover:bg-gray-100 
+      text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium px-4 py-2 
+      rounded-lg hover:bg-gray-100 dark:bg-gray-800 
       transition-all duration-200 ease-out
       focus:outline-none focus:ring-2 focus:ring-gray-200
     `,
@@ -227,17 +227,17 @@ export const utilityClasses = {
   // Inputs
   input: `
     w-full px-4 py-3 
-    border-2 border-gray-200 rounded-xl 
+    border-2 border-gray-200 dark:border-gray-700 rounded-xl 
     focus:border-blue-500 focus:ring-4 focus:ring-blue-100 
     transition-all duration-200 ease-out
-    placeholder:text-gray-400
-    bg-white
+    placeholder:text-gray-400 dark:text-gray-500
+    bg-white dark:bg-gray-900
   `,
 
   // Cards
   card: `
-    bg-white rounded-2xl shadow-lg 
-    border border-gray-100 
+    bg-white dark:bg-gray-900 rounded-2xl shadow-lg 
+    border border-gray-100 dark:border-gray-700 
     hover:shadow-xl hover:-translate-y-1 
     transition-all duration-300 ease-out
   `,
@@ -253,9 +253,9 @@ export const utilityClasses = {
 
   // Text
   text: {
-    heading: 'text-gray-900 font-semibold',
-    body: 'text-gray-700',
-    caption: 'text-gray-500 text-sm',
+    heading: 'text-gray-900 dark:text-gray-100 font-semibold',
+    body: 'text-gray-700 dark:text-gray-300',
+    caption: 'text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm',
     link: 'text-blue-500 hover:text-blue-600 transition-colors',
   },
 } as const;

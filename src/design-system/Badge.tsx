@@ -23,7 +23,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         // Default - Gris
-        default: "bg-gray-100 text-gray-700 border border-gray-200",
+        default: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700",
 
         // Primary - Azul
         primary: "bg-blue-100 text-blue-700 border border-blue-200",
@@ -41,7 +41,7 @@ const badgeVariants = cva(
         info: "bg-cyan-100 text-cyan-700 border border-cyan-200",
 
         // Gradient - Instagram-like
-        gradient: "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 shadow-sm",
+        gradient: "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 shadow-sm dark:shadow-gray-900/50",
 
         // Solid variants
         solidPrimary: "bg-blue-600 text-white border-0",
@@ -58,7 +58,7 @@ const badgeVariants = cva(
         lg: "px-3 py-1.5 text-sm",
       },
       dot: {
-        true: "w-2 h-2 p-0 border-2 border-white shadow-sm",
+        true: "w-2 h-2 p-0 border-2 border-white shadow-sm dark:shadow-gray-900/50",
         false: "",
       },
       pulse: {

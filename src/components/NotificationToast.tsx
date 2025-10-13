@@ -82,7 +82,7 @@ export default function NotificationToast({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -50, scale: 0.9 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className={`fixed top-4 right-4 z-50 max-w-sm w-full bg-white border rounded-lg shadow-lg ${getBackgroundColor()}`}
+          className={`fixed top-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-gray-900 border rounded-lg shadow-lg ${getBackgroundColor()}`}
         >
           <div className="p-4">
             <div className="flex items-start">
@@ -90,11 +90,11 @@ export default function NotificationToast({
                 {getIcon()}
               </div>
               <div className="ml-3 flex-1">
-                <h3 className="text-sm font-medium text-gray-900">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   {title}
                 </h3>
                 {message && (
-                  <p className="mt-1 text-sm text-gray-600">
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                     {message}
                   </p>
                 )}
@@ -102,7 +102,7 @@ export default function NotificationToast({
               <div className="ml-4 flex-shrink-0">
                 <button
                   onClick={handleClose}
-                  className="inline-flex text-gray-400 hover:text-gray-600 transition-colors"
+                  className="inline-flex text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

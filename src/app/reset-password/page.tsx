@@ -136,7 +136,7 @@ function ResetPasswordContent() {
               ¡Contraseña Restablecida!
             </h1>
 
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
               Tu contraseña ha sido cambiada exitosamente.
             </p>
 
@@ -170,7 +170,7 @@ function ResetPasswordContent() {
           <div className="flex items-center mb-6">
             <button
               onClick={() => router.push('/')}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 transition-colors"
+              className="text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 transition-colors"
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
@@ -184,7 +184,7 @@ function ResetPasswordContent() {
             <Lock className="w-8 h-8 text-purple-600" />
           </div>
 
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-center text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
             Ingresa tu nueva contraseña
           </p>
 
@@ -219,7 +219,7 @@ function ResetPasswordContent() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -256,7 +256,7 @@ function ResetPasswordContent() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300"
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -303,7 +303,7 @@ function ResetPasswordContent() {
             <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
               La contraseña debe contener:
             </h3>
-            <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+            <ul className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500 space-y-1">
               <li className="flex items-center space-x-2">
                 <span className={password.length >= 8 ? 'text-green-600' : ''}>
                   {password.length >= 8 ? '✓' : '•'} Mínimo 8 caracteres
@@ -338,7 +338,7 @@ export default function ResetPasswordPage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando...</p>
         </div>
       </div>
     }>

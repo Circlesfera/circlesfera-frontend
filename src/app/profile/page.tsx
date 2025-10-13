@@ -24,7 +24,7 @@ export default function ProfilePage() {
             </svg>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Redirigiendo...</h3>
-          <p className="text-gray-600">Te estamos llevando a tu perfil</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Te estamos llevando a tu perfil</p>
         </div>
       </div>
     );

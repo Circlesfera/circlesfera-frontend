@@ -47,20 +47,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         {/* Sidebar visible durante carga */}
         <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:z-40">
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
             <div className="flex h-16 shrink-0 items-center">
               <div className="flex items-center gap-3">
                 <Shield className="w-8 h-8 text-blue-600" />
                 <div>
-                  <h1 className="font-bold text-gray-900">CircleSfera</h1>
-                  <p className="text-xs text-gray-500">Panel Admin</p>
+                  <h1 className="font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Panel Admin</p>
                 </div>
               </div>
             </div>
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-sm text-gray-500">Cargando...</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">Cargando...</p>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
             <div className="pt-20">
               <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400 font-medium text-lg">Verificando permisos de administrador...</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium text-lg">Verificando permisos de administrador...</p>
             </div>
           </div>
         </main>
@@ -94,19 +94,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Shield className="w-6 h-6 text-blue-600" />
-          <span className="font-bold text-gray-900">Panel Admin</span>
+          <span className="font-bold text-gray-900 dark:text-gray-100">Panel Admin</span>
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
           {sidebarOpen ? (
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
           ) : (
-            <Menu className="w-6 h-6 text-gray-600" />
+            <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
           )}
         </button>
       </div>
@@ -116,16 +116,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         className={`
           fixed top-0 left-0 z-40 h-screen transition-transform
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 w-64 bg-white border-r border-gray-200
+          lg:translate-x-0 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
         `}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
             <Shield className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="font-bold text-gray-900">CircleSfera</h1>
-              <p className="text-xs text-gray-500">Panel Admin</p>
+              <h1 className="font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Panel Admin</p>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all
                   ${isActive
                     ? 'bg-blue-50 text-blue-600 font-medium'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
                   }
                 `}
                 onClick={() => {
@@ -178,10 +178,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <Link
             href="/feed"
-            className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 transition-all mb-2"
+            className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800 transition-all mb-2"
           >
             <Home className="w-5 h-5" />
             <span>Volver al Inicio</span>

@@ -55,7 +55,7 @@ export default function TermsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -65,17 +65,17 @@ export default function TermsPage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Términos de Servicio
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
             Estos términos rigen tu uso de CircleSfera. Al usar nuestra plataforma,
             aceptas cumplir con estas condiciones.
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-4">
             Última actualización: 15 de enero de 2024
           </p>
         </div>
 
         {/* Introducción */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Introducción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
@@ -98,18 +98,18 @@ export default function TermsPage() {
         {/* Secciones principales */}
         <div className="space-y-8 mb-8">
           {sections.map((section, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-200">
+            <div key={index} className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
               <div className="flex items-start space-x-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
                   <section.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">{section.title}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{section.title}</h3>
               </div>
               <ul className="space-y-3">
                 {section.content.map((item, itemIndex) => (
                   <li key={itemIndex} className="flex items-start space-x-3">
                     <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
-                    <span className="text-gray-700">{item}</span>
+                    <span className="text-gray-700 dark:text-gray-300">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -118,7 +118,7 @@ export default function TermsPage() {
         </div>
 
         {/* Suspensión y Terminación */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Suspensión y Terminación</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
@@ -149,7 +149,7 @@ export default function TermsPage() {
         </div>
 
         {/* Limitación de Responsabilidad */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Limitación de Responsabilidad</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
@@ -169,7 +169,7 @@ export default function TermsPage() {
         </div>
 
         {/* Ley Aplicable */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Ley Aplicable y Jurisdicción</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
@@ -213,23 +213,23 @@ export default function TermsPage() {
 
         {/* Enlaces útiles */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">Enlaces relacionados:</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Enlaces relacionados:</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/privacy"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Política de Privacidad
             </Link>
             <Link
               href="/help"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Centro de Ayuda
             </Link>
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>

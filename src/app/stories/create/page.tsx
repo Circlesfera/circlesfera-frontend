@@ -154,7 +154,7 @@ export default function CreateStoryPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando...</p>
         </div>
       </div>
     );
@@ -162,9 +162,9 @@ export default function CreateStoryPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -177,7 +177,7 @@ export default function CreateStoryPage() {
                   <ArrowLeft className="w-5 h-5 mr-2" />
                   Volver
                 </Button>
-                <h1 className="text-xl font-semibold text-gray-900">
+                <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                   Crear Story
                 </h1>
               </div>
@@ -220,12 +220,12 @@ export default function CreateStoryPage() {
                         onClick={() => setStoryType(type.type)}
                         className={`p-4 rounded-lg border-2 transition-all ${storyType === type.type
                           ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600'
                           }`}
                       >
-                        <type.icon className="w-8 h-8 mx-auto mb-2 text-gray-600" />
-                        <p className="font-medium text-gray-900">{type.label}</p>
-                        <p className="text-xs text-gray-500">{type.description}</p>
+                        <type.icon className="w-8 h-8 mx-auto mb-2 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{type.label}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{type.description}</p>
                       </button>
                     ))}
                   </div>
@@ -251,7 +251,7 @@ export default function CreateStoryPage() {
                       <select
                         value={formData.textStyle}
                         onChange={(e) => handleInputChange('textStyle', e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-900 text-gray-900"
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                       >
                         <option value="default">Por defecto</option>
                         <option value="bold">Negrita</option>
@@ -279,13 +279,13 @@ export default function CreateStoryPage() {
 
                         <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                           {storyType === 'image' ? (
-                            <ImageIcon className="w-8 h-8 text-gray-400" />
+                            <ImageIcon className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                           ) : (
-                            <Camera className="w-8 h-8 text-gray-400" />
+                            <Camera className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                           )}
                         </div>
 
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">
                           {storyType === 'image'
                             ? 'Toca para seleccionar una imagen'
                             : 'Toca para seleccionar un video'
@@ -349,7 +349,7 @@ export default function CreateStoryPage() {
                       placeholder="Añade una descripción..."
                       maxLength={500}
                     />
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                       {formData.caption.length}/500 caracteres
                     </p>
                   </div>
@@ -360,7 +360,7 @@ export default function CreateStoryPage() {
                       Ubicación (opcional)
                     </label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                       <Input
                         value={formData.location}
                         onChange={(e) => handleInputChange('location', e.target.value)}
@@ -395,7 +395,7 @@ export default function CreateStoryPage() {
                         )
                       ) : (
                         <div className="text-center">
-                          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <div className="w-12 h-12 bg-white dark:bg-gray-900/20 rounded-full flex items-center justify-center mx-auto mb-2">
                             <Camera className="w-6 h-6" />
                           </div>
                           <p className="text-sm">Tu story aparecerá aquí</p>

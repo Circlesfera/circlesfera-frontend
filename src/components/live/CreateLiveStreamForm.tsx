@@ -80,8 +80,8 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
             <Camera className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Crear Transmisión en Vivo</h2>
-            <p className="text-sm text-gray-600">Configura tu transmisión antes de iniciar</p>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Transmisión en Vivo</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Configura tu transmisión antes de iniciar</p>
           </div>
         </div>
 
@@ -98,11 +98,11 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="¿De qué vas a hablar?"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                 maxLength={100}
                 required
               />
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                 {formData.title.length}/100 caracteres
               </div>
             </div>
@@ -116,11 +116,11 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Cuéntales a tus seguidores de qué se trata tu transmisión..."
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-gray-900 dark:text-gray-100"
                 rows={3}
                 maxLength={500}
               />
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                 {formData.description?.length || 0}/500 caracteres
               </div>
             </div>
@@ -129,8 +129,8 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           {/* Scheduling */}
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
-              <Calendar className="w-5 h-5 text-gray-600" />
-              <h3 className="text-lg font-semibold text-gray-900">Programación</h3>
+              <Calendar className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Programación</h3>
             </div>
 
             <div className="flex items-center space-x-3">
@@ -141,7 +141,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                 onChange={(e) => setIsScheduled(e.target.checked)}
                 className="w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500"
               />
-              <label htmlFor="isScheduled" className="text-sm text-gray-700">
+              <label htmlFor="isScheduled" className="text-sm text-gray-700 dark:text-gray-300">
                 Programar transmisión para más tarde
               </label>
             </div>
@@ -163,7 +163,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                       value={scheduledDate}
                       onChange={(e) => setScheduledDate(e.target.value)}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     />
                   </div>
                   <div>
@@ -175,7 +175,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                       id="scheduledTime"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 dark:text-gray-100"
                     />
                   </div>
                 </div>
@@ -194,17 +194,17 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           {/* Privacy & Interaction */}
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
-              <Shield className="w-5 h-5 text-gray-600" />
-              <h3 className="text-lg font-semibold text-gray-900">Privacidad e Interacción</h3>
+              <Shield className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Privacidad e Interacción</h3>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <Users className="w-5 h-5 text-gray-600" />
+                  <Users className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Transmisión pública</p>
-                    <p className="text-xs text-gray-600">Cualquiera puede ver tu transmisión</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Transmisión pública</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">Cualquiera puede ver tu transmisión</p>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -214,16 +214,16 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                     onChange={() => toggleCheckbox('isPublic')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
                 </label>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <MessageCircle className="w-5 h-5 text-gray-600" />
+                  <MessageCircle className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Permitir comentarios</p>
-                    <p className="text-xs text-gray-600">Los espectadores pueden comentar</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Permitir comentarios</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">Los espectadores pueden comentar</p>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -233,16 +233,16 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                     onChange={() => toggleCheckbox('allowComments')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
                 </label>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <Share2 className="w-5 h-5 text-gray-600" />
+                  <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Permitir compartir</p>
-                    <p className="text-xs text-gray-600">Los espectadores pueden compartir</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Permitir compartir</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">Los espectadores pueden compartir</p>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -252,7 +252,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                     onChange={() => toggleCheckbox('allowShares')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
                 </label>
               </div>
             </div>
@@ -261,17 +261,17 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           {/* Notifications */}
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
-              <Bell className="w-5 h-5 text-gray-600" />
-              <h3 className="text-lg font-semibold text-gray-900">Notificaciones</h3>
+              <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Notificaciones</h3>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <Users className="w-5 h-5 text-gray-600" />
+                  <Users className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Notificar a seguidores</p>
-                    <p className="text-xs text-gray-600">Envía notificación cuando inicies</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Notificar a seguidores</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">Envía notificación cuando inicies</p>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -281,7 +281,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                     onChange={() => toggleCheckbox('notifyFollowers')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
                 </label>
               </div>
 
@@ -291,8 +291,8 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                     <span className="text-white text-xs">👥</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Notificar a amigos cercanos</p>
-                    <p className="text-xs text-gray-600">Solo a tu lista de amigos cercanos</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Notificar a amigos cercanos</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">Solo a tu lista de amigos cercanos</p>
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -302,7 +302,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                     onChange={() => toggleCheckbox('notifyCloseFriends')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
                 </label>
               </div>
             </div>
@@ -311,14 +311,14 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           {/* CSTV Save */}
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
-              <Save className="w-5 h-5 text-gray-600" />
-              <h3 className="text-lg font-semibold text-gray-900">Guardar como CSTV</h3>
+              <Save className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Guardar como CSTV</h3>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-900">Guardar automáticamente</p>
-                <p className="text-xs text-gray-600">La transmisión se guardará como video CSTV</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Guardar automáticamente</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">La transmisión se guardará como video CSTV</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -327,7 +327,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                   onChange={() => toggleCheckbox('saveToCSTV')}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-gray-900 after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
               </label>
             </div>
           </div>
@@ -340,11 +340,11 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           )}
 
           {/* Actions */}
-          <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+          <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-3 text-gray-700 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors"
             >
               Cancelar
             </button>

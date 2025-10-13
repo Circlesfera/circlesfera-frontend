@@ -91,18 +91,18 @@ export default function JobsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center">
             <Link
               href="/feed"
               className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Empleos</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Empleos</h1>
           </div>
         </div>
       </div>
@@ -116,14 +116,14 @@ export default function JobsPage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Únete a CircleSfera
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
             Forma parte de un equipo apasionado que está construyendo el futuro de las redes sociales.
             Buscamos talento excepcional para crear experiencias digitales auténticas.
           </p>
         </div>
 
         {/* Por qué trabajar con nosotros */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">¿Por qué CircleSfera?</h3>
           <div className="grid md:grid-cols-2 gap-6">
             {benefits.map((benefit, index) => (
@@ -133,7 +133,7 @@ export default function JobsPage() {
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{benefit.title}</h4>
-                  <p className="text-gray-600">{benefit.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">{benefit.description}</p>
                 </div>
               </div>
             ))}
@@ -145,7 +145,7 @@ export default function JobsPage() {
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Posiciones Abiertas</h3>
           <div className="space-y-6">
             {openPositions.map((position, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+              <div key={index} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
@@ -153,7 +153,7 @@ export default function JobsPage() {
                     </div>
                     <div>
                       <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{position.title}</h4>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-2">
                         <div className="flex items-center">
                           <MapPin className="w-4 h-4 mr-1" />
                           {position.location}
@@ -173,11 +173,11 @@ export default function JobsPage() {
                   </button>
                 </div>
 
-                <p className="text-gray-600 dark:text-gray-400 mb-4">{position.description}</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">{position.description}</p>
 
                 <div>
                   <h5 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Requisitos:</h5>
-                  <ul className="list-disc list-inside space-y-1 text-gray-600">
+                  <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400 dark:text-gray-500">
                     {position.requirements.map((requirement, reqIndex) => (
                       <li key={reqIndex}>{requirement}</li>
                     ))}
@@ -189,7 +189,7 @@ export default function JobsPage() {
         </div>
 
         {/* Proceso de selección */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Proceso de Selección</h3>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center">
@@ -197,28 +197,28 @@ export default function JobsPage() {
                 <span className="text-blue-600 font-bold">1</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Aplicación</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Envía tu CV y portfolio</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Envía tu CV y portfolio</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
                 <span className="text-blue-600 font-bold">2</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Revisión</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Evaluamos tu perfil</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Evaluamos tu perfil</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
                 <span className="text-blue-600 font-bold">3</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Entrevista</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Conocemos tu experiencia</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Conocemos tu experiencia</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
                 <span className="text-blue-600 font-bold">4</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Decisión</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Te damos una respuesta</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">Te damos una respuesta</p>
             </div>
           </div>
         </div>
@@ -232,18 +232,18 @@ export default function JobsPage() {
             Siempre estamos buscando talento excepcional. Envíanos tu CV y te contactaremos
             cuando tengamos una oportunidad que se ajuste a tu perfil.
           </p>
-          <button className="bg-white dark:bg-gray-900 text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+          <button className="bg-white dark:bg-gray-900 text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 dark:bg-gray-800 transition-colors">
             Enviar CV Espontáneo
           </button>
         </div>
 
         {/* Información de contacto */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mt-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mt-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Información de Contacto</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Recursos Humanos</h4>
-              <div className="space-y-2 text-gray-600">
+              <div className="space-y-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">
                 <p>Email: jobs@circlesfera.com</p>
                 <p>Teléfono: +34 900 123 456</p>
                 <p>Horario: Lunes a Viernes, 9:00 - 18:00 CET</p>
@@ -251,7 +251,7 @@ export default function JobsPage() {
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Síguenos</h4>
-              <div className="space-y-2 text-gray-600">
+              <div className="space-y-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">
                 <p>LinkedIn: /company/circlesfera</p>
                 <p>Twitter: @circlesfera_jobs</p>
                 <p>Blog: blog.circlesfera.com/careers</p>
@@ -262,23 +262,23 @@ export default function JobsPage() {
 
         {/* Enlaces útiles */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">Enlaces relacionados:</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Enlaces relacionados:</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/press"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Prensa
             </Link>
             <Link
               href="/help"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Ayuda
             </Link>

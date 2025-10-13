@@ -71,18 +71,18 @@ export default function APIDocsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center">
             <Link
               href="/feed"
               className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">API Documentation</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">API Documentation</h1>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function APIDocsPage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             API de CircleSfera
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
             Integra CircleSfera en tus aplicaciones con nuestra API REST completa.
             Construye experiencias únicas con nuestros datos y funcionalidades.
           </p>
@@ -105,14 +105,14 @@ export default function APIDocsPage() {
         {/* Features */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-200">
+            <div key={index} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">{feature.description}</p>
                 </div>
               </div>
             </div>
@@ -120,16 +120,16 @@ export default function APIDocsPage() {
         </div>
 
         {/* Quick Start */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center mb-6">
             <Zap className="w-8 h-8 text-yellow-500 mr-3" />
-            <h3 className="text-2xl font-bold text-gray-900">Inicio Rápido</h3>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Inicio Rápido</h3>
           </div>
 
           <div className="space-y-6">
             <div>
               <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">1. Obtén tu API Key</h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-3">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-3">
                 Regístrate en CircleSfera y ve a Configuración - API para obtener tu clave de API.
               </p>
               <div className="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
@@ -141,7 +141,7 @@ export default function APIDocsPage() {
 
             <div>
               <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">2. Autenticación</h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-3">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-3">
                 Incluye tu token JWT en el header Authorization de todas las peticiones.
               </p>
               <div className="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
@@ -151,7 +151,7 @@ export default function APIDocsPage() {
 
             <div>
               <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">3. Realiza tu primera petición</h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-3">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-3">
                 Obtén tu feed de publicaciones con una simple petición GET.
               </p>
               <div className="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
@@ -163,10 +163,10 @@ export default function APIDocsPage() {
         </div>
 
         {/* Endpoints */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center mb-6">
             <Book className="w-8 h-8 text-blue-500 mr-3" />
-            <h3 className="text-2xl font-bold text-gray-900">Endpoints Principales</h3>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Endpoints Principales</h3>
           </div>
 
           <div className="space-y-4">
@@ -188,29 +188,29 @@ export default function APIDocsPage() {
                     )}
                   </div>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">{endpoint.description}</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">{endpoint.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* SDKs y Librerías */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">SDKs y Librerías</h3>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">JavaScript/Node.js</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">SDK oficial para aplicaciones web y Node.js</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-3">SDK oficial para aplicaciones web y Node.js</p>
               <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">npm install @circlesfera/sdk</code>
             </div>
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Python</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">Librería para aplicaciones Python</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-3">Librería para aplicaciones Python</p>
               <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">pip install circlesfera-sdk</code>
             </div>
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">PHP</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">SDK para aplicaciones PHP</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-3">SDK para aplicaciones PHP</p>
               <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">composer require circlesfera/sdk</code>
             </div>
           </div>
@@ -253,7 +253,7 @@ export default function APIDocsPage() {
               <p className="text-blue-100 text-sm mb-3">
                 Accede a la documentación detallada con ejemplos y casos de uso.
               </p>
-              <button className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-white dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
                 Ver Documentación
               </button>
             </div>
@@ -263,7 +263,7 @@ export default function APIDocsPage() {
               <p className="text-blue-100 text-sm mb-3">
                 Contacta con nuestro equipo para soporte técnico especializado.
               </p>
-              <button className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-white dark:bg-gray-900/20 hover:bg-white dark:bg-gray-900/30 px-4 py-2 rounded-lg transition-colors">
                 Contactar Soporte
               </button>
             </div>
@@ -272,23 +272,23 @@ export default function APIDocsPage() {
 
         {/* Enlaces útiles */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">Enlaces relacionados:</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Enlaces relacionados:</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/press"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Prensa
             </Link>
             <Link
               href="/terms"
-              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Términos de API
             </Link>

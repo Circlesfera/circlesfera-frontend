@@ -48,7 +48,7 @@ export default function AnimatedCard({
     } : undefined,
   };
 
-  const combinedClassName = `bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ${className}`;
+  const combinedClassName = `bg-white dark:bg-gray-900 rounded-lg shadow-sm dark:shadow-gray-900/50 hover:shadow-md transition-shadow duration-200 ${className}`;
 
   return (
     <motion.div
@@ -71,7 +71,7 @@ export function AnimatedPostCard({ children, index, ...props }: AnimatedCardProp
       direction="up"
       delay={(index || 0) * 0.1}
       duration={0.4}
-      className="border border-gray-200"
+      className="border border-gray-200 dark:border-gray-700"
       {...props}
     >
       {children}

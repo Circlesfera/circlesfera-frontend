@@ -102,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({
     <svg
       className={cn(
         "w-6 h-6 transition-all duration-200",
-        filled ? "text-red-500 scale-110" : "text-gray-600"
+        filled ? "text-red-500 scale-110" : "text-gray-600 dark:text-gray-400 dark:text-gray-500"
       )}
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
@@ -119,7 +119,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   const CommentIcon = () => (
     <svg
-      className="w-6 h-6 text-gray-600 dark:text-gray-400 transition-colors duration-200"
+      className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-200"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -135,7 +135,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   const ShareIcon = () => (
     <svg
-      className="w-6 h-6 text-gray-600 dark:text-gray-400 transition-colors duration-200"
+      className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors duration-200"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -151,7 +151,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   const MoreIcon = () => (
     <svg
-      className="w-6 h-6 text-gray-600"
+      className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500"
       fill="currentColor"
       viewBox="0 0 24 24"
     >
@@ -160,7 +160,7 @@ const PostCard: React.FC<PostCardProps> = ({
   );
 
   return (
-    <div className={cn("bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm", className)}>
+    <div className={cn("bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm dark:shadow-gray-900/50", className)}>
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div
@@ -178,7 +178,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
               {post.user.username}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               {formatTimeAgo(post.createdAt)}
             </p>
           </div>
@@ -193,7 +193,7 @@ const PostCard: React.FC<PostCardProps> = ({
           </button>
 
           {showMenu && (
-            <div className="absolute right-0 top-8 bg-white dark:bg-gray-900 border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-32">
+            <div className="absolute right-0 top-8 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-10 min-w-32">
               <button
                 onClick={handleDelete}
                 className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center gap-2"
@@ -253,7 +253,7 @@ const PostCard: React.FC<PostCardProps> = ({
               onClick={handleLike}
               className={cn(
                 "p-1 rounded-full transition-all duration-200",
-                isLiked ? "hover:bg-red-50" : "hover:bg-gray-100"
+                isLiked ? "hover:bg-red-50" : "hover:bg-gray-100 dark:bg-gray-800"
               )}
             >
               <LikeIcon filled={isLiked} />
@@ -296,14 +296,14 @@ const PostCard: React.FC<PostCardProps> = ({
         {post.comments > 0 && (
           <button
             onClick={() => onComment?.(post.id)}
-            className="text-gray-500 dark:text-gray-400 text-sm hover:text-gray-700 transition-colors duration-200"
+            className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm hover:text-gray-700 dark:text-gray-300 transition-colors duration-200"
           >
             Ver {post.comments} {post.comments === 1 ? 'comentario' : 'comentarios'}
           </button>
         )}
 
         {/* Add comment */}
-        <div className="flex items-center space-x-3 pt-2 border-t border-gray-100">
+        <div className="flex items-center space-x-3 pt-2 border-t border-gray-100 dark:border-gray-700">
           <Avatar
             src={post.user.avatar}
             alt="Tu avatar"
@@ -314,7 +314,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <input
               type="text"
               placeholder="Añade un comentario..."
-              className="w-full px-3 py-2 text-sm bg-transparent border-none outline-none placeholder-gray-400"
+              className="w-full px-3 py-2 text-sm bg-transparent border-none outline-none placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
           <Button

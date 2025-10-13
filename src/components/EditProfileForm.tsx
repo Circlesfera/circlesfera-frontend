@@ -251,7 +251,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Editar perfil</h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Editar perfil</h2>
         <button
           onClick={onCancel}
           className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
@@ -289,13 +289,13 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             )}
           </div>
           <div>
-            <div className="font-semibold text-gray-900">{profile.username}</div>
+            <div className="font-semibold text-gray-900 dark:text-gray-100">{profile.username}</div>
             <div className="flex items-center space-x-2">
               <button
                 type="button"
                 onClick={handleChangePhotoClick}
                 disabled={avatarUploading}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:text-gray-400 dark:text-gray-500 disabled:cursor-not-allowed"
               >
                 {avatarPreview ? 'Cambiar imagen' : 'Cambiar foto de perfil'}
               </button>
@@ -304,7 +304,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
                   type="button"
                   onClick={handleUploadAvatar}
                   disabled={avatarUploading}
-                  className="text-green-600 hover:text-green-800 text-sm font-medium disabled:text-gray-400 disabled:cursor-not-allowed"
+                  className="text-green-600 hover:text-green-800 text-sm font-medium disabled:text-gray-400 dark:text-gray-500 disabled:cursor-not-allowed"
                 >
                   {avatarUploading ? 'Subiendo...' : 'Guardar'}
                 </button>
@@ -418,7 +418,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             {errors.bio && (
               <p className="text-red-500 text-sm">{errors.bio}</p>
             )}
-            <span className="text-gray-500 dark:text-gray-400 text-sm ml-auto">
+            <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm ml-auto">
               {formData.bio.length}/160
             </span>
           </div>
@@ -525,13 +525,13 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             onChange={handleChange}
             className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
           />
-          <label htmlFor="isPrivate" className="text-sm font-medium text-gray-700">
+          <label htmlFor="isPrivate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Cuenta privada
           </label>
         </div>
 
         {/* Botones */}
-        <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200">
+        <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
           <button
             type="button"
             onClick={onCancel}

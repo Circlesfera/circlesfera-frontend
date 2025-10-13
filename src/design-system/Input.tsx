@@ -20,21 +20,21 @@ import { cn } from '@/utils/cn'
 
 const inputVariants = cva(
   // Base styles
-  "w-full rounded-xl font-medium transition-all duration-200 focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50",
+  "w-full rounded-xl font-medium transition-all duration-200 focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-800",
   {
     variants: {
       variant: {
         // Default - Estado normal (con dark mode)
-        default: "border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-500 focus-visible:border-blue-500 focus-visible:ring-4 focus-visible:ring-blue-100 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus-visible:border-blue-400 dark:focus-visible:ring-blue-900",
+        default: "border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus-visible:border-blue-500 focus-visible:ring-4 focus-visible:ring-blue-100 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus-visible:border-blue-400 dark:focus-visible:ring-blue-900",
 
         // Error - Estado de error (con dark mode)
-        error: "border-2 border-red-500 bg-red-50 text-gray-900 placeholder-red-400 focus-visible:border-red-600 focus-visible:ring-4 focus-visible:ring-red-100 dark:border-red-400 dark:bg-red-950 dark:text-gray-100 dark:focus-visible:ring-red-900",
+        error: "border-2 border-red-500 bg-red-50 text-gray-900 dark:text-gray-100 placeholder-red-400 focus-visible:border-red-600 focus-visible:ring-4 focus-visible:ring-red-100 dark:border-red-400 dark:bg-red-950 dark:text-gray-100 dark:focus-visible:ring-red-900",
 
         // Success - Estado de éxito (con dark mode)
-        success: "border-2 border-green-500 bg-green-50 text-gray-900 placeholder-green-400 focus-visible:border-green-600 focus-visible:ring-4 focus-visible:ring-green-100 dark:border-green-400 dark:bg-green-950 dark:text-gray-100 dark:focus-visible:ring-green-900",
+        success: "border-2 border-green-500 bg-green-50 text-gray-900 dark:text-gray-100 placeholder-green-400 focus-visible:border-green-600 focus-visible:ring-4 focus-visible:ring-green-100 dark:border-green-400 dark:bg-green-950 dark:text-gray-100 dark:focus-visible:ring-green-900",
 
         // Ghost - Sin borde (con dark mode)
-        ghost: "border-2 border-transparent bg-gray-50 text-gray-900 placeholder-gray-500 focus-visible:border-blue-500 focus-visible:ring-4 focus-visible:ring-blue-100 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700",
+        ghost: "border-2 border-transparent bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus-visible:border-blue-500 focus-visible:ring-4 focus-visible:ring-blue-100 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700",
       },
       size: {
         // Small - Compacto
@@ -123,7 +123,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {/* Left icon */}
           {leftIcon && (
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -148,7 +148,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
           {/* Right icon */}
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none">
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 pointer-events-none">
               {rightIcon}
             </div>
           )}
@@ -186,7 +186,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {helperText && !error && !success && (
           <p
             id={helperId}
-            className="mt-2 text-sm text-gray-500 dark:text-gray-400"
+            className="mt-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500"
           >
             {helperText}
           </p>

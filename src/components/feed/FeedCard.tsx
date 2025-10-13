@@ -92,7 +92,7 @@ export default function FeedCard({
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
               {post.user.fullName || post.user.username}
             </h3>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               {formatRelativeTime(post.createdAt)}
             </p>
           </div>
@@ -108,7 +108,7 @@ export default function FeedCard({
           </Button>
 
           {showMore && (
-            <div className="absolute right-0 top-10 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+            <div className="absolute right-0 top-10 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10">
               {isOwnPost && (
                 <button
                   onClick={handleDelete}
@@ -118,7 +118,7 @@ export default function FeedCard({
                   Eliminar
                 </button>
               )}
-              <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors duration-200">
+              <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
                 <ShareIcon className="h-4 w-4" />
                 Compartir
               </button>
@@ -159,7 +159,7 @@ export default function FeedCard({
             onClick={handleLike}
             className={cn(
               "flex items-center gap-2 transition-colors duration-200",
-              isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"
+              isLiked ? "text-red-500" : "text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-red-500"
             )}
           >
             <HeartIcon
@@ -175,7 +175,7 @@ export default function FeedCard({
             variant="ghost"
             size="sm"
             onClick={handleComment}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition-colors duration-200"
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-blue-500 transition-colors duration-200"
           >
             <CommentIcon className="h-5 w-5" />
             <span className="text-sm font-medium">
@@ -187,7 +187,7 @@ export default function FeedCard({
             variant="ghost"
             size="sm"
             onClick={handleShare}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-green-500 transition-colors duration-200"
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-green-500 transition-colors duration-200"
           >
             <ShareIcon className="h-5 w-5" />
             <span className="text-sm font-medium">Compartir</span>
@@ -197,20 +197,20 @@ export default function FeedCard({
 
       {/* Comments Preview */}
       {post.comments.length > 0 && (
-        <div className="px-4 pb-4 border-t border-gray-100 pt-3">
+        <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700 pt-3">
           <div className="space-y-2">
             {post.comments.slice(0, 2).map((commentId, index) => (
               <div key={commentId || index} className="flex items-start gap-2">
                 <div className="w-6 h-6 bg-gray-300 rounded-full flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
                     Comentario #{index + 1}
                   </p>
                 </div>
               </div>
             ))}
             {post.comments.length > 2 && (
-              <button className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 transition-colors duration-200">
+              <button className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 transition-colors duration-200">
                 Ver {post.comments.length - 2} comentarios más
               </button>
             )}

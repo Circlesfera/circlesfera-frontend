@@ -65,7 +65,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
       <div className="max-w-3xl mx-auto mt-10 px-2">
         <div className="text-center">
           <div className="spinner mb-4"></div>
-          <p className="text-gray-600">Cargando perfil...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando perfil...</p>
         </div>
       </div>
     );

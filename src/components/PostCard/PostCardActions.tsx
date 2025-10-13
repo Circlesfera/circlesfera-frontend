@@ -65,7 +65,7 @@ export function PostCardActions({
           {/* Comment button */}
           <button
             onClick={() => onComment?.(post._id, post.user.username, post.content?.images?.[0]?.url)}
-            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
             {...getButtonA11yProps(ARIA_LABELS.post.comment)}
           >
             <CommentIcon
@@ -77,7 +77,7 @@ export function PostCardActions({
           {/* Share button */}
           <button
             onClick={() => onShare?.(post._id, postUrl, post.caption)}
-            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+            className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
             {...getButtonA11yProps(ARIA_LABELS.post.share)}
           >
             <ShareIcon
@@ -90,7 +90,7 @@ export function PostCardActions({
         {/* Save button */}
         <button
           onClick={onSave}
-          className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+          className={`${TOUCH_TARGET_CLASSES.min} p-2 rounded-full hover:bg-gray-100 dark:bg-gray-800 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
           {...getButtonA11yProps(ARIA_LABELS.post.save(isSaved), { pressed: isSaved })}
         >
           <BookmarkIcon
@@ -107,7 +107,7 @@ export function PostCardActions({
           {/* Likes count */}
           {post.likes.length > 0 && (
             <button
-              className="font-semibold text-gray-900 dark:text-gray-100 text-sm hover:text-gray-700 transition-colors focus-visible:outline-none focus-visible:underline"
+              className="font-semibold text-gray-900 dark:text-gray-100 text-sm hover:text-gray-700 dark:text-gray-300 transition-colors focus-visible:outline-none focus-visible:underline"
               aria-label={ARIA_LABELS.post.likeCount(post.likes.length)}
             >
               {formatCount(post.likes.length)} me gusta
@@ -126,7 +126,7 @@ export function PostCardActions({
                     {post.caption.substring(0, 80)}...
                     <button
                       onClick={onToggleCaption}
-                      className="text-gray-500 dark:text-gray-400 hover:text-gray-700 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
+                      className="text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
                       aria-label="Ver caption completo"
                     >
                       más
@@ -138,7 +138,7 @@ export function PostCardActions({
                     {post.caption.length > 80 && showFullCaption && (
                       <button
                         onClick={onToggleCaption}
-                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
+                        className="text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
                         aria-label="Ver menos"
                       >
                         menos
@@ -163,7 +163,7 @@ export function PostCardActions({
                 maxLength={2200}
               />
               <div className="flex items-center justify-between mt-2">
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                   {editCaption.length}/2200
                 </span>
                 <div className="flex space-x-2">
@@ -176,7 +176,7 @@ export function PostCardActions({
                   </button>
                   <button
                     onClick={onCancelEdit}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
+                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
                     aria-label="Cancelar edición"
                   >
                     Cancelar
@@ -191,7 +191,7 @@ export function PostCardActions({
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
         <div className="flex items-center space-x-1 mt-2" role="list" aria-label="Tags del post">
-          <TagIcon aria-hidden="true" className="text-gray-400" />
+          <TagIcon aria-hidden="true" className="text-gray-400 dark:text-gray-500" />
           <div className="flex flex-wrap gap-1">
             {post.tags.slice(0, 3).map((tag, index) => (
               <button
@@ -204,7 +204,7 @@ export function PostCardActions({
               </button>
             ))}
             {post.tags.length > 3 && (
-              <span className="text-gray-500 dark:text-gray-400 text-xs" aria-label={`${post.tags.length - 3} tags más`}>
+              <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs" aria-label={`${post.tags.length - 3} tags más`}>
                 +{post.tags.length - 3}
               </span>
             )}

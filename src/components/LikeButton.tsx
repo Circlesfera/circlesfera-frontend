@@ -44,7 +44,7 @@ export default function LikeButton({ postId, initialLiked }: { postId: string; i
       className={`p-2 rounded-lg transition-all duration-200 ${
         liked 
           ? 'text-red-500 hover:bg-red-50' 
-          : 'text-gray-600 hover:bg-gray-100'
+          : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:bg-gray-800'
       } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <HeartIcon filled={liked} />

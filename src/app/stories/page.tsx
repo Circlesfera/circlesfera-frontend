@@ -73,7 +73,7 @@ export default function StoriesPage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando stories...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando stories...</p>
         </div>
       </div>
     );
@@ -98,7 +98,7 @@ export default function StoriesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         {/* Main Content */}
         <div className="max-w-4xl mx-auto px-4 py-8">
           {stories.length === 0 ? (
@@ -110,7 +110,7 @@ export default function StoriesPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                 No hay stories disponibles
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-8">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-8">
                 Crea tu primera story para comenzar a compartir momentos con tus amigos.
               </p>
               <Button
@@ -142,10 +142,10 @@ export default function StoriesPage() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">
                       Tu story
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">
                       Comparte un momento
                     </p>
                   </div>
@@ -161,7 +161,7 @@ export default function StoriesPage() {
 
               {/* Stories List */}
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-900">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   Todas las stories
                 </h2>
 
@@ -183,8 +183,8 @@ export default function StoriesPage() {
                             interactive
                           />
                           {userWithStories.storiesCount > 1 && (
-                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                              <span className="text-xs font-bold text-gray-700">
+                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
+                              <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
                                 {userWithStories.storiesCount}
                               </span>
                             </div>
@@ -192,19 +192,19 @@ export default function StoriesPage() {
                         </div>
 
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">
                             {userWithStories.username}
                           </h3>
-                          <p className="text-gray-600 dark:text-gray-400 text-sm">
+                          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">
                             {userWithStories.fullName}
                           </p>
-                          <p className="text-gray-500 dark:text-gray-400 text-xs">
+                          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs">
                             {userWithStories.storiesCount} {userWithStories.storiesCount === 1 ? 'story' : 'stories'}
                           </p>
                         </div>
 
                         <div className="text-right">
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             {new Date(userWithStories.latestStory.createdAt).toLocaleTimeString()}
                           </p>
                         </div>

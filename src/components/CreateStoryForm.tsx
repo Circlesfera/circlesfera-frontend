@@ -26,7 +26,7 @@ const TextIcon = () => (
 );
 
 const LocationIcon = () => (
-  <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
@@ -155,8 +155,8 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-100">
-        <h2 className="text-xl font-bold text-gray-900">Crear Story</h2>
+      <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Story</h2>
         <button
           onClick={handleClose}
           className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -184,7 +184,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 onClick={() => handleTypeChange(type)}
                 className={`p-4 rounded-xl border-2 transition-all ${storyType === type
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
-                  : 'border-gray-200 hover:border-gray-300'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600'
                   }`}
               >
                 <Icon />
@@ -205,11 +205,11 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
                 placeholder="Escribe tu story..."
-                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 dark:text-gray-100"
                 rows={6}
                 maxLength={500}
               />
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1 text-right">
                 {textContent.length}/500
               </div>
             </div>
@@ -250,10 +250,10 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                   </div>
                 ) : (
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium">
                       {storyType === 'image' ? 'Sube una imagen' : 'Sube un video'}
                     </p>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
                       {storyType === 'image'
                         ? 'JPG, PNG hasta 10MB'
                         : 'MP4 hasta 50MB'
@@ -288,11 +288,11 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Añade una descripción..."
-              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
+              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 dark:text-gray-100"
               rows={3}
               maxLength={200}
             />
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+            <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1 text-right">
               {caption.length}/200
             </div>
           </div>
@@ -309,7 +309,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="¿Dónde estás?"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                 maxLength={100}
               />
             </div>
@@ -327,7 +327,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:bg-gray-800 transition-colors"
             >
               Cancelar
             </button>

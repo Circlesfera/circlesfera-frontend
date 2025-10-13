@@ -371,7 +371,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
           <p className="mb-4">{error || 'No se pudo cargar la historia'}</p>
           <button
             onClick={handleClose}
-            className="px-4 py-2 bg-white dark:bg-gray-900 text-black rounded-lg hover:bg-gray-100 transition-colors"
+            className="px-4 py-2 bg-white dark:bg-gray-900 text-black rounded-lg hover:bg-gray-100 dark:bg-gray-800 transition-colors"
           >
             Cerrar
           </button>
@@ -545,7 +545,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
                   }}
                   disabled={isDeleting}
                   className={`w-full px-4 py-3 text-left transition-colors rounded-lg flex items-center space-x-3 ${isDeleting
-                    ? 'text-gray-400 bg-gray-800/50 cursor-not-allowed'
+                    ? 'text-gray-400 dark:text-gray-500 bg-gray-800/50 cursor-not-allowed'
                     : 'text-red-400 hover:bg-red-500/20'
                     }`}
                 >
@@ -571,7 +571,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
                   toast.info('Función de reporte en desarrollo');
                   setShowMoreMenu(false);
                 }}
-                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
+                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white dark:bg-gray-900/10 transition-colors rounded-lg flex items-center space-x-3"
               >
                 <ReportIcon />
                 <span>Reportar</span>
@@ -580,7 +580,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
               {/* Opción para cerrar menú */}
               <button
                 onClick={() => setShowMoreMenu(false)}
-                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white/10 transition-colors rounded-lg flex items-center space-x-3"
+                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white dark:bg-gray-900/10 transition-colors rounded-lg flex items-center space-x-3"
               >
                 <CloseIcon />
                 <span>Cerrar</span>
@@ -598,7 +598,7 @@ export default function StoryViewer({ story: initialStory, userId, username, onC
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="Responde a la historia..."
-            className="flex-1 bg-white/95 backdrop-blur-sm rounded-full px-4 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 bg-white dark:bg-gray-900/95 backdrop-blur-sm rounded-full px-4 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             maxLength={200}
           />
           <button

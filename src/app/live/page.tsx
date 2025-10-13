@@ -83,14 +83,14 @@ export default function LivePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Live Streaming</h1>
-              <p className="text-gray-600">Transmisiones en vivo de CircleSfera</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Live Streaming</h1>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Transmisiones en vivo de CircleSfera</p>
             </div>
 
             {isAuthenticated && (
@@ -110,7 +110,7 @@ export default function LivePage() {
               onClick={() => setFilter('live')}
               className={`px-4 py-2 rounded-lg transition-colors ${filter === 'live'
                 ? 'bg-red-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                 }`}
             >
               <div className="flex items-center space-x-2">
@@ -123,7 +123,7 @@ export default function LivePage() {
               onClick={() => setFilter('scheduled')}
               className={`px-4 py-2 rounded-lg transition-colors ${filter === 'scheduled'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                 }`}
             >
               <div className="flex items-center space-x-2">
@@ -136,7 +136,7 @@ export default function LivePage() {
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all'
                 ? 'bg-gray-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                 }`}
             >
               <TrendingUp className="w-4 h-4" />
@@ -152,7 +152,7 @@ export default function LivePage() {
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600">Cargando transmisiones...</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando transmisiones...</p>
             </div>
           </div>
         ) : error ? (
@@ -168,14 +168,14 @@ export default function LivePage() {
         ) : streams.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Camera className="w-12 h-12 text-gray-400" />
+              <Camera className="w-12 h-12 text-gray-400 dark:text-gray-500" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {filter === 'live' ? 'No hay transmisiones en vivo' :
                 filter === 'scheduled' ? 'No hay transmisiones programadas' :
                   'No hay transmisiones disponibles'}
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
               {filter === 'live' ? 'Sé el primero en transmitir en vivo' :
                 filter === 'scheduled' ? 'Programa tu próxima transmisión' :
                   'Explora las transmisiones disponibles'}
@@ -200,7 +200,7 @@ export default function LivePage() {
                 onClick={() => router.push(`/live/${stream._id}`)}
               >
                 {/* Thumbnail */}
-                <div className="relative aspect-video bg-gray-200">
+                <div className="relative aspect-video bg-gray-200 dark:bg-gray-700">
                   {stream.thumbnailUrl ? (
                     <Image
                       src={stream.thumbnailUrl}
@@ -250,7 +250,7 @@ export default function LivePage() {
                       height={24}
                       className="w-6 h-6 rounded-full object-cover"
                     />
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {stream.user.username}
                     </span>
                     {stream.user.isVerified && (
@@ -260,7 +260,7 @@ export default function LivePage() {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                     <span>
                       {stream.status === 'live' ? 'En vivo' :
                         stream.status === 'scheduled' ? `Programado para ${formatDate(stream.scheduledAt || stream.startTime)}` :
@@ -285,7 +285,7 @@ export default function LivePage() {
             <button
               onClick={loadMore}
               disabled={loading}
-              className="bg-gray-100 dark:bg-gray-800 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 disabled:opacity-50 transition-colors"
+              className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-200 dark:bg-gray-700 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>

@@ -195,13 +195,13 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">Crear Reel</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Reel</h2>
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
-            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-500 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -210,7 +210,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Área de video */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Video (Proporción 9:16 recomendada)
             </label>
 
@@ -221,16 +221,16 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
               >
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M4 7h16M4 4h16M4 16h16" />
                 </svg>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   <span className="font-medium text-blue-600 hover:text-blue-500">
                     Haz clic para seleccionar
                   </span>{' '}
                   o arrastra y suelta
                 </p>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                   MP4, MOV, AVI hasta 100MB
                 </p>
               </div>
@@ -282,9 +282,9 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               rows={3}
               maxLength={2200}
               placeholder="Cuenta tu historia..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 dark:text-gray-100"
             />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 text-right">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-right">
               {formData.caption.length}/2200
             </p>
           </div>
@@ -301,9 +301,9 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               value={formData.hashtags}
               onChange={handleInputChange}
               placeholder="hashtag1, hashtag2, hashtag3..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               Separa los hashtags con comas
             </p>
           </div>
@@ -320,7 +320,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               value={formData.location}
               onChange={handleInputChange}
               placeholder="¿Dónde estás?"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
             />
           </div>
 
@@ -337,7 +337,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 value={formData.audioTitle}
                 onChange={handleInputChange}
                 placeholder="Nombre de la canción"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               />
             </div>
             <div>
@@ -351,14 +351,14 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 value={formData.audioArtist}
                 onChange={handleInputChange}
                 placeholder="Nombre del artista"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
 
           {/* Configuraciones */}
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Configuraciones
             </label>
 
@@ -371,7 +371,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                   onChange={handleInputChange}
                   className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="ml-2 text-sm text-gray-700">Permitir comentarios</span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Permitir comentarios</span>
               </label>
 
               <label className="flex items-center">
@@ -382,7 +382,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                   onChange={handleInputChange}
                   className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="ml-2 text-sm text-gray-700">Permitir duets</span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Permitir duets</span>
               </label>
 
               <label className="flex items-center">
@@ -393,7 +393,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                   onChange={handleInputChange}
                   className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="ml-2 text-sm text-gray-700">Permitir stitches</span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Permitir stitches</span>
               </label>
             </div>
           </div>
@@ -401,11 +401,11 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
           {/* Barra de progreso */}
           {isUploading && (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-gray-600">
+              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                 <span>Subiendo video...</span>
                 <span>{uploadProgress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
@@ -427,7 +427,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               type="button"
               onClick={handleReset}
               disabled={isUploading}
-              className="px-4 py-2 text-gray-700 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors disabled:opacity-50"
             >
               Limpiar
             </button>

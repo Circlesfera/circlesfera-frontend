@@ -203,21 +203,21 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
               "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
               isDragOver
                 ? 'border-pink-400 bg-pink-50'
-                : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 hover:bg-gray-50 dark:bg-gray-800'
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <VideoIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+            <VideoIcon className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">
               Arrastra un video aquí
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               o haz clic para seleccionar
             </p>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
               MP4, AVI, MOV hasta 100MB
             </p>
           </div>
@@ -266,7 +266,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
           rows={2}
           maxLength={2200}
         />
-        <div className="text-right text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <div className="text-right text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
           {formData.caption.length}/2200
         </div>
       </div>
@@ -274,8 +274,8 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
       {/* Hashtags */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <HashtagIcon className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">Hashtags</span>
+          <HashtagIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Hashtags</span>
         </div>
         <input
           name="hashtags"
@@ -289,8 +289,8 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
       {/* Ubicación */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <LocationIcon className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">Ubicación</span>
+          <LocationIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Ubicación</span>
         </div>
         <input
           name="location"
@@ -305,8 +305,8 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
       <div className="grid grid-cols-2 gap-3">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <MusicIcon className="w-4 h-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">Canción</span>
+            <MusicIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Canción</span>
           </div>
           <input
             name="audioTitle"
@@ -318,7 +318,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
         </div>
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-700">Artista</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Artista</span>
           </div>
           <input
             name="audioArtist"
@@ -332,7 +332,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
 
       {/* Configuraciones */}
       <div className="space-y-2">
-        <h4 className="text-sm font-medium text-gray-700">Configuraciones</h4>
+        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Configuraciones</h4>
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm">
             <input

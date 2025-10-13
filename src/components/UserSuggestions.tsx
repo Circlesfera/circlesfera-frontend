@@ -39,11 +39,11 @@ export default function UserSuggestions() {
   if (!user) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 p-4">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Sugerencias para ti</h3>
-        <button className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 transition-colors">
+        <button className="text-xs font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 transition-colors">
           Ver todo
         </button>
       </div>
@@ -68,7 +68,7 @@ export default function UserSuggestions() {
         </div>
       ) : suggestions.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-gray-500 dark:text-gray-400 text-xs">No hay sugerencias por ahora</p>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs">No hay sugerencias por ahora</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -99,7 +99,7 @@ export default function UserSuggestions() {
                 <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate">
                   {suggestion.username}
                 </div>
-                <div className="text-gray-500 dark:text-gray-400 text-xs truncate">
+                <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs truncate">
                   {suggestion.bio || 'Sugerido para ti'}
                 </div>
               </div>
@@ -118,8 +118,8 @@ export default function UserSuggestions() {
       )}
 
       {/* Footer con enlaces */}
-      <div className="mt-6 pt-4 border-t border-gray-100">
-        <div className="text-gray-400 text-xs">
+      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+        <div className="text-gray-400 dark:text-gray-500 text-xs">
           {/* Enlaces principales */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
             {[
@@ -135,7 +135,7 @@ export default function UserSuggestions() {
               <a
                 key={link.name}
                 href={link.href}
-                className="hover:text-gray-600 transition-colors"
+                className="hover:text-gray-600 dark:text-gray-400 dark:text-gray-500 transition-colors"
               >
                 {link.name}
               </a>
@@ -145,7 +145,7 @@ export default function UserSuggestions() {
           {/* Copyright */}
           <div className="text-center mt-3">
             <span>© 2024 </span>
-            <span className="font-semibold text-gray-600">CircleSfera</span>
+            <span className="font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-500">CircleSfera</span>
             <span> desde España</span>
           </div>
         </div>

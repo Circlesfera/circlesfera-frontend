@@ -79,7 +79,7 @@ class ErrorBoundary extends Component<Props, State> {
               Algo salió mal
             </h1>
 
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
               Lo sentimos, ocurrió un error inesperado en la aplicación.
             </p>
 
@@ -102,7 +102,7 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleReset}
-                className="px-6 py-2.5 bg-gray-200 text-gray-900 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-medium"
               >
                 Intentar de nuevo
               </button>

@@ -151,7 +151,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
             postType === 'image'
               ? 'bg-blue-100 text-blue-700 border border-blue-300'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700 border border-transparent'
           )}
         >
           <ImageIcon className="w-4 h-4" />
@@ -165,7 +165,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
             postType === 'video'
               ? 'bg-blue-100 text-blue-700 border border-blue-300'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700 border border-transparent'
           )}
         >
           <VideoIcon className="w-4 h-4" />
@@ -181,18 +181,18 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
               "border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer",
               isDragOver
                 ? 'border-blue-400 bg-blue-50'
-                : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 hover:bg-gray-50 dark:bg-gray-800'
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <UploadIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+            <UploadIcon className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">
               Arrastra un {postType === 'image' ? 'imagen' : 'video'} aquí
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               o haz clic para seleccionar
             </p>
           </div>
@@ -240,11 +240,11 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Escribe una descripción..."
-          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900"
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900 dark:text-gray-100"
           rows={2}
           maxLength={2200}
         />
-        <div className="text-right text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <div className="text-right text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
           {caption.length}/2200
         </div>
       </div>

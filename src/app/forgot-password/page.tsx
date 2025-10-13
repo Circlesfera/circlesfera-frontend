@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
               ¡Correo Enviado!
             </h1>
 
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
               Si el email <strong>{email}</strong> está registrado, recibirás instrucciones para restablecer tu contraseña.
             </p>
 
@@ -124,7 +124,7 @@ export default function ForgotPasswordPage() {
           <div className="flex items-center mb-6">
             <button
               onClick={() => router.back()}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 transition-colors"
+              className="text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-gray-100 transition-colors"
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
@@ -138,7 +138,7 @@ export default function ForgotPasswordPage() {
             <Mail className="w-8 h-8 text-purple-600" />
           </div>
 
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-center text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-6">
             Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.
           </p>
 
@@ -192,7 +192,7 @@ export default function ForgotPasswordPage() {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
               ¿Recordaste tu contraseña?{' '}
               <Link href="/" className="text-purple-600 hover:text-purple-700 font-medium">
                 Iniciar sesión
@@ -205,7 +205,7 @@ export default function ForgotPasswordPage() {
             <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
               ¿Necesitas ayuda?
             </h3>
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">
               Si no recibes el correo en unos minutos, verifica tu carpeta de spam o{' '}
               <Link href="/help" className="text-purple-600 hover:text-purple-700">
                 contacta a soporte

@@ -56,7 +56,7 @@ describe('Button Component', () => {
 
       // Assert
       const button = getByRole('button')
-      expect(button.className).toContain('bg-gray-100')
+      expect(button.className).toContain('bg-gray-100 dark:bg-gray-800')
     })
 
     test('debe aplicar variante destructive', () => {

@@ -39,7 +39,7 @@ export default function LoadingSpinner({
       />
       {text && (
         <motion.p
-          className="mt-3 text-gray-600 dark:text-gray-400 text-sm"
+          className="mt-3 text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
@@ -54,7 +54,7 @@ export default function LoadingSpinner({
 // Componente específico para páginas completas
 export function PageLoader({ text = 'Cargando...' }: { text?: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
       <LoadingSpinner size="xl" color="primary" text={text} />
     </div>
   );

@@ -136,8 +136,8 @@ export default function CommentsModal({
           className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Comentarios</h2>
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Comentarios</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
@@ -149,7 +149,7 @@ export default function CommentsModal({
           </div>
 
           {/* Post Info */}
-          <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <div className="flex items-center space-x-3">
               {postImage && (
                 <Image
@@ -161,8 +161,8 @@ export default function CommentsModal({
                 />
               )}
               <div>
-                <p className="font-medium text-gray-900">@{postAuthor}</p>
-                <p className="text-sm text-gray-500">Publicación</p>
+                <p className="font-medium text-gray-900 dark:text-gray-100">@{postAuthor}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">Publicación</p>
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@ export default function CommentsModal({
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
               </div>
             ) : comments.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400 dark:text-gray-500">
                 <p>No hay comentarios aún.</p>
                 <p className="text-sm">¡Sé el primero en comentar!</p>
               </div>
@@ -192,10 +192,10 @@ export default function CommentsModal({
                     <div className="flex-1 min-w-0">
                       <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-3 py-2">
                         <div className="flex items-baseline space-x-2">
-                          <span className="font-semibold text-sm text-gray-900">
+                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
                             {comment.user.username}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             {formatTimeAgo(comment.createdAt)}
                           </span>
                         </div>
@@ -247,7 +247,7 @@ export default function CommentsModal({
                     maxLength={500}
                   />
                   {text.length > 450 && (
-                    <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
+                    <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 dark:text-gray-500">
                       {text.length}/500
                     </span>
                   )}

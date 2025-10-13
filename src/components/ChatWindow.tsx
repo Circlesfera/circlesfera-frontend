@@ -487,7 +487,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               <div className="absolute -left-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => setMessageMenuOpen(messageMenuOpen === message._id ? null : message._id)}
-                  className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 dark:text-gray-400 hover:text-gray-700"
+                  className="p-1.5 rounded-full hover:bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300"
                   title="Opciones"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -502,11 +502,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute left-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 py-1 z-50 min-w-[160px]"
+                      className="absolute left-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50 min-w-[160px]"
                     >
                       <button
                         onClick={() => handleEditMessage(message._id, message.content.text || '')}
-                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-2"
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-2"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -515,7 +515,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       </button>
                       <button
                         onClick={() => handleDeleteMessage(message._id, 'me')}
-                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-2"
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-800 flex items-center space-x-2"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -537,9 +537,9 @@ export default function ChatWindow({ conversationId, conversationName, participa
               </div>
             )}
 
-            <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm ${isOwnMessage
+            <div className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm dark:shadow-gray-900/50 ${isOwnMessage
               ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-              : 'bg-white border border-gray-200 text-gray-900'
+              : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
               }`}>
               {isTextMessage && (
                 <div>
@@ -550,20 +550,20 @@ export default function ChatWindow({ conversationId, conversationName, participa
                         type="text"
                         value={editingText}
                         onChange={(e) => setEditingText(e.target.value)}
-                        className="w-full px-2 py-1 text-xs sm:text-sm border border-white/20 rounded bg-white/10 text-white placeholder-white/60"
+                        className="w-full px-2 py-1 text-xs sm:text-sm border border-white/20 rounded bg-white dark:bg-gray-900/10 text-white placeholder-white/60"
                         placeholder="Editar mensaje..."
                         autoFocus
                       />
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={handleSaveEdit}
-                          className="px-2 py-1 bg-white dark:bg-gray-900 text-blue-600 text-xs rounded hover:bg-gray-100"
+                          className="px-2 py-1 bg-white dark:bg-gray-900 text-blue-600 text-xs rounded hover:bg-gray-100 dark:bg-gray-800"
                         >
                           Guardar
                         </button>
                         <button
                           onClick={handleCancelEdit}
-                          className="px-2 py-1 bg-white/20 text-white text-xs rounded hover:bg-white/30"
+                          className="px-2 py-1 bg-white dark:bg-gray-900/20 text-white text-xs rounded hover:bg-white dark:bg-gray-900/30"
                         >
                           Cancelar
                         </button>
@@ -616,7 +616,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       </span>
                     </div>
                     {message.content.location?.address && (
-                      <div className="text-xs text-gray-600">
+                      <div className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">
                         {message.content.location.address}
                       </div>
                     )}
@@ -625,7 +625,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               )}
 
               {/* Timestamp - Optimizado para móvil */}
-              <div className={`text-xs mt-1 ${isOwnMessage ? 'text-blue-100' : 'text-gray-500'
+              <div className={`text-xs mt-1 ${isOwnMessage ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'
                 }`}>
                 {new Date(message.createdAt).toLocaleTimeString('es-ES', {
                   hour: '2-digit',
@@ -642,7 +642,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
   return (
     <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 rounded-none md:rounded-r-2xl shadow-lg">
       {/* Header mejorado del chat */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
         <button
           onClick={handleHeaderClick}
           className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
@@ -682,7 +682,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 animate={isUserOnline ? { scale: [1, 1.2, 1] } : {}}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
-              <span className={isUserOnline ? 'text-green-600 font-medium' : 'text-gray-500'}>
+              <span className={isUserOnline ? 'text-green-600 font-medium' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'}>
                 {isUserOnline ? 'En línea' : 'Desconectado'}
               </span>
             </p>
@@ -690,26 +690,26 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
           {/* Indicador visual de que es clickeable */}
           <div className="flex-shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </div>
         </button>
 
         <div className="flex items-center space-x-1 flex-shrink-0">
-          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 dark:text-gray-400 hover:text-blue-600">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 dark:bg-gray-800 transition-colors text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-blue-600">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
           </button>
 
-          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 dark:text-gray-400 hover:text-blue-600">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 dark:bg-gray-800 transition-colors text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-blue-600">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           </button>
 
-          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 dark:text-gray-400 hover:text-blue-600">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 dark:bg-gray-800 transition-colors text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-blue-600">
             <MoreIcon />
           </button>
         </div>
@@ -738,7 +738,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                 </div>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">¡Comienza la conversación!</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Envía un mensaje para iniciar el chat</p>
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm leading-relaxed">Envía un mensaje para iniciar el chat</p>
             </div>
           </div>
         ) : (
@@ -785,7 +785,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
                   />
                 </div>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
                   {Array.from(typingUsers).join(', ')} {typingUsers.size > 1 ? 'están' : 'está'} escribiendo...
                 </span>
               </motion.div>
@@ -797,7 +797,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       </div>
 
       {/* Formulario de envío mejorado */}
-      <div className="p-4 border-t border-gray-200/50 bg-gradient-to-t from-white to-gray-50/50 backdrop-blur-sm">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700/50 bg-gradient-to-t from-white to-gray-50/50 backdrop-blur-sm">
         <form onSubmit={handleSend} className="flex items-end space-x-3">
           {/* Botón de adjuntos mejorado */}
           <div className="relative flex-shrink-0">
@@ -806,7 +806,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               onClick={() => setShowAttachments(!showAttachments)}
               className={`p-3 rounded-xl transition-all duration-200 ${showAttachments
                 ? 'bg-blue-100 text-blue-600'
-                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+                : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:bg-gray-800 hover:text-gray-800 dark:text-gray-200'
                 }`}
             >
               <svg className={`w-5 h-5 transition-transform duration-200 ${showAttachments ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -821,7 +821,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute bottom-full left-0 mb-3 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200/50 p-2 space-y-1 z-10 min-w-[180px]"
+                  className="absolute bottom-full left-0 mb-3 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700/50 p-2 space-y-1 z-10 min-w-[180px]"
                 >
                   {/* Input oculto para imágenes */}
                   <input
@@ -835,7 +835,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
                       <ImageIcon />
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Imagen</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Imagen</span>
                   </label>
 
                   {/* Input oculto para videos */}
@@ -850,7 +850,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors">
                       <VideoIcon />
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Video</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Video</span>
                   </label>
 
                   <button
@@ -862,7 +862,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
                       <LocationIcon />
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Ubicación</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Ubicación</span>
                   </button>
                 </motion.div>
               )}
@@ -876,7 +876,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               onChange={handleTextChange}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all text-gray-900 dark:text-gray-100 placeholder:text-gray-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:bg-gray-900 transition-all text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400 dark:text-gray-500"
               rows={1}
               disabled={sending}
               style={{ minHeight: '48px', maxHeight: '120px' }}
@@ -887,7 +887,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
           <div className="flex items-center space-x-2 flex-shrink-0">
             <button
               type="button"
-              className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-800 transition-all"
+              className="p-3 rounded-xl text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:bg-gray-800 hover:text-gray-800 dark:text-gray-200 transition-all"
             >
               <EmojiIcon />
             </button>

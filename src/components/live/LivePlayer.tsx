@@ -340,7 +340,7 @@ export function LivePlayer({ stream, currentUser, isOwner = false }: LivePlayerP
             className={`p-3 rounded-full transition-all ${
               showChat
                 ? 'bg-red-600 text-white'
-                : 'bg-white bg-opacity-20 backdrop-blur-sm text-white hover:bg-opacity-30'
+                : 'bg-white dark:bg-gray-900 bg-opacity-20 backdrop-blur-sm text-white hover:bg-opacity-30'
             }`}
           >
             <Users className="w-5 h-5" />

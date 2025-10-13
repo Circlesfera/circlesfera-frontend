@@ -110,7 +110,7 @@ export function PostCardMedia({ post }: PostCardMediaProps) {
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`${TOUCH_TARGET_CLASSES.small} p-2 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                    className={`${TOUCH_TARGET_CLASSES.small} p-2 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black ${index === currentImageIndex ? 'bg-white dark:bg-gray-900' : 'bg-white dark:bg-gray-900/50'
                       }`}
                     role="tab"
                     aria-selected={index === currentImageIndex}
@@ -171,8 +171,8 @@ export function PostCardMedia({ post }: PostCardMediaProps) {
 
             {/* Indicador de zoom en hover/focus */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity bg-black/10">
-              <div className="bg-white/90 rounded-full p-3 backdrop-blur-sm">
-                <ZoomIcon aria-hidden="true" className="text-gray-900" />
+              <div className="bg-white dark:bg-gray-900/90 rounded-full p-3 backdrop-blur-sm">
+                <ZoomIcon aria-hidden="true" className="text-gray-900 dark:text-gray-100" />
               </div>
             </div>
           </button>

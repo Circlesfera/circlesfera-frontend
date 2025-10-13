@@ -91,12 +91,12 @@ export default function UserStoryPage({ params }: Props) {
       <ProtectedRoute>
         <div className="max-w-2xl mx-auto px-4 py-8">
           <div className="animate-pulse">
-            <div className="aspect-[9/16] bg-gray-200 rounded-lg mb-4"></div>
+            <div className="aspect-[9/16] bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/6"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
               </div>
             </div>
           </div>
@@ -139,17 +139,17 @@ export default function UserStoryPage({ params }: Props) {
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="mb-6">
-          <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             <button
               onClick={() => router.push('/')}
-              className="hover:text-gray-700 transition-colors"
+              className="hover:text-gray-700 dark:text-gray-300 transition-colors"
             >
               Inicio
             </button>
             <span>/</span>
             <button
               onClick={() => router.push(`/${user.username}`)}
-              className="hover:text-gray-700 transition-colors"
+              className="hover:text-gray-700 dark:text-gray-300 transition-colors"
             >
               {user.username}
             </button>
@@ -159,7 +159,7 @@ export default function UserStoryPage({ params }: Props) {
         </nav>
 
         {/* Story */}
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 rounded-2xl overflow-hidden shadow-lg">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
           {/* Header */}
           <div className="p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -171,8 +171,8 @@ export default function UserStoryPage({ params }: Props) {
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
-                <p className="font-semibold text-gray-900">{user.username}</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{user.username}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
                   {new Date(story.createdAt).toLocaleDateString('es-ES', {
                     day: 'numeric',
                     month: 'short',
@@ -183,7 +183,7 @@ export default function UserStoryPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
               <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">
                 {new Date(story.expiresAt) < new Date() ? 'Expirada' : 'Activa'}
               </span>
@@ -245,7 +245,7 @@ export default function UserStoryPage({ params }: Props) {
           <div className="p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2 text-gray-600">
+                <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -267,7 +267,7 @@ export default function UserStoryPage({ params }: Props) {
 
             {/* Location */}
             {story.location && (
-              <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 text-sm">
+              <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />

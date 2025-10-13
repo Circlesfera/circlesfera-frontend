@@ -9,7 +9,7 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md",
+        default: "border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-gray-900/50 hover:shadow-md",
         elevated: "border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl",
         outlined: "border-gray-300 dark:border-gray-600 shadow-none hover:border-gray-400 dark:hover:border-gray-500",
         ghost: "border-transparent shadow-none hover:bg-gray-50 dark:hover:bg-gray-800",
@@ -95,7 +95,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-gray-600 dark:text-gray-400", className)}
+    className={cn("text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500", className)}
     {...props}
   />
 ));

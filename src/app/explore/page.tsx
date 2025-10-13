@@ -85,7 +85,7 @@ export default function ExplorePage() {
       <div className="max-w-6xl mx-auto mt-8 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Explorar</h1>
-          <p className="text-gray-600 dark:text-gray-400">Descubre contenido increíble y conoce nuevas personas</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Descubre contenido increíble y conoce nuevas personas</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 mb-8">
@@ -187,7 +187,7 @@ export default function ExplorePage() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 dark:text-gray-400 text-sm">Sin contenido</span>
+                        <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">Sin contenido</span>
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -274,7 +274,7 @@ export default function ExplorePage() {
                 <Video className="w-8 h-8 text-white" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Explorar Reels</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                 Descubre videos cortos increíbles de la comunidad
               </p>
               <Button
@@ -292,7 +292,7 @@ export default function ExplorePage() {
                 <Clock className="w-8 h-8 text-white" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Ver Stories</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                 Mantente al día con las historias de tus amigos
               </p>
               <Button
@@ -310,7 +310,7 @@ export default function ExplorePage() {
                 <Users className="w-8 h-8 text-white" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Buscar Personas</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                 Encuentra nuevos amigos y personas interesantes
               </p>
               <Button
@@ -346,7 +346,7 @@ export default function ExplorePage() {
                       ✨ NUEVO
                     </span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                     Descubre contenido exclusivo de CSTV, entrevistas, programas especiales y mucho más
                   </p>
                   <div className="flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
@@ -372,7 +372,7 @@ export default function ExplorePage() {
                       🔴 LIVE
                     </span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-4">
                     Únete a transmisiones en vivo, eventos especiales y contenido en tiempo real
                   </p>
                   <div className="flex items-center text-red-600 text-sm font-medium group-hover:text-red-700">

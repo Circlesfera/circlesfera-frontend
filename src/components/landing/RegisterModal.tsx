@@ -76,7 +76,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 onClick={onClose}
                 className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
               </button>
 
               {/* Logo */}
@@ -86,10 +86,10 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-center mb-1 text-gray-900">
+              <h2 className="text-2xl font-bold text-center mb-1 text-gray-900 dark:text-gray-100">
                 Crear Cuenta
               </h2>
-              <p className="text-center text-gray-600 dark:text-gray-400 text-sm mb-5">
+              <p className="text-center text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm mb-5">
                 Únete a la comunidad de CircleSfera
               </p>
 
@@ -105,7 +105,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                     value={formData.fullName}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
                     placeholder="Tu nombre"
                   />
                 </div>
@@ -121,7 +121,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                     value={formData.username}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
                     placeholder="@usuario"
                   />
                 </div>
@@ -137,7 +137,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
                     placeholder="tu@email.com"
                   />
                 </div>
@@ -155,13 +155,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                       onChange={handleChange}
                       required
                       minLength={8}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-10 text-sm"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-10 text-sm"
                       placeholder="••••••••"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300"
                     >
                       {showPassword ? (
                         <EyeOff className="w-5 h-5" />
@@ -170,7 +170,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Mínimo 8 caracteres</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-0.5">Mínimo 8 caracteres</p>
                 </div>
 
                 <button
@@ -183,7 +183,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               </form>
 
               <div className="mt-4 text-center">
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">
                   ¿Ya tienes una cuenta?{' '}
                   <button
                     onClick={() => {
@@ -197,7 +197,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 </p>
               </div>
 
-              <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center mt-4">
                 Al registrarte, aceptas nuestros{' '}
                 <a href="/terms" className="text-blue-600 hover:underline">Términos</a>
                 {' '}y{' '}

@@ -150,7 +150,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-2xl font-bold mb-4">Transmisión no encontrada</h1>
-          <p className="text-gray-400 mb-6">{error || 'La transmisión que buscas no existe'}</p>
+          <p className="text-gray-400 dark:text-gray-500 mb-6">{error || 'La transmisión que buscas no existe'}</p>
           <button
             onClick={() => router.push('/live')}
             className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
@@ -193,7 +193,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
               disabled={likingLoading || !user}
               className={`p-2 rounded-full transition-colors relative ${isLiked
                 ? 'bg-red-600 text-white'
-                : 'bg-white/20 text-white hover:bg-white/30'
+                : 'bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30'
                 } ${likingLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               title={!user ? 'Inicia sesión para dar like' : isLiked ? 'Quitar like' : 'Me gusta'}
             >
@@ -207,12 +207,12 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+              className="p-2 rounded-full bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors"
             >
               <Share2 className="w-5 h-5" />
             </button>
 
-            <button className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors">
+            <button className="p-2 rounded-full bg-white dark:bg-gray-900/20 text-white hover:bg-white dark:bg-gray-900/30 transition-colors">
               <MoreVertical className="w-5 h-5" />
             </button>
           </div>
@@ -240,7 +240,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
                 <p className="text-gray-300 mb-6">{stream.description}</p>
               )}
 
-              <div className="bg-white/10 rounded-lg p-6 mb-6">
+              <div className="bg-white dark:bg-gray-900/10 rounded-lg p-6 mb-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <Image
                     src={stream.user.avatar || '/default-avatar.png'}
@@ -283,7 +283,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
               )}
 
               {!isOwner && (
-                <div className="text-gray-400">
+                <div className="text-gray-400 dark:text-gray-500">
                   <p>La transmisión comenzará pronto</p>
                   <p className="text-sm mt-2">Te notificaremos cuando esté en vivo</p>
                 </div>
@@ -300,7 +300,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
               <h1 className="text-3xl font-bold mb-4">{stream.title}</h1>
               <p className="text-gray-300 mb-6">Esta transmisión ha finalizado</p>
 
-              <div className="bg-white/10 rounded-lg p-6 mb-6">
+              <div className="bg-white dark:bg-gray-900/10 rounded-lg p-6 mb-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <Image
                     src={stream.user.avatar || '/default-avatar.png'}
