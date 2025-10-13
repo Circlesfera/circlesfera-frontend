@@ -123,14 +123,14 @@ export default function CreateConversationModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+            className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">Nueva conversación</h2>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Busca usuarios para comenzar a chatear
                   </p>
                 </div>
@@ -150,7 +150,7 @@ export default function CreateConversationModal({
               {/* Usuarios seleccionados */}
               {selectedUsers.length > 0 && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Seleccionados ({selectedUsers.length})
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -195,7 +195,7 @@ export default function CreateConversationModal({
                   placeholder="Buscar usuarios..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm !text-gray-900 !placeholder-gray-500 bg-white"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm !text-gray-900 !placeholder-gray-500 bg-white"
                   style={{ color: '#111827', '--tw-placeholder-opacity': '1' } as React.CSSProperties}
                 />
               </div>
@@ -216,12 +216,12 @@ export default function CreateConversationModal({
                   </div>
                 ) : users.length === 0 && searchQuery.length >= 2 ? (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
                       <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                       </svg>
                     </div>
-                    <p className="text-gray-500 text-sm">No se encontraron usuarios</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">No se encontraron usuarios</p>
                   </div>
                 ) : (
                   <div className="space-y-1">
@@ -246,7 +246,7 @@ export default function CreateConversationModal({
                             )}
                           </div>
                           <div className="flex-1 text-left">
-                            <p className="font-medium text-gray-900 text-sm">
+                            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
                               {user.fullName || user.username}
                             </p>
                             <p className="text-xs text-gray-500">
@@ -269,11 +269,11 @@ export default function CreateConversationModal({
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-200 bg-gray-50">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50">
               <div className="flex gap-3">
                 <button
                   onClick={handleClose}
-                  className="flex-1 px-4 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 text-gray-700 bg-white dark:bg-gray-900 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-colors"
                 >
                   Cancelar
                 </button>

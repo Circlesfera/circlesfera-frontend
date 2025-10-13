@@ -127,7 +127,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
               Conversaciones
             </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               {conversations.length} {conversations.length === 1 ? 'chat' : 'chats'}
             </p>
           </div>
@@ -165,7 +165,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
             placeholder="Buscar conversaciones..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm bg-gray-50/50 hover:bg-white transition-all !text-gray-900 placeholder:text-gray-500"
+            className="w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm bg-gray-50/50 hover:bg-white transition-all !text-gray-900 placeholder:text-gray-500"
           />
         </div>
 
@@ -199,10 +199,10 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                   </svg>
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
                 {searchQuery ? 'No se encontraron conversaciones' : 'No tienes conversaciones'}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4">
+              <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
                 {searchQuery
                   ? 'Intenta con otros términos de búsqueda'
                   : 'Comienza a conectar con amigos creando tu primera conversación'

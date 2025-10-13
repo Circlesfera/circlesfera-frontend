@@ -110,14 +110,14 @@ export default function StoriesBar() {
             <StoryIcon />
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900 text-sm">Historias</h2>
-            <p className="text-gray-500 text-xs">Momentos que duran 24 horas</p>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Historias</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-xs">Momentos que duran 24 horas</p>
           </div>
         </div>
 
         <button
           onClick={handleCreateStory}
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 group"
+          className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 transition-all duration-200 group"
         >
           <CameraIcon />
         </button>
@@ -136,7 +136,7 @@ export default function StoriesBar() {
               >
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                   <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
-                    <div className="w-full h-full rounded-full bg-white p-0.5 relative">
+                    <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                       {user?.avatar ? (
                         <Image
                           src={`${user.avatar.startsWith('http') ? user.avatar : `https://dev-api.circlesfera.com${user.avatar}`}?v=${user?.updatedAt || ''}`}
@@ -153,12 +153,12 @@ export default function StoriesBar() {
                     </div>
                   </div>
                   {/* Indicador de tiempo */}
-                  <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+                  <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm">
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                   </div>
                 </div>
                 <div className="text-center">
-                  <span className="text-xs font-medium text-gray-900 truncate max-w-[56px] sm:max-w-[64px] block">
+                  <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate max-w-[56px] sm:max-w-[64px] block">
                     Tu historia
                   </span>
                   <span className="text-xs text-gray-500">
@@ -169,7 +169,7 @@ export default function StoriesBar() {
             ) : (
               <div className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] flex-shrink-0">
                 <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
-                  <div className="w-full h-full rounded-full border-2 border-gray-300 bg-white p-0.5">
+                  <div className="w-full h-full rounded-full border-2 border-gray-300 bg-white dark:bg-gray-900 p-0.5">
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center relative">
                       {user?.avatar ? (
                         <Image
@@ -194,7 +194,7 @@ export default function StoriesBar() {
                     <PlusIcon />
                   </button>
                 </div>
-                <span className="text-xs text-center text-gray-600 font-medium">
+                <span className="text-xs text-center text-gray-600 dark:text-gray-400 font-medium">
                   Tu historia
                 </span>
               </div>
@@ -216,8 +216,8 @@ export default function StoriesBar() {
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
                   <StoryIcon />
                 </div>
-                <h3 className="text-gray-700 font-medium mb-2 text-sm sm:text-base">No hay historias aún</h3>
-                <p className="text-gray-500 text-xs sm:text-sm mb-3 sm:mb-4">¡Sé el primero en crear una historia!</p>
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm sm:text-base">No hay historias aún</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">¡Sé el primero en crear una historia!</p>
                 <button
                   onClick={handleCreateStory}
                   className="px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 text-xs sm:text-sm font-medium"
@@ -237,7 +237,7 @@ export default function StoriesBar() {
                 >
                   <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-2 sm:mb-3">
                     <div className="w-full h-full rounded-full border-2 border-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 p-0.5 group-hover:scale-105 transition-all duration-200">
-                      <div className="w-full h-full rounded-full bg-white p-0.5 relative">
+                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                         <Image
                           src={`${(userWithStories.avatar && userWithStories.avatar.startsWith('http'))
                             ? userWithStories.avatar
@@ -252,12 +252,12 @@ export default function StoriesBar() {
                       </div>
                     </div>
                     {/* Indicador de tiempo */}
-                    <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+                    <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm">
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                     </div>
                   </div>
                   <div className="text-center">
-                    <span className="text-xs font-medium text-gray-900 truncate max-w-[56px] sm:max-w-[64px] block">
+                    <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate max-w-[56px] sm:max-w-[64px] block">
                       {userWithStories.username}
                     </span>
                     <span className="text-xs text-gray-500">
@@ -270,12 +270,12 @@ export default function StoriesBar() {
         </div>
 
         {/* Indicadores de scroll */}
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-900 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </div>
-        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-900 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

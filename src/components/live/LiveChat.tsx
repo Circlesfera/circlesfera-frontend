@@ -137,7 +137,7 @@ export function LiveChat({
           <MessageCircle className="w-5 h-5" />
           <span className="text-sm font-medium">
             {comments.length > 0 && (
-              <span className="bg-white text-red-600 rounded-full px-2 py-1 text-xs ml-1">
+              <span className="bg-white dark:bg-gray-900 text-red-600 rounded-full px-2 py-1 text-xs ml-1">
                 {comments.length}
               </span>
             )}
@@ -148,9 +148,9 @@ export function LiveChat({
   }
 
   return (
-    <div className="fixed bottom-4 right-4 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 flex flex-col h-96">
+    <div className="fixed bottom-4 right-4 w-80 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 z-50 flex flex-col h-96">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50 dark:bg-gray-800 rounded-t-lg">
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1">
             <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -185,7 +185,7 @@ export function LiveChat({
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setIsMinimized(true)}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -216,7 +216,7 @@ export function LiveChat({
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {loading && comments.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-gray-500 text-sm">Cargando comentarios...</div>
+            <div className="text-gray-500 dark:text-gray-400 text-sm">Cargando comentarios...</div>
           </div>
         ) : error ? (
           <div className="flex items-center justify-center h-full">
@@ -224,7 +224,7 @@ export function LiveChat({
           </div>
         ) : comments.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-gray-500 text-sm text-center">
+            <div className="text-gray-500 dark:text-gray-400 text-sm text-center">
               <MessageCircle className="w-8 h-8 mx-auto mb-2 text-gray-300" />
               <p>No hay comentarios aún</p>
               <p className="text-xs">¡Sé el primero en comentar!</p>
@@ -274,11 +274,11 @@ export function LiveChat({
       {/* Input */}
       <div className="p-3 border-t border-gray-200">
         {!allowComments ? (
-          <div className="text-center text-gray-500 text-sm py-2">
+          <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-2">
             Los comentarios están deshabilitados
           </div>
         ) : !currentUser ? (
-          <div className="text-center text-gray-500 text-sm py-2">
+          <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-2">
             <button className="text-blue-500 hover:text-blue-700">
               Inicia sesión para comentar
             </button>
@@ -291,7 +291,7 @@ export function LiveChat({
               value={message}
               onChange={handleMessageChange}
               placeholder={replyTo ? `Responder a ${replyTo.username}...` : 'Escribe un comentario...'}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-500"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500"
               maxLength={500}
             />
             <button

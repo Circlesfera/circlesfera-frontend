@@ -85,7 +85,7 @@ export default function LivePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -167,15 +167,15 @@ export default function LivePage() {
           </div>
         ) : streams.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
               <Camera className="w-12 h-12 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {filter === 'live' ? 'No hay transmisiones en vivo' :
                 filter === 'scheduled' ? 'No hay transmisiones programadas' :
                   'No hay transmisiones disponibles'}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               {filter === 'live' ? 'Sé el primero en transmitir en vivo' :
                 filter === 'scheduled' ? 'Programa tu próxima transmisión' :
                   'Explora las transmisiones disponibles'}
@@ -196,7 +196,7 @@ export default function LivePage() {
                 key={stream._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden cursor-pointer"
+                className="bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden cursor-pointer"
                 onClick={() => router.push(`/live/${stream._id}`)}
               >
                 {/* Thumbnail */}
@@ -230,15 +230,15 @@ export default function LivePage() {
 
                   {/* Play Button */}
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                    <div className="bg-white bg-opacity-90 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Play className="w-6 h-6 text-gray-900 ml-1" />
+                    <div className="bg-white dark:bg-gray-900 bg-opacity-90 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Play className="w-6 h-6 text-gray-900 dark:text-gray-100 ml-1" />
                     </div>
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2 line-clamp-2">
                     {stream.title}
                   </h3>
 
@@ -285,7 +285,7 @@ export default function LivePage() {
             <button
               onClick={loadMore}
               disabled={loading}
-              className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 disabled:opacity-50 transition-colors"
+              className="bg-gray-100 dark:bg-gray-800 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>

@@ -227,14 +227,14 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Escribe tu story..."
-            className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm"
             rows={3}
             maxLength={1000}
           />
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-gray-700 mb-1">Color del texto</label>
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Color del texto</label>
               <input
                 type="color"
                 value={textColor}
@@ -243,7 +243,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
               />
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-gray-700 mb-1">Color de fondo</label>
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Color de fondo</label>
               <input
                 type="color"
                 value={backgroundColor}
@@ -269,7 +269,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
               onClick={() => fileInputRef.current?.click()}
             >
               <UploadIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-600 mb-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                 Arrastra un {storyType === 'image' ? 'imagen' : 'video'} aquí
               </p>
               <p className="text-xs text-gray-500">
@@ -318,7 +318,7 @@ export default function CompactCreateStoryForm({ onStoryCreated, onClose }: Comp
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Añade un texto (opcional)..."
-            className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm mt-3"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 text-sm mt-3"
             rows={2}
             maxLength={500}
           />

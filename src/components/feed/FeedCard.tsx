@@ -89,7 +89,7 @@ export default function FeedCard({
             </span>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 text-sm">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
               {post.user.fullName || post.user.username}
             </h3>
             <p className="text-xs text-gray-500">
@@ -108,7 +108,7 @@ export default function FeedCard({
           </Button>
 
           {showMore && (
-            <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+            <div className="absolute right-0 top-10 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 py-1 z-10">
               {isOwnPost && (
                 <button
                   onClick={handleDelete}
@@ -118,7 +118,7 @@ export default function FeedCard({
                   Eliminar
                 </button>
               )}
-              <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+              <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors duration-200">
                 <ShareIcon className="h-4 w-4" />
                 Compartir
               </button>
@@ -130,7 +130,7 @@ export default function FeedCard({
       {/* Content */}
       <div className="px-4 pb-2">
         {post.caption && (
-          <p className="text-gray-900 text-sm leading-relaxed mb-3">
+          <p className="text-gray-900 dark:text-gray-100 text-sm leading-relaxed mb-3">
             {post.caption}
           </p>
         )}
@@ -175,7 +175,7 @@ export default function FeedCard({
             variant="ghost"
             size="sm"
             onClick={handleComment}
-            className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors duration-200"
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition-colors duration-200"
           >
             <CommentIcon className="h-5 w-5" />
             <span className="text-sm font-medium">
@@ -187,7 +187,7 @@ export default function FeedCard({
             variant="ghost"
             size="sm"
             onClick={handleShare}
-            className="flex items-center gap-2 text-gray-600 hover:text-green-500 transition-colors duration-200"
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-green-500 transition-colors duration-200"
           >
             <ShareIcon className="h-5 w-5" />
             <span className="text-sm font-medium">Compartir</span>
@@ -210,7 +210,7 @@ export default function FeedCard({
               </div>
             ))}
             {post.comments.length > 2 && (
-              <button className="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200">
+              <button className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 transition-colors duration-200">
                 Ver {post.comments.length - 2} comentarios más
               </button>
             )}

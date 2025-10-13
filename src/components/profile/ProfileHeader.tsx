@@ -37,7 +37,7 @@ export default function ProfileHeader({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="bg-white rounded-none sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+    <div className="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
         {/* Avatar Section - Optimizado para móvil */}
         <div className="flex-shrink-0 relative">
@@ -84,7 +84,7 @@ export default function ProfileHeader({
                 <>
                   <button
                     onClick={onEditClick}
-                    className="px-3 sm:px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-semibold border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1 sm:gap-2"
+                    className="px-3 sm:px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-800 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-semibold border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1 sm:gap-2"
                   >
                     <EditIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">Editar perfil</span>
@@ -92,7 +92,7 @@ export default function ProfileHeader({
                   </button>
                   <Link
                     href="/settings"
-                    className="p-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="p-2 bg-gray-100 dark:bg-gray-800 text-gray-800 rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
                     title="Configuración"
                   >
                     <SettingsIcon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -105,10 +105,10 @@ export default function ProfileHeader({
           {/* Personal Information */}
           <div className="mb-4 sm:mb-6 text-center sm:text-left">
             {user.fullName && (
-              <div className="font-semibold text-gray-900 mb-2 text-base sm:text-lg">{user.fullName}</div>
+              <div className="font-semibold text-gray-900 dark:text-gray-100 mb-2 text-base sm:text-lg">{user.fullName}</div>
             )}
             {user.bio && (
-              <div className="text-gray-700 mb-2 break-words leading-relaxed text-sm sm:text-base">{user.bio}</div>
+              <div className="text-gray-700 dark:text-gray-300 mb-2 break-words leading-relaxed text-sm sm:text-base">{user.bio}</div>
             )}
             {user.website && (
               <a
@@ -211,10 +211,10 @@ function StatCard({ icon, count, label }: StatCardProps) {
 
   return (
     <div className="text-center group">
-      <div className="flex items-center justify-center mb-1 sm:mb-2 text-gray-600 group-hover:text-blue-600 transition-colors duration-200">
+      <div className="flex items-center justify-center mb-1 sm:mb-2 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 transition-colors duration-200">
         {getIcon()}
       </div>
-      <div className="font-bold text-lg sm:text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+      <div className="font-bold text-lg sm:text-xl text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors duration-200">
         {formatNumber(count)}
       </div>
       <div className="text-xs sm:text-sm text-gray-600">{label}</div>

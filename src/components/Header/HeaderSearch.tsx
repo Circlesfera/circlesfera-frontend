@@ -61,7 +61,7 @@ export function HeaderSearch({
       {/* Resultados de búsqueda */}
       {showSearch && searchQuery && (
         <div
-          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50 animate-fade-in"
+          className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50 animate-fade-in"
           role="region"
           aria-label="Resultados de búsqueda"
         >

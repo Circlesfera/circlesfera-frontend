@@ -7,7 +7,7 @@ export default function UsersPage() {
     <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Gestión de Usuarios
         </h1>
         <p className="text-gray-600">
@@ -16,13 +16,13 @@ export default function UsersPage() {
       </div>
 
       {/* Placeholder */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-12">
         <div className="text-center">
           <Users className="w-20 h-20 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Gestión de Usuarios
           </h2>
-          <p className="text-gray-600 mb-6 max-w-md mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
             Esta sección te permitirá ver, buscar y gestionar usuarios de la plataforma.
           </p>
 
@@ -46,7 +46,7 @@ export default function UsersPage() {
             </div>
           </div>
 
-          <p className="text-sm text-gray-500 mt-8">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-8">
             🚧 Próximamente disponible
           </p>
         </div>

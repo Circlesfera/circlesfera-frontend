@@ -39,11 +39,11 @@ export default function UserSuggestions() {
   if (!user) return null;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900 text-sm">Sugerencias para ti</h3>
-        <button className="text-xs font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Sugerencias para ti</h3>
+        <button className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 transition-colors">
           Ver todo
         </button>
       </div>
@@ -68,14 +68,14 @@ export default function UserSuggestions() {
         </div>
       ) : suggestions.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-gray-500 text-xs">No hay sugerencias por ahora</p>
+          <p className="text-gray-500 dark:text-gray-400 text-xs">No hay sugerencias por ahora</p>
         </div>
       ) : (
         <div className="space-y-4">
           {suggestions.map((suggestion) => (
             <div
               key={suggestion._id}
-              className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               {/* Avatar */}
               <div className="relative">
@@ -96,10 +96,10 @@ export default function UserSuggestions() {
 
               {/* Información del usuario */}
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-gray-900 text-sm truncate">
+                <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate">
                   {suggestion.username}
                 </div>
-                <div className="text-gray-500 text-xs truncate">
+                <div className="text-gray-500 dark:text-gray-400 text-xs truncate">
                   {suggestion.bio || 'Sugerido para ti'}
                 </div>
               </div>

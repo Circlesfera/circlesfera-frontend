@@ -255,8 +255,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* User Profile */}
         {user && (
-          <div className="border-t border-gray-200 p-4">
-            <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+          <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+            <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
               <Avatar
                 src={user.avatar}
                 alt={user.username}
@@ -265,10 +265,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                 interactive
               />
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm text-gray-900 truncate">
+                <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
                   {user.username}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {user.fullName}
                 </p>
               </div>
@@ -284,7 +284,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 px-4 py-2 z-50">
         <div className="flex items-center justify-around">
           {sidebarItems.slice(0, 4).map((item) => {
             const isActive = pathname === item.href || 

@@ -100,20 +100,20 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Crear Duet</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                 Graba tu video lado a lado con @{originalReel.user.username}
               </p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -123,8 +123,8 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Original Reel Preview */}
-              <div className="bg-gray-50 rounded-xl p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">Video Original</h3>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Video Original</h3>
                 <div className="aspect-[9/16] bg-black rounded-lg overflow-hidden relative">
                   <video
                     src={originalReel.video.url}
@@ -145,7 +145,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
 
               {/* Tu Video */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Tu Video</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Tu Video</h3>
                 {preview ? (
                   <div className="aspect-[9/16] bg-black rounded-lg overflow-hidden relative">
                     <video
@@ -166,11 +166,11 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                 ) : (
                   <div
                     onClick={() => videoInputRef.current?.click()}
-                    className="aspect-[9/16] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 transition-colors"
+                    className="aspect-[9/16] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 transition-colors"
                   >
                     <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                    <p className="text-gray-600 font-medium">Sube tu video</p>
-                    <p className="text-sm text-gray-500 mt-2">Formato 9:16 (vertical)</p>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">Sube tu video</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Formato 9:16 (vertical)</p>
                     <p className="text-xs text-gray-400 mt-1">Máx. 100MB</p>
                   </div>
                 )}
@@ -187,14 +187,14 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
             {/* Form */}
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Descripción
                 </label>
                 <textarea
                   value={formData.caption}
                   onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
                   placeholder="Escribe una descripción..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
                   rows={3}
                   maxLength={2200}
                 />
@@ -202,7 +202,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <Hash className="w-4 h-4 inline mr-1" />
                     Hashtags
                   </label>
@@ -211,12 +211,12 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                     value={formData.hashtags}
                     onChange={(e) => setFormData({ ...formData, hashtags: e.target.value })}
                     placeholder="#duet #reaction"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <MapPin className="w-4 h-4 inline mr-1" />
                     Ubicación
                   </label>
@@ -225,7 +225,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder="Ciudad, País"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
               </div>
@@ -279,7 +279,7 @@ export default function CreateDuetForm({ originalReel, onClose, onSuccess }: Cre
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 transition-colors"
                 >
                   Cancelar
                 </button>

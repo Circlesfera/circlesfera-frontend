@@ -189,7 +189,7 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
             onClick={() => fileInputRef.current?.click()}
           >
             <UploadIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
               Arrastra un {postType === 'image' ? 'imagen' : 'video'} aquí
             </p>
             <p className="text-xs text-gray-500">
@@ -240,11 +240,11 @@ export default function CompactCreatePostForm({ onPostCreated }: CompactCreatePo
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           placeholder="Escribe una descripción..."
-          className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900"
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm text-gray-900"
           rows={2}
           maxLength={2200}
         />
-        <div className="text-right text-xs text-gray-500 mt-1">
+        <div className="text-right text-xs text-gray-500 dark:text-gray-400 mt-1">
           {caption.length}/2200
         </div>
       </div>

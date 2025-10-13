@@ -487,7 +487,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               <div className="absolute -left-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => setMessageMenuOpen(messageMenuOpen === message._id ? null : message._id)}
-                  className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+                  className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 dark:text-gray-400 hover:text-gray-700"
                   title="Opciones"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -502,11 +502,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 min-w-[160px]"
+                      className="absolute left-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 py-1 z-50 min-w-[160px]"
                     >
                       <button
                         onClick={() => handleEditMessage(message._id, message.content.text || '')}
-                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-2"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -515,7 +515,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       </button>
                       <button
                         onClick={() => handleDeleteMessage(message._id, 'me')}
-                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center space-x-2"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -557,7 +557,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={handleSaveEdit}
-                          className="px-2 py-1 bg-white text-blue-600 text-xs rounded hover:bg-gray-100"
+                          className="px-2 py-1 bg-white dark:bg-gray-900 text-blue-600 text-xs rounded hover:bg-gray-100"
                         >
                           Guardar
                         </button>
@@ -608,7 +608,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
               {isLocationMessage && (
                 <div className="space-y-2">
-                  <div className="bg-gray-100 rounded-lg p-2 sm:p-3">
+                  <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 sm:p-3">
                     <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                       <LocationIcon />
                       <span className="font-medium text-xs sm:text-sm">
@@ -640,12 +640,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white rounded-none md:rounded-r-2xl shadow-lg">
+    <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 rounded-none md:rounded-r-2xl shadow-lg">
       {/* Header mejorado del chat */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm">
         <button
           onClick={handleHeaderClick}
-          className="flex items-center space-x-3 hover:bg-gray-50 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
+          className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
           title="Ver perfil"
         >
           <div className="relative flex-shrink-0">
@@ -670,7 +670,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
           </div>
 
           <div className="min-w-0">
-            <h3 className="font-semibold text-gray-900 text-base truncate group-hover:text-blue-600 transition-colors">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-base truncate group-hover:text-blue-600 transition-colors">
               {conversationName || (() => {
                 const otherParticipant = getOtherParticipant();
                 return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
@@ -697,19 +697,19 @@ export default function ChatWindow({ conversationId, conversationName, participa
         </button>
 
         <div className="flex items-center space-x-1 flex-shrink-0">
-          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 dark:text-gray-400 hover:text-blue-600">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
           </button>
 
-          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 dark:text-gray-400 hover:text-blue-600">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           </button>
 
-          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600">
+          <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-600 dark:text-gray-400 hover:text-blue-600">
             <MoreIcon />
           </button>
         </div>
@@ -737,8 +737,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
                   </svg>
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">¡Comienza la conversación!</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">Envía un mensaje para iniciar el chat</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">¡Comienza la conversación!</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Envía un mensaje para iniciar el chat</p>
             </div>
           </div>
         ) : (
@@ -821,7 +821,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute bottom-full left-0 mb-3 bg-white rounded-2xl shadow-2xl border border-gray-200/50 p-2 space-y-1 z-10 min-w-[180px]"
+                  className="absolute bottom-full left-0 mb-3 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200/50 p-2 space-y-1 z-10 min-w-[180px]"
                 >
                   {/* Input oculto para imágenes */}
                   <input
@@ -876,7 +876,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               onChange={handleTextChange}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all text-gray-900 placeholder:text-gray-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50/50 hover:bg-white transition-all text-gray-900 dark:text-gray-100 placeholder:text-gray-500"
               rows={1}
               disabled={sending}
               style={{ minHeight: '48px', maxHeight: '120px' }}
@@ -887,7 +887,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
           <div className="flex items-center space-x-2 flex-shrink-0">
             <button
               type="button"
-              className="p-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-all"
+              className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-800 transition-all"
             >
               <EmojiIcon />
             </button>

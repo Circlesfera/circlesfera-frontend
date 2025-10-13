@@ -82,7 +82,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
   if (results.length === 0 && query.trim()) {
     return (
       <div className="p-4 text-center">
-        <div className="text-gray-500 text-sm">No se encontraron usuarios</div>
+        <div className="text-gray-500 dark:text-gray-400 text-sm">No se encontraron usuarios</div>
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
             key={user._id}
             href={`/${user.username}`}
             onClick={onResultClick}
-            className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+            className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
           >
             {user.avatar ? (
               <Image
@@ -112,22 +112,22 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
-                <span className="font-medium text-gray-900 truncate">
+                <span className="font-medium text-gray-900 dark:text-gray-100 truncate">
                   {user.username}
                 </span>
                 {user.isFollowing && (
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
                     Siguiendo
                   </span>
                 )}
               </div>
               {user.fullName && (
-                <div className="text-sm text-gray-500 truncate">
+                <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                   {user.fullName}
                 </div>
               )}
               {user.bio && (
-                <div className="text-sm text-gray-500 truncate">
+                <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                   {user.bio}
                 </div>
               )}
@@ -137,7 +137,7 @@ export default function UserSearch({ query, onResultClick }: UserSearchProps) {
       </div>
 
       {results.length > 0 && (
-        <div className="border-t border-gray-200 mt-2 pt-2">
+        <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
           <Link
             href={`/search?q=${encodeURIComponent(query)}`}
             onClick={onResultClick}

@@ -238,7 +238,7 @@ export default function ReelPage() {
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-white text-black hover:bg-gray-200"
+                className="bg-white dark:bg-gray-900 text-black hover:bg-gray-200"
               >
                 Seguir
               </Button>

@@ -153,13 +153,13 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-100">
         <h2 className="text-xl font-bold text-gray-900">Crear Story</h2>
         <button
           onClick={handleClose}
-          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
           <CloseIcon />
         </button>
@@ -169,7 +169,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
       <div className="p-6">
         {/* Selector de tipo */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             Tipo de Story
           </label>
           <div className="grid grid-cols-3 gap-3">
@@ -198,27 +198,27 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
           {/* Área de contenido */}
           {storyType === 'text' ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Contenido
               </label>
               <textarea
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
                 placeholder="Escribe tu story..."
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
                 rows={6}
                 maxLength={500}
               />
-              <div className="text-xs text-gray-500 mt-1 text-right">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
                 {textContent.length}/500
               </div>
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {storyType === 'image' ? 'Imagen' : 'Video'}
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
                 {preview ? (
                   <div className="space-y-4">
                     {storyType === 'image' ? (
@@ -250,7 +250,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                   </div>
                 ) : (
                   <div>
-                    <p className="text-gray-600 font-medium">
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">
                       {storyType === 'image' ? 'Sube una imagen' : 'Sube un video'}
                     </p>
                     <p className="text-gray-400 text-sm mt-1">
@@ -281,25 +281,25 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
 
           {/* Caption */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Descripción (opcional)
             </label>
             <textarea
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Añade una descripción..."
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
+              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900"
               rows={3}
               maxLength={200}
             />
-            <div className="text-xs text-gray-500 mt-1 text-right">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
               {caption.length}/200
             </div>
           </div>
 
           {/* Ubicación */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Ubicación (opcional)
             </label>
             <div className="relative">
@@ -309,7 +309,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="¿Dónde estás?"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 maxLength={100}
               />
             </div>
@@ -327,7 +327,7 @@ export default function CreateStoryForm({ onStoryCreated, onClose }: CreateStory
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
             >
               Cancelar
             </button>

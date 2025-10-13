@@ -107,7 +107,7 @@ export function PostCardActions({
           {/* Likes count */}
           {post.likes.length > 0 && (
             <button
-              className="font-semibold text-gray-900 text-sm hover:text-gray-700 transition-colors focus-visible:outline-none focus-visible:underline"
+              className="font-semibold text-gray-900 dark:text-gray-100 text-sm hover:text-gray-700 transition-colors focus-visible:outline-none focus-visible:underline"
               aria-label={ARIA_LABELS.post.likeCount(post.likes.length)}
             >
               {formatCount(post.likes.length)} me gusta
@@ -117,16 +117,16 @@ export function PostCardActions({
           {/* Caption */}
           {post.caption && !isEditing && (
             <div className="mt-1">
-              <span className="font-semibold text-gray-900 text-sm mr-2">
+              <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm mr-2">
                 {post.user.username}
               </span>
-              <span className="text-gray-900 text-sm">
+              <span className="text-gray-900 dark:text-gray-100 text-sm">
                 {post.caption.length > 80 && !showFullCaption ? (
                   <>
                     {post.caption.substring(0, 80)}...
                     <button
                       onClick={onToggleCaption}
-                      className="text-gray-500 hover:text-gray-700 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
+                      className="text-gray-500 dark:text-gray-400 hover:text-gray-700 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
                       aria-label="Ver caption completo"
                     >
                       más
@@ -138,7 +138,7 @@ export function PostCardActions({
                     {post.caption.length > 80 && showFullCaption && (
                       <button
                         onClick={onToggleCaption}
-                        className="text-gray-500 hover:text-gray-700 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
+                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 ml-1 font-medium focus-visible:outline-none focus-visible:underline"
                         aria-label="Ver menos"
                       >
                         menos
@@ -156,7 +156,7 @@ export function PostCardActions({
               <textarea
                 value={editCaption}
                 onChange={(e) => onEditCaption(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 rows={3}
                 placeholder="Escribe tu caption..."
                 aria-label="Caption del post"
@@ -176,7 +176,7 @@ export function PostCardActions({
                   </button>
                   <button
                     onClick={onCancelEdit}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
+                    className="px-4 py-2 bg-gray-200 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
                     aria-label="Cancelar edición"
                   >
                     Cancelar
@@ -204,7 +204,7 @@ export function PostCardActions({
               </button>
             ))}
             {post.tags.length > 3 && (
-              <span className="text-gray-500 text-xs" aria-label={`${post.tags.length - 3} tags más`}>
+              <span className="text-gray-500 dark:text-gray-400 text-xs" aria-label={`${post.tags.length - 3} tags más`}>
                 +{post.tags.length - 3}
               </span>
             )}

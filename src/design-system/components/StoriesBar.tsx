@@ -94,7 +94,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
                 <PlusIcon />
               </div>
             </div>
-            <span className="text-xs text-gray-600 font-medium text-center">
+            <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center">
               Tu historia
             </span>
           </div>
@@ -118,7 +118,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
 
               {/* Story count indicator */}
               {user.storiesCount > 1 && (
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                   <span className="text-xs font-bold text-gray-700">
                     {user.storiesCount}
                   </span>
@@ -131,7 +131,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
               )}
             </div>
 
-            <span className="text-xs text-gray-600 font-medium text-center truncate max-w-16">
+            <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center truncate max-w-16">
               {user.username}
             </span>
           </div>
@@ -142,7 +142,7 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
           <div className="flex-1 flex items-center justify-center py-8">
             <div className="text-center">
               <CameraIcon />
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 No hay historias para mostrar
               </p>
             </div>

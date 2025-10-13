@@ -270,7 +270,7 @@ export default function HomePage() {
                           interactive
                         />
                         {item.storiesCount > 1 && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                             <span className="text-xs font-bold text-gray-700">
                               {item.storiesCount}
                             </span>

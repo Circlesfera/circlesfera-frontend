@@ -72,7 +72,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-2xl mx-auto bg-white rounded-lg shadow-xl"
+      className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl"
     >
       <div className="p-6">
         <div className="flex items-center space-x-3 mb-6">
@@ -89,7 +89,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           {/* Basic Info */}
           <div className="space-y-4">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Título de la transmisión *
               </label>
               <input
@@ -98,17 +98,17 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="¿De qué vas a hablar?"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                 maxLength={100}
                 required
               />
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {formData.title.length}/100 caracteres
               </div>
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Descripción (opcional)
               </label>
               <textarea
@@ -116,18 +116,18 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Cuéntales a tus seguidores de qué se trata tu transmisión..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none text-gray-900"
                 rows={3}
                 maxLength={500}
               />
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {formData.description?.length || 0}/500 caracteres
               </div>
             </div>
           </div>
 
           {/* Scheduling */}
-          <div className="border-t border-gray-200 pt-6">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
               <Calendar className="w-5 h-5 text-gray-600" />
               <h3 className="text-lg font-semibold text-gray-900">Programación</h3>
@@ -139,7 +139,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                 id="isScheduled"
                 checked={isScheduled}
                 onChange={(e) => setIsScheduled(e.target.checked)}
-                className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                className="w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500"
               />
               <label htmlFor="isScheduled" className="text-sm text-gray-700">
                 Programar transmisión para más tarde
@@ -154,7 +154,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
               >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="scheduledDate" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="scheduledDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Fecha
                     </label>
                     <input
@@ -163,11 +163,11 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                       value={scheduledDate}
                       onChange={(e) => setScheduledDate(e.target.value)}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                   <div>
-                    <label htmlFor="scheduledTime" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="scheduledTime" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Hora
                     </label>
                     <input
@@ -175,7 +175,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
                       id="scheduledTime"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 </div>
@@ -192,7 +192,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           </div>
 
           {/* Privacy & Interaction */}
-          <div className="border-t border-gray-200 pt-6">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
               <Shield className="w-5 h-5 text-gray-600" />
               <h3 className="text-lg font-semibold text-gray-900">Privacidad e Interacción</h3>
@@ -259,7 +259,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           </div>
 
           {/* Notifications */}
-          <div className="border-t border-gray-200 pt-6">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
               <Bell className="w-5 h-5 text-gray-600" />
               <h3 className="text-lg font-semibold text-gray-900">Notificaciones</h3>
@@ -309,7 +309,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
           </div>
 
           {/* CSTV Save */}
-          <div className="border-t border-gray-200 pt-6">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
             <div className="flex items-center space-x-3 mb-4">
               <Save className="w-5 h-5 text-gray-600" />
               <h3 className="text-lg font-semibold text-gray-900">Guardar como CSTV</h3>
@@ -344,7 +344,7 @@ export function CreateLiveStreamForm({ onSuccess, onCancel }: CreateLiveStreamFo
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 text-gray-700 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
             >
               Cancelar
             </button>

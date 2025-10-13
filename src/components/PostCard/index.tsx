@@ -148,14 +148,14 @@ export default function PostCard({
           aria-modal="true"
           aria-labelledby="delete-dialog-title"
         >
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
             <h3
               id="delete-dialog-title"
-              className="text-lg font-semibold text-gray-900 mb-4"
+              className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4"
             >
               ¿Eliminar publicación?
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               Esta acción no se puede deshacer. La publicación se eliminará permanentemente.
             </p>
             <div className="flex space-x-3">
@@ -169,7 +169,7 @@ export default function PostCard({
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
+                className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 transition-colors"
               >
                 Cancelar
               </button>

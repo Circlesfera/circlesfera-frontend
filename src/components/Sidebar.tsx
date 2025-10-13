@@ -112,7 +112,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Sidebar para md+ */}
-      <aside className="hidden md:flex flex-col w-60 h-screen pt-20 bg-white border-r border-gray-200 fixed left-0 top-0 z-40 shadow-sm">
+      <aside className="hidden md:flex flex-col w-60 h-screen pt-20 bg-white dark:bg-gray-900 border-r border-gray-200 fixed left-0 top-0 z-40 shadow-sm">
         {/* Logo y branding */}
         <div className="px-6 pb-6">
           <div className="flex items-center space-x-3">
@@ -149,7 +149,7 @@ export default function Sidebar() {
                 {/* Badges dinámicos */}
                 {item.badge === 'live' && (
                   <span className="ml-auto flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded uppercase animate-pulse">
-                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                    <span className="w-1.5 h-1.5 bg-white dark:bg-gray-900 rounded-full animate-ping"></span>
                     LIVE
                   </span>
                 )}
@@ -185,7 +185,7 @@ export default function Sidebar() {
         </div>
       </aside>
       {/* Menú inferior fijo para móvil - Expandido con scroll horizontal */}
-      <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 md:hidden shadow-lg overflow-x-auto">
+      <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 z-50 md:hidden shadow-lg overflow-x-auto">
         <div className="flex items-center justify-start gap-2 px-2 py-3 min-w-max">
           {mobileNavigationItems.map((item) => {
             const active = isActive(item.href, item.exact);

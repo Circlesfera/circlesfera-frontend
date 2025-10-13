@@ -337,11 +337,11 @@ export default function SettingsPage() {
                 ← Volver al perfil
               </Link>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
               <SettingsIcon />
               Configuración
             </h1>
-            <p className="text-gray-600 mt-2">Gestiona tu cuenta y preferencias</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-2">Gestiona tu cuenta y preferencias</p>
           </div>
 
           {/* Mensaje de estado */}
@@ -357,7 +357,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Sidebar de navegación */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 p-6">
                 <nav className="space-y-2">
                   <button
                     onClick={() => setActiveSection('account')}
@@ -429,7 +429,7 @@ export default function SettingsPage() {
                     <ArrowIcon />
                   </button>
 
-                  <div className="border-t border-gray-200 pt-4 mt-4">
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center justify-between p-3 rounded-lg text-left text-red-600 hover:bg-red-50 transition-colors"
@@ -447,10 +447,10 @@ export default function SettingsPage() {
 
             {/* Contenido principal */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 p-8">
                 {activeSection === 'account' && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Información de la cuenta</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Información de la cuenta</h2>
                     {profile && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-4">
@@ -488,22 +488,22 @@ export default function SettingsPage() {
 
                 {activeSection === 'security' && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Seguridad</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Seguridad</h2>
                     <div className="space-y-6">
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Cambiar contraseña</h3>
-                        <p className="text-gray-600 mb-4">Actualiza tu contraseña para mantener tu cuenta segura</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Cambiar contraseña</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Actualiza tu contraseña para mantener tu cuenta segura</p>
                         <button
                           onClick={() => setShowPasswordForm(true)}
-                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                          className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                           Cambiar contraseña
                         </button>
                       </div>
 
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Autenticación de dos factores</h3>
-                        <p className="text-gray-600 mb-4">Añade una capa extra de seguridad a tu cuenta</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Autenticación de dos factores</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Añade una capa extra de seguridad a tu cuenta</p>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">
                             {securitySettings.twoFactorEnabled ? 'Habilitado' : 'Deshabilitado'}
@@ -521,9 +521,9 @@ export default function SettingsPage() {
                         </div>
                       </div>
 
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Notificaciones de seguridad</h3>
-                        <p className="text-gray-600 mb-4">Recibe alertas sobre actividad sospechosa</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Notificaciones de seguridad</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Recibe alertas sobre actividad sospechosa</p>
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
                             <span className="text-gray-700">Notificaciones de inicio de sesión</span>
@@ -558,11 +558,11 @@ export default function SettingsPage() {
 
                 {activeSection === 'privacy' && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Privacidad</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Privacidad</h2>
                     <div className="space-y-6">
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Perfil público</h3>
-                        <p className="text-gray-600 mb-4">Controla quién puede ver tu perfil</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Perfil público</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Controla quién puede ver tu perfil</p>
                         <div className="flex items-center gap-4">
                           <label className="flex items-center">
                             <input
@@ -587,9 +587,9 @@ export default function SettingsPage() {
                         </div>
                       </div>
 
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Mensajes directos</h3>
-                        <p className="text-gray-600 mb-4">Controla quién puede enviarte mensajes</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Mensajes directos</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Controla quién puede enviarte mensajes</p>
                         <div className="flex items-center gap-4">
                           <label className="flex items-center">
                             <input
@@ -624,9 +624,9 @@ export default function SettingsPage() {
                         </div>
                       </div>
 
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Información personal</h3>
-                        <p className="text-gray-600 mb-4">Controla qué información personal es visible</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Información personal</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Controla qué información personal es visible</p>
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
                             <span className="text-gray-700">Mostrar email</span>
@@ -671,11 +671,11 @@ export default function SettingsPage() {
 
                 {activeSection === 'notifications' && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Notificaciones</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Notificaciones</h2>
                     <div className="space-y-6">
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Notificaciones push</h3>
-                        <p className="text-gray-600 mb-4">Recibe notificaciones en tiempo real</p>
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Notificaciones push</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Recibe notificaciones en tiempo real</p>
                         <div className="space-y-3">
                           <label className="flex items-center justify-between">
                             <span className="text-gray-700">Nuevos seguidores</span>
@@ -751,20 +751,20 @@ export default function SettingsPage() {
 
                 {activeSection === 'help' && (
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Ayuda y soporte</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Ayuda y soporte</h2>
                     <div className="space-y-6">
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Centro de ayuda</h3>
-                        <p className="text-gray-600 mb-4">Encuentra respuestas a tus preguntas</p>
-                        <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Centro de ayuda</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Encuentra respuestas a tus preguntas</p>
+                        <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                           Ver ayuda
                         </button>
                       </div>
 
-                      <div className="p-4 border border-gray-200 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">Contactar soporte</h3>
-                        <p className="text-gray-600 mb-4">¿Necesitas ayuda? Contáctanos</p>
-                        <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Contactar soporte</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">¿Necesitas ayuda? Contáctanos</p>
+                        <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                           Contactar
                         </button>
                       </div>
@@ -779,7 +779,7 @@ export default function SettingsPage() {
         {/* Modal de editar perfil */}
         {showEditForm && profile && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <EditProfileForm
                 profile={profile}
                 onSave={handleProfileUpdate}
@@ -792,42 +792,42 @@ export default function SettingsPage() {
         {/* Modal de cambiar contraseña */}
         {showPasswordForm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Cambiar contraseña</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full p-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Cambiar contraseña</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Contraseña actual
                   </label>
                   <input
                     type="password"
                     value={passwordForm.currentPassword}
                     onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400"
                     placeholder="Contraseña actual"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Nueva contraseña
                   </label>
                   <input
                     type="password"
                     value={passwordForm.newPassword}
                     onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400"
                     placeholder="Nueva contraseña"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Confirmar nueva contraseña
                   </label>
                   <input
                     type="password"
                     value={passwordForm.confirmPassword}
                     onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400"
                     placeholder="Confirmar nueva contraseña"
                   />
                 </div>
@@ -845,7 +845,7 @@ export default function SettingsPage() {
                     setShowPasswordForm(false);
                     setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Cancelar
                 </button>

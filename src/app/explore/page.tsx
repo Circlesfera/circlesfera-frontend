@@ -187,7 +187,7 @@ export default function ExplorePage() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">Sin contenido</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">Sin contenido</span>
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -236,7 +236,7 @@ export default function ExplorePage() {
                 >
                   <div className="relative w-16 h-16 mx-auto mb-2">
                     <div className="w-full h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-600 p-0.5">
-                      <div className="w-full h-full rounded-full bg-white p-0.5 relative">
+                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 p-0.5 relative">
                         <Image
                           src={user.avatar || '/default-avatar.png'}
                           alt={`Story de ${user.username}`}
@@ -252,7 +252,7 @@ export default function ExplorePage() {
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-700 truncate">
+                  <p className="text-xs text-gray-700 dark:text-gray-300 truncate">
                     {user.username}
                   </p>
                 </Card>

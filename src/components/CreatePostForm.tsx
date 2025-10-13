@@ -242,7 +242,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
         {/* Selector visual de aspect ratio - Solo para imágenes */}
         {postType === 'image' && (
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               Formato de la publicación
             </label>
             <div className="flex space-x-4">
@@ -338,7 +338,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 </div>
               </motion.button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
               {aspectRatio === '1:1'
                 ? '📷 Formato clásico de Instagram - Foto cuadrada balanceada'
                 : '📱 Ocupa más espacio en el feed - Ideal para retratos y productos'}
@@ -360,7 +360,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 onDrop={handleDrop}
               >
                 <UploadIcon />
-                <p className="text-gray-600 mb-2">
+                <p className="text-gray-600 dark:text-gray-400 mb-2">
                   Arrastra un {postType === 'image' ? 'imagen' : 'video'} aquí o
                 </p>
                 <button
@@ -370,7 +370,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
                 >
                   Seleccionar {postType === 'image' ? 'imagen' : 'video'}
                 </button>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                   {postType === 'image'
                     ? 'PNG, JPG, GIF, WebP hasta 5MB'
                     : 'MP4, AVI, MOV, WebM hasta 100MB'
@@ -451,11 +451,11 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Escribe tu mensaje aquí..."
-              className="w-full p-4 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-gray-900"
+              className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-gray-900"
               rows={3}
               maxLength={5000}
             />
-            <div className="text-right text-sm text-gray-500 mt-1">
+            <div className="text-right text-sm text-gray-500 dark:text-gray-400 mt-1">
               {text.length}/5000 caracteres
             </div>
           </div>
@@ -466,11 +466,11 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Añade una descripción adicional (opcional)"
-              className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-gray-900"
+              className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-gray-900"
               rows={2}
               maxLength={2200}
             />
-            <div className="text-right text-sm text-gray-500 mt-1">
+            <div className="text-right text-sm text-gray-500 dark:text-gray-400 mt-1">
               {caption.length}/2200 caracteres
             </div>
           </div>
@@ -487,7 +487,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
             <button
               type="button"
               onClick={resetForm}
-              className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              className="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 transition-colors"
               disabled={loading}
             >
               Cancelar

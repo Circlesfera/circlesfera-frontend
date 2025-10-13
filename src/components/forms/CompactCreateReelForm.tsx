@@ -211,7 +211,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
             onClick={() => fileInputRef.current?.click()}
           >
             <VideoIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
               Arrastra un video aquí
             </p>
             <p className="text-xs text-gray-500">
@@ -262,11 +262,11 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
           value={formData.caption}
           onChange={handleInputChange}
           placeholder="Escribe una descripción para tu reel..."
-          className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
           rows={2}
           maxLength={2200}
         />
-        <div className="text-right text-xs text-gray-500 mt-1">
+        <div className="text-right text-xs text-gray-500 dark:text-gray-400 mt-1">
           {formData.caption.length}/2200
         </div>
       </div>
@@ -282,7 +282,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
           value={formData.hashtags}
           onChange={handleInputChange}
           placeholder="#hashtag1 #hashtag2 #hashtag3"
-          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
         />
       </div>
 
@@ -297,7 +297,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
           value={formData.location}
           onChange={handleInputChange}
           placeholder="¿Dónde estás?"
-          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
         />
       </div>
 
@@ -313,7 +313,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
             value={formData.audioTitle}
             onChange={handleInputChange}
             placeholder="Título de la canción"
-            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
           />
         </div>
         <div>
@@ -325,7 +325,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
             value={formData.audioArtist}
             onChange={handleInputChange}
             placeholder="Nombre del artista"
-            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
+            className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 text-sm"
           />
         </div>
       </div>
@@ -340,7 +340,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
               name="allowComments"
               checked={formData.allowComments}
               onChange={handleInputChange}
-              className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+              className="rounded border-gray-300 dark:border-gray-600 text-pink-600 focus:ring-pink-500"
             />
             Permitir comentarios
           </label>
@@ -350,7 +350,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
               name="allowDuets"
               checked={formData.allowDuets}
               onChange={handleInputChange}
-              className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+              className="rounded border-gray-300 dark:border-gray-600 text-pink-600 focus:ring-pink-500"
             />
             Permitir duetos
           </label>
@@ -360,7 +360,7 @@ export default function CompactCreateReelForm({ onReelCreated, onClose }: Compac
               name="allowStitches"
               checked={formData.allowStitches}
               onChange={handleInputChange}
-              className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+              className="rounded border-gray-300 dark:border-gray-600 text-pink-600 focus:ring-pink-500"
             />
             Permitir stitches
           </label>

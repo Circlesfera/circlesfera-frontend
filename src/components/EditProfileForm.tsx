@@ -254,7 +254,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         <h2 className="text-xl font-semibold text-gray-900">Editar perfil</h2>
         <button
           onClick={onCancel}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -326,7 +326,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Nombre de usuario */}
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Nombre de usuario
             {usernameChanged && (
               <span className="text-orange-600 ml-2 text-xs">
@@ -383,7 +383,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Nombre completo */}
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Nombre completo
           </label>
           <input
@@ -402,7 +402,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Biografía */}
         <div>
-          <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Biografía
           </label>
           <textarea
@@ -418,7 +418,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             {errors.bio && (
               <p className="text-red-500 text-sm">{errors.bio}</p>
             )}
-            <span className="text-gray-500 text-sm ml-auto">
+            <span className="text-gray-500 dark:text-gray-400 text-sm ml-auto">
               {formData.bio.length}/160
             </span>
           </div>
@@ -426,7 +426,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Sitio web */}
         <div>
-          <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Sitio web
           </label>
           <input
@@ -445,7 +445,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Ubicación */}
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Ubicación
           </label>
           <input
@@ -464,7 +464,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Teléfono */}
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Teléfono
           </label>
           <input
@@ -483,7 +483,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Género */}
         <div>
-          <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="gender" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Género
           </label>
           <select
@@ -502,7 +502,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
 
         {/* Fecha de nacimiento */}
         <div>
-          <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Fecha de nacimiento
           </label>
           <input
@@ -523,7 +523,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             name="isPrivate"
             checked={formData.isPrivate}
             onChange={handleChange}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
           />
           <label htmlFor="isPrivate" className="text-sm font-medium text-gray-700">
             Cuenta privada

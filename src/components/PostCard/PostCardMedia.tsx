@@ -239,7 +239,7 @@ export function PostCardMedia({ post }: PostCardMediaProps) {
           className="px-6 py-8 bg-gradient-to-r from-blue-50 to-purple-50"
           role="article"
         >
-          <p className="text-gray-900 text-base leading-relaxed whitespace-pre-wrap">
+          <p className="text-gray-900 dark:text-gray-100 text-base leading-relaxed whitespace-pre-wrap">
             {post.content.text}
           </p>
         </div>

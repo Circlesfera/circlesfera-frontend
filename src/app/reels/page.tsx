@@ -108,10 +108,10 @@ export default function ReelsPage() {
           <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <Video className="w-12 h-12 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             No hay reels disponibles
           </h2>
-          <p className="text-gray-600 mb-8">
+          <p className="text-gray-600 dark:text-gray-400 mb-8">
             Crea tu primer reel para comenzar a compartir videos cortos con la comunidad.
           </p>
           <Button

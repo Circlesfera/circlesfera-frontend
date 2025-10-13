@@ -193,8 +193,8 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error al cargar contenido</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Error al cargar contenido</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <button
             onClick={() => loadContent(activeTab)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
@@ -223,7 +223,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
             <button
               onClick={handleLoadMore}
               disabled={loading}
-              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? 'Cargando...' : 'Cargar más'}
             </button>
@@ -234,7 +234,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
   };
 
   return (
-    <div className="bg-white rounded-none sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-none sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       {/* Pestañas */}
       <div className="border-b border-gray-200">
         <div className="flex">
@@ -252,7 +252,7 @@ export default function ProfileTabs({ username, isOwnProfile }: ProfileTabsProps
               <span className="sm:hidden">
                 {tab.id === 'posts' ? 'Posts' : tab.id === 'reels' ? 'Reels' : 'Stories'}
               </span>
-              <span className="bg-gray-200 text-gray-600 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
+              <span className="bg-gray-200 text-gray-600 dark:text-gray-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs">
                 {formatNumber(tab.count)}
               </span>
             </button>
@@ -319,8 +319,8 @@ function EmptyState({ tabType, isOwnProfile }: { tabType: TabType; isOwnProfile:
   return (
     <div className="text-center py-16 px-6">
       <div className="text-6xl mb-4">{message.icon}</div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">{message.title}</h3>
-      <p className="text-gray-600 mb-6">{message.subtitle}</p>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{message.title}</h3>
+      <p className="text-gray-600 dark:text-gray-400 mb-6">{message.subtitle}</p>
       {isOwnProfile && (
         <div className="flex justify-center gap-4">
           <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
@@ -365,7 +365,7 @@ function ContentGrid({ content, type }: { content: (Post | Reel | Story)[]; type
         const isVideo = type === 'posts' && post.type === 'video';
 
         return (
-          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 relative group cursor-pointer">
+          <div key={item._id} className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 relative group cursor-pointer">
             {type === 'posts' ? (
               <Image
                 src={post.content?.images?.[0]?.url || '/placeholder.png'}

@@ -70,23 +70,23 @@ export default function HelpPage() {
           <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
             <Search className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             ¿En qué podemos ayudarte?
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Encuentra respuestas rápidas, tutoriales detallados y toda la información
             que necesitas para aprovechar al máximo CircleSfera.
           </p>
         </div>
 
         {/* Barra de búsqueda */}
-        <div className="bg-white rounded-2xl p-6 mb-8 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 mb-8 shadow-sm border border-gray-200">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
               placeholder="Buscar en el centro de ayuda..."
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400"
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400"
             />
           </div>
         </div>
@@ -94,19 +94,19 @@ export default function HelpPage() {
         {/* Categorías */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {categories.map((category, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+            <div key={index} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
                   <category.icon className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{category.title}</h3>
-                  <p className="text-gray-600 mb-3">{category.description}</p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{category.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-3">{category.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {category.topics.map((topic, topicIndex) => (
                       <span
                         key={topicIndex}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                        className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 rounded-full text-sm"
                       >
                         {topic}
                       </span>
@@ -119,12 +119,12 @@ export default function HelpPage() {
         </div>
 
         {/* FAQ */}
-        <div className="bg-white rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">Preguntas Frecuentes</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-8 shadow-sm border border-gray-200">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Preguntas Frecuentes</h3>
           <div className="space-y-6">
             {faqs.map((faq, index) => (
               <div key={index} className="border-b border-gray-100 pb-6 last:border-b-0">
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h4>
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{faq.question}</h4>
                 <p className="text-gray-600">{faq.answer}</p>
               </div>
             ))}
@@ -173,23 +173,23 @@ export default function HelpPage() {
 
         {/* Enlaces útiles */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600 mb-4">También te puede interesar:</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">También te puede interesar:</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/about"
-              className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
             >
               Sobre nosotros
             </Link>
             <Link
               href="/privacy"
-              className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
             >
               Política de privacidad
             </Link>
             <Link
               href="/terms"
-              className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
             >
               Términos de servicio
             </Link>

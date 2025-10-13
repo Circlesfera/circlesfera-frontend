@@ -57,7 +57,7 @@ export default function ModernProfileHeader({
           {/* Avatar Section */}
           <div className="flex-shrink-0 relative group">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full shadow-lg overflow-hidden bg-gray-100 relative">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full shadow-lg overflow-hidden bg-gray-100 dark:bg-gray-800 relative">
                 {user.avatar && !imageError ? (
                   <Image
                     src={user.avatar}
@@ -134,7 +134,7 @@ export default function ModernProfileHeader({
                     </button>
                     <Link
                       href="/settings"
-                      className="p-2 bg-white/80 backdrop-blur-sm text-gray-700 rounded-lg hover:bg-white transition-all duration-300 shadow-md hover:shadow-lg border border-gray-200/50"
+                      className="p-2 bg-white/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-lg hover:bg-white transition-all duration-300 shadow-md hover:shadow-lg border border-gray-200/50"
                       title="Configuración"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,10 +150,10 @@ export default function ModernProfileHeader({
             {/* Personal Information */}
             <div className="mb-4">
               {user.fullName && (
-                <div className="font-semibold text-gray-900 mb-2 text-base">{user.fullName}</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100 mb-2 text-base">{user.fullName}</div>
               )}
               {user.bio && (
-                <div className="text-gray-700 mb-2 break-words leading-relaxed text-sm">
+                <div className="text-gray-700 dark:text-gray-300 mb-2 break-words leading-relaxed text-sm">
                   {user.bio}
                 </div>
               )}
@@ -178,14 +178,14 @@ export default function ModernProfileHeader({
                 className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105"
                 onClick={onFollowersClick}
               >
-                <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.followers)}</span>
+                <span className="font-bold text-gray-900 dark:text-gray-100 text-xl">{formatNumber(stats.followers)}</span>
                 <span className="text-gray-600">seguidores</span>
               </button>
               <button
                 className="hover:underline flex items-center gap-2 transition-all duration-200 hover:text-blue-600 hover:scale-105"
                 onClick={onFollowingClick}
               >
-                <span className="font-bold text-gray-900 text-xl">{formatNumber(stats.following)}</span>
+                <span className="font-bold text-gray-900 dark:text-gray-100 text-xl">{formatNumber(stats.following)}</span>
                 <span className="text-gray-600">seguidos</span>
               </button>
             </div>
@@ -209,7 +209,7 @@ export default function ModernProfileHeader({
                   </div>
                   <div>
                     <div className="text-xs text-gray-500">Estado</div>
-                    <div className="font-medium text-gray-900 text-xs">
+                    <div className="font-medium text-gray-900 dark:text-gray-100 text-xs">
                       {user.isPrivate ? 'Privada' : 'Pública'}
                     </div>
                   </div>
@@ -226,7 +226,7 @@ export default function ModernProfileHeader({
                     </div>
                     <div>
                       <div className="text-xs text-gray-500">Ubicación</div>
-                      <div className="font-medium text-gray-900 text-xs truncate">{user.location}</div>
+                      <div className="font-medium text-gray-900 dark:text-gray-100 text-xs truncate">{user.location}</div>
                     </div>
                   </div>
                 )}
@@ -241,7 +241,7 @@ export default function ModernProfileHeader({
                     </div>
                     <div>
                       <div className="text-xs text-gray-500">Nacimiento</div>
-                      <div className="font-medium text-gray-900 text-xs">
+                      <div className="font-medium text-gray-900 dark:text-gray-100 text-xs">
                         {formatDate(user.birthDate)}
                       </div>
                     </div>
@@ -257,7 +257,7 @@ export default function ModernProfileHeader({
                   </div>
                   <div>
                     <div className="text-xs text-gray-500">Miembro desde</div>
-                    <div className="font-medium text-gray-900 text-xs">
+                    <div className="font-medium text-gray-900 dark:text-gray-100 text-xs">
                       {formatDate(user.createdAt)}
                     </div>
                   </div>
@@ -271,7 +271,7 @@ export default function ModernProfileHeader({
                     </div>
                     <div>
                       <div className="text-xs text-gray-500">Última actividad</div>
-                      <div className="font-medium text-gray-900 text-xs">
+                      <div className="font-medium text-gray-900 dark:text-gray-100 text-xs">
                         {formatDate(user.lastSeen)}
                       </div>
                     </div>

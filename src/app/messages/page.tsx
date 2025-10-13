@@ -68,7 +68,7 @@ export default function MessagesPage() {
                 {showChat && (
                   <button
                     onClick={handleBackToList}
-                    className="md:hidden p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200"
+                    className="md:hidden p-2.5 text-gray-700 dark:text-gray-300 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -104,7 +104,7 @@ export default function MessagesPage() {
                   <span className="text-sm">Nuevo</span>
                 </button>
 
-                <button className="p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                <button className="p-2.5 text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                   </svg>
@@ -147,7 +147,7 @@ export default function MessagesPage() {
                       <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3">
                         ¡Comienza a chatear!
                       </h3>
-                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
+                      <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-6">
                         Selecciona una conversación o crea una nueva para comenzar a conectar con tus amigos
                       </p>
 

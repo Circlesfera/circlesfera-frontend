@@ -107,10 +107,10 @@ export default function StoriesPage() {
               <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Plus className="w-12 h-12 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                 No hay stories disponibles
               </h2>
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
                 Crea tu primera story para comenzar a compartir momentos con tus amigos.
               </p>
               <Button
@@ -145,7 +145,7 @@ export default function StoriesPage() {
                     <h3 className="font-semibold text-gray-900">
                       Tu story
                     </h3>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
                       Comparte un momento
                     </p>
                   </div>
@@ -183,7 +183,7 @@ export default function StoriesPage() {
                             interactive
                           />
                           {userWithStories.storiesCount > 1 && (
-                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                               <span className="text-xs font-bold text-gray-700">
                                 {userWithStories.storiesCount}
                               </span>
@@ -195,10 +195,10 @@ export default function StoriesPage() {
                           <h3 className="font-semibold text-gray-900">
                             {userWithStories.username}
                           </h3>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">
                             {userWithStories.fullName}
                           </p>
-                          <p className="text-gray-500 text-xs">
+                          <p className="text-gray-500 dark:text-gray-400 text-xs">
                             {userWithStories.storiesCount} {userWithStories.storiesCount === 1 ? 'story' : 'stories'}
                           </p>
                         </div>

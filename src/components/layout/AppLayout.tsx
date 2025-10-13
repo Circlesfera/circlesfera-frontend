@@ -475,7 +475,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {/* Botón de crear contenido */}
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            className="flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 flex-1 max-w-[80px] text-gray-500 dark:text-gray-400 hover:text-gray-700 hover:bg-gray-50"
           >
             <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
               <PlusIcon className="h-4 w-4 text-white" />
@@ -572,7 +572,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <nav className="flex flex-1 flex-col mt-6">
               {/* Navegación Principal */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Principal</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Principal</h3>
                 <ul role="list" className="space-y-1">
                   {primaryNavigation.map((item) => (
                     <li key={item.name}>
@@ -609,7 +609,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Navegación de Contenido */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Contenido</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Contenido</h3>
                 <ul role="list" className="space-y-1">
                   {contentNavigation.map((item) => (
                     <li key={item.name}>
@@ -645,7 +645,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
               {/* Navegación de Notificaciones */}
               <div className="mb-4">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Social</h3>
+                <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Social</h3>
                 <ul role="list" className="space-y-1">
                   {notificationsNavigation.map((item) => (
                     <li key={item.name}>
@@ -747,10 +747,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                         {user.fullName || user.username}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         @{user.username}
                       </p>
                     </div>
@@ -809,7 +809,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
                     <button
                       onClick={() => handleCreateContent('story')}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 group"
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 group"
                     >
                       <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200">
                         <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -824,7 +824,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
                     <button
                       onClick={() => handleCreateContent('reel')}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all duration-200 group"
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-pink-300 hover:bg-pink-50 transition-all duration-200 group"
                     >
                       <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center group-hover:bg-pink-200 transition-colors duration-200">
                         <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

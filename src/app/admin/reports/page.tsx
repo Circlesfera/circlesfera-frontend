@@ -151,7 +151,7 @@ export default function ReportsPage() {
     <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Gestión de Reportes
         </h1>
         <p className="text-gray-600">
@@ -160,7 +160,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
         <div className="flex items-center space-x-2 mb-4">
           <Filter className="w-5 h-5 text-gray-600" />
           <h2 className="font-semibold text-gray-900">Filtros</h2>
@@ -169,13 +169,13 @@ export default function ReportsPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Estado */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Estado
             </label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900"
             >
               {statusOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -187,13 +187,13 @@ export default function ReportsPage() {
 
           {/* Tipo */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Tipo de Contenido
             </label>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900"
             >
               {typeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -205,13 +205,13 @@ export default function ReportsPage() {
 
           {/* Razón */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Razón del Reporte
             </label>
             <select
               value={reasonFilter}
               onChange={(e) => setReasonFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900"
             >
               {reasonOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -223,7 +223,7 @@ export default function ReportsPage() {
 
           {/* Búsqueda */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Buscar
             </label>
             <div className="relative">
@@ -233,7 +233,7 @@ export default function ReportsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="ID, usuario..."
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900"
               />
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function ReportsPage() {
 
       {/* Reports List */}
       {loading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-12">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-600">Cargando reportes...</p>
@@ -275,10 +275,10 @@ export default function ReportsPage() {
           </div>
         </div>
       ) : reports.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-12">
           <div className="text-center">
             <Flag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
               No hay reportes
             </h3>
             <p className="text-gray-600">
@@ -288,30 +288,30 @@ export default function ReportsPage() {
         </div>
       ) : (
         <>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       ID
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Contenido
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Razón
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Reportado Por
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Estado
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Fecha
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Acciones
                     </th>
                   </tr>
@@ -320,7 +320,7 @@ export default function ReportsPage() {
                   {reports.map((report) => (
                     <tr
                       key={report._id}
-                      className="hover:bg-gray-50 transition-colors"
+                      className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       {/* ID */}
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -333,7 +333,7 @@ export default function ReportsPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
-                            <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                               {report.contentType === 'post' && <span className="text-xl">📷</span>}
                               {report.contentType === 'reel' && <span className="text-xl">🎬</span>}
                               {report.contentType === 'story' && <span className="text-xl">⭐</span>}
@@ -344,10 +344,10 @@ export default function ReportsPage() {
                             </div>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-900 capitalize">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                               {report.contentType}
                             </p>
-                            <p className="text-xs text-gray-500 truncate max-w-xs">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
                               {report.description || 'Sin descripción'}
                             </p>
                           </div>
@@ -420,7 +420,7 @@ export default function ReportsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -430,7 +430,7 @@ export default function ReportsPage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>

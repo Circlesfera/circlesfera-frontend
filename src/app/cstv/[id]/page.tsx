@@ -232,7 +232,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
       </div>
 
       {/* Side Panel */}
-      <div className="absolute top-0 right-0 bottom-0 w-80 bg-white transform translate-x-full transition-transform duration-300">
+      <div className="absolute top-0 right-0 bottom-0 w-80 bg-white dark:bg-gray-900 transform translate-x-full transition-transform duration-300">
         {/* User Info */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3 mb-4">
@@ -266,12 +266,12 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
         {/* Video Details */}
         <div className="p-6">
-          <h4 className="font-semibold text-gray-900 mb-3">Detalles del video</h4>
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Detalles del video</h4>
 
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Categoría:</span>
-              <span className="text-gray-900 capitalize">{video.category}</span>
+              <span className="text-gray-900 dark:text-gray-100 capitalize">{video.category}</span>
             </div>
 
             <div className="flex justify-between">
@@ -286,7 +286,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             <div className="flex justify-between">
               <span className="text-gray-600">Visibilidad:</span>
-              <span className="text-gray-900 capitalize">{video.visibility.replace('_', ' ')}</span>
+              <span className="text-gray-900 dark:text-gray-100 capitalize">{video.visibility.replace('_', ' ')}</span>
             </div>
 
             {video.isFromLiveStream && (
@@ -300,7 +300,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
         {/* Actions */}
         <div className="p-6 border-t border-gray-200">
-          <h4 className="font-semibold text-gray-900 mb-3">Acciones</h4>
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Acciones</h4>
 
           <div className="space-y-2">
             <button
@@ -329,7 +329,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             <button
               onClick={handleShare}
-              className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+              className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 hover:bg-gray-200 transition-colors"
             >
               <Share2 className="w-4 h-4" />
               <span>Compartir</span>
@@ -351,9 +351,9 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
       {/* Share Modal */}
       {showShareModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">¡Enlace copiado!</h3>
-            <p className="text-gray-600 mb-4">El enlace del video se ha copiado al portapapeles.</p>
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-sm mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">¡Enlace copiado!</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">El enlace del video se ha copiado al portapapeles.</p>
             <button
               onClick={() => setShowShareModal(false)}
               className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"

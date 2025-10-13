@@ -151,7 +151,7 @@ export default function ReportDetailPage() {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-12">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-600">Cargando reporte...</p>
@@ -192,7 +192,7 @@ export default function ReportDetailPage() {
       <div className="mb-6">
         <Link
           href="/admin/reports"
-          className="inline-flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center space-x-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Volver a reportes</span>
@@ -200,11 +200,11 @@ export default function ReportDetailPage() {
 
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Detalle del Reporte
             </h1>
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-600 font-mono">
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
                 ID: {report._id}
               </span>
               {getStatusBadge(report.status)}
@@ -217,8 +217,8 @@ export default function ReportDetailPage() {
         {/* Main Content - 2/3 */}
         <div className="lg:col-span-2 space-y-6">
           {/* Información del Reporte */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
               Información del Reporte
             </h2>
 
@@ -230,7 +230,7 @@ export default function ReportDetailPage() {
                   <p className="text-sm font-medium text-gray-700">
                     Tipo de Contenido
                   </p>
-                  <p className="text-sm text-gray-900 capitalize">
+                  <p className="text-sm text-gray-900 dark:text-gray-100 capitalize">
                     {report.contentType}
                   </p>
                 </div>
@@ -254,10 +254,10 @@ export default function ReportDetailPage() {
                 <div className="flex items-start space-x-3">
                   <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-700 mb-1">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Descripción Adicional
                     </p>
-                    <p className="text-sm text-gray-900 bg-gray-50 rounded-lg p-3">
+                    <p className="text-sm text-gray-900 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                       {report.description}
                     </p>
                   </div>
@@ -268,11 +268,11 @@ export default function ReportDetailPage() {
               <div className="flex items-start space-x-3">
                 <User className="w-5 h-5 text-gray-400 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-700 mb-2">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Reportado Por
                   </p>
                   {report.reportedBy ? (
-                    <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       {report.reportedBy.avatar ? (
                         <Image
                           src={report.reportedBy.avatar}
@@ -344,15 +344,15 @@ export default function ReportDetailPage() {
           </div>
 
           {/* Contenido Reportado */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
               Contenido Reportado
             </h2>
 
             {/* TODO: Mostrar preview del contenido según el tipo */}
-            <div className="bg-gray-50 rounded-lg p-8 text-center">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
               <ContentIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                 Tipo: <span className="font-medium capitalize">{report.contentType}</span>
               </p>
               <p className="text-xs text-gray-500">
@@ -360,7 +360,7 @@ export default function ReportDetailPage() {
               </p>
               <Link
                 href={`/${report.contentType}/${report.reportedContent}`}
-                className="mt-4 inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium"
+                className="mt-4 inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium"
                 target="_blank"
               >
                 <span>Ver Contenido Original</span>
@@ -369,8 +369,8 @@ export default function ReportDetailPage() {
           </div>
 
           {/* Notas del Moderador */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
               Notas del Moderador
             </h2>
             <textarea
@@ -378,9 +378,9 @@ export default function ReportDetailPage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Agrega notas internas sobre este reporte..."
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-white text-gray-900"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-white dark:bg-gray-900 text-gray-900"
             />
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
               Estas notas son internas y no serán visibles para los usuarios
             </p>
           </div>
@@ -389,8 +389,8 @@ export default function ReportDetailPage() {
         {/* Sidebar - 1/3 */}
         <div className="space-y-6">
           {/* Acciones */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="font-bold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4">
               Acciones de Moderación
             </h3>
 
@@ -433,7 +433,7 @@ export default function ReportDetailPage() {
 
               {/* Divider */}
               {report.status !== 'resolved' && (
-                <div className="border-t border-gray-200 my-4"></div>
+                <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
               )}
 
               {/* Acciones Severas */}
@@ -478,8 +478,8 @@ export default function ReportDetailPage() {
           </div>
 
           {/* Historial (placeholder) */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="font-bold text-gray-900 mb-4 text-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4 text-sm">
               Historial de Acciones
             </h3>
             <div className="space-y-3">

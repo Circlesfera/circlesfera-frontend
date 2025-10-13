@@ -153,7 +153,7 @@ export default function FollowButton({
         <button
           onClick={handleClick}
           disabled={loading}
-          className="text-xs font-semibold text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50"
+          className="text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 transition-colors disabled:opacity-50"
         >
           {loading ? '...' : 'Siguiendo'}
         </button>
@@ -169,7 +169,7 @@ export default function FollowButton({
 
       {/* Menú desplegable moderno */}
       {showMenu && following && (
-        <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden">
           <button
             onClick={handleUnfollow}
             disabled={loading}
@@ -181,7 +181,7 @@ export default function FollowButton({
 
           <button
             onClick={handleMute}
-            className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-all duration-200"
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center gap-3 transition-all duration-200"
           >
             <MuteIcon />
             <span className="font-medium">Silenciar</span>
@@ -189,7 +189,7 @@ export default function FollowButton({
 
           <button
             onClick={handleRestrict}
-            className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-all duration-200"
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 flex items-center gap-3 transition-all duration-200"
           >
             <RestrictIcon />
             <span className="font-medium">Restringir</span>

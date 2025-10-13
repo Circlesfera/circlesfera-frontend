@@ -205,7 +205,7 @@ export default function Header() {
                 <div className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-200">
                   <span className="text-white font-bold text-xs sm:text-sm lg:text-lg">C</span>
                 </div>
-                <span className="font-bold text-base sm:text-lg lg:text-2xl text-gray-900 tracking-tight select-none group-hover:text-blue-600 transition-colors">
+                <span className="font-bold text-base sm:text-lg lg:text-2xl text-gray-900 dark:text-gray-100 tracking-tight select-none group-hover:text-blue-600 transition-colors">
                   CircleSfera
                 </span>
               </Link>
@@ -235,7 +235,7 @@ export default function Header() {
 
               {/* Resultados de búsqueda */}
               {showSearch && searchQuery && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50">
                   <UserSearch query={searchQuery} onResultClick={() => setShowSearch(false)} />
                 </div>
               )}
@@ -243,47 +243,47 @@ export default function Header() {
 
             {/* Navegación derecha - Desktop */}
             <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-              <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <HomeIcon />
                 <span className="sr-only">Inicio</span>
               </Link>
 
-              <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/messages" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <MessageIcon />
                 <span className="sr-only">Mensajes</span>
               </Link>
 
-              <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/explore" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <ExploreIcon />
                 <span className="sr-only">Explorar</span>
               </Link>
 
-              <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/reels" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <ReelsIcon />
                 <span className="sr-only">Reels</span>
               </Link>
 
-              <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/stories" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <StoriesIcon />
                 <span className="sr-only">Stories</span>
               </Link>
 
-              <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/search" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <SearchIcon />
                 <span className="sr-only">Buscar</span>
               </Link>
 
-              <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/feed" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <FeedIcon />
                 <span className="sr-only">Feed</span>
               </Link>
 
-              <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/settings" className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <SettingsIcon />
                 <span className="sr-only">Configuración</span>
               </Link>
 
-              <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group">
+              <Link href="/notifications" className="relative p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group">
                 <NotificationIcon />
                 {unread > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center font-bold animate-pulse">
@@ -297,7 +297,7 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setShowCreateMenu(!showCreateMenu)}
-                  className="p-2 lg:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 group"
+                  className="p-2 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group"
                 >
                   <PlusIcon />
                   <span className="sr-only">Crear contenido</span>
@@ -305,11 +305,11 @@ export default function Header() {
 
                 {/* Menú desplegable de crear contenido */}
                 {showCreateMenu && (
-                  <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
+                  <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
                     <div className="space-y-1">
                       <button
                         onClick={() => setShowPostForm(true)}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                       >
                         <PostIcon />
                         <span className="font-medium text-gray-900">Crear publicación</span>
@@ -317,7 +317,7 @@ export default function Header() {
 
                       <button
                         onClick={() => setShowStoryForm(true)}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                       >
                         <StoryIcon />
                         <span className="font-medium text-gray-900">Crear story</span>
@@ -351,11 +351,11 @@ export default function Header() {
 
                 {/* Menú de usuario */}
                 {showUserMenu && (
-                  <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
+                  <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 p-2 min-w-[200px] z-50 animate-fade-in">
                     <div className="space-y-1">
                       <Link
                         href={`/${user?.username}`}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                       >
                         {user?.avatar ? (
                           <Image
@@ -373,7 +373,7 @@ export default function Header() {
                         <div>
                           <Link
                             href={`/${user?.username}`}
-                            className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                            className="font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 transition-colors"
                             onClick={() => setShowUserMenu(false)}
                           >
                             {user?.username || 'Usuario'}
@@ -384,7 +384,7 @@ export default function Header() {
 
                       <Link
                         href="/settings"
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                       >
                         <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -395,7 +395,7 @@ export default function Header() {
 
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors text-red-600"
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-red-600"
                       >
                         <LogoutIcon />
                         <span className="font-medium">Cerrar sesión</span>
@@ -409,7 +409,7 @@ export default function Header() {
             {/* Menú móvil - Optimizado */}
             <div className="md:hidden flex items-center gap-2">
               {/* Notificaciones en móvil */}
-              <Link href="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <Link href="/notifications" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                 <NotificationIcon />
                 {unread > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold animate-pulse">
@@ -420,7 +420,7 @@ export default function Header() {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
                 <MenuIcon />
               </button>
@@ -431,29 +431,29 @@ export default function Header() {
 
       {/* Menú móvil desplegable - Optimizado */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-12 sm:top-14 lg:top-16 left-0 w-full bg-white border-b border-gray-200 z-40 animate-slide-in">
+        <div className="md:hidden fixed top-12 sm:top-14 lg:top-16 left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-200 z-40 animate-slide-in">
           <div className="px-4 py-2 space-y-1">
-            <Link href="/" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <HomeIcon />
               <span>Inicio</span>
             </Link>
 
-            <Link href="/messages" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/messages" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <MessageIcon />
               <span>Mensajes</span>
             </Link>
 
-            <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/explore" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <ExploreIcon />
               <span>Explorar</span>
             </Link>
 
-            <Link href="/reels" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/reels" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <ReelsIcon />
               <span>Reels</span>
             </Link>
 
-            <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/stories" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <StoriesIcon />
               <span>Stories</span>
             </Link>
@@ -474,22 +474,22 @@ export default function Header() {
                 <span>En Vivo</span>
               </div>
               <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded animate-pulse">
-                <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                <span className="w-1.5 h-1.5 bg-white dark:bg-gray-900 rounded-full animate-ping"></span>
                 LIVE
               </span>
             </Link>
 
-            <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/search" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <SearchIcon />
               <span>Buscar</span>
             </Link>
 
-            <Link href="/feed" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/feed" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <FeedIcon />
               <span>Feed</span>
             </Link>
 
-            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <SettingsIcon />
               <span>Configuración</span>
             </Link>
@@ -497,7 +497,7 @@ export default function Header() {
             {/* Botón de crear contenido en móvil */}
             <button
               onClick={() => setShowCreateMenu(!showCreateMenu)}
-              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
               <PlusIcon />
               <span>Crear contenido</span>
@@ -508,7 +508,7 @@ export default function Header() {
               <div className="ml-4 space-y-1">
                 <button
                   onClick={() => setShowPostForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   <PostIcon />
                   <span>Crear publicación</span>
@@ -516,7 +516,7 @@ export default function Header() {
 
                 <button
                   onClick={() => setShowStoryForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   <StoryIcon />
                   <span>Crear story</span>
@@ -524,7 +524,7 @@ export default function Header() {
 
                 <button
                   onClick={() => setShowReelForm(true)}
-                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   <ReelIcon />
                   <span>Crear reel</span>
@@ -532,7 +532,7 @@ export default function Header() {
               </div>
             )}
 
-            <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href={`/${user?.username}`} className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               {user?.avatar ? (
                 <Image
                   src={user.avatar}
@@ -549,7 +549,7 @@ export default function Header() {
               <span>Perfil</span>
             </Link>
 
-            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link href="/settings" className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -559,7 +559,7 @@ export default function Header() {
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors text-red-600"
+              className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-red-600"
             >
               <LogoutIcon />
               <span>Cerrar sesión</span>
@@ -571,13 +571,13 @@ export default function Header() {
       {/* Modal para crear post */}
       {showPostForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">Crear publicación</h2>
                 <button
                   onClick={() => setShowPostForm(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
                   <CloseIcon />
                 </button>
@@ -591,13 +591,13 @@ export default function Header() {
       {/* Modal para crear story */}
       {showStoryForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">Crear story</h2>
                 <button
                   onClick={() => setShowStoryForm(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
                   <CloseIcon />
                 </button>

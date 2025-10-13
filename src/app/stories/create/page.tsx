@@ -164,7 +164,7 @@ export default function CreateStoryPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -212,7 +212,7 @@ export default function CreateStoryPage() {
               {/* Story Type Selection */}
               {!preview && storyType !== 'text' && (
                 <Card className="p-6">
-                  <h3 className="font-semibold text-gray-900 mb-4">Tipo de story</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Tipo de story</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {storyTypes.map((type) => (
                       <button
@@ -237,7 +237,7 @@ export default function CreateStoryPage() {
                 {storyType === 'text' ? (
                   /* Text Story */
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-4">Escribe tu story</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Escribe tu story</h3>
                     <Input
                       value={formData.textContent}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('textContent', e.target.value)}
@@ -245,13 +245,13 @@ export default function CreateStoryPage() {
                       className="w-full resize-none"
                     />
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Estilo de texto
                       </label>
                       <select
                         value={formData.textStyle}
                         onChange={(e) => handleInputChange('textStyle', e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+                        className="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-900 text-gray-900"
                       >
                         <option value="default">Por defecto</option>
                         <option value="bold">Negrita</option>
@@ -263,12 +263,12 @@ export default function CreateStoryPage() {
                 ) : (
                   /* Image/Video Upload */
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-4">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">
                       {storyType === 'image' ? 'Subir imagen' : 'Subir video'}
                     </h3>
 
                     {!preview ? (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                      <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
                         <input
                           ref={fileInputRef}
                           type="file"
@@ -277,7 +277,7 @@ export default function CreateStoryPage() {
                           className="hidden"
                         />
 
-                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                           {storyType === 'image' ? (
                             <ImageIcon className="w-8 h-8 text-gray-400" />
                           ) : (
@@ -285,7 +285,7 @@ export default function CreateStoryPage() {
                           )}
                         </div>
 
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
                           {storyType === 'image'
                             ? 'Toca para seleccionar una imagen'
                             : 'Toca para seleccionar un video'
@@ -335,12 +335,12 @@ export default function CreateStoryPage() {
             {/* Right Side - Story Details */}
             <div>
               <Card className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-6">Detalles de la story</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-6">Detalles de la story</h3>
 
                 <div className="space-y-6">
                   {/* Caption */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Descripción (opcional)
                     </label>
                     <Input
@@ -349,14 +349,14 @@ export default function CreateStoryPage() {
                       placeholder="Añade una descripción..."
                       maxLength={500}
                     />
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {formData.caption.length}/500 caracteres
                     </p>
                   </div>
 
                   {/* Location */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Ubicación (opcional)
                     </label>
                     <div className="relative">
@@ -372,7 +372,7 @@ export default function CreateStoryPage() {
 
                   {/* Story Preview */}
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-3">Vista previa</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Vista previa</h4>
                     <div className="aspect-[9/16] bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center text-white">
                       {storyType === 'text' && formData.textContent ? (
                         <p className="text-center p-4">{formData.textContent}</p>

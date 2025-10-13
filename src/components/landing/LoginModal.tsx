@@ -58,12 +58,12 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
             >
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <X className="w-5 h-5 text-gray-500" />
               </button>
@@ -78,13 +78,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               <h2 className="text-3xl font-bold text-center mb-2 text-gray-900">
                 Iniciar Sesión
               </h2>
-              <p className="text-center text-gray-600 mb-8">
+              <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
                 Bienvenido de vuelta a CircleSfera
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Email
                   </label>
                   <input
@@ -93,13 +93,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="tu@email.com"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Contraseña
                   </label>
                   <div className="relative">
@@ -109,13 +109,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white dark:bg-gray-900 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
                       placeholder="••••••••"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700"
                     >
                       {showPassword ? (
                         <EyeOff className="w-5 h-5" />

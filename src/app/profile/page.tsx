@@ -23,7 +23,7 @@ export default function ProfilePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Redirigiendo...</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Redirigiendo...</h3>
           <p className="text-gray-600">Te estamos llevando a tu perfil</p>
         </div>
       </div>
