@@ -107,7 +107,7 @@ export default function CreateStitchForm({ originalReel, onClose, onSuccess }: C
         onSuccess?.();
         onClose();
       }
-    } catch (error) {
+    } catch {
       toast.error('Error al crear el stitch. Intenta de nuevo.');
       // Error ya logueado por el interceptor de axios
     } finally {
