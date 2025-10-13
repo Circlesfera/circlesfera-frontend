@@ -195,6 +195,49 @@ body {
 }
 
 /* ==========================================
+   🎨 CLASES DE COMPONENTES TEMPORALES
+   TODO: Mover a design-system cuando sea posible
+   ========================================== */
+
+/* Input moderno con tema oscuro */
+.input-modern {
+  @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg
+         bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+         placeholder-gray-500 dark:placeholder-gray-400
+         focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+         transition-colors duration-200;
+}
+
+.input-modern:focus {
+  @apply outline-none;
+}
+
+/* Botón primario */
+.btn-primary {
+  @apply px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600
+         text-white font-medium rounded-lg
+         hover:from-blue-700 hover:to-purple-700
+         focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition-all duration-200 shadow-md hover:shadow-lg;
+}
+
+/* Botón ghost */
+.btn-ghost {
+  @apply px-6 py-3 bg-transparent text-gray-700 dark:text-gray-300
+         font-medium rounded-lg border border-gray-300 dark:border-gray-600
+         hover:bg-gray-50 dark:hover:bg-gray-700
+         focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition-all duration-200;
+}
+
+/* Spinner para botones */
+.spinner {
+  @apply w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin;
+}
+
+/* ==========================================
    ⚠️ NOTAS IMPORTANTES
    ========================================== */
 

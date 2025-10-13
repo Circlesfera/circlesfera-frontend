@@ -254,7 +254,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Editar perfil</h2>
         <button
           onClick={onCancel}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -295,7 +295,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
                 type="button"
                 onClick={handleChangePhotoClick}
                 disabled={avatarUploading}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:text-gray-400 dark:text-gray-500 dark:text-gray-400 disabled:cursor-not-allowed"
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:text-gray-400 dark:text-blue-400 dark:hover:text-blue-300 disabled:cursor-not-allowed"
               >
                 {avatarPreview ? 'Cambiar imagen' : 'Cambiar foto de perfil'}
               </button>
@@ -304,7 +304,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
                   type="button"
                   onClick={handleUploadAvatar}
                   disabled={avatarUploading}
-                  className="text-green-600 hover:text-green-800 text-sm font-medium disabled:text-gray-400 dark:text-gray-500 dark:text-gray-400 disabled:cursor-not-allowed"
+                  className="text-green-600 hover:text-green-800 text-sm font-medium disabled:text-gray-400 dark:text-green-400 dark:hover:text-green-300 disabled:cursor-not-allowed"
                 >
                   {avatarUploading ? 'Subiendo...' : 'Guardar'}
                 </button>
@@ -418,7 +418,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
             {errors.bio && (
               <p className="text-red-500 text-sm">{errors.bio}</p>
             )}
-            <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm ml-auto">
+            <span className="text-gray-500 dark:text-gray-400 text-sm ml-auto">
               {formData.bio.length}/160
             </span>
           </div>
