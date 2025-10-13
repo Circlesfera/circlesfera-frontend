@@ -57,7 +57,7 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100 px-4">
           <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 text-center">
             <div className="mb-6">
               <svg

@@ -206,7 +206,7 @@ export default function PressPage() {
         </div>
 
         {/* Declaración de Misión */}
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-8">
+        <div className="bg-gradient-to-r from-gray-50 dark:from-gray-900 to-blue-50 rounded-2xl p-8">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Declaración de Misión</h3>
           <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
             CircleSfera nació con la visión de crear un espacio digital auténtico donde la creatividad

@@ -43,7 +43,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 via-white dark:via-gray-900 to-blue-50">
         {/* Navegación */}
         <nav className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm dark:shadow-gray-900/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -145,7 +145,7 @@ export default function LandingPage() {
                   <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-2xl opacity-20"></div>
 
                   <div className="relative rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 shadow-2xl">
-                    <div className="rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-3">
+                    <div className="rounded-xl bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100 p-3">
                       <div className="flex justify-center gap-2 mb-3">
                         <div className="w-3 h-3 rounded-full bg-red-500 shadow-sm dark:shadow-gray-900/50"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-sm dark:shadow-gray-900/50"></div>
@@ -265,7 +265,7 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 to-white p-12 shadow-xl"
+              className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 dark:from-gray-900 to-white p-12 shadow-xl"
             >
               <div className="flex flex-col md:flex-row items-center gap-12">
                 <div className="flex-1">
@@ -367,7 +367,7 @@ export default function LandingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t-2 border-gray-200 dark:border-gray-700 bg-gradient-to-b from-white to-gray-50 px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <footer className="border-t-2 border-gray-200 dark:border-gray-700 bg-gradient-to-b from-white to-gray-50 dark:to-gray-900 px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-3 mb-4">
