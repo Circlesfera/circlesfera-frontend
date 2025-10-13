@@ -114,7 +114,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
   }, [conversationId, token]);
 
   // Obtener el otro participante (no el usuario actual)
-  const getOtherParticipant = () => {
+  const getOtherParticipant = useCallback(() => {
     // Si tenemos participants como prop, usarlos
     if (participants && participants.length > 0) {
       return participants.find(p => p._id !== user?._id) || participants[0];
@@ -126,7 +126,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
     }
 
     return null;
-  };
+  }, [participants, user?._id, conversationInfo]);
 
   // Manejar click en el header para ir al perfil
   const handleHeaderClick = () => {

@@ -107,8 +107,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ? ariaLabel || `${loadingText || children} - Cargando`
       : ariaLabel
 
-    // Filtrar props no válidas para el DOM
-    const { gradient: _gradient, ...validProps } = props as Record<string, unknown>
+    // Usar todas las props - React filtra automáticamente las no válidas
+    const validProps = props as Record<string, unknown>
 
     return (
       <button

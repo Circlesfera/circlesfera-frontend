@@ -60,7 +60,7 @@ export default function AnimatedButton({
     disabled: disabled || loading
   };
 
-  // Filtrar props que pueden causar conflictos con motion
+  // Filtrar props que pueden causar conflictos de tipos con motion
   const {
     style: _style,
     onAnimationStart: _onAnimationStart,
