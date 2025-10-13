@@ -10,7 +10,8 @@ import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
-import ThemeSwitcher from '@/components/ThemeSwitcher.v2';
+import ThemeSwitcher from '@/components/ThemeSwitcher.v3';
+import ThemeDebugger from '@/components/ThemeDebugger';
 
 // Iconos SVG optimizados
 const HomeIcon = ({ className }: { className?: string }) => (
@@ -873,6 +874,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
       )}
+
+      {/* Debugger temporal */}
+      <ThemeDebugger />
     </div>
   );
 }
