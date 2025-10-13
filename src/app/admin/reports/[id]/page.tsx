@@ -34,12 +34,6 @@ export default function ReportDetailPage() {
   const [updating, setUpdating] = useState(false)
   const [notes, setNotes] = useState('')
 
-  useEffect(() => {
-    if (reportId) {
-      fetchReport()
-    }
-  }, [reportId, fetchReport])
-
   const fetchReport = async () => {
     try {
       setLoading(true)
@@ -54,11 +48,17 @@ export default function ReportDetailPage() {
       }
 
       setLoading(false)
-    } catch (err) {
+    } catch {
       setError('Error al cargar el reporte')
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (reportId) {
+      fetchReport()
+    }
+  }, [reportId])
 
   const handleUpdateStatus = async (newStatus: string, action?: string | undefined) => {
     if (!report) return
@@ -76,7 +76,7 @@ export default function ReportDetailPage() {
     try {
       setUpdating(true)
 
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         status: newStatus,
         moderatorNotes: notes,
       }
@@ -95,7 +95,7 @@ export default function ReportDetailPage() {
       }
 
       setUpdating(false)
-    } catch (err) {
+    } catch {
       alert('Error al actualizar el reporte')
       setUpdating(false)
     }

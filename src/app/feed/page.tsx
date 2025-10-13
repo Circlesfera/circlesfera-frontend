@@ -236,7 +236,7 @@ export default function HomePage() {
             {/* Stories Section */}
             <Card className="p-6">
               <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
-                {(item) => {
+                {(item: { _id: string; isAddStory?: boolean;[key: string]: unknown }) => {
                   if (item.isAddStory) {
                     return (
                       <div key="add-story" className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
@@ -258,27 +258,28 @@ export default function HomePage() {
                     );
                   }
 
+                  const storyItem = item as { _id: string; avatar?: string; username: string; fullName?: string; storiesCount?: number };
                   return (
-                    <div key={item._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
+                    <div key={storyItem._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
                       <div className="relative p-2">
                         <Avatar
-                          src={item.avatar}
-                          alt={item.username}
+                          src={storyItem.avatar}
+                          alt={storyItem.username}
                           size="xl"
-                          fallback={item.fullName || item.username}
+                          fallback={storyItem.fullName || storyItem.username}
                           variant="story"
                           interactive
                         />
-                        {item.storiesCount > 1 && (
+                        {(storyItem.storiesCount || 0) > 1 && (
                           <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
                             <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
-                              {item.storiesCount}
+                              {storyItem.storiesCount}
                             </span>
                           </div>
                         )}
                       </div>
                       <span className="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium truncate max-w-16">
-                        {item.username}
+                        {storyItem.username}
                       </span>
                     </div>
                   );
@@ -288,7 +289,7 @@ export default function HomePage() {
 
             {/* Posts Feed */}
             <AnimatedPostList posts={posts || []}>
-              {(post) => (
+              {(post: { _id: string; user: { _id: string; username: string; avatar?: string; fullName?: string }; type: string; content: { images?: Array<{ url: string }>; video?: { url: string }; text?: string }; caption: string; likes: Array<unknown>; comments: Array<unknown> }) => (
                 <PostCard
                   key={post._id}
                   post={{
