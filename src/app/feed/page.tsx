@@ -350,8 +350,8 @@ export default function HomePage() {
                     }}
                     className="animate-fade-in"
                   />
-                )
-              }
+                );
+              }}
             </AnimatedPostList>
 
             {/* Infinite Scroll Trigger */}
