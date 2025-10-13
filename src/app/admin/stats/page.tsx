@@ -12,8 +12,16 @@ import {
 } from 'lucide-react'
 import { getReportStats } from '@/services/reportService'
 
+interface StatsData {
+  total: number;
+  byStatus: Record<string, number>;
+  byReason: Record<string, number>;
+  byContentType: Record<string, number>;
+  averageResolutionTime: string;
+}
+
 export default function StatsPage() {
-  const [stats, setStats] = useState<any>(null)
+  const [stats, setStats] = useState<StatsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -40,7 +48,7 @@ export default function StatsPage() {
 
         // Convertir arrays de byReason a objeto
         if (Array.isArray(statsData.byReason)) {
-          statsData.byReason.forEach((item: any) => {
+          statsData.byReason.forEach((item: { _id: string; count: number }) => {
             processedStats.byReason[item._id] = item.count
             processedStats.total += item.count
           })
@@ -48,21 +56,21 @@ export default function StatsPage() {
 
         // Convertir arrays de byContentType a objeto
         if (Array.isArray(statsData.byContentType)) {
-          statsData.byContentType.forEach((item: any) => {
+          statsData.byContentType.forEach((item: { _id: string; count: number }) => {
             processedStats.byContentType[item._id] = item.count
           })
         }
 
         // Calcular total desde byStatus si no hay byReason
         if (processedStats.total === 0 && statsData.byStatus) {
-          processedStats.total = Object.values(statsData.byStatus).reduce((sum: number, val: any) => sum + val, 0)
+          processedStats.total = Object.values(statsData.byStatus).reduce((sum: number, val: number) => sum + val, 0)
         }
 
         setStats(processedStats)
       }
 
       setLoading(false)
-    } catch (err) {
+    } catch {
       setError('Error al cargar estadísticas')
       setLoading(false)
     }
@@ -189,7 +197,7 @@ export default function StatsPage() {
             <span>Reportes por Razón</span>
           </h2>
           <div className="space-y-3">
-            {stats.byReason && Object.entries(stats.byReason).map(([reason, count]: [string, any]) => {
+            {stats.byReason && Object.entries(stats.byReason).map(([reason, count]: [string, number]) => {
               const percentage = (count / stats.total) * 100
               return (
                 <div key={reason}>
@@ -220,7 +228,7 @@ export default function StatsPage() {
             <span>Por Tipo de Contenido</span>
           </h2>
           <div className="space-y-3">
-            {stats.byContentType && Object.entries(stats.byContentType).map(([type, count]: [string, any]) => {
+            {stats.byContentType && Object.entries(stats.byContentType).map(([type, count]: [string, number]) => {
               const percentage = (count / stats.total) * 100
               return (
                 <div key={type}>
@@ -250,7 +258,7 @@ export default function StatsPage() {
             Estado de Reportes
           </h2>
           <div className="space-y-4">
-            {stats.byStatus && Object.entries(stats.byStatus).map(([status, count]: [string, any]) => {
+            {stats.byStatus && Object.entries(stats.byStatus).map(([status, count]: [string, number]) => {
               const statusColors: Record<string, string> = {
                 pending: 'bg-yellow-500',
                 under_review: 'bg-blue-500',

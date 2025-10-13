@@ -88,7 +88,7 @@ export default function ReportDetailPage() {
       const response = await updateReportStatus(reportId, updateData)
 
       if (response.success) {
-        setReport({ ...report, status: newStatus as any, moderatorNotes: notes })
+        setReport({ ...report, status: newStatus, moderatorNotes: notes })
         alert('Estado actualizado exitosamente')
       } else {
         alert('Error al actualizar estado')
@@ -118,7 +118,7 @@ export default function ReportDetailPage() {
   }
 
   const getStatusBadge = (status: string) => {
-    const badges: Record<string, { label: string; color: string; icon: any }> = {
+    const badges: Record<string, { label: string; color: string; icon: React.ComponentType<{ className?: string }> }> = {
       pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
       under_review: { label: 'En Revisión', color: 'bg-blue-100 text-blue-800', icon: Flag },
       resolved: { label: 'Resuelto', color: 'bg-green-100 text-green-800', icon: CheckCircle },
@@ -136,7 +136,7 @@ export default function ReportDetailPage() {
   }
 
   const getContentIcon = (type: string) => {
-    const icons: Record<string, any> = {
+    const icons: Record<string, React.ComponentType<{ className?: string }>> = {
       post: ImageIcon,
       reel: Video,
       story: Video,

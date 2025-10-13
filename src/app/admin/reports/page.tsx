@@ -69,12 +69,13 @@ export default function ReportsPage() {
 
   useEffect(() => {
     fetchReports()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, typeFilter, reasonFilter, page])
 
   const fetchReports = async () => {
     try {
       setLoading(true)
-      const params: any = { page, limit: 20 }
+      const params: Record<string, string | number> = { page, limit: 20 }
 
       if (statusFilter !== 'all') params.status = statusFilter
       if (typeFilter !== 'all') params.contentType = typeFilter
@@ -89,7 +90,7 @@ export default function ReportsPage() {
       }
 
       setLoading(false)
-    } catch (err) {
+    } catch {
       setError('Error al cargar reportes')
       setLoading(false)
     }
