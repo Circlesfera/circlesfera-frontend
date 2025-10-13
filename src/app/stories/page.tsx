@@ -114,8 +114,7 @@ export default function StoriesPage() {
                 Crea tu primera story para comenzar a compartir momentos con tus amigos.
               </p>
               <Button
-                variant="primary"
-                gradient
+                variant="gradient"
                 size="lg"
                 onClick={() => router.push('/stories/create')}
                 className="w-full"
@@ -135,9 +134,8 @@ export default function StoriesPage() {
                       alt="Tu story"
                       size="xl"
                       fallback={user?.fullName || user?.username || 'Tú'}
+                      variant="primary"
                       interactive
-                      ring
-                      ringColor="blue"
                     />
                     <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center border-2 border-white">
                       <Plus className="w-4 h-4 text-white" />
@@ -181,9 +179,8 @@ export default function StoriesPage() {
                             alt={userWithStories.username}
                             size="lg"
                             fallback={userWithStories.fullName || userWithStories.username}
+                            variant="story"
                             interactive
-                            ring={true}
-                            ringColor="purple"
                           />
                           {userWithStories.storiesCount > 1 && (
                             <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">

@@ -246,9 +246,8 @@ export default function HomePage() {
                             alt="Tu historia"
                             size="xl"
                             fallback={user?.fullName || user?.username || 'Tú'}
+                            variant="primary"
                             interactive
-                            ring
-                            ringColor="blue"
                           />
                           <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center border-2 border-white">
                             <PlusIcon />
@@ -267,9 +266,8 @@ export default function HomePage() {
                           alt={item.username}
                           size="xl"
                           fallback={item.fullName || item.username}
+                          variant="story"
                           interactive
-                          ring={true}
-                          ringColor="purple"
                         />
                         {item.storiesCount > 1 && (
                           <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
@@ -383,8 +381,7 @@ export default function HomePage() {
                   </p>
                   <div className="space-y-3">
                     <Button
-                      variant="primary"
-                      gradient
+                      variant="gradient"
                       size="lg"
                       leftIcon={<PlusIcon />}
                       className="w-full"

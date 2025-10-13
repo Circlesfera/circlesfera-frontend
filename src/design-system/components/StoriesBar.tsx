@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Card from './Card';
-import Avatar from './Avatar';
+import { Avatar } from '../Avatar';
 import { cn } from '@/utils/cn';
 
 // Tipo simplificado para Stories en el design system
@@ -87,9 +87,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
                 alt="Tu historia"
                 size="xl"
                 fallback={currentUser.fullName || currentUser.username}
+                variant="primary"
                 interactive
-                ring
-                ringColor="blue"
               />
               <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center border-2 border-white group-hover:scale-110 transition-transform duration-200">
                 <PlusIcon />
@@ -113,9 +112,8 @@ const StoriesBar: React.FC<StoriesBarProps> = ({
                 alt={user.username}
                 size="xl"
                 fallback={user.fullName || user.username}
+                variant={user.hasUnviewedStories ? "story" : "default"}
                 interactive
-                ring={user.hasUnviewedStories}
-                ringColor="purple"
               />
 
               {/* Story count indicator */}
