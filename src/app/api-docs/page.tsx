@@ -156,7 +156,7 @@ export default function APIDocsPage() {
               </p>
               <div className="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
                 <div>curl -X GET https://api.circlesfera.com/posts/feed \</div>
-                <div className="ml-4">-H "Authorization: Bearer {"<"}tu_token{">"}"</div>
+                <div className="ml-4">-H &quot;Authorization: Bearer &#123;&lt;tu_token&gt;&#125;&quot;</div>
               </div>
             </div>
           </div>

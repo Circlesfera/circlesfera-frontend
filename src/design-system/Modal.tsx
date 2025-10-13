@@ -75,7 +75,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
     children,
     ...props
   }, ref) => {
-    const modalRef = (ref as React.RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null)
+    const internalRef = useRef<HTMLDivElement>(null)
+    const modalRef = (ref as React.RefObject<HTMLDivElement>) || internalRef
     const titleId = `modal-title-${Math.random().toString(36).substr(2, 9)}`
     const descId = `modal-desc-${Math.random().toString(36).substr(2, 9)}`
 
