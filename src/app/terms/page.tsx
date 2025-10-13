@@ -153,7 +153,7 @@ export default function TermsPage() {
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Limitación de Responsabilidad</h3>
           <div className="text-gray-700 dark:text-gray-300 space-y-4">
             <p>
-              CircleSfera se proporciona "tal como está" sin garantías de ningún tipo.
+              CircleSfera se proporciona &quot;tal como está&quot; sin garantías de ningún tipo.
               No garantizamos que el servicio esté libre de errores o interrupciones.
             </p>
             <p>
