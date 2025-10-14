@@ -159,3 +159,112 @@ export const checkUsernameAvailability = async (username: string): Promise<{ ava
   const res = await api.get(`/auth/check-username/${encodeURIComponent(username)}`);
   return res.data;
 };
+
+// Funciones específicas para administración de usuarios
+export interface AdminUser {
+  _id: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  fullName?: string;
+  bio?: string;
+  role: 'user' | 'moderator' | 'admin';
+  isVerified: boolean;
+  isActive: boolean;
+  isBanned: boolean;
+  banReason?: string;
+  banExpiresAt?: string;
+  createdAt: string;
+  lastLoginAt?: string;
+  postsCount: number;
+  followersCount: number;
+  followingCount: number;
+  reportsCount: number;
+  violationsCount: number;
+}
+
+export interface AdminUsersResponse {
+  users: AdminUser[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}
+
+export const getAdminUsers = async (params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: string;
+  status?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}): Promise<AdminUsersResponse> => {
+  const queryParams = new URLSearchParams();
+
+  if (params?.page) queryParams.append('page', params.page.toString());
+  if (params?.limit) queryParams.append('limit', params.limit.toString());
+  if (params?.search) queryParams.append('search', params.search);
+  if (params?.role) queryParams.append('role', params.role);
+  if (params?.status) queryParams.append('status', params.status);
+  if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
+  if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
+
+  const res = await api.get(`/admin/users?${queryParams.toString()}`);
+  return res.data;
+};
+
+export const updateUserRole = async (userId: string, role: 'user' | 'moderator' | 'admin'): Promise<AdminUser> => {
+  const res = await api.put(`/admin/users/${userId}/role`, { role });
+  return res.data.user;
+};
+
+export const banUser = async (userId: string, reason: string, duration?: number): Promise<AdminUser> => {
+  const res = await api.post(`/admin/users/${userId}/ban`, {
+    reason,
+    duration // duración en días, opcional (permanente si no se especifica)
+  });
+  return res.data.user;
+};
+
+export const unbanUser = async (userId: string): Promise<AdminUser> => {
+  const res = await api.delete(`/admin/users/${userId}/ban`);
+  return res.data.user;
+};
+
+export const verifyUser = async (userId: string): Promise<AdminUser> => {
+  const res = await api.post(`/admin/users/${userId}/verify`);
+  return res.data.user;
+};
+
+export const unverifyUser = async (userId: string): Promise<AdminUser> => {
+  const res = await api.delete(`/admin/users/${userId}/verify`);
+  return res.data.user;
+};
+
+export const suspendUser = async (userId: string, reason: string, duration: number): Promise<AdminUser> => {
+  const res = await api.post(`/admin/users/${userId}/suspend`, {
+    reason,
+    duration // duración en días
+  });
+  return res.data.user;
+};
+
+export const unsuspendUser = async (userId: string): Promise<AdminUser> => {
+  const res = await api.delete(`/admin/users/${userId}/suspend`);
+  return res.data.user;
+};
+
+export const getUserDetails = async (userId: string): Promise<AdminUser> => {
+  const res = await api.get(`/admin/users/${userId}`);
+  return res.data.user;
+};
+
+export const getUserActivity = async (userId: string): Promise<{
+  recentPosts: any[];
+  recentReports: any[];
+  loginHistory: any[];
+}> => {
+  const res = await api.get(`/admin/users/${userId}/activity`);
+  return res.data;
+};
