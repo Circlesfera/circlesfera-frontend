@@ -474,8 +474,8 @@ export default function UsersPage() {
                           key={pageNum}
                           onClick={() => setPagination(prev => ({ ...prev, page: pageNum }))}
                           className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${pagination.page === pageNum
-                              ? 'z-10 bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-600 dark:text-blue-400'
-                              : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-600'
+                            ? 'z-10 bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-600 dark:text-blue-400'
+                            : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-600'
                             }`}
                         >
                           {pageNum}
