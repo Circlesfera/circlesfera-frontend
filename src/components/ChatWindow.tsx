@@ -209,7 +209,14 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
     // Listener para nuevos mensajes
     const handleNewMessage = (message: Message) => {
-      setMessages(prev => [...prev, message]);
+      setMessages(prev => {
+        // Evitar duplicados - verificar si el mensaje ya existe
+        const messageExists = prev.some(msg => msg._id === message._id);
+        if (messageExists) {
+          return prev;
+        }
+        return [...prev, message];
+      });
       // Scroll automático al nuevo mensaje
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -303,28 +310,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
     try {
       await sendTextMessage(conversationId, text.trim(), token);
       setText('');
-      // Agregar el mensaje optimísticamente
-      const newMessage: Message = {
-        _id: Date.now().toString(),
-        conversation: conversationId,
-        sender: {
-          _id: user!._id,
-          username: user!.username,
-          ...(user!.avatar && { avatar: user!.avatar }),
-          ...(user!.fullName && { fullName: user!.fullName })
-        },
-        type: 'text',
-        content: {
-          text: text.trim()
-        },
-        status: 'sent',
-        isEdited: false,
-        isDeleted: false,
-        isForwarded: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, newMessage]);
+      // No agregar optimísticamente - esperar WebSocket para evitar duplicados
       logger.debug('Message sent:', { conversationId });
     } catch (error: unknown) {
       // Logging detallado para debug
