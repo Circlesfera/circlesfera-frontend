@@ -176,7 +176,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             )}
             <div className="flex-1 min-w-0">
               <button
-                onClick={() => window.open(`/profile/${user.username}`, '_blank')}
+                onClick={() => window.open(`/${user.username}`, '_blank')}
                 className="font-semibold text-gray-900 dark:text-gray-100 truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-left"
                 title="Ver perfil de usuario"
               >
