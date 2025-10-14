@@ -94,6 +94,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const publicRoutes = ['/', '/forgot-password', '/reset-password'];
   const isPublicRoute = pathname === '/' || publicRoutes.slice(1).some(route => pathname.startsWith(route));
 
+  // Rutas de admin (tienen su propio layout)
+  const isAdminRoute = pathname.startsWith('/admin');
+
   // Rutas que requieren autenticación
   const protectedRoutes = ['/explore', '/messages', '/notifications', '/profile'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
@@ -124,8 +127,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
     );
   }
 
-  // Si es ruta pública, NO mostrar sidebar/navegación (solo el contenido)
-  if (isPublicRoute) {
+  // Si es ruta pública o de admin, NO mostrar sidebar/navegación (solo el contenido)
+  if (isPublicRoute || isAdminRoute) {
     return <>{children}</>;
   }
 
