@@ -44,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         {/* Sidebar visible durante carga */}
         <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-40">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Contenido principal con loading */}
         <div className="lg:pl-72">
           <main className="py-4 sm:py-6 pb-20 lg:pb-6">
-            <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
+            <div className="mx-auto max-w-none px-3 sm:px-4 lg:px-8">
               <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
                   <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center space-x-3">
@@ -217,7 +217,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main content */}
       <div className="lg:pl-72">
         <main className="py-4 sm:py-6 pb-20 lg:pb-6">
-          <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
+          <div className="mx-auto max-w-none px-3 sm:px-4 lg:px-8">
             {children}
           </div>
         </main>
