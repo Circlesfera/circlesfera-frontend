@@ -50,96 +50,94 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     setIsConnecting(true)
     setError(null)
 
-    // Agregar delay para asegurar que el backend esté listo
-    setTimeout(() => {
-      const socketInstance = io(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/analytics`, {
-        path: '/socket.io',
-        transports: ['websocket', 'polling'],
-        timeout: 20000,
-        forceNew: true
+    // Conectar directamente al servidor de analytics
+    const socketInstance = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000', {
+      path: '/analytics-socket.io',
+      transports: ['websocket', 'polling'],
+      timeout: 20000,
+      forceNew: true
+    })
+
+    socketInstance.on('connect', () => {
+      console.log('Connected to analytics WebSocket')
+      setIsConnected(true)
+      setIsConnecting(false)
+      setError(null)
+      reconnectAttemptsRef.current = 0
+
+      // Unirse a la sala de analytics
+      socketInstance.emit('join-analytics', {
+        userId: user._id,
+        userRole: user.role,
+        timeRange: '24h'
       })
+    })
 
-      socketInstance.on('connect', () => {
-        console.log('Connected to analytics WebSocket')
-        setIsConnected(true)
-        setIsConnecting(false)
-        setError(null)
-        reconnectAttemptsRef.current = 0
+    socketInstance.on('disconnect', (reason) => {
+      console.log('Disconnected from analytics WebSocket:', reason)
+      setIsConnected(false)
+      setIsConnecting(false)
 
-        // Unirse a la sala de analytics
-        socketInstance.emit('join-analytics', {
-          userId: user._id,
-          userRole: user.role,
-          timeRange: '24h'
-        })
-      })
+      // Intentar reconectar si no fue desconexión manual
+      if (reason !== 'io client disconnect' && reconnectAttemptsRef.current < maxReconnectAttempts) {
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000)
+        reconnectAttemptsRef.current++
 
-      socketInstance.on('disconnect', (reason) => {
-        console.log('Disconnected from analytics WebSocket:', reason)
-        setIsConnected(false)
-        setIsConnecting(false)
+        reconnectTimeoutRef.current = setTimeout(() => {
+          console.log(`Attempting to reconnect (${reconnectAttemptsRef.current}/${maxReconnectAttempts})`)
+          connect()
+        }, delay)
+      }
+    })
 
-        // Intentar reconectar si no fue desconexión manual
-        if (reason !== 'io client disconnect' && reconnectAttemptsRef.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000)
-          reconnectAttemptsRef.current++
+    socketInstance.on('connect_error', (err) => {
+      console.error('Analytics WebSocket connection error:', err)
+      setError('Error de conexión con el servidor de analytics')
+      setIsConnecting(false)
 
-          reconnectTimeoutRef.current = setTimeout(() => {
-            console.log(`Attempting to reconnect (${reconnectAttemptsRef.current}/${maxReconnectAttempts})`)
-            connect()
-          }, delay)
-        }
-      })
+      // Intentar reconectar
+      if (reconnectAttemptsRef.current < maxReconnectAttempts) {
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000)
+        reconnectAttemptsRef.current++
 
-      socketInstance.on('connect_error', (err) => {
-        console.error('Analytics WebSocket connection error:', err)
-        setError('Error de conexión con el servidor de analytics')
-        setIsConnecting(false)
+        reconnectTimeoutRef.current = setTimeout(() => {
+          connect()
+        }, delay)
+      }
+    })
 
-        // Intentar reconectar
-        if (reconnectAttemptsRef.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000)
-          reconnectAttemptsRef.current++
+    // Eventos de analytics
+    socketInstance.on('analytics-initial-data', (socketData: AnalyticsSocketData) => {
+      console.log('Received initial analytics data:', socketData)
+      setData(socketData)
+    })
 
-          reconnectTimeoutRef.current = setTimeout(() => {
-            connect()
-          }, delay)
-        }
-      })
+    socketInstance.on('analytics-update', (socketData: AnalyticsSocketData) => {
+      console.log('Received analytics update:', socketData)
+      setData(socketData)
+    })
 
-      // Eventos de analytics
-      socketInstance.on('analytics-initial-data', (socketData: AnalyticsSocketData) => {
-        console.log('Received initial analytics data:', socketData)
-        setData(socketData)
-      })
+    socketInstance.on('analytics-data', (socketData: AnalyticsSocketData) => {
+      console.log('Received analytics data:', socketData)
+      setData(socketData)
+    })
 
-      socketInstance.on('analytics-update', (socketData: AnalyticsSocketData) => {
-        console.log('Received analytics update:', socketData)
-        setData(socketData)
-      })
+    socketInstance.on('analytics-event', (eventData: any) => {
+      console.log('Received analytics event:', eventData)
+      // Aquí puedes manejar eventos específicos en tiempo real
+    })
 
-      socketInstance.on('analytics-data', (socketData: AnalyticsSocketData) => {
-        console.log('Received analytics data:', socketData)
-        setData(socketData)
-      })
+    socketInstance.on('analytics-alert', (alertData: { alerts: AnalyticsAlert[] }) => {
+      console.log('Received analytics alerts:', alertData)
+      setAlerts(prev => [...prev, ...alertData.alerts])
+    })
 
-      socketInstance.on('analytics-event', (eventData: any) => {
-        console.log('Received analytics event:', eventData)
-        // Aquí puedes manejar eventos específicos en tiempo real
-      })
+    socketInstance.on('analytics-error', (errorData: { message: string }) => {
+      console.error('Analytics WebSocket error:', errorData)
+      setError(errorData.message)
+    })
 
-      socketInstance.on('analytics-alert', (alertData: { alerts: AnalyticsAlert[] }) => {
-        console.log('Received analytics alerts:', alertData)
-        setAlerts(prev => [...prev, ...alertData.alerts])
-      })
-
-      socketInstance.on('analytics-error', (errorData: { message: string }) => {
-        console.error('Analytics WebSocket error:', errorData)
-        setError(errorData.message)
-      })
-
-      setSocket(socketInstance)
-    }, 100) // 100ms delay para asegurar que el backend esté listo
+    setSocket(socketInstance)
   }, [user, isConnecting]) // Removido socket para evitar bucle infinito
 
   // Actualizar ref
