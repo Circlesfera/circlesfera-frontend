@@ -175,11 +175,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-900 dark:text-gray-100 truncate text-sm">
+              <button
+                onClick={() => window.open(`/profile/${user.username}`, '_blank')}
+                className="font-semibold text-gray-900 dark:text-gray-100 truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-left"
+                title="Ver perfil de usuario"
+              >
                 {user.displayName || user.username}
-              </p>
+              </button>
               <div className="flex items-center gap-1 mt-1">
-                <div className={`w-2 h-2 rounded-full ${user.role === 'admin' ? 'bg-red-500' : user.role === 'moderator' ? 'bg-blue-500' : 'bg-green-500'} shadow-sm`}></div>
                 <p className="text-xs text-blue-600 dark:text-blue-400 font-medium capitalize">
                   {user.role === 'admin' ? 'Administrador' : user.role === 'moderator' ? 'Moderador' : 'Usuario'}
                 </p>
