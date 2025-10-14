@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import {
   BarChart3,
+  TrendingUp,
   Flag,
   Users,
   Shield,
@@ -89,9 +90,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: Home },
-    { name: 'Reportes', href: '/admin/reports', icon: Flag },
-    { name: 'Estadísticas', href: '/admin/stats', icon: BarChart3 },
     { name: 'Usuarios', href: '/admin/users', icon: Users },
+    { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+    { name: 'Estadísticas', href: '/admin/stats', icon: TrendingUp },
+    { name: 'Reportes', href: '/admin/reports', icon: Flag },
     { name: 'Configuración', href: '/admin/settings', icon: Settings },
   ]
 
