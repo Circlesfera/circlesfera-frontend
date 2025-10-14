@@ -19,8 +19,6 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Wifi,
-  WifiOff,
   Zap,
   Target,
   DollarSign,
@@ -29,8 +27,6 @@ import {
   Server
 } from 'lucide-react'
 import { analyticsService, formatAnalyticsData, type DashboardMetrics, type AnalyticsParams } from '@/services/analyticsService'
-import { useAnalyticsSocket } from '@/hooks/useAnalyticsSocket'
-import { AnalyticsAlerts } from '@/components/analytics/AnalyticsAlerts'
 
 export default function AnalyticsDashboard() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
@@ -38,42 +34,13 @@ export default function AnalyticsDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [timeRange, setTimeRange] = useState<AnalyticsParams['timeRange']>('24h')
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
-  const [useWebSocket, setUseWebSocket] = useState(true)
 
-  // WebSocket hook
-  const {
-    isConnected,
-    isConnecting,
-    error: socketError,
-    data: socketData,
-    alerts,
-    changeTimeRange: socketChangeTimeRange,
-    clearAlerts
-  } = useAnalyticsSocket()
-
-  // Efecto para manejar datos de WebSocket
+  // Efecto para cargar datos iniciales y manejar cambios de timeRange
   useEffect(() => {
-    if (socketData && socketData.type === 'dashboard-metrics') {
-      setMetrics(socketData.data)
-      setLastRefresh(new Date(socketData.timestamp))
-      setLoading(false)
-      setError(null)
-    }
-  }, [socketData])
-
-  // Efecto para manejar cambios de timeRange en WebSocket
-  useEffect(() => {
-    if (useWebSocket && isConnected && timeRange) {
-      socketChangeTimeRange(timeRange)
-    } else {
-      fetchDashboardData()
-    }
-  }, [timeRange, useWebSocket, isConnected]) // Removido socketChangeTimeRange de dependencias
+    fetchDashboardData()
+  }, [timeRange])
 
   const fetchDashboardData = async () => {
-    // Evitar requests si ya estamos cargando
-    if (loading) return
-
     try {
       setLoading(true)
       setError(null)
@@ -151,8 +118,6 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Alertas de WebSocket */}
-      <AnalyticsAlerts alerts={alerts} onClear={clearAlerts} />
 
       {/* Header */}
       <div className="mb-8">
@@ -166,44 +131,6 @@ export default function AnalyticsDashboard() {
                 Métricas en tiempo real del sistema
               </p>
 
-              {/* Indicador de conexión WebSocket */}
-              <div className="flex items-center space-x-2">
-                {useWebSocket ? (
-                  <div className="flex items-center space-x-2">
-                    {isConnected ? (
-                      <div className="flex items-center space-x-1 text-green-600 dark:text-green-400">
-                        <Wifi className="w-4 h-4" />
-                        <span className="text-sm font-medium">En vivo</span>
-                      </div>
-                    ) : isConnecting ? (
-                      <div className="flex items-center space-x-1 text-yellow-600 dark:text-yellow-400">
-                        <div className="w-4 h-4 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-sm font-medium">Conectando...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-1 text-red-600 dark:text-red-400">
-                        <WifiOff className="w-4 h-4" />
-                        <span className="text-sm font-medium">Desconectado</span>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                    <WifiOff className="w-4 h-4" />
-                    <span className="text-sm font-medium">Modo manual</span>
-                  </div>
-                )}
-
-                <button
-                  onClick={() => setUseWebSocket(!useWebSocket)}
-                  className={`px-3 py-1 text-xs font-medium rounded-full transition-colors duration-200 ${useWebSocket
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
-                    }`}
-                >
-                  {useWebSocket ? 'WebSocket ON' : 'WebSocket OFF'}
-                </button>
-              </div>
             </div>
           </div>
 
@@ -228,17 +155,11 @@ export default function AnalyticsDashboard() {
             <div className="flex space-x-2">
               <button
                 onClick={handleRefresh}
-                disabled={loading || (useWebSocket && isConnected)}
-                className={`px-4 py-2 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 ${useWebSocket && isConnected
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400'
-                  }`}
-                title={useWebSocket && isConnected ? 'WebSocket está activo - datos se actualizan automáticamente' : ''}
+                disabled={loading}
+                className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-lg transition-colors duration-200 flex items-center space-x-2"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                <span>
-                  {useWebSocket && isConnected ? 'Auto' : 'Actualizar'}
-                </span>
+                <span>Actualizar</span>
               </button>
 
               <button
@@ -258,17 +179,14 @@ export default function AnalyticsDashboard() {
             <Clock className="w-4 h-4" />
             <span>
               Última actualización: {formatAnalyticsData.formatDate(lastRefresh.toISOString(), 'time')}
-              {useWebSocket && isConnected && (
-                <span className="ml-2 text-green-600 dark:text-green-400">• En tiempo real</span>
-              )}
             </span>
           </div>
 
-          {/* Mostrar errores de WebSocket si los hay */}
-          {(socketError || error) && (
+          {/* Mostrar errores si los hay */}
+          {error && (
             <div className="flex items-center space-x-2 text-sm text-red-500 dark:text-red-400">
               <AlertTriangle className="w-4 h-4" />
-              <span>{socketError || error}</span>
+              <span>{error}</span>
             </div>
           )}
         </div>
