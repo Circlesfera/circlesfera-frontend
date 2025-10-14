@@ -41,6 +41,8 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const reconnectAttemptsRef = useRef(0)
   const maxReconnectAttempts = 5
+  const connectRef = useRef<() => void>()
+  const disconnectRef = useRef<() => void>()
 
   const connect = useCallback(() => {
     if (socket?.connected || isConnecting || !user) return
@@ -48,7 +50,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     setIsConnecting(true)
     setError(null)
 
-    const socketInstance = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000', {
+    const socketInstance = io(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/analytics`, {
       path: '/socket.io',
       transports: ['websocket', 'polling'],
       timeout: 20000,
@@ -135,7 +137,10 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     })
 
     setSocket(socketInstance)
-  }, [user, socket, isConnecting])
+  }, [user, isConnecting]) // Removido socket para evitar bucle infinito
+
+  // Actualizar ref
+  connectRef.current = connect
 
   const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
@@ -152,7 +157,10 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     setIsConnecting(false)
     setError(null)
     reconnectAttemptsRef.current = 0
-  }, [socket])
+  }, []) // Sin dependencias para evitar bucle infinito
+
+  // Actualizar ref
+  disconnectRef.current = disconnect
 
   const changeTimeRange = useCallback((timeRange: string) => {
     if (socket?.connected && user) {
@@ -180,13 +188,13 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
   // Conectar automáticamente cuando el usuario esté disponible
   useEffect(() => {
     if (user && user.role === 'admin' && !socket) {
-      connect()
+      connectRef.current?.()
     }
 
     return () => {
-      disconnect()
+      disconnectRef.current?.()
     }
-  }, [user, connect, disconnect, socket])
+  }, [user, socket]) // Agregado socket para detectar cambios de estado
 
   // Limpiar timeout al desmontar
   useEffect(() => {
