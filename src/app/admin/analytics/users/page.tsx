@@ -405,9 +405,9 @@ export default function UserAnalyticsPage() {
                     <div key={`${geo._id.country}-${geo._id.region}`} className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-blue-500' :
-                            index === 1 ? 'bg-green-500' :
-                              index === 2 ? 'bg-purple-500' :
-                                index === 3 ? 'bg-orange-500' : 'bg-gray-500'
+                          index === 1 ? 'bg-green-500' :
+                            index === 2 ? 'bg-purple-500' :
+                              index === 3 ? 'bg-orange-500' : 'bg-gray-500'
                           }`}></div>
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                           {geo._id.country}
@@ -418,9 +418,9 @@ export default function UserAnalyticsPage() {
                         <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div
                             className={`h-2 rounded-full ${index === 0 ? 'bg-blue-500' :
-                                index === 1 ? 'bg-green-500' :
-                                  index === 2 ? 'bg-purple-500' :
-                                    index === 3 ? 'bg-orange-500' : 'bg-gray-500'
+                              index === 1 ? 'bg-green-500' :
+                                index === 2 ? 'bg-purple-500' :
+                                  index === 3 ? 'bg-orange-500' : 'bg-gray-500'
                               }`}
                             style={{ width: `${percentage}%` }}
                           ></div>

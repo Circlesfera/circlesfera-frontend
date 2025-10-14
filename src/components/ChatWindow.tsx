@@ -98,7 +98,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
             ...(conversation.lastMessage && {
               lastMessage: {
                 content: conversation.lastMessage.content.text || '',
-                createdAt: conversation.lastMessage.createdAt,
+                createdAt: conversation.lastMessage.createdAt || conversation.lastMessage.timestamp || new Date().toISOString(),
                 senderId: conversation.lastMessage.sender._id
               }
             })
@@ -106,10 +106,20 @@ export default function ChatWindow({ conversationId, conversationName, participa
         }
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       logger.error('Error fetching conversation info:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: errorMessage,
         conversationId
       });
+
+      // Si es un error de autenticación, no mostrar error al usuario
+      if (errorMessage.includes('401') || errorMessage.includes('Token') || errorMessage.includes('Unauthorized')) {
+        logger.debug('Authentication error in conversation info, user will be redirected');
+        return;
+      }
+
+      // Para otros errores, podrías mostrar un mensaje al usuario
+      console.warn('Error obteniendo información de conversación:', errorMessage);
     }
   }, [conversationId, token]);
 
@@ -152,11 +162,21 @@ export default function ChatWindow({ conversationId, conversationName, participa
       setPage(pageNum);
       logger.debug('Chat messages fetched:', { conversationId, page: pageNum, count: response.messages.length });
     } catch (fetchError) {
+      const errorMessage = fetchError instanceof Error ? fetchError.message : 'Unknown error';
       logger.error('Error fetching messages:', {
-        error: fetchError instanceof Error ? fetchError.message : 'Unknown error',
+        error: errorMessage,
         conversationId,
         page: pageNum
       });
+
+      // Si es un error de autenticación, no mostrar error al usuario
+      if (errorMessage.includes('401') || errorMessage.includes('Token') || errorMessage.includes('Unauthorized')) {
+        logger.debug('Authentication error in messages fetch, user will be redirected');
+        return;
+      }
+
+      // Para otros errores, podrías mostrar un mensaje al usuario
+      console.warn('Error obteniendo mensajes:', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -641,10 +661,10 @@ export default function ChatWindow({ conversationId, conversationName, participa
               {/* Timestamp - Optimizado para móvil */}
               <div className={`text-xs mt-1 ${isOwnMessage ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'
                 }`}>
-                {new Date(message.createdAt).toLocaleTimeString('es-ES', {
+                {message.createdAt ? new Date(message.createdAt).toLocaleTimeString('es-ES', {
                   hour: '2-digit',
                   minute: '2-digit'
-                })}
+                }) : ''}
               </div>
             </div>
           </div>

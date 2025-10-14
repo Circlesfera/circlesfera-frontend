@@ -80,8 +80,16 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
   });
 
   const formatTimeAgo = (date: string) => {
+    if (!date) return '';
+
     const now = new Date();
     const messageDate = new Date(date);
+
+    // Verificar si la fecha es válida
+    if (isNaN(messageDate.getTime())) {
+      return '';
+    }
+
     const diffInMinutes = Math.floor((now.getTime() - messageDate.getTime()) / (1000 * 60));
 
     if (diffInMinutes < 1) return 'Ahora';
@@ -279,7 +287,7 @@ export default function ConversationsList({ onSelect, selectedId, onCreateNew }:
                           }`}>
                           {getConversationName(conversation)}
                         </h3>
-                        {conversation.lastMessage && (
+                        {conversation.lastMessage && conversation.lastMessage.createdAt && (
                           <span className={`text-xs flex-shrink-0 ml-2 font-medium ${conversation.unreadCount > 0 ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400'
                             }`}>
                             {formatTimeAgo(conversation.lastMessage.createdAt)}

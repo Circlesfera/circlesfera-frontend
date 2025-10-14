@@ -40,9 +40,17 @@ export const getUnreadCount = async (): Promise<number> => {
 
     return 0;
   } catch (error) {
-    // ✅ IMPLEMENTADO: Logging de error al obtener contador de no leídas
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+    // Si es un error de autenticación, no mostrar error al usuario
+    if (errorMessage.includes('401') || errorMessage.includes('Token') || errorMessage.includes('Unauthorized')) {
+      logger.debug('Authentication error in unread count, user will be redirected');
+      return 0;
+    }
+
+    // Para otros errores, loggear pero no fallar
     logger.error('Error fetching unread count:', {
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: errorMessage
     });
     return 0;
   }

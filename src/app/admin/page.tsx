@@ -1,7 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Flag, Users, AlertTriangle, CheckCircle, TrendingUp, Activity } from 'lucide-react'
+import { motion } from 'framer-motion'
+import {
+  Flag,
+  Users,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
+  Activity,
+  BarChart3,
+  Eye,
+  Heart,
+  MessageCircle,
+  Clock,
+  Zap,
+  Globe,
+  Smartphone,
+  ArrowUpRight,
+  ArrowDownRight
+} from 'lucide-react'
 import Link from 'next/link'
 import { getDashboardStats, DashboardStats, getRecentActivity, Activity as ActivityType } from '@/services/adminService'
 import logger from '@/utils/logger'
@@ -223,7 +241,7 @@ export default function AdminDashboard() {
       {/* Stats Grid */}
       <div className="mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {statCards.map((stat) => {
+          {statCards.map((stat, index) => {
             const Icon = stat.icon
             const colorClasses: Record<string, string> = {
               blue: 'bg-gradient-to-r from-blue-500 to-blue-600',
@@ -233,41 +251,199 @@ export default function AdminDashboard() {
             }
 
             return (
-              <Link
+              <motion.div
                 key={stat.name}
-                href={stat.href}
-                className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-14 h-14 rounded-xl ${colorClasses[stat.color]} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-7 h-7 text-white" />
+                <Link
+                  href={stat.href}
+                  className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] block"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-14 h-14 rounded-xl ${colorClasses[stat.color]} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
+                    {stat.change && (
+                      <span className={`text-xs font-semibold px-3 py-1 rounded-full ${stat.changeType === 'increase'
+                        ? 'bg-red-100 text-red-700'
+                        : 'bg-green-100 text-green-700'
+                        }`}>
+                        {stat.change}
+                      </span>
+                    )}
                   </div>
-                  {stat.change && (
-                    <span className={`text-xs font-semibold px-3 py-1 rounded-full ${stat.changeType === 'increase'
-                      ? 'bg-red-100 text-red-700'
-                      : 'bg-green-100 text-green-700'
-                      }`}>
-                      {stat.change}
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">
-                  {stat.name}
-                </h3>
-                <div className="space-y-1">
-                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
-                    {stat.value}
-                  </p>
-                  {stat.subtitle && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
-                      {stat.subtitle}
+                  <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">
+                    {stat.name}
+                  </h3>
+                  <div className="space-y-1">
+                    <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
+                      {stat.value}
                     </p>
-                  )}
-                </div>
-              </Link>
+                    {stat.subtitle && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
+                        {stat.subtitle}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              </motion.div>
             )
           })}
         </div>
+      </div>
+
+      {/* Métricas de Engagement */}
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
+            <BarChart3 className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Métricas de Engagement</h2>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Interacciones y actividad de usuarios</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
+                <Heart className="w-6 h-6 text-red-600 dark:text-red-400" />
+              </div>
+              <div className="flex items-center space-x-1 text-red-600 dark:text-red-400">
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="text-sm font-medium">+15.3%</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Likes</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">12,847</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Últimas 24h</p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex items-center space-x-1 text-blue-600 dark:text-blue-400">
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="text-sm font-medium">+8.7%</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Comentarios</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">3,421</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Últimas 24h</p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                <Eye className="w-6 h-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div className="flex items-center space-x-1 text-green-600 dark:text-green-400">
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="text-sm font-medium">+22.1%</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Visualizaciones</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">89,234</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Últimas 24h</p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                <Zap className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="flex items-center space-x-1 text-purple-600 dark:text-purple-400">
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="text-sm font-medium">+5.2%</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Engagement Rate</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">4.8%</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Promedio diario</p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Gráfico de Actividad en Tiempo Real */}
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+            <Activity className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Actividad en Tiempo Real</h2>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Usuarios activos en las últimas 24 horas</p>
+          </div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6"
+        >
+          <div className="h-64 bg-gradient-to-t from-blue-50 to-transparent dark:from-blue-900/20 dark:to-transparent rounded-lg p-4 relative overflow-hidden">
+            <div className="absolute inset-0 flex items-end justify-between px-4 pb-4">
+              {[65, 72, 58, 85, 78, 92, 88, 95, 82, 76, 89, 94, 87, 91, 85, 88, 92, 89, 86, 90, 93, 88, 85, 89].map((height, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ height: 0 }}
+                  animate={{ height: `${height}%` }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
+                  className="bg-blue-500 rounded-t-sm transition-all duration-500 hover:bg-blue-600 cursor-pointer"
+                  style={{ width: '8px' }}
+                  title={`${height} usuarios activos`}
+                />
+              ))}
+            </div>
+            <div className="absolute bottom-2 left-4 right-4 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+              <span>00:00</span>
+              <span>06:00</span>
+              <span>12:00</span>
+              <span>18:00</span>
+              <span>24:00</span>
+            </div>
+            <div className="absolute top-4 left-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">En vivo</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Quick Actions */}

@@ -73,16 +73,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (typeof window !== 'undefined') {
       const { token: storedToken, user: storedUser } = getStoredAuthData();
       if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(storedUser);
+        // Validar el token antes de establecerlo
+        validateToken(storedToken, storedUser);
+      } else {
+        setLoading(false);
       }
 
       // Obtener token CSRF para peticiones mutativas
       initializeCsrfToken();
-
-      setLoading(false);
     }
   }, []);
+
+  // Función para validar el token almacenado
+  const validateToken = async (tokenToValidate: string, userToValidate: User) => {
+    try {
+      // Hacer una petición simple para validar el token
+      const response = await api.get('/auth/profile', {
+        headers: { Authorization: `Bearer ${tokenToValidate}` }
+      });
+
+      if (response.data.success) {
+        setToken(tokenToValidate);
+        setUser(userToValidate);
+        logger.debug('Token validated successfully on app initialization');
+      } else {
+        logger.warn('Token validation failed, clearing stored auth data');
+        clearInvalidTokens();
+      }
+    } catch (error) {
+      logger.warn('Token validation failed during app initialization:', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      clearInvalidTokens();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Función para inicializar token CSRF
   const initializeCsrfToken = async () => {
