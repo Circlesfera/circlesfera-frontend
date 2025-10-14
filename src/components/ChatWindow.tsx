@@ -103,7 +103,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
             ...(conversation.lastMessage && {
               lastMessage: {
                 content: conversation.lastMessage.content.text || '',
-                createdAt: conversation.lastMessage.createdAt || conversation.lastMessage.timestamp || new Date().toISOString(),
+                createdAt: conversation.lastMessage.createdAt || new Date().toISOString(),
                 senderId: conversation.lastMessage.sender._id
               }
             })
@@ -906,7 +906,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
               onChange={handleTextChange}
               onKeyPress={handleKeyPress}
               placeholder="Escribe un mensaje..."
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50 dark:bg-gray-800 dark:bg-gray-800/50 hover:bg-white dark:bg-gray-900 transition-all text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400 dark:text-gray-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 resize-none text-base bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 transition-all text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               rows={1}
               disabled={sending}
               style={{ minHeight: '48px', maxHeight: '120px' }}
