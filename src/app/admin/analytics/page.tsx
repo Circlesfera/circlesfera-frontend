@@ -68,9 +68,12 @@ export default function AnalyticsDashboard() {
     } else {
       fetchDashboardData()
     }
-  }, [timeRange, useWebSocket, isConnected, socketChangeTimeRange])
+  }, [timeRange, useWebSocket, isConnected]) // Removido socketChangeTimeRange de dependencias
 
   const fetchDashboardData = async () => {
+    // Evitar requests si ya estamos cargando
+    if (loading) return
+
     try {
       setLoading(true)
       setError(null)
