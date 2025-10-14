@@ -82,7 +82,7 @@ export default function StatsPage() {
         <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 p-12">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando estadísticas...</p>
+            <p className="text-gray-600 dark:text-gray-400">Cargando estadísticas...</p>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function StatsPage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Estadísticas de Reportes
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">
+        <p className="text-gray-600 dark:text-gray-400">
           Análisis y métricas del sistema de moderación
         </p>
       </div>
@@ -152,7 +152,7 @@ export default function StatsPage() {
           <div className="flex items-center justify-between mb-2">
             <Flag className="w-8 h-8 text-blue-500" />
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Total Reportes</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Reportes</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.total}
           </p>
@@ -162,7 +162,7 @@ export default function StatsPage() {
           <div className="flex items-center justify-between mb-2">
             <Clock className="w-8 h-8 text-yellow-500" />
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Pendientes</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Pendientes</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.byStatus?.pending || 0}
           </p>
@@ -172,7 +172,7 @@ export default function StatsPage() {
           <div className="flex items-center justify-between mb-2">
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Resueltos</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Resueltos</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.byStatus?.resolved || 0}
           </p>
@@ -182,7 +182,7 @@ export default function StatsPage() {
           <div className="flex items-center justify-between mb-2">
             <XCircle className="w-8 h-8 text-red-500" />
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Rechazados</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Rechazados</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             {stats.byStatus?.rejected || 0}
           </p>
@@ -209,7 +209,7 @@ export default function StatsPage() {
                       {count}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div
                       className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all"
                       style={{ width: `${percentage}%` }}
@@ -240,7 +240,7 @@ export default function StatsPage() {
                       {count}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div
                       className="bg-gradient-to-r from-green-500 to-teal-500 h-2 rounded-full transition-all"
                       style={{ width: `${percentage}%` }}
@@ -296,7 +296,7 @@ export default function StatsPage() {
           </h2>
           <div className="text-center py-8">
             <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Próximamente: Top contenido reportado
             </p>
           </div>
@@ -304,29 +304,29 @@ export default function StatsPage() {
       </div>
 
       {/* Tendencias */}
-      <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-6">
+      <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-700 p-6">
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center space-x-2">
-          <TrendingUp className="w-5 h-5 text-blue-600" />
+          <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <span>Resumen General</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Tasa de Resolución</p>
-            <p className="text-2xl font-bold text-green-600">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Tasa de Resolución</p>
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
               {stats.total > 0
                 ? Math.round(((stats.byStatus?.resolved || 0) / stats.total) * 100)
                 : 0}%
             </p>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Tiempo Promedio</p>
-            <p className="text-2xl font-bold text-blue-600">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Tiempo Promedio</p>
+            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {stats.averageResolutionTime || '0h'}
             </p>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">En Revisión</p>
-            <p className="text-2xl font-bold text-yellow-600">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">En Revisión</p>
+            <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
               {stats.byStatus?.under_review || 0}
             </p>
           </div>
