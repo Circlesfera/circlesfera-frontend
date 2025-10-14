@@ -92,18 +92,18 @@ export default function LandingPage() {
               <motion.div
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-blue-200 bg-blue-50 mb-8 shadow-sm dark:shadow-gray-900/50">
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-blue-200 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/50 mb-8 shadow-sm dark:shadow-gray-900/50">
                 <span className="text-xl">✨</span>
-                <span className="text-sm text-blue-700 font-semibold">La nueva red social de videos cortos</span>
+                <span className="text-sm text-blue-700 dark:text-blue-300 font-semibold">La red social donde tú decides qué ver y qué compartir. Videos cortos, sin censura y sin filtros.</span>
               </motion.div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-[1.1] text-gray-900 dark:text-gray-100 px-4">
-                Crea, comparte e{' '}
+                Crea,     {' '}
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   inspira
                 </span>
                 <br />
-                con videos cortos
+                y comparte sin límites.
               </h1>
 
               <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-3xl mx-auto mb-10 leading-relaxed px-4">
@@ -197,7 +197,7 @@ export default function LandingPage() {
                   </span>
                 </h2>
                 <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 dark:text-gray-500 max-w-3xl mx-auto px-4">
-                  Todas las herramientas que amas de Instagram, enfocadas en videos cortos y momentos que importan
+                  Todas las herramientas que amas de CircleSfera, enfocadas en videos cortos y momentos que importan
                 </p>
               </motion.div>
             </div>
@@ -265,7 +265,7 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 dark:from-gray-900 to-white p-12 shadow-xl"
+              className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 p-12 shadow-xl"
             >
               <div className="flex flex-col md:flex-row items-center gap-12">
                 <div className="flex-1">
@@ -309,11 +309,11 @@ export default function LandingPage() {
         </section>
 
         {/* CTA */}
-        <section id="cta" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+        <section id="cta" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 -z-10">
-            <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-200 dark:bg-blue-800/30 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200 dark:bg-purple-800/30 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
           </div>
 
           <div className="max-w-5xl mx-auto">
@@ -325,7 +325,7 @@ export default function LandingPage() {
               className="relative rounded-3xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-8 sm:p-12 lg:p-16 text-center shadow-2xl overflow-hidden"
             >
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20"></div>
 
               <div className="relative z-10">
                 <motion.div
@@ -343,7 +343,7 @@ export default function LandingPage() {
                 </h2>
 
                 <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-                  Crea tu cuenta gratis y comienza a compartir tu creatividad con el mundo.
+                  Crea tu cuenta y comienza a compartir tu creatividad con el mundo.
                   Únete a miles de creadores que ya están en CircleSfera.
                 </p>
 
@@ -353,21 +353,16 @@ export default function LandingPage() {
                   onClick={() => setShowRegisterModal(true)}
                   className="px-10 py-4 rounded-xl text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 relative overflow-hidden group"
                 >
-                  <span className="relative z-10">Crear Cuenta Gratis</span>
+                  <span className="relative z-10">Crear Cuenta</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </motion.button>
-
-                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-6 flex items-center justify-center gap-2">
-                  <span className="text-xl">🎁</span>
-                  Gratis para siempre. Sin tarjeta de crédito requerida.
-                </p>
               </div>
             </motion.div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="border-t-2 border-gray-200 dark:border-gray-700 bg-gradient-to-b from-white to-gray-50 dark:to-gray-900 px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <footer className="border-t-2 border-gray-200 dark:border-gray-700 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-3 mb-4">

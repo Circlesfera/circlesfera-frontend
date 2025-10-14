@@ -44,10 +44,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Sidebar visible durante carga */}
-        <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:z-40">
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
+        <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-40">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 px-6 pb-4 shadow-xl">
             <div className="flex h-16 shrink-0 items-center">
               <div className="flex items-center gap-3">
                 <Shield className="w-8 h-8 text-blue-600" />
@@ -67,14 +67,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* Contenido principal con loading */}
-        <main className="lg:ml-64 min-h-screen flex items-start justify-start">
-          <div className="max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
-            <div className="pt-20">
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium text-lg">Verificando permisos de administrador...</p>
+        <div className="lg:pl-72">
+          <main className="py-4 sm:py-6 pb-20 lg:pb-6">
+            <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
+              <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                  <p className="text-gray-600 dark:text-gray-400 font-medium text-lg">Verificando permisos de administrador...</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     )
   }
@@ -92,21 +96,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center space-x-3">
-          <Shield className="w-6 h-6 text-blue-600" />
-          <span className="font-bold text-gray-900 dark:text-gray-100">Panel Admin</span>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <span className="font-bold text-gray-900 dark:text-gray-100 text-lg">CircleSfera</span>
+            <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Admin</p>
+          </div>
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
+          className="p-2 rounded-xl hover:bg-gray-100/80 dark:hover:bg-gray-700/80 transition-all duration-200"
         >
           {sidebarOpen ? (
-            <X className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+            <X className="w-6 h-6 text-gray-600 dark:text-gray-400" />
           ) : (
-            <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400 dark:text-gray-500" />
+            <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400" />
           )}
         </button>
       </div>
@@ -114,41 +123,46 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 z-40 h-screen transition-transform
+          fixed top-0 left-0 z-40 h-screen transition-all duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 w-64 bg-white dark:bg-gray-900 dark:bg-gray-900 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 dark:border-gray-700
+          lg:translate-x-0 w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 shadow-xl
         `}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-900/20 dark:to-purple-900/20">
           <div className="flex items-center space-x-3">
-            <Shield className="w-8 h-8 text-blue-600" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
             <div>
-              <h1 className="font-bold text-gray-900 dark:text-gray-100">CircleSfera</h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">Panel Admin</p>
+              <h1 className="font-bold text-gray-900 dark:text-gray-100 text-lg">CircleSfera</h1>
+              <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Panel Admin</p>
             </div>
           </div>
         </div>
 
         {/* User info */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-900/10 dark:to-purple-900/10">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
               {user.username?.[0]?.toUpperCase() || 'A'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+              <p className="font-semibold text-gray-900 dark:text-gray-100 truncate text-sm">
                 {user.username}
               </p>
-              <p className="text-xs text-blue-600 font-medium capitalize">
-                {user.role === 'admin' ? 'Administrador' : user.role === 'moderator' ? 'Moderador' : 'Usuario'}
-              </p>
+              <div className="flex items-center gap-1 mt-1">
+                <div className={`w-2 h-2 rounded-full ${user.role === 'admin' ? 'bg-red-500' : 'bg-blue-500'} shadow-sm`}></div>
+                <p className="text-xs text-blue-600 dark:text-blue-400 font-medium capitalize">
+                  {user.role === 'admin' ? 'Administrador' : user.role === 'moderator' ? 'Moderador' : 'Usuario'}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {navigation.map((item) => {
             const Icon = item.icon
             const isActive = typeof window !== 'undefined' && window.location.pathname === item.href
@@ -158,10 +172,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.name}
                 href={item.href}
                 className={`
-                  flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all
+                  group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${isActive
-                    ? 'bg-blue-50 text-blue-600 font-medium'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-700 dark:bg-gray-800'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 hover:shadow-md'
                   }
                 `}
                 onClick={() => {
@@ -170,44 +184,49 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   }
                 }}
               >
-                <Icon className="w-5 h-5" />
-                <span>{item.name}</span>
+                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'group-hover:text-blue-600 dark:group-hover:text-blue-400'}`} />
+                <span className="font-medium">{item.name}</span>
+                {isActive && (
+                  <div className="ml-auto w-2 h-2 rounded-full bg-white/80 animate-pulse"></div>
+                )}
               </Link>
             )
           })}
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-t border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-gray-50/50 to-blue-50/50 dark:from-gray-800/50 dark:to-blue-900/10">
           <Link
             href="/feed"
-            className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-all mb-2"
+            className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80 transition-all duration-200 mb-3 group"
           >
-            <Home className="w-5 h-5" />
-            <span>Volver al Inicio</span>
+            <Home className="w-5 h-5 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+            <span className="font-medium">Volver al Inicio</span>
           </Link>
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-all"
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50/80 dark:hover:bg-red-900/20 transition-all duration-200 group"
           >
-            <LogOut className="w-5 h-5" />
-            <span>Cerrar Sesión</span>
+            <LogOut className="w-5 h-5 group-hover:text-red-700" />
+            <span className="font-medium">Cerrar Sesión</span>
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="transition-all duration-300 pt-16 lg:pt-0 lg:ml-64 min-h-screen">
-        <div className="max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </div>
-      </main>
+      <div className="lg:pl-72">
+        <main className="py-4 sm:py-6 pb-20 lg:pb-6">
+          <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-8">
+            {children}
+          </div>
+        </main>
+      </div>
 
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300"
           onClick={() => setSidebarOpen(false)}
         />
       )}
