@@ -282,7 +282,7 @@ export const analyticsService = {
 
     if (params?.timeRange) queryParams.append('timeRange', params.timeRange)
 
-    const response = await api.get(`/admin/analytics/dashboard-debug?${queryParams.toString()}`)
+    const response = await api.get(`/admin/analytics/dashboard?${queryParams.toString()}`)
     return response.data.data
   },
 
