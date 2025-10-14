@@ -85,7 +85,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
 
   // Obtener información de la conversación
   const fetchConversationInfo = useCallback(async () => {
-    if (!token) return;
+    if (!token) {
+      logger.warn('No token available for fetching conversation info', { conversationId });
+      return;
+    }
+
+    logger.debug('Fetching conversation info', { conversationId, hasToken: !!token });
 
     try {
       const response = await getConversations();
@@ -147,7 +152,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
   };
 
   const fetchMessages = useCallback(async (pageNum = 1, append = false) => {
-    if (!token) return;
+    if (!token) {
+      logger.warn('No token available for fetching messages', { conversationId });
+      return;
+    }
+
+    logger.debug('Fetching messages with token', { conversationId, pageNum, hasToken: !!token });
 
     try {
       const response = await getMessages(conversationId, token, pageNum);
