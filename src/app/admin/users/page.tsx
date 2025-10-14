@@ -94,7 +94,7 @@ export default function UsersPage() {
       }
 
       const response: AdminUsersResponse = await getAdminUsers(params)
-      setUsers(response.users)
+      setUsers(response.users || [])
       setPagination(prev => ({
         ...prev,
         total: response.total,
@@ -235,7 +235,7 @@ export default function UsersPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Administradores</p>
-              <p className="text-3xl font-bold text-red-600">{users.filter(u => u.role === 'admin').length}</p>
+              <p className="text-3xl font-bold text-red-600">{users?.filter(u => u.role === 'admin').length || 0}</p>
             </div>
             <Shield className="w-8 h-8 text-red-500" />
           </div>
@@ -245,7 +245,7 @@ export default function UsersPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Moderadores</p>
-              <p className="text-3xl font-bold text-blue-600">{users.filter(u => u.role === 'moderator').length}</p>
+              <p className="text-3xl font-bold text-blue-600">{users?.filter(u => u.role === 'moderator').length || 0}</p>
             </div>
             <UserCheck className="w-8 h-8 text-blue-500" />
           </div>
@@ -255,7 +255,7 @@ export default function UsersPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Verificados</p>
-              <p className="text-3xl font-bold text-green-600">{users.filter(u => u.isVerified).length}</p>
+              <p className="text-3xl font-bold text-green-600">{users?.filter(u => u.isVerified).length || 0}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
