@@ -70,3 +70,66 @@ export const getRecentActivity = async (limit = 20): Promise<RecentActivityRespo
   return response.data;
 };
 
+export interface EngagementMetrics {
+  totalLikes: number;
+  totalComments: number;
+  totalViews: number;
+  totalShares: number;
+  currentPeriod: {
+    likes: number;
+    comments: number;
+    views: number;
+    shares: number;
+  };
+  changes: {
+    likes: number;
+    comments: number;
+    views: number;
+    shares: number;
+  };
+  engagementRate: number;
+  timeRange: string;
+}
+
+export interface EngagementResponse {
+  success: boolean;
+  data: EngagementMetrics;
+}
+
+/**
+ * Obtener métricas de engagement reales
+ */
+export const getEngagementMetrics = async (timeRange = '24h'): Promise<EngagementResponse> => {
+  const response = await api.get('/analytics/engagement', {
+    params: { timeRange }
+  });
+  return response.data;
+};
+
+export interface RealtimeActivityData {
+  hour: number;
+  activeUsers: number;
+  posts: number;
+  reels: number;
+  timestamp: string;
+}
+
+export interface RealtimeActivityResponse {
+  success: boolean;
+  data: {
+    activityData: RealtimeActivityData[];
+    timeRange: string;
+    totalActiveUsers: number;
+  };
+}
+
+/**
+ * Obtener actividad en tiempo real
+ */
+export const getRealtimeActivity = async (hours = 24): Promise<RealtimeActivityResponse> => {
+  const response = await api.get('/analytics/realtime-activity', {
+    params: { hours }
+  });
+  return response.data;
+};
+
