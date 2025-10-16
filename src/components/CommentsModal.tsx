@@ -139,22 +139,62 @@ export default function CommentsModal({
           className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-lg mx-auto max-h-[85vh] flex flex-col overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-            <div className="flex items-center space-x-3">
-              <MessageCircle className="w-5 h-5 text-blue-500" />
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Comentarios</h2>
-              {comments.length > 0 && (
-                <span className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 text-sm px-2 py-1 rounded-full">
-                  {comments.length}
-                </span>
-              )}
+          <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm"></div>
+            <div className="absolute inset-0 opacity-20">
+              <div className="w-full h-full" style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundRepeat: 'repeat'
+              }}></div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-            </button>
+
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                {/* Icon with glow effect */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/20 rounded-full blur-sm"></div>
+                  <div className="relative bg-white/10 backdrop-blur-sm rounded-full p-2 border border-white/20">
+                    <MessageCircle className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col">
+                  <h2 className="text-xl font-bold text-white">Comentarios</h2>
+                  <div className="flex items-center space-x-2">
+                    {comments.length > 0 ? (
+                      <>
+                        <span className="text-white/80 text-sm">
+                          {comments.length} {comments.length === 1 ? 'comentario' : 'comentarios'}
+                        </span>
+                        <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+                        <span className="text-white/60 text-xs">
+                          @{postAuthor}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-white/80 text-sm">Sin comentarios aún</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Close button with improved design */}
+              <button
+                onClick={onClose}
+                className="relative group p-2 hover:bg-white/10 rounded-full transition-all duration-200 border border-white/20 hover:border-white/40"
+              >
+                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 rounded-full transition-colors"></div>
+                <X className="relative w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+              </button>
+            </div>
+
+            {/* Progress bar for loading */}
+            {loading && (
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+                <div className="h-full bg-white/60 animate-pulse rounded-full"></div>
+              </div>
+            )}
           </div>
 
           {/* Post Info */}
@@ -329,7 +369,7 @@ export default function CommentsModal({
             </div>
           )}
         </motion.div>
-      </div>
-    </AnimatePresence>
+      </div >
+    </AnimatePresence >
   );
 }
