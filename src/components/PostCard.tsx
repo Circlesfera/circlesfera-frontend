@@ -543,61 +543,64 @@ export default function PostCard({
           </button>
         </div>
 
-        {/* Likes y Caption combinados */}
-        {(post.likes.length > 0 || post.caption) && (
+        {/* Contador de likes - Primera línea */}
+        {post.likes.length > 0 && (
           <div className="mb-1">
-            {post.likes.length > 0 && (
-              <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm mr-3">
-                {post.likes.length} me gusta
-              </span>
-            )}
-            {post.caption && !isEditing && (
-              <span className="text-gray-900 dark:text-gray-100 text-sm">
-                {post.caption.length > 80 ? (
-                  <>
-                    {post.caption.substring(0, 80)}...
-                    <button
-                      onClick={() => setShowFullCaption(!showFullCaption)}
-                      className="text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 ml-1 font-medium"
-                    >
-                      {showFullCaption ? 'menos' : 'más'}
-                    </button>
-                  </>
-                ) : (
-                  post.caption
-                )}
-              </span>
-            )}
+            <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+              {post.likes.length} {post.likes.length === 1 ? 'me gusta' : 'me gustan'}
+            </span>
+          </div>
+        )}
 
-            {/* Formulario de edición */}
-            {isEditing && (
-              <div className="mt-2">
-                <textarea
-                  value={editCaption}
-                  onChange={(e) => setEditCaption(e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm resize-none"
-                  rows={3}
-                  placeholder="Escribe tu caption..."
-                />
-                <div className="flex space-x-2 mt-2">
+        {/* Caption con username - Segunda línea */}
+        {post.caption && !isEditing && (
+          <div className="mb-1">
+            <span className="text-gray-900 dark:text-gray-100 text-sm">
+              <span className="font-semibold mr-2">{post.user.username}</span>
+              {post.caption.length > 80 ? (
+                <>
+                  {showFullCaption ? post.caption : post.caption.substring(0, 80)}...
                   <button
-                    onClick={handleEditPost}
-                    className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                    onClick={() => setShowFullCaption(!showFullCaption)}
+                    className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 ml-1 font-medium"
                   >
-                    Guardar
+                    {showFullCaption ? 'menos' : 'más'}
                   </button>
-                  <button
-                    onClick={() => {
-                      setIsEditing(false);
-                      setEditCaption(post.caption);
-                    }}
-                    className="px-3 py-1 bg-gray-300 text-gray-700 dark:text-gray-300 text-sm rounded hover:bg-gray-400"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </div>
-            )}
+                </>
+              ) : (
+                post.caption
+              )}
+            </span>
+          </div>
+        )}
+
+        {/* Formulario de edición */}
+        {isEditing && (
+          <div className="mt-2 mb-1">
+            <textarea
+              value={editCaption}
+              onChange={(e) => setEditCaption(e.target.value)}
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm resize-none"
+              rows={3}
+              placeholder="Escribe tu caption..."
+            />
+            <div className="flex space-x-2 mt-2">
+              <button
+                onClick={handleEditPost}
+                className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditCaption(post.caption);
+                }}
+                className="px-3 py-1 bg-gray-300 text-gray-700 dark:text-gray-300 text-sm rounded hover:bg-gray-400"
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         )}
 
