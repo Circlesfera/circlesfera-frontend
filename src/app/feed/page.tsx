@@ -33,6 +33,16 @@ export default function HomePage() {
     removePost
   } = useFeed({ isAuthenticated: !!user && !authLoading });
 
+  // Debug: Log posts cuando cambien
+  useEffect(() => {
+    console.log('🔍 Feed Page - Posts en estado:', {
+      postsCount: posts?.length || 0,
+      posts: posts?.map(p => ({ id: p._id, username: p.user?.username, type: p.type })) || [],
+      loading,
+      hasMore
+    });
+  }, [posts, loading, hasMore]);
+
   const [stories, setStories] = useState<UserWithStories[]>([]);
   const [commentsModal, setCommentsModal] = useState<{
     isOpen: boolean;
@@ -194,7 +204,7 @@ export default function HomePage() {
   return (
     <ProtectedRoute>
       <div className="max-w-4xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Stories Section */}
