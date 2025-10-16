@@ -246,6 +246,12 @@ export const deleteComment = async (commentId: string): Promise<{ success: boole
   return res.data;
 };
 
+// Reportar un comentario
+export const reportComment = async (commentId: string, reason: string, description?: string): Promise<{ success: boolean; message: string }> => {
+  const res = await api.post(`/comments/${commentId}/report`, { reason, description });
+  return res.data;
+};
+
 // Obtener comentarios de un usuario
 export const getUserComments = async (username: string, page = 1, limit = 10): Promise<{
   success: boolean;

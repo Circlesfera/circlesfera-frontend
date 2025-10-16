@@ -3,8 +3,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MessageCircle, Send, Loader2 } from 'lucide-react';
-import { getComments, createComment, Comment } from '@/services/postService';
+import { X, MessageCircle, Send, Loader2, MoreVertical, Edit, Trash2, Flag, Check, X as XIcon } from 'lucide-react';
+import { getComments, createComment, deleteComment, updateComment, reportComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 import { Button } from '@/design-system';
 import logger from '@/utils/logger';
@@ -32,6 +32,12 @@ export default function CommentsModal({
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [editingComment, setEditingComment] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportCommentId, setReportCommentId] = useState<string | null>(null);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
   const commentsEndRef = useRef<HTMLDivElement>(null);
 
   const fetchComments = useCallback(async (pageNum = 1, append = false) => {
@@ -114,6 +120,74 @@ export default function CommentsModal({
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
     return `${Math.floor(diffInSeconds / 86400)}d`;
+  };
+
+  // Función para eliminar comentario
+  const handleDeleteComment = async (commentId: string) => {
+    if (!user) return;
+    
+    try {
+      await deleteComment(commentId);
+      setComments(prev => prev.filter(comment => comment._id !== commentId));
+    } catch (err) {
+      logger.error('Error deleting comment:', err);
+      setError('Error al eliminar el comentario');
+    }
+  };
+
+  // Función para editar comentario
+  const handleEditComment = (comment: Comment) => {
+    setEditingComment(comment._id);
+    setEditText(comment.content);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingComment || !editText.trim()) return;
+
+    try {
+      const response = await updateComment(editingComment, editText);
+      if (response.success) {
+        setComments(prev => prev.map(comment => 
+          comment._id === editingComment 
+            ? { ...comment, content: editText }
+            : comment
+        ));
+        setEditingComment(null);
+        setEditText('');
+      }
+    } catch (err) {
+      logger.error('Error updating comment:', err);
+      setError('Error al actualizar el comentario');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingComment(null);
+    setEditText('');
+  };
+
+  // Función para reportar comentario
+  const handleReportComment = (commentId: string) => {
+    setReportCommentId(commentId);
+    setShowReportModal(true);
+  };
+
+  const handleSubmitReport = async () => {
+    if (!reportCommentId || !reportReason.trim()) return;
+
+    try {
+      await reportComment(reportCommentId, reportReason, reportDescription);
+      setShowReportModal(false);
+      setReportCommentId(null);
+      setReportReason('');
+      setReportDescription('');
+      // Mostrar mensaje de éxito
+      setError('Comentario reportado correctamente');
+      setTimeout(() => setError(''), 3000);
+    } catch (err) {
+      logger.error('Error reporting comment:', err);
+      setError('Error al reportar el comentario');
+    }
   };
 
   if (!isOpen) return null;
@@ -278,17 +352,96 @@ export default function CommentsModal({
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-                        <div className="flex items-baseline space-x-2 mb-1">
-                          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                            {comment.user.username}
-                          </span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {formatTimeAgo(comment.createdAt)}
-                          </span>
+                        <div className="flex items-baseline justify-between mb-1">
+                          <div className="flex items-baseline space-x-2">
+                            <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                              {comment.user.username}
+                            </span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              {formatTimeAgo(comment.createdAt)}
+                            </span>
+                          </div>
+                          
+                          {/* Menú de opciones */}
+                          {user && (comment.user._id === user._id || user.role === 'admin') && (
+                            <div className="relative">
+                              <button
+                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full transition-all"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  // Aquí se abriría un dropdown, por ahora solo mostrar opciones
+                                }}
+                              >
+                                <MoreVertical className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                              </button>
+                            </div>
+                          )}
                         </div>
-                        <p className="text-sm text-gray-900 dark:text-gray-100 break-words leading-relaxed">
-                          {comment.content}
-                        </p>
+                        
+                        {/* Contenido del comentario */}
+                        {editingComment === comment._id ? (
+                          <div className="space-y-2">
+                            <textarea
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                              className="w-full p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                              rows={2}
+                              maxLength={500}
+                            />
+                            <div className="flex items-center justify-end space-x-2">
+                              <button
+                                onClick={handleCancelEdit}
+                                className="p-1 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full transition-colors"
+                              >
+                                <XIcon className="w-4 h-4 text-gray-500" />
+                              </button>
+                              <button
+                                onClick={handleSaveEdit}
+                                disabled={!editText.trim()}
+                                className="p-1 hover:bg-green-100 dark:hover:bg-green-900 rounded-full transition-colors disabled:opacity-50"
+                              >
+                                <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-900 dark:text-gray-100 break-words leading-relaxed">
+                            {comment.content}
+                          </p>
+                        )}
+                        
+                        {/* Botones de acción para el autor del comentario */}
+                        {user && comment.user._id === user._id && editingComment !== comment._id && (
+                          <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => handleEditComment(comment)}
+                              className="flex items-center space-x-1 text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-2 py-1 rounded-full transition-colors"
+                            >
+                              <Edit className="w-3 h-3" />
+                              <span>Editar</span>
+                            </button>
+                            <button
+                              onClick={() => handleDeleteComment(comment._id)}
+                              className="flex items-center space-x-1 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded-full transition-colors"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              <span>Eliminar</span>
+                            </button>
+                          </div>
+                        )}
+                        
+                        {/* Botón de reportar para otros usuarios */}
+                        {user && comment.user._id !== user._id && (
+                          <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => handleReportComment(comment._id)}
+                              className="flex items-center space-x-1 text-xs text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 px-2 py-1 rounded-full transition-colors"
+                            >
+                              <Flag className="w-3 h-3" />
+                              <span>Reportar</span>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -376,7 +529,88 @@ export default function CommentsModal({
             </div>
           )}
         </motion.div>
-      </div >
-    </AnimatePresence >
+      </div>
+
+      {/* Modal de Reporte */}
+      {showReportModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-60 flex items-center justify-center p-4"
+        >
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowReportModal(false)} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Reportar Comentario</h3>
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Motivo del reporte
+                </label>
+                <select
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Selecciona un motivo</option>
+                  <option value="spam">Spam</option>
+                  <option value="harassment">Acoso o bullying</option>
+                  <option value="inappropriate">Contenido inapropiado</option>
+                  <option value="hate_speech">Discurso de odio</option>
+                  <option value="false_info">Información falsa</option>
+                  <option value="other">Otro</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Descripción adicional (opcional)
+                </label>
+                <textarea
+                  value={reportDescription}
+                  onChange={(e) => setReportDescription(e.target.value)}
+                  placeholder="Proporciona más detalles sobre el problema..."
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  rows={3}
+                  maxLength={500}
+                />
+              </div>
+
+              <div className="flex items-center justify-end space-x-3 pt-4">
+                <Button
+                  onClick={() => setShowReportModal(false)}
+                  variant="ghost"
+                  size="sm"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleSubmitReport}
+                  disabled={!reportReason.trim()}
+                  variant="primary"
+                  size="sm"
+                >
+                  Reportar
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
