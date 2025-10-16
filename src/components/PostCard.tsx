@@ -320,7 +320,7 @@ export default function PostCard({
         } else {
           return (
             <div
-              className={`relative overflow-hidden ${aspectRatioClass} bg-black cursor-pointer group`}
+              className={`relative overflow-hidden ${aspectRatioClass} bg-black cursor-pointer`}
               onClick={() => {
                 if (onPostClick) {
                   onPostClick(post._id, post.user.username);
@@ -333,16 +333,8 @@ export default function PostCard({
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
                 fill
-                className="object-cover transition-opacity group-hover:opacity-90"
+                className="object-cover"
               />
-              {/* Indicador de clic para ampliar */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
-                <div className="bg-white dark:bg-gray-900 dark:bg-gray-900/90 rounded-full p-3 backdrop-blur-sm">
-                  <svg className="w-6 h-6 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                  </svg>
-                </div>
-              </div>
             </div>
           );
         }
@@ -537,14 +529,14 @@ export default function PostCard({
 
             <button
               onClick={() => onComment?.(post._id, post.user.username, post.content?.images?.[0]?.url)}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-all duration-200 group hover:scale-105"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
             >
               <CommentIcon />
             </button>
 
             <button
               onClick={() => onShare?.(post._id, `${window.location.origin}/${post.user.username}/post/${post._id}`, post.caption)}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-all duration-200 group hover:scale-105"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
             >
               <ShareIcon />
             </button>
@@ -552,7 +544,7 @@ export default function PostCard({
 
           <button
             onClick={() => setIsSaved(!isSaved)}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-all duration-200 group hover:scale-105"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors duration-200"
           >
             <BookmarkIcon filled={isSaved} />
           </button>
