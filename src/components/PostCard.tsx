@@ -320,14 +320,7 @@ export default function PostCard({
         } else {
           return (
             <div
-              className={`relative overflow-hidden ${aspectRatioClass} bg-black cursor-pointer`}
-              onClick={() => {
-                if (onPostClick) {
-                  onPostClick(post._id, post.user.username);
-                } else {
-                  setShowImageModal(true);
-                }
-              }}
+              className={`relative overflow-hidden ${aspectRatioClass} bg-black`}
             >
               <SimpleImage
                 src={post.content.images?.[0]?.url || ''}
@@ -396,7 +389,7 @@ export default function PostCard({
       animate={isInView ? fadeInUp.animate : fadeInUp.initial}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={cardAnimation.whileHover}
-      className="animate-fade-in"
+      className="animate-fade-in bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
     >
       {/* Header del usuario */}
       <div className="flex items-center justify-between px-6 py-4">
@@ -522,9 +515,9 @@ export default function PostCard({
       {renderContent()}
 
       {/* Acciones */}
-      <div className="px-6 py-1">
-        <div className="flex items-center justify-between mb-1">
-          <div className="flex items-center space-x-4">
+      <div className="px-6 py-4">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center space-x-6">
             <LikeButton postId={post._id} initialLiked={likedByUser} {...(onLike && { onLikeAction: onLike })} />
 
             <button

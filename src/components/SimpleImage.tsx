@@ -63,8 +63,9 @@ export default function SimpleImage({
         alt={alt}
         className={cn(
           'object-cover transition-opacity duration-300',
-          fill ? 'w-full h-full' : '',
-          isLoading ? 'opacity-0' : 'opacity-100'
+          fill ? 'w-full h-full' : 'w-full h-full',
+          isLoading ? 'opacity-0' : 'opacity-100',
+          className // Aplicar las clases del contenedor al img también
         )}
         style={fill ? { width: '100%', height: '100%' } : undefined}
         onLoad={handleLoad}
