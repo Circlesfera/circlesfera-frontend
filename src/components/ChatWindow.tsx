@@ -474,6 +474,12 @@ export default function ChatWindow({ conversationId, conversationName, participa
   };
 
   const renderMessage = (message: Message) => {
+    // Verificar que el mensaje tenga un remitente válido
+    if (!message.sender) {
+      console.warn('Mensaje sin remitente válido:', message);
+      return null;
+    }
+
     const isOwnMessage = message.sender._id === user?._id;
     const isTextMessage = message.type === 'text';
     const isImageMessage = message.type === 'image';
