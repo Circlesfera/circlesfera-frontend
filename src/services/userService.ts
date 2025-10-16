@@ -261,9 +261,9 @@ export const getUserDetails = async (userId: string): Promise<AdminUser> => {
 };
 
 export const getUserActivity = async (userId: string): Promise<{
-  recentPosts: any[];
-  recentReports: any[];
-  loginHistory: any[];
+  recentPosts: Record<string, unknown>[];
+  recentReports: Record<string, unknown>[];
+  loginHistory: Record<string, unknown>[];
 }> => {
   const res = await api.get(`/admin/users/${userId}/activity`);
   return res.data;

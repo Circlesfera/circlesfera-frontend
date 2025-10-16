@@ -32,7 +32,7 @@ export interface ContentMetric {
   comments: number
   views: number
   totalEngagement: number
-  content?: any
+  content?: Record<string, unknown>
 }
 
 export interface GrowthData {
@@ -230,8 +230,8 @@ export interface PlatformRetentionData {
 }
 
 export interface PeriodComparison {
-  current: any
-  previous: any
+  current: Record<string, unknown>
+  previous: Record<string, unknown>
   changes: {
     [key: string]: {
       value: number
@@ -249,13 +249,13 @@ export interface CustomMetric {
 export interface CustomMetricsRequest {
   metrics: CustomMetric[]
   timeRange?: '7d' | '30d' | '90d'
-  filters?: Record<string, any>
+  filters?: Record<string, unknown>
   groupBy?: 'daily' | 'weekly' | 'monthly'
 }
 
 export interface CustomMetricsResponse {
   [metricName: string]: {
-    data: any
+    data: Record<string, unknown>
     error?: string
     timestamp: string
   }
@@ -477,7 +477,7 @@ export const formatAnalyticsData = {
    * Generar colores para gráficos
    */
   generateChartColors: (count: number): string[] => {
-    const colors = [
+    const colors: string[] = [
       '#3B82F6', // blue-500
       '#EF4444', // red-500
       '#10B981', // emerald-500
@@ -490,9 +490,12 @@ export const formatAnalyticsData = {
       '#6B7280'  // gray-500
     ]
 
-    const result = []
+    const result: string[] = []
     for (let i = 0; i < count; i++) {
-      result.push(colors[i % colors.length])
+      const color = colors[i % colors.length]
+      if (color) {
+        result.push(color)
+      }
     }
     return result
   }

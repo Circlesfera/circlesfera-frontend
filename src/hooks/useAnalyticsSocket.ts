@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/useAuth'
 
 interface AnalyticsSocketData {
   type: string
-  data: any
+  data: Record<string, unknown>
   timestamp: string
   timeRange?: string
 }
@@ -13,7 +13,7 @@ interface AnalyticsAlert {
   type: string
   message: string
   severity: 'info' | 'warning' | 'error'
-  data?: any
+  data?: Record<string, unknown>
 }
 
 interface UseAnalyticsSocketReturn {
@@ -26,7 +26,7 @@ interface UseAnalyticsSocketReturn {
   connect: () => void
   disconnect: () => void
   changeTimeRange: (timeRange: string) => void
-  requestData: (dataType: string, params?: any) => void
+  requestData: (dataType: string, params?: Record<string, unknown>) => void
   clearAlerts: () => void
 }
 
@@ -41,8 +41,8 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const reconnectAttemptsRef = useRef(0)
   const maxReconnectAttempts = 5
-  const connectRef = useRef<() => void>()
-  const disconnectRef = useRef<() => void>()
+  const connectRef = useRef<(() => void) | undefined>(undefined)
+  const disconnectRef = useRef<(() => void) | undefined>(undefined)
 
   const connect = useCallback(() => {
     if (socket?.connected || isConnecting || !user) return
@@ -85,7 +85,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
 
         reconnectTimeoutRef.current = setTimeout(() => {
           console.log(`Attempting to reconnect (${reconnectAttemptsRef.current}/${maxReconnectAttempts})`)
-          connect()
+          connectRef.current?.()
         }, delay)
       }
     })
@@ -101,7 +101,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
         reconnectAttemptsRef.current++
 
         reconnectTimeoutRef.current = setTimeout(() => {
-          connect()
+          connectRef.current?.()
         }, delay)
       }
     })
@@ -122,7 +122,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
       setData(socketData)
     })
 
-    socketInstance.on('analytics-event', (eventData: any) => {
+    socketInstance.on('analytics-event', (eventData: Record<string, unknown>) => {
       console.log('Received analytics event:', eventData)
       // Aquí puedes manejar eventos específicos en tiempo real
     })
@@ -172,7 +172,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     }
   }, [socket, user])
 
-  const requestData = useCallback((dataType: string, params: any = {}) => {
+  const requestData = useCallback((dataType: string, params: Record<string, unknown> = {}) => {
     if (socket?.connected && user) {
       socket.emit('request-analytics-data', {
         userId: user._id,

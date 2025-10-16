@@ -80,6 +80,9 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false)
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [showSecrets, setShowSecrets] = useState(false)
+  const [showUserManagement, setShowUserManagement] = useState(false)
+  const [showGlobalSettings, setShowGlobalSettings] = useState(false)
+  const [showSecuritySettings, setShowSecuritySettings] = useState(false)
 
   useEffect(() => {
     fetchSettings()
@@ -117,13 +120,30 @@ export default function AdminSettingsPage() {
     }
   }
 
+  const handleToggleUserManagement = () => {
+    setShowUserManagement(!showUserManagement)
+  }
+
+  const handleToggleGlobalSettings = () => {
+    setShowGlobalSettings(!showGlobalSettings)
+  }
+
+  const handleToggleSecuritySettings = () => {
+    setShowSecuritySettings(!showSecuritySettings)
+  }
+
   const handleExportSettings = () => {
-    const dataStr = JSON.stringify(settings, null, 2)
+    const exportData = {
+      timestamp: new Date().toISOString(),
+      settings: settings,
+      version: '1.0.0'
+    }
+    const dataStr = JSON.stringify(exportData, null, 2)
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(dataBlob)
     const link = document.createElement('a')
     link.href = url
-    link.download = 'circlesfera-settings.json'
+    link.download = `system-settings-${new Date().toISOString().split('T')[0]}.json`
     link.click()
     URL.revokeObjectURL(url)
   }
@@ -135,17 +155,24 @@ export default function AdminSettingsPage() {
       reader.onload = (e) => {
         try {
           const importedSettings = JSON.parse(e.target?.result as string)
-          setSettings(importedSettings)
-          alert('Configuración importada exitosamente')
+          setSettings(importedSettings.settings || importedSettings)
+          console.log('Configuración importada:', importedSettings)
         } catch (error) {
-          alert('Error al importar configuración')
+          console.error('Error importing settings:', error)
         }
       }
       reader.readAsText(file)
     }
   }
 
-  const updateSetting = (key: keyof SystemSettings, value: any) => {
+  const handleDeleteAllData = () => {
+    if (confirm('¿Estás seguro de que quieres eliminar todos los datos? Esta acción no se puede deshacer.')) {
+      console.log('Eliminando todos los datos...')
+      // Aquí implementarías la lógica para eliminar datos
+    }
+  }
+
+  const updateSetting = (key: keyof SystemSettings, value: string | number | boolean | string[]) => {
     setSettings(prev => ({ ...prev, [key]: value }))
   }
 
@@ -176,6 +203,84 @@ export default function AdminSettingsPage() {
             </p>
           </div>
           <div className="flex items-center space-x-3">
+            {/* Botón de gestión de usuarios */}
+            <button
+              onClick={handleToggleUserManagement}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showUserManagement
+                ? 'bg-green-50 border-green-200 text-green-700'
+                : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                }`}
+              title="Gestión de usuarios"
+            >
+              <Users className="w-4 h-4" />
+            </button>
+
+            {/* Botón de configuración global */}
+            <button
+              onClick={handleToggleGlobalSettings}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showGlobalSettings
+                ? 'bg-purple-50 border-purple-200 text-purple-700'
+                : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                }`}
+              title="Configuración global"
+            >
+              <Globe className="w-4 h-4" />
+            </button>
+
+            {/* Botón de configuración de seguridad */}
+            <button
+              onClick={handleToggleSecuritySettings}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showSecuritySettings
+                ? 'bg-red-50 border-red-200 text-red-700'
+                : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                }`}
+              title="Configuración de seguridad"
+            >
+              <Lock className="w-4 h-4" />
+            </button>
+
+            {/* Botón de mostrar/ocultar secretos */}
+            <button
+              onClick={() => setShowSecrets(!showSecrets)}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showSecrets
+                ? 'bg-yellow-50 border-yellow-200 text-yellow-700'
+                : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                }`}
+              title={showSecrets ? "Ocultar secretos" : "Mostrar secretos"}
+            >
+              {showSecrets ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+
+            {/* Botón de exportar configuración */}
+            <button
+              onClick={handleExportSettings}
+              className="px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors"
+              title="Exportar configuración"
+            >
+              <Download className="w-4 h-4" />
+            </button>
+
+            {/* Botón de importar configuración */}
+            <label className="px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer" title="Importar configuración">
+              <Upload className="w-4 h-4" />
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleImportSettings}
+                className="hidden"
+              />
+            </label>
+
+            {/* Botón de eliminar datos */}
+            <button
+              onClick={handleDeleteAllData}
+              className="px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+              title="Eliminar todos los datos"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+
+            {/* Botón avanzado */}
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
               className={`px-4 py-2 rounded-lg border transition-colors ${showAdvanced
@@ -186,6 +291,8 @@ export default function AdminSettingsPage() {
               <SettingsIcon className="w-4 h-4 mr-2 inline" />
               Avanzado
             </button>
+
+            {/* Botón de guardar */}
             <button
               onClick={handleSaveSettings}
               disabled={saving}

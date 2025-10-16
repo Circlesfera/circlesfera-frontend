@@ -17,7 +17,7 @@ interface AnalyticsAlert {
   type: string
   message: string
   severity: 'info' | 'warning' | 'error'
-  data?: any
+  data?: Record<string, unknown>
 }
 
 interface AnalyticsAlertsProps {

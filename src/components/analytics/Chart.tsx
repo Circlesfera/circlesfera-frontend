@@ -3,8 +3,15 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
+interface ChartDataPoint {
+  label: string
+  value: number
+  color?: string
+  [key: string]: unknown
+}
+
 interface ChartProps {
-  data: any[]
+  data: ChartDataPoint[]
   type: 'line' | 'bar' | 'pie' | 'doughnut' | 'area'
   title?: string
   subtitle?: string
@@ -127,7 +134,7 @@ export function Chart({
 // Función para dibujar gráfico de líneas
 function drawLineChart(
   ctx: CanvasRenderingContext2D,
-  data: any[],
+  data: ChartDataPoint[],
   dimensions: { width: number; height: number },
   colors: string[],
   showGrid: boolean,
@@ -164,9 +171,14 @@ function drawLineChart(
   }
 
   // Dibujar línea
-  ctx.strokeStyle = colors[0]
+  ctx.strokeStyle = colors[0] || '#3B82F6'
   ctx.lineWidth = 3
   ctx.beginPath()
+
+  // Aplicar animación si está habilitada
+  if (animation) {
+    ctx.globalAlpha = 0.8
+  }
 
   data.forEach((point, index) => {
     const value = typeof point === 'object' ? point.value : point
@@ -183,7 +195,7 @@ function drawLineChart(
   ctx.stroke()
 
   // Dibujar puntos
-  ctx.fillStyle = colors[0]
+  ctx.fillStyle = colors[0] || '#3B82F6'
   data.forEach((point, index) => {
     const value = typeof point === 'object' ? point.value : point
     const x = padding + (chartWidth / (data.length - 1)) * index
@@ -212,7 +224,7 @@ function drawLineChart(
 // Función para dibujar gráfico de barras
 function drawBarChart(
   ctx: CanvasRenderingContext2D,
-  data: any[],
+  data: ChartDataPoint[],
   dimensions: { width: number; height: number },
   colors: string[],
   showGrid: boolean,
@@ -249,13 +261,18 @@ function drawBarChart(
   const barWidth = chartWidth / data.length * 0.8
   const barSpacing = chartWidth / data.length * 0.2
 
+  // Aplicar animación si está habilitada
+  if (animation) {
+    ctx.globalAlpha = 0.8
+  }
+
   data.forEach((point, index) => {
     const value = typeof point === 'object' ? point.value : point
     const barHeight = (value / maxValue) * chartHeight
     const x = padding + (chartWidth / data.length) * index + barSpacing / 2
     const y = padding + chartHeight - barHeight
 
-    ctx.fillStyle = colors[index % colors.length]
+    ctx.fillStyle = colors[index % colors.length] || '#3B82F6'
     ctx.fillRect(x, y, barWidth, barHeight)
   })
 
@@ -277,7 +294,7 @@ function drawBarChart(
 // Función para dibujar gráfico circular
 function drawPieChart(
   ctx: CanvasRenderingContext2D,
-  data: any[],
+  data: ChartDataPoint[],
   dimensions: { width: number; height: number },
   colors: string[],
   showLegend: boolean,
@@ -291,11 +308,16 @@ function drawPieChart(
   const total = data.reduce((sum, point) => sum + (typeof point === 'object' ? point.value : point), 0)
   let currentAngle = -Math.PI / 2
 
+  // Aplicar animación si está habilitada
+  if (animation) {
+    ctx.globalAlpha = 0.8
+  }
+
   data.forEach((point, index) => {
     const value = typeof point === 'object' ? point.value : point
     const sliceAngle = (value / total) * 2 * Math.PI
 
-    ctx.fillStyle = colors[index % colors.length]
+    ctx.fillStyle = colors[index % colors.length] || '#3B82F6'
     ctx.beginPath()
     ctx.moveTo(centerX, centerY)
     ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle)
@@ -309,7 +331,7 @@ function drawPieChart(
 // Función para dibujar gráfico de dona
 function drawDoughnutChart(
   ctx: CanvasRenderingContext2D,
-  data: any[],
+  data: ChartDataPoint[],
   dimensions: { width: number; height: number },
   colors: string[],
   showLegend: boolean,
@@ -324,11 +346,16 @@ function drawDoughnutChart(
   const total = data.reduce((sum, point) => sum + (typeof point === 'object' ? point.value : point), 0)
   let currentAngle = -Math.PI / 2
 
+  // Aplicar animación si está habilitada
+  if (animation) {
+    ctx.globalAlpha = 0.8
+  }
+
   data.forEach((point, index) => {
     const value = typeof point === 'object' ? point.value : point
     const sliceAngle = (value / total) * 2 * Math.PI
 
-    ctx.fillStyle = colors[index % colors.length]
+    ctx.fillStyle = colors[index % colors.length] || '#3B82F6'
     ctx.beginPath()
     ctx.arc(centerX, centerY, outerRadius, currentAngle, currentAngle + sliceAngle)
     ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true)
@@ -342,7 +369,7 @@ function drawDoughnutChart(
 // Función para dibujar gráfico de área
 function drawAreaChart(
   ctx: CanvasRenderingContext2D,
-  data: any[],
+  data: ChartDataPoint[],
   dimensions: { width: number; height: number },
   colors: string[],
   showGrid: boolean,
@@ -379,8 +406,13 @@ function drawAreaChart(
 
   // Dibujar área
   const gradient = ctx.createLinearGradient(0, padding, 0, padding + chartHeight)
-  gradient.addColorStop(0, colors[0] + '40')
-  gradient.addColorStop(1, colors[0] + '10')
+  gradient.addColorStop(0, colors[0] || '#3B82F6' + '40')
+  gradient.addColorStop(1, colors[0] || '#3B82F6' + '10')
+
+  // Aplicar animación si está habilitada
+  if (animation) {
+    ctx.globalAlpha = 0.8
+  }
 
   ctx.fillStyle = gradient
   ctx.beginPath()
@@ -398,7 +430,7 @@ function drawAreaChart(
   ctx.fill()
 
   // Dibujar línea
-  ctx.strokeStyle = colors[0]
+  ctx.strokeStyle = colors[0] || '#3B82F6'
   ctx.lineWidth = 2
   ctx.beginPath()
 
@@ -415,6 +447,20 @@ function drawAreaChart(
   })
 
   ctx.stroke()
+
+  // Dibujar etiquetas
+  if (showLabels) {
+    ctx.fillStyle = '#6B7280'
+    ctx.font = '11px Inter, sans-serif'
+    ctx.textAlign = 'center'
+
+    data.forEach((point, index) => {
+      const value = typeof point === 'object' ? point.value : point
+      const x = padding + (chartWidth / (data.length - 1)) * index
+
+      ctx.fillText(value.toString(), x, padding + chartHeight + 20)
+    })
+  }
 }
 
 export default Chart
