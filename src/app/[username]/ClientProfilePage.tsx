@@ -15,31 +15,34 @@ import { useToast } from '@/components/Toast';
 
 // Función para convertir UserProfile a User compatible con EditProfileForm
 const convertToFormData = (profile: UserProfile): User => {
-  return {
+  const converted = {
     _id: profile._id,
     username: profile.username,
     email: profile.email,
-    ...(profile.avatar && { avatar: profile.avatar }),
-    ...(profile.bio && { bio: profile.bio }),
-    ...(profile.fullName && { fullName: profile.fullName }),
-    ...(profile.website && { website: profile.website }),
-    ...(profile.location && { location: profile.location }),
-    ...(profile.phone && { phone: profile.phone }),
-    ...(profile.gender && { gender: profile.gender as 'male' | 'female' | 'other' | 'prefer-not-to-say' }),
-    ...(profile.birthDate && { birthDate: profile.birthDate }),
-    ...(profile.isPrivate !== undefined && { isPrivate: profile.isPrivate }),
+    avatar: profile.avatar || '',           // ✅ Siempre incluir, aunque esté vacío
+    bio: profile.bio || '',                 // ✅ Siempre incluir, aunque esté vacío
+    fullName: profile.fullName || '',       // ✅ Siempre incluir, aunque esté vacío
+    website: profile.website || '',         // ✅ Siempre incluir, aunque esté vacío
+    location: profile.location || '',       // ✅ Siempre incluir, aunque esté vacío
+    phone: profile.phone || '',             // ✅ Siempre incluir, aunque esté vacío
+    gender: profile.gender as 'male' | 'female' | 'other' | 'prefer-not-to-say' || 'prefer-not-to-say',
+    birthDate: profile.birthDate || '',
+    isPrivate: profile.isPrivate !== undefined ? profile.isPrivate : false,
     followers: profile.followers || [],
     following: profile.following || [],
     posts: profile.posts?.map(p => p._id) || [],
     savedPosts: [],
     blockedUsers: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    createdAt: profile.createdAt || new Date().toISOString(),
+    updatedAt: profile.updatedAt || new Date().toISOString()
   } as User;
+
+
+  return converted;
 };
 
 export default function ClientProfilePage({ profile }: { profile: UserProfile }) {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, loading: authLoading } = useAuth();
   const router = useRouter();
   const toast = useToast();
   const [showEdit, setShowEdit] = useState(false);
@@ -117,11 +120,53 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     try {
       const { getUserProfileByUsername } = await import('@/services/userService');
       const newProfileData = await getUserProfileByUsername(profileData?.username || '');
-      setProfileData(newProfileData);
+
+      // Solo actualizar si los datos del servidor son diferentes a los locales
+      // Esto evita sobrescribir cambios recién guardados
+      setProfileData(prevData => {
+        if (!prevData) return newProfileData;
+
+        // Comparar campos críticos para ver si hay diferencias significativas
+        const hasSignificantChanges =
+          prevData.fullName !== newProfileData.fullName ||
+          prevData.bio !== newProfileData.bio ||
+          prevData.location !== newProfileData.location ||
+          prevData.phone !== newProfileData.phone ||
+          prevData.gender !== newProfileData.gender ||
+          prevData.birthDate !== newProfileData.birthDate ||
+          prevData.website !== newProfileData.website ||
+          prevData.avatar !== newProfileData.avatar ||
+          prevData.followersCount !== newProfileData.followersCount ||
+          prevData.followingCount !== newProfileData.followingCount;
+
+        logger.info('🔍 reloadProfile - Comparación de datos:', {
+          hasSignificantChanges,
+          prev: {
+            location: prevData.location,
+            phone: prevData.phone,
+            gender: prevData.gender,
+            birthDate: prevData.birthDate
+          },
+          new: {
+            location: newProfileData.location,
+            phone: newProfileData.phone,
+            gender: newProfileData.gender,
+            birthDate: newProfileData.birthDate
+          }
+        });
+
+        if (hasSignificantChanges) {
+          logger.info('🔍 reloadProfile - Actualizando con datos del servidor');
+          return newProfileData;
+        } else {
+          logger.info('🔍 reloadProfile - No hay cambios significativos, manteniendo datos locales');
+          return prevData;
+        }
+      });
     } catch (error) {
       // Solo logear errores críticos
       if (error instanceof Error && error.message.includes('500')) {
-
+        logger.error('reloadProfile - Server error:', error);
       }
     }
   }, [profileData?.username]);
@@ -195,6 +240,18 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     }
   };
 
+  // Mostrar loading si AuthContext está cargando
+  if (authLoading) {
+    return (
+      <div className="max-w-3xl mx-auto mt-10 px-2">
+        <div className="text-center">
+          <div className="spinner mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Verificar si profileData es válido
   if (!profileData || !profileData.username) {
     return (
@@ -246,19 +303,55 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
                   profile={convertToFormData(profileData)}
                   onSave={async (updatedData) => {
                     try {
-                      // Actualizar el perfil usando el servicio
-                      await updateUserProfile(updatedData);
 
-                      // Si se actualizó el avatar, actualizar también el usuario en el contexto de autenticación
-                      if (updatedData.avatar && user) {
-                        await refreshUser();
-                      }
+                      // Actualizar el perfil usando el servicio y obtener los datos actualizados del backend
+                      const updatedProfile = await updateUserProfile(updatedData);
+
+                      // Log de datos actualizados
+                      logger.info('🔍 ClientProfilePage - Datos actualizados recibidos:', updatedData);
+                      logger.info('🔍 ClientProfilePage - Datos devueltos por backend:', updatedProfile);
+
+                      // Actualizar el estado local con los datos frescos del backend
+                      setProfileData(prevData => {
+                        if (!prevData) return prevData;
+                        const newData = {
+                          ...prevData,
+                          avatar: updatedProfile.avatar || prevData.avatar || '',
+                          bio: updatedProfile.bio || '',
+                          fullName: updatedProfile.fullName || '',
+                          website: updatedProfile.website || '',
+                          location: updatedProfile.location || '',
+                          phone: updatedProfile.phone || '',
+                          gender: updatedProfile.gender || prevData.gender || 'prefer-not-to-say',
+                          birthDate: updatedProfile.birthDate || '',
+                          isPrivate: updatedProfile.isPrivate !== undefined ? updatedProfile.isPrivate : prevData.isPrivate || false
+                        } as UserProfile;
+
+                        logger.info('🔍 ClientProfilePage - Estado local actualizado con datos del backend:', {
+                          fullName: newData.fullName,
+                          location: newData.location,
+                          phone: newData.phone,
+                          gender: newData.gender,
+                          birthDate: newData.birthDate
+                        });
+
+                        return newData;
+                      });
+
+                      // Siempre actualizar el usuario en el contexto de autenticación
+                      // porque EditProfileForm ya maneja la subida del avatar internamente
+                      await refreshUser();
 
                       // Cerrar el modal
                       setShowEdit(false);
 
-                      // Recargar el perfil desde el servidor para obtener datos frescos
-                      await reloadProfile();
+                      // TEMPORALMENTE DESHABILITADO - reloadProfile está causando que los datos desaparezcan
+                      // El problema es que reloadProfile está obteniendo datos del caché antes de que se invalide completamente
+                      // setTimeout(() => {
+                      //   reloadProfile().catch(error => {
+                      //     logger.warn('Profile page - Background reload failed:', error);
+                      //   });
+                      // }, 2000);
 
                       // Mostrar mensaje de éxito
                       toast.success('Perfil actualizado correctamente');
