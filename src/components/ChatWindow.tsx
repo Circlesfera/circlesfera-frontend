@@ -97,6 +97,11 @@ export default function ChatWindow({ conversationId, conversationName, participa
       if (response && response.conversations) {
         const conversation = response.conversations.find((c: { _id: string }) => c._id === conversationId);
         if (conversation) {
+          logger.debug('Conversation found:', {
+            conversationId: conversation._id,
+            participants: conversation.participants,
+            participantCount: conversation.participants?.length
+          });
           setConversationInfo({
             _id: conversation._id,
             participants: conversation.participants,
@@ -108,6 +113,8 @@ export default function ChatWindow({ conversationId, conversationName, participa
               }
             })
           });
+        } else {
+          logger.warn('Conversation not found:', { conversationId, availableConversations: response.conversations?.length });
         }
       }
     } catch (error) {
@@ -132,14 +139,19 @@ export default function ChatWindow({ conversationId, conversationName, participa
   const getOtherParticipant = useCallback(() => {
     // Si tenemos participants como prop, usarlos
     if (participants && participants.length > 0) {
-      return participants.find(p => p._id !== user?._id) || participants[0];
+      const otherParticipant = participants.find(p => p._id !== user?._id) || participants[0];
+      logger.debug('Using participants prop:', { otherParticipant, participants, currentUserId: user?._id });
+      return otherParticipant;
     }
 
     // Si no, usar la información de la conversación
     if (conversationInfo && conversationInfo.participants) {
-      return conversationInfo.participants.find((p: { _id: string }) => p._id !== user?._id) || conversationInfo.participants[0];
+      const otherParticipant = conversationInfo.participants.find((p: { _id: string }) => p._id !== user?._id) || conversationInfo.participants[0];
+      logger.debug('Using conversationInfo participants:', { otherParticipant, participants: conversationInfo.participants, currentUserId: user?._id });
+      return otherParticipant;
     }
 
+    logger.warn('No participant information available:', { participants, conversationInfo, currentUserId: user?._id });
     return null;
   }, [participants, user?._id, conversationInfo]);
 
