@@ -8,7 +8,7 @@ import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import { motion } from 'framer-motion';
 import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
-import LazyImage from './LazyImage';
+import TestImage from './TestImage';
 import ReportModal from './ReportModal';
 import ImageModal from './ImageModal';
 import logger from '@/utils/logger';
@@ -276,10 +276,9 @@ export default function PostCard({
           return (
             <div className="relative overflow-hidden">
               <div className={`relative ${aspectRatioClass} bg-black`}>
-                <LazyImage
+                <TestImage
                   src={post.content.images[currentImageIndex]?.url || ''}
                   alt={post.content.images[currentImageIndex]?.alt || "post"}
-                  className="w-full h-full object-cover"
                 />
                 {/* Indicadores de imagen */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -328,10 +327,9 @@ export default function PostCard({
                 }
               }}
             >
-              <LazyImage
+              <TestImage
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
-                className="w-full h-full object-cover transition-opacity group-hover:opacity-90"
               />
               {/* Indicador de clic para ampliar */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
@@ -412,10 +410,9 @@ export default function PostCard({
             className="group"
           >
             {post.user.avatar ? (
-              <LazyImage
+              <TestImage
                 src={post.user.avatar || ''}
                 alt="avatar"
-                className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">

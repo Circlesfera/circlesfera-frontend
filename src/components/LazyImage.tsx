@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import OptimizedImage from './OptimizedImage';
+import SimpleImage from './SimpleImage';
 
 interface LazyImageProps {
   src: string;
@@ -105,18 +105,17 @@ const LazyImage: React.FC<LazyImageProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Usar OptimizedImage para mejor manejo de URLs del backend local */}
+      {/* Usar SimpleImage para mejor manejo de URLs del backend local */}
       <motion.div
         className="relative w-full h-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <OptimizedImage
+        <SimpleImage
           src={currentSrc}
           alt={alt}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           onLoad={handleLoad}
           onError={handleError}
           className="object-cover"

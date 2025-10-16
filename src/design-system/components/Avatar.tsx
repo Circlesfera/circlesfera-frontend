@@ -1,7 +1,7 @@
 "use client";
 
 import React, { forwardRef } from 'react';
-import OptimizedImage from '@/components/OptimizedImage';
+import SimpleImage from '@/components/SimpleImage';
 import { cn } from '@/utils/cn';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -91,14 +91,13 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         {...props}
       >
         {src ? (
-          <OptimizedImage
+          <SimpleImage
             src={src}
             alt={alt}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100px, 150px"
             onError={() => {
-              // El manejo de errores se hace en OptimizedImage
+              // El manejo de errores se hace en SimpleImage
             }}
           />
         ) : null}
