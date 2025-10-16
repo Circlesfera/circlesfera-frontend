@@ -489,7 +489,28 @@ export default function ChatWindow({ conversationId, conversationName, participa
     // Verificar que el mensaje tenga un remitente válido
     if (!message.sender) {
       console.warn('Mensaje sin remitente válido:', message);
-      return null;
+      
+      // Mostrar mensaje con información alternativa cuando sender es null
+      return (
+        <div key={message._id} className="flex items-start space-x-3 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+          <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">?</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center space-x-2 mb-1">
+              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                Usuario desconocido
+              </span>
+              <span className="text-xs text-gray-400 dark:text-gray-500">
+                {new Date(message.createdAt).toLocaleTimeString()}
+              </span>
+            </div>
+            <div className="text-sm text-gray-700 dark:text-gray-300">
+              {message.content.text || 'Mensaje no disponible'}
+            </div>
+          </div>
+        </div>
+      );
     }
 
     const isOwnMessage = message.sender._id === user?._id;
