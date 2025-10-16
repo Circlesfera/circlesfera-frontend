@@ -19,6 +19,7 @@ interface ThemeContextType {
   resolvedTheme: Theme
   setTheme: (theme: Theme) => void
   toggleTheme: () => void
+  isHydrated: boolean
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
@@ -34,15 +35,20 @@ export function ThemeProvider({
   defaultTheme = 'light',
   storageKey = 'theme',
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return defaultTheme
+  const [theme, setThemeState] = useState<Theme>(defaultTheme)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // Inicializar tema después de la hidratación
+  useEffect(() => {
     const savedTheme = localStorage.getItem(storageKey) as Theme | null
     if (savedTheme === 'light' || savedTheme === 'dark') {
-      return savedTheme
+      setThemeState(savedTheme)
+    } else {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      setThemeState(systemPrefersDark ? 'dark' : 'light')
     }
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    return systemPrefersDark ? 'dark' : 'light'
-  })
+    setIsHydrated(true)
+  }, [storageKey])
 
   // Aplicar tema inmediatamente cuando cambie
   useEffect(() => {
@@ -98,6 +104,7 @@ export function ThemeProvider({
     resolvedTheme: theme,
     setTheme: handleSetTheme,
     toggleTheme,
+    isHydrated,
   }
 
   return (
