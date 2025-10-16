@@ -184,7 +184,7 @@ export const togglePinPost = async (postId: string): Promise<{ success: boolean;
 // Obtener comentarios de un post
 export const getComments = async (postId: string, page = 1, limit = 10): Promise<{
   success: boolean;
-  data: Comment[];
+  posts: Comment[];
   pagination: {
     page: number;
     limit: number;
