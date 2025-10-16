@@ -691,58 +691,71 @@ export default function ChatWindow({ conversationId, conversationName, participa
     <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 rounded-none md:rounded-r-2xl shadow-lg">
       {/* Header mejorado del chat */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
-        <button
-          onClick={handleHeaderClick}
-          className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
-          title="Ver perfil"
-        >
-          <div className="relative flex-shrink-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all relative">
-              {(() => {
-                const otherParticipant = getOtherParticipant();
-                return otherParticipant?.avatar ? (
-                  <Image
-                    src={otherParticipant.avatar}
-                    alt={`Avatar de ${otherParticipant.username}`}
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-base">
-                    {otherParticipant?.username?.[0]?.toUpperCase() || 'U'}
+        {(() => {
+          const otherParticipant = getOtherParticipant();
+
+          if (!otherParticipant) {
+            return (
+              <div className="flex items-center justify-center p-8">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                   </div>
-                );
-              })()}
-            </div>
-          </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Cargando información del chat...</p>
+                </div>
+              </div>
+            );
+          }
 
-          <div className="min-w-0">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-base truncate group-hover:text-blue-600 transition-colors">
-              {conversationName || (() => {
-                const otherParticipant = getOtherParticipant();
-                return otherParticipant?.fullName || otherParticipant?.username || 'Usuario';
-              })()}
-            </h3>
-            <p className="text-xs flex items-center space-x-1">
-              <motion.span
-                className={`w-2 h-2 rounded-full ${isUserOnline ? 'bg-green-500' : 'bg-gray-400'}`}
-                animate={isUserOnline ? { scale: [1, 1.2, 1] } : {}}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-              <span className={isUserOnline ? 'text-green-600 font-medium' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'}>
-                {isUserOnline ? 'En línea' : 'Desconectado'}
-              </span>
-            </p>
-          </div>
+          return (
+            <button
+              onClick={handleHeaderClick}
+              className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-xl p-2 -m-2 transition-colors duration-200 group cursor-pointer"
+              title="Ver perfil"
+            >
+              <div className="relative flex-shrink-0">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all relative">
+                  {otherParticipant.avatar ? (
+                    <Image
+                      src={otherParticipant.avatar}
+                      alt={`Avatar de ${otherParticipant.username}`}
+                      width={48}
+                      height={48}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-base">
+                      {otherParticipant.username?.[0]?.toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              </div>
 
-          {/* Indicador visual de que es clickeable */}
-          <div className="flex-shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <svg className="w-4 h-4 text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </button>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-base truncate group-hover:text-blue-600 transition-colors">
+                  {conversationName || otherParticipant.fullName || otherParticipant.username}
+                </h3>
+                <p className="text-xs flex items-center space-x-1">
+                  <motion.span
+                    className={`w-2 h-2 rounded-full ${isUserOnline ? 'bg-green-500' : 'bg-gray-400'}`}
+                    animate={isUserOnline ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                  <span className={isUserOnline ? 'text-green-600 font-medium' : 'text-gray-500 dark:text-gray-400 dark:text-gray-500'}>
+                    {isUserOnline ? 'En línea' : 'Desconectado'}
+                  </span>
+                </p>
+              </div>
+
+              {/* Indicador visual de que es clickeable */}
+              <div className="flex-shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg className="w-4 h-4 text-gray-400 dark:text-gray-500 dark:text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </button>
+          );
+        })()}
 
         <div className="flex items-center space-x-1 flex-shrink-0">
           <button className="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-blue-600">
