@@ -33,15 +33,6 @@ export default function HomePage() {
     removePost
   } = useFeed({ isAuthenticated: !!user && !authLoading });
 
-  // Debug: Log posts cuando cambien
-  useEffect(() => {
-    console.log('🔍 Feed Page - Posts en estado:', {
-      postsCount: posts?.length || 0,
-      posts: posts?.map(p => ({ id: p._id, username: p.user?.username, type: p.type })) || [],
-      loading,
-      hasMore
-    });
-  }, [posts, loading, hasMore]);
 
   const [stories, setStories] = useState<UserWithStories[]>([]);
   const [commentsModal, setCommentsModal] = useState<{

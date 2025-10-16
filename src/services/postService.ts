@@ -31,38 +31,17 @@ export interface LikeResponse {
 
 // Obtener el feed de publicaciones
 export const getFeed = async (page = 1, limit = 10): Promise<FeedResponse> => {
-  console.log('🔍 getFeed - Parámetros:', { page, limit });
-
   const res = await api.get('/posts/feed', {
     params: { page, limit },
   });
-
-  console.log('🔍 getFeed - Respuesta completa:', {
-    status: res.status,
-    data: res.data,
-    postsCount: res.data?.posts?.length || 0
-  });
-
   return res.data;
 };
 
 // Alias para getFeedPosts (para compatibilidad)
 export const getFeedPosts = async (options?: { offset?: number; limit?: number }): Promise<FeedResponse> => {
-  console.log('🔍 getFeedPosts - Opciones recibidas:', options);
-
   const page = options?.offset ? Math.floor(options.offset / (options.limit || 10)) + 1 : 1;
   const limit = options?.limit || 10;
-
-  console.log('🔍 getFeedPosts - Parámetros calculados:', { page, limit, originalOffset: options?.offset });
-
-  const result = await getFeed(page, limit);
-
-  console.log('🔍 getFeedPosts - Resultado final:', {
-    success: result.success,
-    postsCount: result.posts?.length || 0
-  });
-
-  return result;
+  return getFeed(page, limit);
 };
 
 // Obtener posts trending

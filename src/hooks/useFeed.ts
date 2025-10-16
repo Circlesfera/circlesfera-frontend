@@ -42,21 +42,10 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
 
       const response = await getFeedPosts({ offset: 0, limit: POSTS_PER_PAGE })
 
-      console.log('🔍 useFeed - Respuesta del backend:', {
-        success: response.success,
-        postsCount: response.posts?.length || 0,
-        posts: response.posts?.map(p => ({ id: p._id, username: p.user?.username })) || [],
-        hasMore: response.hasMore
-      })
-
       if (response.success) {
         setPosts(response.posts || [])
         setHasMore(response.hasMore ?? (response.posts?.length === POSTS_PER_PAGE))
         setPage(1)
-
-        console.log('🔍 useFeed - Posts establecidos en estado:', response.posts?.length || 0)
-      } else {
-        console.error('🔍 useFeed - Error en respuesta:', response)
       }
     } catch {
       setError('Error al cargar el feed')
