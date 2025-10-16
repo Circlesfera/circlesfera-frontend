@@ -127,6 +127,11 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
         } else if (type === 'stories') {
           setStories(newContent as Story[]);
         }
+
+        // Marcar que la carga inicial terminó exitosamente
+        if (isInitialLoadRef.current) {
+          isInitialLoadRef.current = false;
+        }
       }
     } catch (err) {
       // Solo logear errores críticos
@@ -136,9 +141,6 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
       setError(`Error al cargar ${type}`);
     } finally {
       setLoading(false);
-      if (isInitialLoadRef.current) {
-        isInitialLoadRef.current = false;
-      }
     }
   }, [username]);
 
