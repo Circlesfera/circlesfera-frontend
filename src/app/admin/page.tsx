@@ -34,6 +34,7 @@ export default function AdminDashboard() {
   const [showRealTimeStats, setShowRealTimeStats] = useState(false)
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h')
   const [showNotifications, setShowNotifications] = useState(false)
+  const [useSimulatedData, setUseSimulatedData] = useState(false)
 
   useEffect(() => {
     fetchDashboardData()
@@ -195,6 +196,10 @@ export default function AdminDashboard() {
     setShowNotifications(!showNotifications)
   }
 
+  const handleToggleSimulatedData = () => {
+    setUseSimulatedData(!useSimulatedData)
+  }
+
   const handleExportStats = () => {
     if (stats) {
       const exportData = {
@@ -336,6 +341,18 @@ export default function AdminDashboard() {
                 title="Exportar estadísticas"
               >
                 <ArrowUpRight className="w-4 h-4" />
+              </button>
+
+              {/* Botón de datos simulados */}
+              <button
+                onClick={handleToggleSimulatedData}
+                className={`px-3 py-2 rounded-lg border transition-colors duration-200 ${useSimulatedData
+                  ? 'border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300'
+                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                  }`}
+                title={useSimulatedData ? "Usar datos reales" : "Usar datos simulados"}
+              >
+                <BarChart3 className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -668,7 +685,20 @@ export default function AdminDashboard() {
         >
           <div className="h-64 bg-gradient-to-t from-blue-50 to-transparent dark:from-blue-900/20 dark:to-transparent rounded-lg p-4 relative overflow-hidden">
             <div className="absolute inset-0 flex items-end justify-between px-4 pb-4">
-              {realtimeActivity.length > 0 ? (
+              {useSimulatedData ? (
+                // Datos simulados más realistas
+                [15, 22, 18, 25, 28, 32, 38, 45, 42, 36, 29, 34, 37, 41, 35, 38, 42, 39, 36, 40, 43, 38, 35, 39].map((height, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ height: 0 }}
+                    animate={{ height: `${height}%` }}
+                    transition={{ delay: index * 0.05, duration: 0.5 }}
+                    className="bg-orange-500 rounded-t-sm transition-all duration-500 hover:bg-orange-600 cursor-pointer"
+                    style={{ width: `${100 / 24}%`, minWidth: '8px' }}
+                    title={`${height} usuarios activos (simulado)`}
+                  />
+                ))
+              ) : realtimeActivity.length > 0 ? (
                 realtimeActivity.map((activity, index) => {
                   const maxUsers = Math.max(...realtimeActivity.map(a => a.activeUsers))
                   const height = maxUsers > 0 ? (activity.activeUsers / maxUsers) * 100 : 0
@@ -687,15 +717,15 @@ export default function AdminDashboard() {
                 })
               ) : (
                 // Fallback con datos simulados si no hay datos reales
-                [65, 72, 58, 85, 78, 92, 88, 95, 82, 76, 89, 94, 87, 91, 85, 88, 92, 89, 86, 90, 93, 88, 85, 89].map((height, index) => (
+                [15, 22, 18, 25, 28, 32, 38, 45, 42, 36, 29, 34, 37, 41, 35, 38, 42, 39, 36, 40, 43, 38, 35, 39].map((height, index) => (
                   <motion.div
                     key={index}
                     initial={{ height: 0 }}
                     animate={{ height: `${height}%` }}
                     transition={{ delay: index * 0.05, duration: 0.5 }}
                     className="bg-blue-500 rounded-t-sm transition-all duration-500 hover:bg-blue-600 cursor-pointer"
-                    style={{ width: '8px' }}
-                    title={`${height} usuarios activos`}
+                    style={{ width: `${100 / 24}%`, minWidth: '8px' }}
+                    title={`${height} usuarios activos (fallback)`}
                   />
                 ))
               )}
@@ -711,8 +741,22 @@ export default function AdminDashboard() {
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {realtimeActivity.length > 0 ? 'Datos reales' : 'Simulado'}
+                  {useSimulatedData ? 'Datos simulados' :
+                    realtimeActivity.length > 0 ? 'Datos reales' : 'Fallback'}
                 </span>
+              </div>
+            </div>
+            <div className="absolute top-4 right-4">
+              <div className="text-right">
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Total: {useSimulatedData ?
+                    [15, 22, 18, 25, 28, 32, 38, 45, 42, 36, 29, 34, 37, 41, 35, 38, 42, 39, 36, 40, 43, 38, 35, 39].reduce((sum, val) => sum + val, 0) :
+                    realtimeActivity.reduce((sum, item) => sum + item.activeUsers, 0)} usuarios
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Pico: {useSimulatedData ? 45 :
+                    realtimeActivity.length > 0 ? Math.max(...realtimeActivity.map(a => a.activeUsers)) : 39} usuarios
+                </div>
               </div>
             </div>
           </div>
