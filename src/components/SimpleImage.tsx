@@ -6,10 +6,8 @@ import { cn } from '@/utils/cn';
 interface SimpleImageProps {
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
-  fill?: boolean;
   className?: string;
+  fill?: boolean;
   priority?: boolean;
   onLoad?: () => void;
   onError?: () => void;
@@ -18,13 +16,11 @@ interface SimpleImageProps {
 export default function SimpleImage({
   src,
   alt,
-  width,
-  height,
-  fill = false,
   className,
+  fill = false,
   priority = false,
   onLoad,
-  onError,
+  onError
 }: SimpleImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +33,6 @@ export default function SimpleImage({
   const handleError = () => {
     setHasError(true);
     setIsLoading(false);
-    console.error('Error loading image:', src);
     onError?.();
   };
 
@@ -66,8 +61,6 @@ export default function SimpleImage({
       <img
         src={src}
         alt={alt}
-        width={fill ? undefined : width}
-        height={fill ? undefined : height}
         className={cn(
           'object-cover transition-opacity duration-300',
           fill ? 'w-full h-full' : '',

@@ -8,7 +8,7 @@ import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import { motion } from 'framer-motion';
 import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
-import TestImage from './TestImage';
+import SimpleImage from './SimpleImage';
 import ReportModal from './ReportModal';
 import ImageModal from './ImageModal';
 import logger from '@/utils/logger';
@@ -276,7 +276,7 @@ export default function PostCard({
           return (
             <div className="relative overflow-hidden">
               <div className={`relative ${aspectRatioClass} bg-black`}>
-                <TestImage
+                <SimpleImage
                   src={post.content.images[currentImageIndex]?.url || ''}
                   alt={post.content.images[currentImageIndex]?.alt || "post"}
                   fill
@@ -329,7 +329,7 @@ export default function PostCard({
                 }
               }}
             >
-              <TestImage
+              <SimpleImage
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
                 fill
@@ -414,7 +414,7 @@ export default function PostCard({
             className="group"
           >
             {post.user.avatar ? (
-              <TestImage
+              <SimpleImage
                 src={post.user.avatar || ''}
                 alt="avatar"
                 className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
