@@ -34,7 +34,6 @@ export default function AdminDashboard() {
   const [showRealTimeStats, setShowRealTimeStats] = useState(false)
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h')
   const [showNotifications, setShowNotifications] = useState(false)
-  const [useSimulatedData, setUseSimulatedData] = useState(false)
 
   useEffect(() => {
     fetchDashboardData()
@@ -196,9 +195,6 @@ export default function AdminDashboard() {
     setShowNotifications(!showNotifications)
   }
 
-  const handleToggleSimulatedData = () => {
-    setUseSimulatedData(!useSimulatedData)
-  }
 
   const handleExportStats = () => {
     if (stats) {
@@ -341,18 +337,6 @@ export default function AdminDashboard() {
                 title="Exportar estadísticas"
               >
                 <ArrowUpRight className="w-4 h-4" />
-              </button>
-
-              {/* Botón de datos simulados */}
-              <button
-                onClick={handleToggleSimulatedData}
-                className={`px-3 py-2 rounded-lg border transition-colors duration-200 ${useSimulatedData
-                  ? 'border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300'
-                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
-                  }`}
-                title={useSimulatedData ? "Usar datos reales" : "Usar datos simulados"}
-              >
-                <BarChart3 className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -684,24 +668,12 @@ export default function AdminDashboard() {
           className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 p-6"
         >
           <div className="h-64 bg-gradient-to-t from-blue-50 to-transparent dark:from-blue-900/20 dark:to-transparent rounded-lg p-4 relative overflow-hidden">
-            <div className="absolute inset-0 flex items-end justify-between px-4 pb-4">
-              {useSimulatedData ? (
-                // Datos simulados más realistas
-                [15, 22, 18, 25, 28, 32, 38, 45, 42, 36, 29, 34, 37, 41, 35, 38, 42, 39, 36, 40, 43, 38, 35, 39].map((height, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${height}%` }}
-                    transition={{ delay: index * 0.05, duration: 0.5 }}
-                    className="bg-orange-500 rounded-t-sm transition-all duration-500 hover:bg-orange-600 cursor-pointer"
-                    style={{ width: `${100 / 24}%`, minWidth: '8px' }}
-                    title={`${height} usuarios activos (simulado)`}
-                  />
-                ))
-              ) : realtimeActivity.length > 0 ? (
+            <div className="absolute inset-0 flex items-end justify-between pl-12 pr-4 pb-4">
+              {realtimeActivity.length > 0 ? (
                 realtimeActivity.map((activity, index) => {
-                  const maxUsers = Math.max(...realtimeActivity.map(a => a.activeUsers))
-                  const height = maxUsers > 0 ? (activity.activeUsers / maxUsers) * 100 : 0
+                  // Mostrar datos reales con escala fija (máximo 50 usuarios = 100% de altura)
+                  const maxScale = 50
+                  const height = Math.min((activity.activeUsers / maxScale) * 100, 100)
 
                   return (
                     <motion.div
@@ -716,46 +688,53 @@ export default function AdminDashboard() {
                   )
                 })
               ) : (
-                // Fallback con datos simulados si no hay datos reales
-                [15, 22, 18, 25, 28, 32, 38, 45, 42, 36, 29, 34, 37, 41, 35, 38, 42, 39, 36, 40, 43, 38, 35, 39].map((height, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${height}%` }}
-                    transition={{ delay: index * 0.05, duration: 0.5 }}
-                    className="bg-blue-500 rounded-t-sm transition-all duration-500 hover:bg-blue-600 cursor-pointer"
-                    style={{ width: `${100 / 24}%`, minWidth: '8px' }}
-                    title={`${height} usuarios activos (fallback)`}
-                  />
-                ))
+                // Si no hay datos reales, mostrar mensaje
+                <div className="flex items-center justify-center w-full h-full text-gray-500 dark:text-gray-400">
+                  <div className="text-center">
+                    <div className="text-lg font-medium mb-2">Sin datos de actividad</div>
+                    <div className="text-sm">No hay actividad registrada en las últimas 24 horas</div>
+                  </div>
+                </div>
               )}
             </div>
-            <div className="absolute bottom-2 left-4 right-4 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+            {/* Escala del eje Y */}
+            <div className="absolute left-2 top-4 bottom-8 flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400">
+              <span>50</span>
+              <span>40</span>
+              <span>30</span>
+              <span>20</span>
+              <span>10</span>
+              <span>0</span>
+            </div>
+
+            {/* Escala del eje X */}
+            <div className="absolute bottom-2 left-12 right-4 flex justify-between text-xs text-gray-500 dark:text-gray-400">
               <span>00:00</span>
               <span>06:00</span>
               <span>12:00</span>
               <span>18:00</span>
               <span>24:00</span>
             </div>
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-16">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {useSimulatedData ? 'Datos simulados' :
-                    realtimeActivity.length > 0 ? 'Datos reales' : 'Fallback'}
+                  {realtimeActivity.length > 0 ? 'Datos reales' : 'Sin datos'}
                 </span>
               </div>
             </div>
             <div className="absolute top-4 right-4">
               <div className="text-right">
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Total: {useSimulatedData ?
-                    [15, 22, 18, 25, 28, 32, 38, 45, 42, 36, 29, 34, 37, 41, 35, 38, 42, 39, 36, 40, 43, 38, 35, 39].reduce((sum, val) => sum + val, 0) :
-                    realtimeActivity.reduce((sum, item) => sum + item.activeUsers, 0)} usuarios
+                  Total: {realtimeActivity.length > 0 ?
+                    realtimeActivity.reduce((sum, item) => sum + item.activeUsers, 0) : 0} usuarios
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Pico: {useSimulatedData ? 45 :
-                    realtimeActivity.length > 0 ? Math.max(...realtimeActivity.map(a => a.activeUsers)) : 39} usuarios
+                  Pico: {realtimeActivity.length > 0 ?
+                    Math.max(...realtimeActivity.map(a => a.activeUsers)) : 0} usuarios
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Escala: 0-50 usuarios
                 </div>
               </div>
             </div>
