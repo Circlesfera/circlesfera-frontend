@@ -69,7 +69,7 @@ export default function AdminDashboard() {
       setError('Error al cargar datos del dashboard')
       setLoading(false)
     }
-  }, [])
+  }, [selectedTimeRange])
 
   useEffect(() => {
     fetchDashboardData()
