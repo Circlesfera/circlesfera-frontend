@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Card, PostCard, Avatar, Button } from '@/design-system';
+import { Card, Avatar, Button } from '@/design-system';
+import PostCard from '@/components/PostCard';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -9,6 +10,7 @@ import UserSuggestions from '@/components/UserSuggestions';
 import { useRouter } from 'next/navigation';
 import { useFeed } from '@/hooks/useFeed';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { Post } from '@/types';
 import logger from '@/utils/logger';
 
 // Lazy load componentes pesados
@@ -142,56 +144,18 @@ export default function HomePage() {
     router.push(`/${username}/post/${postId}`);
   }, [router]);
 
+
   const PlusIcon = () => (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
     </svg>
   );
 
-  if (loading) {
+  // Mostrar loading mientras se verifica la autenticación o se cargan los posts
+  if (authLoading || loading) {
     return (
       <div className="max-w-2xl mx-auto space-y-6 px-4">
         {/* Loading State */}
-        <Card className="p-6">
-          <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
-            {/* Loading skeletons */}
-            {[...Array(8)].map((_, index) => (
-              <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 px-1">
-                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse p-2"></div>
-                <div className="w-12 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Posts Loading */}
-        <div className="space-y-6">
-          {[...Array(3)].map((_, index) => (
-            <Card key={index} className="p-6">
-              <div className="animate-pulse">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
-                  </div>
-                </div>
-                <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // Mostrar loading mientras se verifica la autenticación
-  if (authLoading) {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6 px-4">
-        {/* Stories Loading */}
         <Card className="p-6">
           <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
             {/* Loading skeletons */}
@@ -291,44 +255,25 @@ export default function HomePage() {
             {/* Posts Feed */}
             <AnimatedPostList posts={posts || []}>
               {(post: unknown) => {
-                const typedPost = post as { _id: string; user: { _id: string; username: string; avatar?: string; fullName?: string }; type: 'image' | 'video' | 'text'; content: { images?: Array<{ url: string }>; video?: { url: string }; text?: string }; caption: string; likes: Array<unknown>; comments: Array<unknown>; isLiked?: boolean; createdAt: string };
+                const typedPost = post as Post;
                 return (
                   <PostCard
                     key={typedPost._id}
-                    post={{
-                      id: typedPost._id,
-                      user: {
-                        id: typedPost.user._id,
-                        username: typedPost.user.username,
-                        ...(typedPost.user.avatar && { avatar: typedPost.user.avatar }),
-                        ...(typedPost.user.fullName && { fullName: typedPost.user.fullName }),
-                      },
-                      content: {
-                        type: typedPost.type,
-                        url: typedPost.content.images?.[0]?.url || typedPost.content.video?.url || '',
-                        ...(typedPost.content.text && { text: typedPost.content.text }),
-                      },
-                      caption: typedPost.caption,
-                      likes: typedPost.likes.length,
-                      comments: typedPost.comments.length,
-                      isLiked: typedPost.isLiked || false,
-                      createdAt: typedPost.createdAt,
-                    }}
+                    post={typedPost}
                     onLike={handleLike}
+                    onPostClick={handlePostClick}
                     onComment={(postId) => {
                       if (!posts || !Array.isArray(posts)) return;
                       const foundPost = posts.find(p => p._id === postId);
                       if (foundPost) {
-                        const typedFoundPost = foundPost as { user: { username: string }; content?: { images?: Array<{ url: string }> } };
-                        handleComment(postId, typedFoundPost.user.username, typedFoundPost.content?.images?.[0]?.url);
+                        handleComment(postId, foundPost.user.username, foundPost.content?.images?.[0]?.url);
                       }
                     }}
                     onShare={(postId) => {
                       if (!posts || !Array.isArray(posts)) return;
                       const foundPost = posts.find(p => p._id === postId);
                       if (foundPost) {
-                        const typedFoundPost = foundPost as { user: { username: string }; caption: string };
-                        handleShare(postId, `${window.location.origin}/${typedFoundPost.user.username}/post/${postId}`, typedFoundPost.caption);
+                        handleShare(postId, `${window.location.origin}/${foundPost.user.username}/post/${postId}`, foundPost.caption);
                       }
                     }}
                     onUserClick={(userId) => {
@@ -338,17 +283,9 @@ export default function HomePage() {
                         handleUserClick(post.user._id);
                       }
                     }}
-                    onDelete={(postId) => {
+                    onPostDeleted={(postId) => {
                       handlePostDeleted(postId);
                     }}
-                    onPostClick={(postId) => {
-                      if (!posts || !Array.isArray(posts)) return;
-                      const post = posts.find(p => p._id === postId);
-                      if (post) {
-                        handlePostClick(postId, post.user.username);
-                      }
-                    }}
-                    className="animate-fade-in"
                   />
                 );
               }}
