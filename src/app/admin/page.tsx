@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   Flag,
@@ -35,11 +35,7 @@ export default function AdminDashboard() {
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h')
   const [showNotifications, setShowNotifications] = useState(false)
 
-  useEffect(() => {
-    fetchDashboardData()
-  }, [])
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true)
 
@@ -73,7 +69,11 @@ export default function AdminDashboard() {
       setError('Error al cargar datos del dashboard')
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchDashboardData()
+  }, [fetchDashboardData])
 
   if (loading) {
     return (

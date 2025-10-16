@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '@/services/axios';
 import type { User, ApiResponse, LoginResponse } from '@/types';
 import logger from '@/utils/logger';
@@ -68,24 +68,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     clearStoredAuthData();
   };
 
-  useEffect(() => {
-    // Solo ejecutar en el cliente
-    if (typeof window !== 'undefined') {
-      const { token: storedToken, user: storedUser } = getStoredAuthData();
-      if (storedToken && storedUser) {
-        // Validar el token antes de establecerlo
-        validateToken(storedToken, storedUser);
-      } else {
-        setLoading(false);
-      }
-
-      // Obtener token CSRF para peticiones mutativas
-      initializeCsrfToken();
-    }
-  }, []);
-
   // Función para validar el token almacenado
-  const validateToken = async (tokenToValidate: string, userToValidate: User) => {
+  const validateToken = useCallback(async (tokenToValidate: string, userToValidate: User) => {
     try {
       // Hacer una petición simple para validar el token
       const response = await api.get('/auth/profile', {
@@ -108,7 +92,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Solo ejecutar en el cliente
+    if (typeof window !== 'undefined') {
+      const { token: storedToken, user: storedUser } = getStoredAuthData();
+      if (storedToken && storedUser) {
+        // Validar el token antes de establecerlo
+        validateToken(storedToken, storedUser);
+      } else {
+        setLoading(false);
+      }
+
+      // Obtener token CSRF para peticiones mutativas
+      initializeCsrfToken();
+    }
+  }, [validateToken]);
 
   // Función para inicializar token CSRF
   const initializeCsrfToken = async () => {

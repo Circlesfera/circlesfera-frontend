@@ -138,7 +138,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     })
 
     setSocket(socketInstance)
-  }, [user, isConnecting]) // Removido socket para evitar bucle infinito
+  }, [user, isConnecting, socket?.connected]) // Agregado socket?.connected
 
   // Actualizar ref
   connectRef.current = connect
@@ -158,7 +158,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
     setIsConnecting(false)
     setError(null)
     reconnectAttemptsRef.current = 0
-  }, []) // Sin dependencias para evitar bucle infinito
+  }, [socket]) // Agregado socket como dependencia
 
   // Actualizar ref
   disconnectRef.current = disconnect

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   BarChart3,
@@ -35,12 +35,7 @@ export default function AnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState<AnalyticsParams['timeRange']>('24h')
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
 
-  // Efecto para cargar datos iniciales y manejar cambios de timeRange
-  useEffect(() => {
-    fetchDashboardData()
-  }, [timeRange])
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -53,7 +48,12 @@ export default function AnalyticsDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [timeRange])
+
+  // Efecto para cargar datos iniciales y manejar cambios de timeRange
+  useEffect(() => {
+    fetchDashboardData()
+  }, [fetchDashboardData])
 
   const handleRefresh = () => {
     fetchDashboardData()

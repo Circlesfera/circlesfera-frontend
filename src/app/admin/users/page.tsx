@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Search,
   Filter,
@@ -64,38 +64,7 @@ export default function UsersPage() {
   const [showBanModal, setShowBanModal] = useState(false)
   const [showSuspendModal, setShowSuspendModal] = useState(false)
 
-  // Debounce para la búsqueda
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchUsers() // Buscar siempre, incluso con campo vacío
-    }, 500) // Esperar 500ms después de que el usuario deje de escribir
-
-    return () => clearTimeout(timer)
-  }, [searchTerm])
-
-  // Efecto separado para otros filtros (sin debounce)
-  useEffect(() => {
-    fetchUsers()
-  }, [pagination.page, roleFilter, statusFilter, sortBy, sortOrder])
-
-  // Efecto para cargar usuarios inicialmente
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  // Función para búsqueda inmediata (Enter o botón)
-  const handleSearchSubmit = () => {
-    fetchUsers()
-  }
-
-  // Función para manejar Enter en el input
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearchSubmit()
-    }
-  }
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true)
       const params: {
@@ -136,6 +105,37 @@ export default function UsersPage() {
       console.error('Error fetching users:', err)
     } finally {
       setLoading(false)
+    }
+  }, [pagination.page, pagination.limit, searchTerm, roleFilter, statusFilter, sortBy, sortOrder])
+
+  // Debounce para la búsqueda
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUsers() // Buscar siempre, incluso con campo vacío
+    }, 500) // Esperar 500ms después de que el usuario deje de escribir
+
+    return () => clearTimeout(timer)
+  }, [searchTerm, fetchUsers])
+
+  // Efecto separado para otros filtros (sin debounce)
+  useEffect(() => {
+    fetchUsers()
+  }, [pagination.page, roleFilter, statusFilter, sortBy, sortOrder, fetchUsers])
+
+  // Efecto para cargar usuarios inicialmente
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
+
+  // Función para búsqueda inmediata (Enter o botón)
+  const handleSearchSubmit = () => {
+    fetchUsers()
+  }
+
+  // Función para manejar Enter en el input
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit()
     }
   }
 

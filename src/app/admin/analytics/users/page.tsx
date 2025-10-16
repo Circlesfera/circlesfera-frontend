@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   Users,
@@ -29,16 +29,18 @@ export default function UserAnalyticsPage() {
   const [timeRange, setTimeRange] = useState<AnalyticsParams['timeRange']>('30d')
   const [groupBy, setGroupBy] = useState<AnalyticsParams['groupBy']>('daily')
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const [showDetails, setShowDetails] = useState(false)
+  const [selectedDateRange, setSelectedDateRange] = useState<Date | null>(null)
+  const [showExportOptions, setShowExportOptions] = useState(false)
 
-  useEffect(() => {
-    fetchUserAnalytics()
-  }, [timeRange, groupBy])
-
-  const fetchUserAnalytics = async () => {
+  const fetchUserAnalytics = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await analyticsService.getUserAnalytics({ timeRange, groupBy })
+      const data = await analyticsService.getUserAnalytics({
+        timeRange: timeRange || '30d',
+        groupBy: groupBy || 'daily'
+      })
       setAnalytics(data)
       setLastRefresh(new Date())
     } catch (err) {
@@ -47,10 +49,61 @@ export default function UserAnalyticsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [timeRange, groupBy])
+
+  useEffect(() => {
+    fetchUserAnalytics()
+  }, [fetchUserAnalytics])
 
   const handleRefresh = () => {
     fetchUserAnalytics()
+  }
+
+  const handleToggleDetails = () => {
+    setShowDetails(!showDetails)
+  }
+
+  const handleDateRangeChange = (date: Date) => {
+    setSelectedDateRange(date)
+    // Aquí podrías filtrar los datos basándose en la fecha seleccionada
+    console.log('Fecha seleccionada:', date.toISOString())
+  }
+
+  const handleExportData = () => {
+    setShowExportOptions(!showExportOptions)
+    // Funcionalidad de exportación
+    if (analytics) {
+      const exportData = {
+        timestamp: new Date().toISOString(),
+        timeRange,
+        groupBy,
+        data: analytics
+      }
+      const dataStr = JSON.stringify(exportData, null, 2)
+      const dataBlob = new Blob([dataStr], { type: 'application/json' })
+      const url = URL.createObjectURL(dataBlob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `user-analytics-${new Date().toISOString().split('T')[0]}.json`
+      link.click()
+      URL.revokeObjectURL(url)
+    }
+  }
+
+  const handleShareReport = () => {
+    const url = window.location.href
+    navigator.clipboard.writeText(url)
+    // Aquí podrías agregar una notificación de éxito
+  }
+
+  const handleLikeReport = () => {
+    // Funcionalidad para marcar reporte como favorito
+    console.log('Reporte marcado como favorito')
+  }
+
+  const handleCommentOnReport = () => {
+    // Funcionalidad para agregar comentarios al reporte
+    console.log('Abrir modal de comentarios')
   }
 
   if (loading && !analytics) {
@@ -131,24 +184,154 @@ export default function UserAnalyticsPage() {
               </select>
             </div>
 
-            {/* Botón de actualización */}
-            <button
-              onClick={handleRefresh}
-              disabled={loading}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              <span>Actualizar</span>
-            </button>
+            {/* Botones de acción */}
+            <div className="flex items-center space-x-2">
+              {/* Botón de calendario */}
+              <button
+                onClick={() => handleDateRangeChange(new Date())}
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
+                title="Seleccionar rango de fechas"
+              >
+                <Calendar className="w-4 h-4" />
+              </button>
+
+              {/* Botón de detalles */}
+              <button
+                onClick={handleToggleDetails}
+                className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${showDetails
+                  ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                  }`}
+                title={showDetails ? "Ocultar detalles" : "Mostrar detalles"}
+              >
+                <Eye className="w-4 h-4" />
+              </button>
+
+              {/* Botón de exportar */}
+              <button
+                onClick={handleExportData}
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200"
+                title="Exportar datos"
+              >
+                <Share className="w-4 h-4" />
+              </button>
+
+              {/* Botón de actualización */}
+              <button
+                onClick={handleRefresh}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <span>Actualizar</span>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Información de última actualización */}
-        <div className="mt-4 flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-          <Clock className="w-4 h-4" />
-          <span>Última actualización: {formatAnalyticsData.formatDate(lastRefresh.toISOString(), 'time')}</span>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center space-x-2">
+              <Clock className="w-4 h-4" />
+              <span>Última actualización: {formatAnalyticsData.formatDate(lastRefresh.toISOString(), 'time')}</span>
+            </div>
+            {selectedDateRange && (
+              <div className="flex items-center space-x-2 text-blue-600 dark:text-blue-400">
+                <Calendar className="w-4 h-4" />
+                <span>Fecha seleccionada: {formatAnalyticsData.formatDate(selectedDateRange.toISOString(), 'short')}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Botones de interacción social */}
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleLikeReport}
+              className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200"
+              title="Marcar como favorito"
+            >
+              <Heart className="w-4 h-4" />
+              <span>Favorito</span>
+            </button>
+
+            <button
+              onClick={handleCommentOnReport}
+              className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+              title="Agregar comentario"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Comentar</span>
+            </button>
+
+            <button
+              onClick={handleShareReport}
+              className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-green-500 dark:hover:text-green-400 transition-colors duration-200"
+              title="Compartir reporte"
+            >
+              <Share className="w-4 h-4" />
+              <span>Compartir</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Sección de detalles expandidos */}
+      {showDetails && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="mb-8"
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center">
+                <MapPin className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Distribución Geográfica Detallada</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Análisis detallado por ubicación</p>
+              </div>
+            </div>
+
+            {analytics.geographicDistribution && analytics.geographicDistribution.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {analytics.geographicDistribution.slice(0, 9).map((location, index) => (
+                  <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium text-gray-900 dark:text-gray-100">
+                        {location._id.country}
+                      </h4>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {location._id.region || 'N/A'}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Sesiones:</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {formatAnalyticsData.formatNumber(location.count)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Usuarios únicos:</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {formatAnalyticsData.formatNumber(location.uniqueUserCount)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                No hay datos de distribución geográfica disponibles
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
 
       {/* Métricas principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -237,7 +420,10 @@ export default function UserAnalyticsPage() {
           className="mb-8"
         >
           <Chart
-            data={analytics.growth}
+            data={analytics.growth.map(item => ({
+              label: item.date,
+              value: item.count
+            }))}
             type="line"
             title="Crecimiento de Usuarios"
             subtitle={`Nuevos registros en los últimos ${timeRange}`}
@@ -344,7 +530,7 @@ export default function UserAnalyticsPage() {
                         />
                       ) : (
                         <div className="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold">
-                          {user.username[0].toUpperCase()}
+                          {user.username?.[0]?.toUpperCase() || 'U'}
                         </div>
                       )}
                       <div>
@@ -453,7 +639,7 @@ export default function UserAnalyticsPage() {
 
               <Chart
                 data={analytics.geographicDistribution.slice(0, 8).map(geo => ({
-                  name: geo._id.country,
+                  label: geo._id.country,
                   value: geo.count
                 }))}
                 type="doughnut"
