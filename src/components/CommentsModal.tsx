@@ -197,23 +197,30 @@ export default function CommentsModal({
             )}
           </div>
 
-          {/* Post Info */}
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+          {/* Post Context */}
+          <div className="px-6 py-3 bg-gray-50 dark:bg-gray-800/30 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
               {postImage && (
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                   <Image
                     src={postImage}
                     alt="Publicación"
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded-xl object-cover border border-gray-200 dark:border-gray-700"
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 rounded-lg object-cover border-2 border-gray-200 dark:border-gray-600"
                   />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white dark:border-gray-800"></div>
                 </div>
               )}
-              <div className="flex-1">
-                <p className="font-semibold text-gray-900 dark:text-gray-100">@{postAuthor}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Publicación</p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Comentando en la publicación de</span>
+                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">@{postAuthor}</span>
+                </div>
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Publicación original</span>
+                </div>
               </div>
             </div>
           </div>
