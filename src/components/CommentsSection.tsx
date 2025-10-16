@@ -36,7 +36,10 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
       // Verificar si la respuesta es válida
       if (data && typeof data === 'object') {
-        if (data.success && Array.isArray(data.data)) {
+        if (data.success && Array.isArray(data.posts)) {
+          setComments(data.posts);
+        } else if (data.success && Array.isArray(data.data)) {
+          // Fallback para compatibilidad con estructura anterior
           setComments(data.data);
         } else if (Array.isArray(data)) {
           // Si devuelve directamente un array de comentarios
