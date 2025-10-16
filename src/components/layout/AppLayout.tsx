@@ -10,6 +10,7 @@ import CompactCreatePostForm from '@/components/forms/CompactCreatePostForm';
 import CompactCreateStoryForm from '@/components/forms/CompactCreateStoryForm';
 import CompactCreateReelForm from '@/components/forms/CompactCreateReelForm';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
+import { useUnreadConversations } from '@/features/messages/useUnreadConversations';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 // Iconos SVG optimizados
@@ -89,6 +90,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [createType, setCreateType] = useState<'post' | 'story' | 'reel' | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
   const unreadNotifications = useUnreadNotifications();
+  const { unreadCount: unreadConversations } = useUnreadConversations();
 
   // Rutas públicas (sin layout/sidebar)
   const publicRoutes = ['/', '/forgot-password', '/reset-password'];
@@ -96,6 +98,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   // Rutas de admin (tienen su propio layout)
   const isAdminRoute = pathname.startsWith('/admin');
+
+  // Rutas de perfil de usuario (accesibles sin autenticación)
+  const isUserProfileRoute = pathname.startsWith('/') && !isPublicRoute && !isAdminRoute && !pathname.startsWith('/feed') && !pathname.startsWith('/explore') && !pathname.startsWith('/messages') && !pathname.startsWith('/notifications') && !pathname.startsWith('/profile') && !pathname.startsWith('/reels') && !pathname.startsWith('/stories') && !pathname.startsWith('/settings') && !pathname.startsWith('/live') && !pathname.startsWith('/search');
 
   // Rutas que requieren autenticación
   const protectedRoutes = ['/explore', '/messages', '/notifications', '/profile'];
@@ -113,8 +118,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
     }
   }, [loading, user, isProtectedRoute, router, isHydrated]);
 
-  // Solo mostrar loading en el cliente durante la hidratación
-  if (!isHydrated) {
+  // Solo mostrar loading en el cliente durante la hidratación para rutas que lo necesiten
+  if (!isHydrated && !isUserProfileRoute) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="flex items-center justify-center min-h-screen">
@@ -136,7 +141,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const primaryNavigation: NavigationItem[] = [
     { name: 'Inicio', href: '/feed', icon: HomeIcon },
     { name: 'Explorar', href: '/explore', icon: ExploreIcon },
-    { name: 'Mensajes', href: '/messages', icon: MessageIcon, badge: 2 }, // Hardcoded por ahora
+    { name: 'Mensajes', href: '/messages', icon: MessageIcon, badge: unreadConversations > 0 ? unreadConversations : undefined },
   ];
 
   const contentNavigation: NavigationItem[] = [
@@ -161,8 +166,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   const handleCreateContent = (type: 'post' | 'story' | 'reel') => {
-    setCreateType(type);
-    setShowCreateModal(true);
+    // Cerrar el modal primero
+    setShowCreateModal(false);
+    setCreateType(null);
+
+    // Navegar a la página de creación correspondiente
+    const routes = {
+      post: '/post/create',
+      story: '/stories/create',
+      reel: '/reels/create'
+    };
+    router.push(routes[type]);
   };
 
   const handleCloseCreateModal = () => {
