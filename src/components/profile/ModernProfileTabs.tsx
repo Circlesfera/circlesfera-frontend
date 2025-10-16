@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
@@ -31,6 +31,7 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
   const [activeTab, setActiveTab] = useState<TabType>('posts');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isInitialLoadRef = useRef(true);
 
   // Estados para cada tipo de contenido
   const [posts, setPosts] = useState<Post[]>([]);
@@ -135,6 +136,9 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
       setError(`Error al cargar ${type}`);
     } finally {
       setLoading(false);
+      if (isInitialLoadRef.current) {
+        isInitialLoadRef.current = false;
+      }
     }
   }, [username]);
 
@@ -210,6 +214,12 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
 
   // Renderizar contenido de la pestaña activa
   const renderTabContent = () => {
+    // No mostrar skeleton durante la carga inicial para evitar duplicación con el loading del perfil principal
+    if (isInitialLoadRef.current) {
+      return null;
+    }
+
+    // Solo mostrar skeleton si está cargando Y no hay contenido cargado aún
     if (loading && (activeTab === 'posts' ? posts.length === 0 : activeTab === 'reels' ? reels.length === 0 : stories.length === 0)) {
       return <ModernContentSkeleton />;
     }
@@ -280,10 +290,10 @@ export default function ModernProfileTabs({ username, isOwnProfile }: ModernProf
                       router.push('/post/create');
                       break;
                     case 'reels':
-                      router.push('/create/reel');
+                      router.push('/reels/create');
                       break;
                     case 'stories':
-                      router.push('/create/story');
+                      router.push('/stories/create');
                       break;
                   }
                 }}
@@ -451,13 +461,13 @@ function ModernEmptyState({ tabType, isOwnProfile, router }: { tabType: TabType;
             onClick={() => {
               switch (tabType) {
                 case 'posts':
-                  router.push('/create/post');
+                  router.push('/post/create');
                   break;
                 case 'reels':
-                  router.push('/create/reel');
+                  router.push('/reels/create');
                   break;
                 case 'stories':
-                  router.push('/create/story');
+                  router.push('/stories/create');
                   break;
               }
             }}
