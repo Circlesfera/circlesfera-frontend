@@ -11,17 +11,20 @@ import CreateConversationModal from '@/components/CreateConversationModal';
 export default function MessagesPage() {
   const searchParams = useSearchParams();
   const [selected, setSelected] = useState<string | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleSelectConversation = (conversation: Conversation) => {
     setSelected(conversation._id);
+    setSelectedConversation(conversation);
     setShowChat(true);
   };
 
   const handleBackToList = () => {
     setShowChat(false);
     setSelected(null);
+    setSelectedConversation(null);
   };
 
   const handleCreateNew = () => {
@@ -130,7 +133,10 @@ export default function MessagesPage() {
               {/* Área de chat mejorada */}
               <div className={`${!showChat ? 'hidden md:flex' : 'flex'} flex-1 flex-col bg-white dark:bg-gray-900`}>
                 {selected ? (
-                  <ChatWindow conversationId={selected} />
+                  <ChatWindow
+                    conversationId={selected}
+                    {...(selectedConversation?.participants && { participants: selectedConversation.participants })}
+                  />
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center p-6">
                     <div className="text-center max-w-md mx-auto">
