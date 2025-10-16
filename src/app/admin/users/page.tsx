@@ -57,12 +57,43 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
   const [showUserDetails, setShowUserDetails] = useState(false)
   const [showRoleModal, setShowRoleModal] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [showCalendarView, setShowCalendarView] = useState(false)
+  const [showBulkActions, setShowBulkActions] = useState(false)
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [showBanModal, setShowBanModal] = useState(false)
   const [showSuspendModal, setShowSuspendModal] = useState(false)
 
+  // Debounce para la búsqueda
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUsers() // Buscar siempre, incluso con campo vacío
+    }, 500) // Esperar 500ms después de que el usuario deje de escribir
+
+    return () => clearTimeout(timer)
+  }, [searchTerm])
+
+  // Efecto separado para otros filtros (sin debounce)
   useEffect(() => {
     fetchUsers()
-  }, [pagination.page, searchTerm, roleFilter, statusFilter, sortBy, sortOrder])
+  }, [pagination.page, roleFilter, statusFilter, sortBy, sortOrder])
+
+  // Efecto para cargar usuarios inicialmente
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  // Función para búsqueda inmediata (Enter o botón)
+  const handleSearchSubmit = () => {
+    fetchUsers()
+  }
+
+  // Función para manejar Enter en el input
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit()
+    }
+  }
 
   const fetchUsers = async () => {
     try {
@@ -174,6 +205,46 @@ export default function UsersPage() {
     }
   }
 
+  const handleSendEmail = async (userId: string, subject: string, message: string) => {
+    try {
+      // Aquí implementarías la lógica para enviar email
+      console.log('Enviando email a usuario:', userId, subject, message)
+      setShowEmailModal(false)
+    } catch (err) {
+      console.error('Error sending email:', err)
+    }
+  }
+
+  const handleToggleCalendarView = () => {
+    setShowCalendarView(!showCalendarView)
+  }
+
+  const handleToggleBulkActions = () => {
+    setShowBulkActions(!showBulkActions)
+  }
+
+  const handleToggleAdvancedFilters = () => {
+    setShowAdvancedFilters(!showAdvancedFilters)
+  }
+
+  const handleEditUser = (user: AdminUser) => {
+    setSelectedUser(user)
+    // Aquí abrirías un modal de edición
+    console.log('Editando usuario:', user)
+  }
+
+  const handleDeleteUser = async (userId: string) => {
+    if (confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
+      try {
+        // Aquí implementarías la lógica para eliminar usuario
+        console.log('Eliminando usuario:', userId)
+        fetchUsers()
+      } catch (err) {
+        console.error('Error deleting user:', err)
+      }
+    }
+  }
+
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case 'admin': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
@@ -218,6 +289,21 @@ export default function UsersPage() {
           Administra usuarios, roles y permisos
         </p>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-6 h-6 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+              <span className="text-red-600 dark:text-red-400 text-sm">!</span>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-red-800 dark:text-red-200">Error</h3>
+              <p className="text-red-600 dark:text-red-300">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -274,6 +360,7 @@ export default function UsersPage() {
                 placeholder="Buscar usuarios..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -308,8 +395,8 @@ export default function UsersPage() {
             value={`${sortBy}-${sortOrder}`}
             onChange={(e) => {
               const [field, order] = e.target.value.split('-')
-              setSortBy(field)
-              setSortOrder(order as 'asc' | 'desc')
+              setSortBy(field || 'createdAt')
+              setSortOrder((order as 'asc' | 'desc') || 'desc')
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
@@ -320,6 +407,45 @@ export default function UsersPage() {
             <option value="postsCount-desc">Más posts</option>
             <option value="followersCount-desc">Más seguidores</option>
           </select>
+
+          {/* Botones de acción adicionales */}
+          <div className="flex items-center space-x-2">
+            {/* Botón de filtros avanzados */}
+            <button
+              onClick={handleToggleAdvancedFilters}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showAdvancedFilters
+                ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                }`}
+              title="Filtros avanzados"
+            >
+              <Filter className="w-4 h-4" />
+            </button>
+
+            {/* Botón de vista calendario */}
+            <button
+              onClick={handleToggleCalendarView}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showCalendarView
+                ? 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                }`}
+              title="Vista calendario"
+            >
+              <Calendar className="w-4 h-4" />
+            </button>
+
+            {/* Botón de acciones masivas */}
+            <button
+              onClick={handleToggleBulkActions}
+              className={`px-3 py-2 rounded-lg border transition-colors ${showBulkActions
+                ? 'border-purple-300 dark:border-purple-600 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                }`}
+              title="Acciones masivas"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -370,7 +496,7 @@ export default function UsersPage() {
                             />
                           ) : (
                             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                              {user.username[0].toUpperCase()}
+                              {user.username?.[0]?.toUpperCase() || 'U'}
                             </div>
                           )}
                         </div>
@@ -419,6 +545,23 @@ export default function UsersPage() {
                           title="Ver detalles"
                         >
                           <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleEditUser(user)}
+                          className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
+                          title="Editar usuario"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setShowEmailModal(true)
+                          }}
+                          className="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300"
+                          title="Enviar email"
+                        >
+                          <Mail className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => {
@@ -471,6 +614,13 @@ export default function UsersPage() {
                             <Clock className="w-4 h-4" />
                           </button>
                         ) : null}
+                        <button
+                          onClick={() => handleDeleteUser(user._id)}
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          title="Eliminar usuario"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </td>
                   </motion.tr>
@@ -553,6 +703,114 @@ export default function UsersPage() {
         )}
       </div>
 
+      {/* Sección de Filtros Avanzados */}
+      {showAdvancedFilters && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+        >
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+              <Filter className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Filtros Avanzados</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Filtros adicionales para búsquedas específicas</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Fecha de registro
+              </label>
+              <input
+                type="date"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Número de posts mínimo
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Número de seguidores mínimo
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Sección de Vista Calendario */}
+      {showCalendarView && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+        >
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-green-600 dark:text-green-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Vista Calendario</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Registros de usuarios por fecha</p>
+            </div>
+          </div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            Vista de calendario de registros de usuarios
+            <div className="mt-4 text-sm">
+              {users.length} usuarios registrados en total
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Sección de Acciones Masivas */}
+      {showBulkActions && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+        >
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+              <MoreVertical className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Acciones Masivas</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Operaciones en lote para múltiples usuarios</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Enviar Email Masivo
+            </button>
+            <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              Verificar Usuarios
+            </button>
+            <button className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              Exportar Lista
+            </button>
+            <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              Suspender Masivo
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       {/* Modal de Detalles del Usuario */}
       <AnimatePresence>
         {showUserDetails && selectedUser && (
@@ -597,7 +855,7 @@ export default function UsersPage() {
                         />
                       ) : (
                         <div className="h-20 w-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-                          {selectedUser.username[0].toUpperCase()}
+                          {selectedUser.username?.[0]?.toUpperCase() || 'U'}
                         </div>
                       )}
                     </div>
@@ -847,7 +1105,7 @@ export default function UsersPage() {
                       />
                     ) : (
                       <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                        {selectedUser.username[0].toUpperCase()}
+                        {selectedUser.username?.[0]?.toUpperCase() || 'U'}
                       </div>
                     )}
                     <div>
@@ -989,7 +1247,7 @@ export default function UsersPage() {
                       />
                     ) : (
                       <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                        {selectedUser.username[0].toUpperCase()}
+                        {selectedUser.username?.[0]?.toUpperCase() || 'U'}
                       </div>
                     )}
                     <div>
@@ -1132,7 +1390,7 @@ export default function UsersPage() {
                       />
                     ) : (
                       <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                        {selectedUser.username[0].toUpperCase()}
+                        {selectedUser.username?.[0]?.toUpperCase() || 'U'}
                       </div>
                     )}
                     <div>
@@ -1248,6 +1506,95 @@ export default function UsersPage() {
                     </div>
                   </form>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Modal de Enviar Email */}
+        {showEmailModal && selectedUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={() => setShowEmailModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-lg w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                      Enviar Email
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Enviar mensaje a {selectedUser.username}
+                    </p>
+                  </div>
+                </div>
+
+                <form onSubmit={(e) => {
+                  e.preventDefault()
+                  const formData = new FormData(e.currentTarget)
+                  const subject = formData.get('subject') as string
+                  const message = formData.get('message') as string
+                  handleSendEmail(selectedUser._id, subject, message)
+                }}>
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="emailSubject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Asunto *
+                      </label>
+                      <input
+                        type="text"
+                        id="emailSubject"
+                        name="subject"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
+                        placeholder="Asunto del email"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="emailMessage" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Mensaje *
+                      </label>
+                      <textarea
+                        id="emailMessage"
+                        name="message"
+                        required
+                        rows={6}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
+                        placeholder="Escribe tu mensaje aquí..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end space-x-3 mt-6">
+                    <button
+                      type="button"
+                      onClick={() => setShowEmailModal(false)}
+                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    >
+                      Enviar Email
+                    </button>
+                  </div>
+                </form>
               </div>
             </motion.div>
           </motion.div>
