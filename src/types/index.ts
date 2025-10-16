@@ -111,6 +111,7 @@ export interface Comment {
     user: string;
     createdAt: string;
   }>;
+  likesCount?: number;
   replies: Comment[];
   isEdited: boolean;
   createdAt: string;

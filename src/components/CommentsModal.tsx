@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MessageCircle, Send, Loader2, MoreVertical, Edit, Trash2, Flag, Check, X as XIcon } from 'lucide-react';
+import { X, MessageCircle, Send, Loader2, MoreVertical, Edit, Trash2, Flag, Check, X as XIcon, Heart } from 'lucide-react';
 import { getComments, createComment, deleteComment, updateComment, reportComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 import { Button } from '@/design-system';
@@ -125,7 +125,7 @@ export default function CommentsModal({
   // Función para eliminar comentario
   const handleDeleteComment = async (commentId: string) => {
     if (!user) return;
-    
+
     try {
       await deleteComment(commentId);
       setComments(prev => prev.filter(comment => comment._id !== commentId));
@@ -147,8 +147,8 @@ export default function CommentsModal({
     try {
       const response = await updateComment(editingComment, editText);
       if (response.success) {
-        setComments(prev => prev.map(comment => 
-          comment._id === editingComment 
+        setComments(prev => prev.map(comment =>
+          comment._id === editingComment
             ? { ...comment, content: editText }
             : comment
         ));
@@ -352,6 +352,16 @@ export default function CommentsModal({
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
+                        {/* Contador de likes - Encima del username */}
+                        {comment.likesCount && comment.likesCount > 0 && (
+                          <div className="flex items-center space-x-1 mb-2">
+                            <Heart className="w-3 h-3 text-red-500 fill-current" />
+                            <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                              {comment.likesCount} {comment.likesCount === 1 ? 'me gusta' : 'me gustan'}
+                            </span>
+                          </div>
+                        )}
+
                         <div className="flex items-baseline justify-between mb-1">
                           <div className="flex items-baseline space-x-2">
                             <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
@@ -361,7 +371,7 @@ export default function CommentsModal({
                               {formatTimeAgo(comment.createdAt)}
                             </span>
                           </div>
-                          
+
                           {/* Menú de opciones */}
                           {user && (comment.user._id === user._id || user.role === 'admin') && (
                             <div className="relative">
@@ -377,7 +387,7 @@ export default function CommentsModal({
                             </div>
                           )}
                         </div>
-                        
+
                         {/* Contenido del comentario */}
                         {editingComment === comment._id ? (
                           <div className="space-y-2">
@@ -409,7 +419,7 @@ export default function CommentsModal({
                             {comment.content}
                           </p>
                         )}
-                        
+
                         {/* Botones de acción para el autor del comentario */}
                         {user && comment.user._id === user._id && editingComment !== comment._id && (
                           <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -429,7 +439,7 @@ export default function CommentsModal({
                             </button>
                           </div>
                         )}
-                        
+
                         {/* Botón de reportar para otros usuarios */}
                         {user && comment.user._id !== user._id && (
                           <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
