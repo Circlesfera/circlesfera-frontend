@@ -51,6 +51,14 @@ const nextConfig: NextConfig = {
       ? process.env.NEXT_PUBLIC_IMAGE_DOMAINS.split(',')
       : ['localhost', 'res.cloudinary.com', 'dev-api.circlesfera.com'],
     formats: ['image/webp', 'image/avif'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '5001',
+        pathname: '/uploads/**',
+      },
+    ],
   },
 };
 

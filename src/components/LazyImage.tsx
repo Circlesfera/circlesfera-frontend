@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import OptimizedImage from './OptimizedImage';
 
 interface LazyImageProps {
   src: string;
@@ -104,22 +105,24 @@ const LazyImage: React.FC<LazyImageProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Usar img nativo para compatibilidad con framer-motion y lazy loading personalizado */}
-      <motion.img
-        src={currentSrc}
-        alt={alt}
-        width={width}
-        height={height}
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+      {/* Usar OptimizedImage para mejor manejo de URLs del backend local */}
+      <motion.div
+        className="relative w-full h-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.3 }}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
-      />
+      >
+        <OptimizedImage
+          src={currentSrc}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          onLoad={handleLoad}
+          onError={handleError}
+          className="object-cover"
+          priority={priority}
+        />
+      </motion.div>
 
       {hasError && !fallback && (
         <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 flex items-center justify-center">

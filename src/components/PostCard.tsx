@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Post, updatePost, deletePost, togglePinPost } from '@/services/postService';
+import { updatePost, deletePost, togglePinPost } from '@/services/postService';
+import { Post } from '@/types';
 import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
@@ -58,6 +59,8 @@ interface PostCardProps {
   onComment?: (postId: string, postAuthor: string, postImage?: string) => void;
   onShare?: (postId: string, postUrl?: string, postCaption?: string) => void;
   onUserClick?: (userId: string) => void;
+  onLike?: (postId: string) => void;
+  onPostClick?: (postId: string, username: string) => void;
 }
 
 export default function PostCard({
@@ -65,7 +68,9 @@ export default function PostCard({
   onPostDeleted,
   onComment,
   onShare,
-  onUserClick
+  onUserClick,
+  onLike,
+  onPostClick
 }: PostCardProps) {
   const { user } = useAuth();
   const toast = useToast();
@@ -274,7 +279,7 @@ export default function PostCard({
                 <LazyImage
                   src={post.content.images[currentImageIndex]?.url || ''}
                   alt={post.content.images[currentImageIndex]?.alt || "post"}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                 />
                 {/* Indicadores de imagen */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -315,12 +320,18 @@ export default function PostCard({
           return (
             <div
               className={`relative overflow-hidden ${aspectRatioClass} bg-black cursor-pointer group`}
-              onClick={() => setShowImageModal(true)}
+              onClick={() => {
+                if (onPostClick) {
+                  onPostClick(post._id, post.user.username);
+                } else {
+                  setShowImageModal(true);
+                }
+              }}
             >
               <LazyImage
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
-                className="w-full h-full object-contain transition-opacity group-hover:opacity-90"
+                className="w-full h-full object-cover transition-opacity group-hover:opacity-90"
               />
               {/* Indicador de clic para ampliar */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
@@ -336,7 +347,10 @@ export default function PostCard({
 
       case 'video':
         return (
-          <div className={`relative overflow-hidden ${aspectRatioClass} bg-black`}>
+          <div
+            className={`relative overflow-hidden ${aspectRatioClass} bg-black cursor-pointer`}
+            onClick={() => onPostClick?.(post._id, post.user.username)}
+          >
             <video
               ref={videoRef}
               src={post.content.video?.url}
@@ -366,7 +380,10 @@ export default function PostCard({
 
       case 'text':
         return (
-          <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50">
+          <div
+            className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 cursor-pointer"
+            onClick={() => onPostClick?.(post._id, post.user.username)}
+          >
             <div className="text-gray-900 dark:text-gray-100 text-base leading-relaxed whitespace-pre-wrap">
               {post.content.text}
             </div>
@@ -514,7 +531,7 @@ export default function PostCard({
       <div className="px-6 py-1">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-4">
-            <LikeButton postId={post._id} initialLiked={likedByUser} initialCount={post.likes.length} />
+            <LikeButton postId={post._id} initialLiked={likedByUser} {...(onLike && { onLikeAction: onLike })} />
 
             <button
               onClick={() => onComment?.(post._id, post.user.username, post.content?.images?.[0]?.url)}
