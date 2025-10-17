@@ -1,6 +1,6 @@
 import api from './axios';
 import { UserProfile } from './userService';
-import type { Post, Comment } from '@/types';
+import type { Post, PostComment as Comment } from '@/features/posts/types';
 
 // Re-exportar para compatibilidad con imports existentes
 export type { Post, Comment };

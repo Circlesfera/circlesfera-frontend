@@ -1,325 +1,303 @@
-"use client";
-
-import React, { useState, useRef } from 'react';
-import { useAuth } from '@/features/auth/useAuth';
-import { createStory } from '@/services/storyService';
-import logger from '@/utils/logger';
+import React, { useState, useCallback, memo } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { Button } from '@/design-system/Button'
+import { Input } from '@/design-system/Input'
+import { Textarea } from '@/design-system/Textarea'
+import { Label } from '@/design-system/Label'
+import { Progress } from '@/design-system/Progress'
+import { Switch } from '@/design-system/Switch'
+import { X, UploadCloud, Image, Video, Type, Palette } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { useAuth } from '@/features/auth/AuthContext'
+import { createStory } from '@/features/stories/services/storyService'
+import { CreateStoryData } from '@/features/stories/types'
+import logger from '@/utils/logger'
 
 interface CreateStoryFormProps {
-  onStoryCreated: () => void;
-  onClose: () => void;
+  onStoryCreated: () => void
+  onClose: () => void
 }
 
-export default function CreateStoryForm({ onStoryCreated }: CreateStoryFormProps) {
-  const { user } = useAuth();
-  const [storyType, setStoryType] = useState<'image' | 'video' | 'text'>('image');
-  const [caption, setCaption] = useState('');
-  const [textContent, setTextContent] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+interface StoryFormData {
+  type: 'image' | 'video'
+  text: string
+  backgroundColor: string
+  fontColor: string
+  duration: number
+  media: File | null
+}
 
-  const handleFileSelect = (selectedFile: File) => {
-    if (selectedFile) {
-      // Validar tipo de archivo según el tipo de story
-      if (storyType === 'image' && !selectedFile.type.startsWith('image/')) {
-        setError('Por favor selecciona una imagen válida');
-        return;
+const CreateStoryForm = memo(({ onClose, onStoryCreated }: CreateStoryFormProps) => {
+  const { user } = useAuth()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [storyData, setStoryData] = useState<StoryFormData>({
+    type: 'image',
+    text: '',
+    backgroundColor: '#000000',
+    fontColor: '#ffffff',
+    duration: 5,
+    media: null
+  })
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0]
+    if (file) {
+      const isImage = file.type.startsWith('image/')
+      const isVideo = file.type.startsWith('video/')
+
+      if (!isImage && !isVideo) {
+        toast.error('Solo se permiten archivos de imagen y video')
+        return
       }
 
-      if (storyType === 'video' && !selectedFile.type.startsWith('video/')) {
-        setError('Por favor selecciona un video válido');
-        return;
+      if (file.size > 50 * 1024 * 1024) { // 50MB
+        toast.error('El archivo es demasiado grande (máximo 50MB)')
+        return
       }
 
-      // Validar tamaño (máximo 50MB para stories)
-      if (selectedFile.size > 50 * 1024 * 1024) {
-        setError('El archivo es demasiado grande. Máximo 50MB para stories');
-        return;
-      }
-
-      setSelectedFile(selectedFile);
-      setError('');
-
-      // Crear preview
-      const fileUrl = URL.createObjectURL(selectedFile);
-      setPreview(fileUrl);
+      setStoryData(prev => ({
+        ...prev,
+        type: isImage ? 'image' : 'video',
+        media: file
+      }))
     }
-  };
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+      'video/*': ['.mp4', '.mov', '.avi', '.webm']
+    },
+    maxFiles: 1
+  })
 
-    if (storyType !== 'text' && !selectedFile) {
-      setError('Por favor selecciona un archivo');
-      return;
-    }
-
-    if (storyType === 'text' && !textContent.trim()) {
-      setError('Por favor escribe algo para tu story');
-      return;
-    }
-
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (!user) {
-      setError('Debes estar autenticado para crear una story');
-      return;
+      toast.error('Debes iniciar sesión para crear una story')
+      return
     }
 
-    setIsUploading(true);
-    setError(null);
+    if (!storyData.media) {
+      toast.error('Debes subir una imagen o video')
+      return
+    }
+
+    setIsSubmitting(true)
+    setUploadProgress(0)
 
     try {
-      const formDataToSend = new FormData();
-
-      if (storyType !== 'text' && selectedFile) {
-        formDataToSend.append(storyType, selectedFile);
+      const createData: CreateStoryData = {
+        type: storyData.type,
+        media: storyData.media,
+        text: storyData.text || undefined,
+        backgroundColor: storyData.backgroundColor,
+        fontColor: storyData.fontColor,
+        duration: storyData.duration
       }
 
-      formDataToSend.append('type', storyType);
-      formDataToSend.append('caption', caption);
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval)
+            return prev
+          }
+          return prev + 10
+        })
+      }, 200)
 
-      if (storyType === 'text') {
-        formDataToSend.append('textContent', textContent);
-      }
+      await createStory(createData)
 
-      const response = await createStory(formDataToSend);
+      clearInterval(progressInterval)
+      setUploadProgress(100)
 
-      if (response.success) {
-        // Limpiar formulario
-        setCaption('');
-        setTextContent('');
-        setSelectedFile(null);
-        setPreview(null);
-        onStoryCreated();
-      } else {
-        throw new Error(response.message || 'Error al crear la story');
-      }
-    } catch (createStoryError) {
-      logger.error('Error creating story:', {
-        error: createStoryError instanceof Error ? createStoryError.message : 'Unknown error',
-        storyType,
-        hasMedia: !!preview
-      });
-      setError(createStoryError instanceof Error ? createStoryError.message : 'Error al crear la story');
+      toast.success('¡Story creada exitosamente!')
+      logger.info('Story created successfully', { userId: user.id, type: storyData.type })
+
+      onStoryCreated()
+      onClose()
+    } catch (error) {
+      logger.error('Error creating story', error)
+      toast.error('Error al crear la story')
     } finally {
-      setIsUploading(false);
+      setIsSubmitting(false)
+      setUploadProgress(0)
     }
-  };
+  }, [storyData, user, onStoryCreated, onClose])
 
-  const resetForm = () => {
-    setCaption('');
-    setTextContent('');
-    setSelectedFile(null);
-    setPreview(null);
-    setError('');
-  };
+  const removeMedia = () => {
+    setStoryData(prev => ({ ...prev, media: null }))
+  }
 
   return (
-    <div>
-      <div className="p-6">
-        <div className="flex items-center space-x-4 mb-6">
-          {user?.avatar ? (
-            <img src={user.avatar} alt={`Avatar de ${user.username}`} className="w-10 h-10 rounded-full object-cover" />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white">
-              {user?.username?.[0]?.toUpperCase()}
-            </div>
-          )}
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          Crear Story
+        </h2>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          <X className="w-5 h-5" />
+        </Button>
+      </div>
 
-          <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Crear Story</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">Comparte un momento efímero con tus amigos</p>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Tipo de story */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              Tipo de story
-            </label>
-            <div className="grid grid-cols-3 gap-3">
-              <button
-                type="button"
-                onClick={() => setStoryType('image')}
-                className={`p-3 rounded-lg border-2 transition-all ${storyType === 'image'
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Media Upload */}
+        <div>
+          <Label>Contenido de la Story</Label>
+          {!storyData.media ? (
+            <div
+              {...getRootProps()}
+              className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+                isDragActive
                   ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-              >
-                <svg className="w-6 h-6 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <p className="text-xs font-medium text-gray-900 dark:text-gray-100">Imagen</p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStoryType('video')}
-                className={`p-3 rounded-lg border-2 transition-all ${storyType === 'video'
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-              >
-                <svg className="w-6 h-6 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                <p className="text-xs font-medium text-gray-900 dark:text-gray-100">Video</p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStoryType('text')}
-                className={`p-3 rounded-lg border-2 transition-all ${storyType === 'text'
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-              >
-                <svg className="w-6 h-6 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
-                <p className="text-xs font-medium text-gray-900 dark:text-gray-100">Texto</p>
-              </button>
-            </div>
-          </div>
-
-          {/* Contenido */}
-          {storyType === 'text' ? (
-            <div>
-              <label htmlFor="textContent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Escribe tu story
-              </label>
-              <textarea
-                id="textContent"
-                value={textContent}
-                onChange={(e) => setTextContent(e.target.value)}
-                rows={4}
-                maxLength={200}
-                placeholder="¿Qué está pasando?"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 dark:text-gray-100"
-              />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-right">
-                {textContent.length}/200
+                  : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+              }`}
+            >
+              <input {...getInputProps()} />
+              <UploadCloud className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+              <p className="text-gray-600 dark:text-gray-400 mb-2">
+                Arrastra una imagen o video aquí, o haz clic para seleccionar
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                JPG, PNG, GIF, MP4, MOV (máximo 50MB)
               </p>
             </div>
           ) : (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {storyType === 'image' ? 'Subir imagen (9:16 vertical)' : 'Subir video (9:16 vertical)'}
-              </label>
-
-              {!preview ? (
-                <div
-                  className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-400 transition-colors cursor-pointer aspect-[9/16] max-w-xs mx-auto"
-                  onClick={() => fileInputRef.current?.click()}
+            <div className="mt-2 relative">
+              <div className="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                {storyData.type === 'image' ? (
+                  <Image className="w-8 h-8 text-blue-500" />
+                ) : (
+                  <Video className="w-8 h-8 text-red-500" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                    {storyData.media.name}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {(storyData.media.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={removeMedia}
+                  className="text-red-500 hover:text-red-700"
                 >
-                  <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    {storyType === 'image' ? (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    ) : (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    )}
-                  </svg>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
-                    <span className="font-medium text-blue-600 hover:text-blue-500">
-                      Haz clic para seleccionar
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
-                    {storyType === 'image' ? 'JPG, PNG hasta 10MB' : 'MP4, MOV hasta 50MB'}
-                  </p>
-                </div>
-              ) : (
-                <div className="relative aspect-[9/16] max-w-xs mx-auto">
-                  {storyType === 'image' ? (
-                    <img
-                      src={preview}
-                      alt="Vista previa de la story"
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                  ) : (
-                    <video
-                      src={preview}
-                      className="w-full h-full object-cover rounded-xl"
-                      controls
-                    />
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedFile(null);
-                      setPreview(null);
-                    }}
-                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              )}
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept={storyType === 'image' ? 'image/*' : 'video/*'}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileSelect(file);
-                }}
-                className="hidden"
-              />
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           )}
+        </div>
 
-          {/* Caption */}
+        {/* Text Overlay */}
+        <div>
+          <Label>Texto (opcional)</Label>
+          <Textarea
+            value={storyData.text}
+            onChange={(e) => setStoryData(prev => ({ ...prev, text: e.target.value }))}
+            placeholder="Agrega texto a tu story..."
+            className="mt-2"
+            maxLength={100}
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            {storyData.text.length}/100 caracteres
+          </p>
+        </div>
+
+        {/* Text Styling */}
+        {storyData.text && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Color de fondo</Label>
+              <div className="flex items-center space-x-2 mt-2">
+                <input
+                  type="color"
+                  value={storyData.backgroundColor}
+                  onChange={(e) => setStoryData(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                  className="w-12 h-10 rounded border border-gray-300 dark:border-gray-600"
+                />
+                <Input
+                  value={storyData.backgroundColor}
+                  onChange={(e) => setStoryData(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Color del texto</Label>
+              <div className="flex items-center space-x-2 mt-2">
+                <input
+                  type="color"
+                  value={storyData.fontColor}
+                  onChange={(e) => setStoryData(prev => ({ ...prev, fontColor: e.target.value }))}
+                  className="w-12 h-10 rounded border border-gray-300 dark:border-gray-600"
+                />
+                <Input
+                  value={storyData.fontColor}
+                  onChange={(e) => setStoryData(prev => ({ ...prev, fontColor: e.target.value }))}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Duration (for videos) */}
+        {storyData.type === 'video' && (
           <div>
-            <label htmlFor="caption" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Descripción (opcional)
-            </label>
-            <textarea
-              id="caption"
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              rows={2}
-              maxLength={200}
-              placeholder="Añade una descripción..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 dark:text-gray-100"
+            <Label>Duración de visualización (segundos)</Label>
+            <Input
+              type="number"
+              min="3"
+              max="15"
+              value={storyData.duration}
+              onChange={(e) => setStoryData(prev => ({ ...prev, duration: parseInt(e.target.value) || 5 }))}
+              className="mt-2"
             />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-right">
-              {caption.length}/200
+            <p className="text-xs text-gray-500 mt-1">
+              Entre 3 y 15 segundos
             </p>
           </div>
+        )}
 
-          {/* Mensaje de error */}
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{error}</p>
+        {/* Upload Progress */}
+        {isSubmitting && (
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Subiendo story...
+              </span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {uploadProgress}%
+              </span>
             </div>
-          )}
-
-          {/* Botones de acción */}
-          <div className="flex justify-end space-x-3 pt-4">
-            <button
-              type="button"
-              onClick={resetForm}
-              disabled={isUploading}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors disabled:opacity-50"
-            >
-              Limpiar
-            </button>
-            <button
-              type="submit"
-              disabled={isUploading || (storyType !== 'text' && !selectedFile) || (storyType === 'text' && !textContent.trim())}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isUploading ? 'Creando...' : 'Crear Story'}
-            </button>
+            <Progress value={uploadProgress} className="h-2" />
           </div>
-        </form>
-      </div>
+        )}
+
+        {/* Submit Button */}
+        <div className="flex justify-end space-x-3">
+          <Button type="button" variant="outline" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            disabled={!storyData.media || isSubmitting}
+          >
+            {isSubmitting ? 'Creando...' : 'Crear Story'}
+          </Button>
+        </div>
+      </form>
     </div>
-  );
-}
+  )
+})
+
+CreateStoryForm.displayName = 'CreateStoryForm'
+
+export default CreateStoryForm

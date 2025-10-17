@@ -62,7 +62,22 @@ export default function UserStoryPage({ params }: Props) {
           }
 
           setStory(storyData);
-          setUser(userData);
+          // Convertir User a UserProfile
+          const userProfile: UserProfile = {
+            ...userData,
+            followers: [],
+            following: [],
+            posts: [],
+            savedPosts: [],
+            blockedUsers: [],
+            postsCount: userData.postCount || 0,
+            reelsCount: 0,
+            storiesCount: 0,
+            followersCount: userData.followerCount || 0,
+            totalLikes: 0,
+            totalComments: 0
+          };
+          setUser(userProfile);
         } else {
           setError(true);
         }

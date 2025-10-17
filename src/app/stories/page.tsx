@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, Button, Avatar } from '@/design-system';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { getUsersWithStories, UserWithStories } from '@/features/stories/services/storyService';
+import { getUsersWithStories, UserWithStories, UsersWithStoriesResponse } from '@/features/stories/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { StoryViewer } from '@/features/stories/components';
 import { Plus } from 'lucide-react';
@@ -13,7 +13,7 @@ import logger from '@/utils/logger';
 export default function StoriesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [stories, setStories] = useState<UserWithStories[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<UserWithStories | null>(null);
@@ -29,13 +29,13 @@ export default function StoriesPage() {
 
       try {
         setLoading(true);
-        const response = await getUsersWithStories();
+        const response: UsersWithStoriesResponse = await getUsersWithStories();
         if (response.success) {
           setStories(response.users || []);
 
           // Si hay usuario inicial, configurarlo
           if (initialUser && response.users) {
-            const foundUser = response.users.find(u => u.username === initialUser);
+            const foundUser = response.users.find((u: UserWithStories) => u.username === initialUser);
             if (foundUser) {
               setSelectedUser(foundUser);
               setIsViewing(true);
@@ -84,13 +84,10 @@ export default function StoriesPage() {
 
     return (
       <StoryViewer
-        story={currentStory}
-        userId={selectedUser.id}
-        username={selectedUser.username}
+        stories={currentStory ? [currentStory] : []}
         onClose={handleCloseViewer}
-        onStoryDeleted={() => {
-          // Recargar stories cuando se elimine una
-
+        onStoryEnd={() => {
+          // Recargar stories cuando termine
         }}
       />
     );
@@ -176,14 +173,14 @@ export default function StoriesPage() {
                           src={userWithStories.avatar}
                           alt={userWithStories.username}
                           size="lg"
-                          fallback={userWithStories.fullName || userWithStories.username}
+                          fallback={userWithStories.username}
                           variant="story"
                           interactive
                         />
-                        {userWithStories.storiesCount > 1 && (
+                        {(userWithStories as any).storiesCount > 1 && (
                           <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border-2 border-white shadow-sm dark:shadow-gray-900/50">
                             <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
-                              {userWithStories.storiesCount}
+                              {(userWithStories as any).storiesCount}
                             </span>
                           </div>
                         )}
@@ -194,10 +191,10 @@ export default function StoriesPage() {
                           {userWithStories.username}
                         </h3>
                         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 text-sm">
-                          {userWithStories.fullName}
+                          {(userWithStories as any).fullName || userWithStories.username}
                         </p>
                         <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs">
-                          {userWithStories.storiesCount} {userWithStories.storiesCount === 1 ? 'story' : 'stories'}
+                          {(userWithStories as any).storiesCount || 0} {(userWithStories as any).storiesCount === 1 ? 'story' : 'stories'}
                         </p>
                       </div>
 

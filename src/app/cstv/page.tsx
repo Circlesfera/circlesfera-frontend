@@ -6,7 +6,7 @@ import { Play, TrendingUp, Clock, Search, Filter } from 'lucide-react';
 import { useCSTVVideos, useTrendingVideos, useCSTVSearch } from '@/hooks/useCSTV';
 import { CSTVVideoCard } from '@/components/cstv/CSTVVideoCard';
 import { CSTV_CATEGORIES, type CSTVCategory } from '@/types/cstv';
-import { useAuthContext } from '@/features/auth/AuthContext';
+// import { useAuth } from '@/features/auth/AuthContext'; // TODO: Usar cuando sea necesario
 import { useRouter } from 'next/navigation';
 import api from '@/services/axios';
 import logger from '@/utils/logger';
@@ -17,7 +17,7 @@ export default function CSTVPage() {
   const [selectedCategory, setSelectedCategory] = useState<CSTVCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'views' | 'likes' | 'trending'>('trending');
 
-  const { user } = useAuthContext();
+  // const { user } = useAuthContext(); // TODO: Implementar autenticación
   const router = useRouter();
 
   // Trending videos
@@ -61,10 +61,11 @@ export default function CSTVPage() {
   };
 
   const handleVideoLike = async (videoId: string, isLiked: boolean) => {
-    if (!user) {
-      logger.warn('User not authenticated for video like');
-      return;
-    }
+    // TODO: Implementar autenticación
+    // if (!user) {
+    //   logger.warn('User not authenticated for video like');
+    //   return;
+    // }
     try {
       const endpoint = isLiked ? `/cstv/${videoId}/unlike` : `/cstv/${videoId}/like`;
       await api.post(endpoint);
@@ -85,10 +86,11 @@ export default function CSTVPage() {
   };
 
   const handleVideoSave = async (videoId: string, isSaved: boolean) => {
-    if (!user) {
-      logger.warn('User not authenticated for video save');
-      return;
-    }
+    // TODO: Implementar autenticación
+    // if (!user) {
+    //   logger.warn('User not authenticated for video save');
+    //   return;
+    // }
     try {
       const endpoint = isSaved ? `/cstv/${videoId}/unsave` : `/cstv/${videoId}/save`;
       await api.post(endpoint);
@@ -208,7 +210,7 @@ export default function CSTVPage() {
               <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">Videos largos de CircleSfera</p>
             </div>
 
-            {user && (
+            {false && ( // TODO: Implementar autenticación
               <button
                 onClick={() => router.push('/cstv/create')}
                 className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-2"
@@ -363,7 +365,7 @@ export default function CSTVPage() {
                 activeTab === 'trending' ? 'Los videos trending aparecerán aquí' :
                   'Los videos más recientes aparecerán aquí'}
             </p>
-            {user && activeTab !== 'search' && (
+            {false && activeTab !== 'search' && ( // TODO: Implementar autenticación
               <button
                 onClick={() => router.push('/cstv/create')}
                 className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
@@ -387,7 +389,7 @@ export default function CSTVPage() {
                     onLike={handleVideoLike}
                     onSave={handleVideoSave}
                     onShare={handleVideoShare}
-                    currentUser={user ? { id: user.id, username: user.username } : undefined}
+                    currentUser={undefined} // TODO: Implementar autenticación
                     size="medium"
                   />
                 </motion.div>

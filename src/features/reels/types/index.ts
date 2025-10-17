@@ -1,68 +1,54 @@
 export interface Reel {
   id: string
   userId: string
-  user: {
-    id: string
-    username: string
-    avatar?: string
-  }
+  caption: string
   videoUrl: string
-  caption?: string
+  thumbnailUrl: string
   hashtags: string[]
   location?: {
     name: string
     coordinates: [number, number]
   }
   audioTitle?: string
-  audioArtist?: string
-  allowComments: boolean
-  allowDuets: boolean
-  allowStitches: boolean
   duration: number
-  views: number
   likes: string[]
-  comments: string[]
+  comments: any[]
+  views: number
   shares: number
   createdAt: string
+  updatedAt: string
+  user?: {
+    id: string
+    username: string
+    avatar?: string
+  }
+  isLiked?: boolean
 }
 
 export interface CreateReelData {
-  video: File
-  caption?: string
-  hashtags?: string[]
+  caption: string
+  hashtags: string[]
   location?: {
     name: string
     coordinates: [number, number]
   }
   audioTitle?: string
-  audioArtist?: string
-  allowComments?: boolean
-  allowDuets?: boolean
-  allowStitches?: boolean
+  video: File
 }
 
-export interface ReelResponse {
-  success: boolean
-  data: Reel
-  message?: string
-}
-
-export interface ReelsResponse {
-  success: boolean
-  data: Reel[]
-  pagination?: {
-    page: number
-    limit: number
-    total: number
-    pages: number
+export interface ReelFilters {
+  hashtags?: string[]
+  location?: string
+  duration?: {
+    min?: number
+    max?: number
   }
-  message?: string
+  sortBy?: 'recent' | 'popular' | 'trending'
 }
 
-export interface ReelStats {
-  views: number
-  likes: number
-  comments: number
-  shares: number
-  engagement: number
+export interface ReelSearchOptions {
+  query?: string
+  filters?: ReelFilters
+  page?: number
+  limit?: number
 }

@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import { getPostById } from '@/services/postService'
 import { PostCard } from '@/features/posts/components'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { Post } from '@/types'
+import { Post } from '@/features/posts/types'
 import logger from '@/utils/logger'
 
 export default function UserPostDetailPage() {

@@ -26,7 +26,22 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
         }
 
         const profileData = await getUserProfileByUsername(username);
-        setProfile(profileData);
+        // Convertir User a UserProfile
+        const userProfile: UserProfile = {
+          ...profileData,
+          followers: [],
+          following: [],
+          posts: [],
+          savedPosts: [],
+          blockedUsers: [],
+          postsCount: profileData.postCount || 0,
+          reelsCount: 0,
+          storiesCount: 0,
+          followersCount: profileData.followerCount || 0,
+          totalLikes: 0,
+          totalComments: 0
+        };
+        setProfile(userProfile);
       } catch (loadProfileError) {
         // Manejo detallado de errores de Axios
         if (loadProfileError && typeof loadProfileError === 'object' && 'response' in loadProfileError) {

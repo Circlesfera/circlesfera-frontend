@@ -28,6 +28,8 @@ export interface Post {
 export interface PostContent {
   text?: string
   media?: PostMedia[]
+  images?: PostMedia[] // Alias para compatibilidad
+  video?: PostMedia // Alias para compatibilidad
   location?: PostLocation
 }
 

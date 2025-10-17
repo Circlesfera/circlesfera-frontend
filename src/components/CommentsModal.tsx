@@ -138,7 +138,7 @@ export default function CommentsModal({
   // Función para editar comentario
   const handleEditComment = (comment: Comment) => {
     setEditingComment(comment.id);
-    setEditText(comment.content);
+    setEditText((comment as any).content || comment.text);
   };
 
   const handleSaveEdit = async () => {
@@ -343,8 +343,8 @@ export default function CommentsModal({
                   >
                     <div className="flex-shrink-0">
                       <Image
-                        src={comment.user.avatar || '/default-avatar.png'}
-                        alt={`Avatar de ${comment.user.username}`}
+                        src={comment.user?.avatar || '/default-avatar.png'}
+                        alt={`Avatar de ${comment.user?.username || 'Usuario'}`}
                         width={36}
                         height={36}
                         className="w-9 h-9 rounded-full object-cover ring-2 ring-gray-200 dark:ring-gray-700"
@@ -353,11 +353,11 @@ export default function CommentsModal({
                     <div className="flex-1 min-w-0">
                       <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
                         {/* Contador de likes - Encima del username */}
-                        {comment.likesCount && comment.likesCount > 0 && (
+                        {(comment as any).likesCount && (comment as any).likesCount > 0 && (
                           <div className="flex items-center space-x-1 mb-2">
                             <Heart className="w-3 h-3 text-red-500 fill-current" />
                             <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                              {comment.likesCount} {comment.likesCount === 1 ? 'me gusta' : 'me gustan'}
+                              {(comment as any).likesCount} {(comment as any).likesCount === 1 ? 'me gusta' : 'me gustan'}
                             </span>
                           </div>
                         )}
@@ -365,7 +365,7 @@ export default function CommentsModal({
                         <div className="flex items-baseline justify-between mb-1">
                           <div className="flex items-baseline space-x-2">
                             <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                              {comment.user.username}
+                              {comment.user?.username || 'Usuario'}
                             </span>
                             <span className="text-xs text-gray-500 dark:text-gray-400">
                               {formatTimeAgo(comment.createdAt)}
@@ -373,7 +373,7 @@ export default function CommentsModal({
                           </div>
 
                           {/* Menú de opciones */}
-                          {user && (comment.user.id === user.id || user.role === 'admin') && (
+                          {user && (comment.user?.id === user.id || user.role === 'admin') && (
                             <div className="relative">
                               <button
                                 className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full transition-all"
@@ -416,12 +416,12 @@ export default function CommentsModal({
                           </div>
                         ) : (
                           <p className="text-sm text-gray-900 dark:text-gray-100 break-words leading-relaxed">
-                            {comment.content}
+                            {(comment as any).content || comment.text}
                           </p>
                         )}
 
                         {/* Botones de acción para el autor del comentario */}
-                        {user && comment.user.id === user.id && editingComment !== comment.id && (
+                        {user && comment.user?.id === user.id && editingComment !== comment.id && (
                           <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleEditComment(comment)}
@@ -441,7 +441,7 @@ export default function CommentsModal({
                         )}
 
                         {/* Botón de reportar para otros usuarios */}
-                        {user && comment.user.id !== user.id && (
+                        {user && comment.user?.id !== user.id && (
                           <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleReportComment(comment.id)}

@@ -66,11 +66,11 @@ export default function FeedCard({
   };
 
   const handleComment = () => {
-    onComment?.(post.id, post.user.username);
+    onComment?.(post.id, post.user?.username || 'Usuario');
   };
 
   const handleShare = () => {
-    onShare?.(post.id, post.user.username);
+    onShare?.(post.id, post.user?.username || 'Usuario');
   };
 
   const handleDelete = () => {
@@ -85,12 +85,12 @@ export default function FeedCard({
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
             <span className="text-white font-semibold text-sm">
-              {post.user.username?.[0]?.toUpperCase()}
+              {post.user?.username?.[0]?.toUpperCase() || 'U'}
             </span>
           </div>
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
-              {post.user.fullName || post.user.username}
+              {post.user?.fullName || post.user?.username || 'Usuario'}
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               {formatRelativeTime(post.createdAt)}
@@ -141,7 +141,7 @@ export default function FeedCard({
         <div className="relative w-full bg-black">
           <Image
             src={post.content.images[0].url}
-            alt={post.caption || post.content.images[0].alt || "Contenido del post"}
+            alt={post.caption || (post.content.images[0] as any).alt || "Contenido del post"}
             width={600}
             height={384}
             className="w-full h-auto max-h-96 object-contain"
@@ -200,7 +200,7 @@ export default function FeedCard({
         <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700 pt-3">
           <div className="space-y-2">
             {post.comments.slice(0, 2).map((commentId, index) => (
-              <div key={commentId || index} className="flex items-start gap-2">
+              <div key={(commentId as any)?.id || index} className="flex items-start gap-2">
                 <div className="w-6 h-6 bg-gray-300 rounded-full flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-gray-700 dark:text-gray-300">

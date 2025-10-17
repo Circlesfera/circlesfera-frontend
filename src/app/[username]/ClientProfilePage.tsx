@@ -26,11 +26,10 @@ const convertToFormData = (profile: UserProfile): User => {
     gender: profile.gender as 'male' | 'female' | 'other' | 'prefer-not-to-say' || 'prefer-not-to-say',
     birthDate: profile.birthDate || '',
     isPrivate: profile.isPrivate !== undefined ? profile.isPrivate : false,
-    followers: profile.followers || [],
-    following: profile.following || [],
-    posts: profile.posts?.map(p => p.id) || [],
-    savedPosts: [],
-    blockedUsers: [],
+    isVerified: profile.isVerified || false,
+    followerCount: profile.followerCount || profile.followersCount || 0,
+    followingCount: profile.followingCount || 0,
+    postCount: profile.postCount || 0,
     createdAt: profile.createdAt || new Date().toISOString(),
     updatedAt: profile.updatedAt || new Date().toISOString()
   } as User;
@@ -122,7 +121,23 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
       // Solo actualizar si los datos del servidor son diferentes a los locales
       // Esto evita sobrescribir cambios recién guardados
       setProfileData(prevData => {
-        if (!prevData) return newProfileData;
+        if (!prevData) {
+          const userProfile: UserProfile = {
+            ...newProfileData,
+            followers: [],
+            following: [],
+            posts: [],
+            savedPosts: [],
+            blockedUsers: [],
+            postsCount: newProfileData.postCount || 0,
+            reelsCount: 0,
+            storiesCount: 0,
+            followersCount: newProfileData.followerCount || 0,
+            totalLikes: 0,
+            totalComments: 0
+          };
+          return userProfile;
+        }
 
         // Comparar campos críticos para ver si hay diferencias significativas
         const hasSignificantChanges =
@@ -134,7 +149,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           prevData.birthDate !== newProfileData.birthDate ||
           prevData.website !== newProfileData.website ||
           prevData.avatar !== newProfileData.avatar ||
-          prevData.followersCount !== newProfileData.followersCount ||
+          prevData.followerCount !== newProfileData.followerCount ||
           prevData.followingCount !== newProfileData.followingCount;
 
         logger.info('🔍 reloadProfile - Comparación de datos:', {
@@ -155,7 +170,21 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
         if (hasSignificantChanges) {
           logger.info('🔍 reloadProfile - Actualizando con datos del servidor');
-          return newProfileData;
+          const updatedUserProfile: UserProfile = {
+            ...newProfileData,
+            followers: prevData.followers,
+            following: prevData.following,
+            posts: prevData.posts,
+            savedPosts: prevData.savedPosts,
+            blockedUsers: prevData.blockedUsers,
+            postsCount: newProfileData.postCount || 0,
+            reelsCount: prevData.reelsCount,
+            storiesCount: prevData.storiesCount,
+            followersCount: newProfileData.followerCount || 0,
+            totalLikes: prevData.totalLikes,
+            totalComments: prevData.totalComments
+          };
+          return updatedUserProfile;
         } else {
           logger.info('🔍 reloadProfile - No hay cambios significativos, manteniendo datos locales');
           return prevData;
@@ -213,7 +242,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     setShowFollowers(true);
     try {
       const data = await getFollowers(profileData.id);
-      setFollowersList(data);
+      setFollowersList(data.followers || []);
     } catch (error) {
       // Solo logear errores críticos
       if (error instanceof Error && error.message.includes('500')) {
@@ -228,7 +257,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
     setShowFollowing(true);
     try {
       const data = await getFollowing(profileData.id);
-      setFollowingList(data);
+      setFollowingList(data.following || []);
     } catch (error) {
       // Solo logear errores críticos
       if (error instanceof Error && error.message.includes('500')) {

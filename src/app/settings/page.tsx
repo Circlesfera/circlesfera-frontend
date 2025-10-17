@@ -125,7 +125,7 @@ export default function SettingsPage() {
   const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
-      const profileData = await getUserProfile();
+      const profileData = await getUserProfile('');
       setProfile(profileData);
     } catch (loadProfileError) {
       logger.error('Error loading user profile in settings:', {

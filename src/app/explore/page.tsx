@@ -91,6 +91,10 @@ export default function ExplorePage() {
           <UserSearch
             query={searchQuery}
             onResultClick={() => setSearchQuery('')}
+            onSelectUser={(user) => {
+              // TODO: Navigate to user profile
+              console.log('Selected user:', user)
+            }}
           />
         </div>
 
@@ -166,7 +170,7 @@ export default function ExplorePage() {
                 <Card
                   key={post.id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/${post.user.username}/post/${post.id}`)}
+                  onClick={() => router.push(`/${post.user?.username || 'unknown'}/post/${post.id}`)}
                 >
                   <div className="aspect-[9/16] relative">
                     {post.content.images && post.content.images[0] ? (
@@ -192,7 +196,7 @@ export default function ExplorePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                     <div className="absolute bottom-2 left-2 right-2">
                       <p className="text-white text-sm font-medium truncate">
-                        @{post.user.username}
+                        @{post.user?.username || 'unknown'}
                       </p>
                       <div className="flex items-center text-white text-xs mt-1">
                         <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

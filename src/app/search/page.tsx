@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { searchUsers } from '@/services/userService';
+// import { searchUsers } from '@/services/userService';
 import { useAuth } from '@/features/auth/useAuth';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -38,10 +38,11 @@ function SearchContent() {
       setError('');
 
       try {
-        const searchResults = await searchUsers(query);
+        const { searchUsers } = await import('@/services/userService');
+        const searchResults = await searchUsers(query, 1, 20) || [];
         // Filtrar resultados para excluir al usuario actual si está logueado
         const filteredResults = user
-          ? searchResults.filter(result => result.id !== user.id)
+          ? (searchResults as any).filter((result: any) => result.id !== user.id)
           : searchResults;
         setResults(filteredResults);
       } catch (searchError) {

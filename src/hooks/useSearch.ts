@@ -65,7 +65,7 @@ export function useSearch(): UseSearchReturn {
       if (filters.type === 'users' || filters.type === 'all') {
         try {
           const usersResponse = await searchUsers(debouncedQuery);
-          newResults.users = usersResponse || [];
+          newResults.users = usersResponse.users || [];
         } catch (searchError) {
           logger.error('Error searching users:', {
             error: searchError instanceof Error ? searchError.message : 'Unknown error',

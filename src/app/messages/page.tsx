@@ -14,7 +14,7 @@ export default function MessagesPage() {
   const [showChat, setShowChat] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const handleSelectConversation = (conversation: Conversation) => {
+  const handleSelectConversation = (conversation: any) => {
     setSelected(conversation.id);
     setSelectedConversation(conversation);
     setShowChat(true);
@@ -123,9 +123,8 @@ export default function MessagesPage() {
               {/* Sidebar mejorado */}
               <div className={`${showChat ? 'hidden md:block' : 'block'} w-full md:w-96 lg:w-[420px] border-r border-gray-200 dark:border-gray-700`}>
                 <ConversationsList
-                  onSelect={handleSelectConversation}
-                  selectedId={selected}
-                  onCreateNew={handleCreateNew}
+                  onConversationSelect={handleSelectConversation}
+                  onNewConversation={handleCreateNew}
                 />
               </div>
 
@@ -134,14 +133,11 @@ export default function MessagesPage() {
                 {selected ? (
                   <ChatWindow
                     conversationId={selected}
-                    {...(selectedConversation?.participants && {
-                      participants: selectedConversation.participants.map(p => ({
-                        id: p.id,
-                        username: p.username,
-                        ...(p.avatar && { avatar: p.avatar }),
-                        ...(p.fullName && { fullName: p.fullName })
-                      }))
-                    })}
+                    recipient={selectedConversation?.participants?.[0] || {
+                      id: 'unknown',
+                      username: 'Usuario',
+                      avatar: '/default-avatar.png'
+                    }}
                   />
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center p-6">
@@ -204,7 +200,7 @@ export default function MessagesPage() {
           <CreateConversationModal
             isOpen={showCreateModal}
             onClose={handleCloseCreateModal}
-            onConversationCreated={(conversation: Conversation) => {
+            onConversationCreated={(conversation: any) => {
               handleSelectConversation(conversation);
               setShowCreateModal(false);
             }}

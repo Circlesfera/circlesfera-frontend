@@ -1,6 +1,30 @@
 import api from '@/services/api'
 import { CreateStoryData, StoryResponse, StoriesResponse, StoryStats } from '../types'
 
+// Tipos adicionales necesarios
+export interface UserWithStories {
+  id: string
+  username: string
+  avatar?: string
+  stories: any[] // TODO: Tipar correctamente
+  hasViewed: boolean
+  latestStory?: any // TODO: Tipar correctamente
+}
+
+export interface UsersWithStoriesResponse {
+  success: boolean
+  users: UserWithStories[]
+}
+
+export const getUsersWithStories = async (): Promise<UsersWithStoriesResponse> => {
+  try {
+    const response = await api.get('/stories/users')
+    return response.data
+  } catch (_error: unknown) {
+    throw new Error('Error obteniendo usuarios con stories')
+  }
+}
+
 export const storyService = {
   /**
    * Obtener todas las stories activas

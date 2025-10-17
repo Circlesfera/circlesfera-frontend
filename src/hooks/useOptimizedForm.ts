@@ -1,14 +1,9 @@
 "use client";
 
 import { useState, useCallback, useMemo } from 'react';
-import { useDebounce } from './useVirtualization';
+import { useDebounce } from './useDebounce';
 
-interface FormField<T> {
-  value: T;
-  error: string | null;
-  touched: boolean;
-  dirty: boolean;
-}
+// Removed unused interface FormField
 
 interface FormState<T> {
   values: T;
@@ -51,7 +46,7 @@ export const useOptimizedForm = <T extends Record<string, any>>({
   const debouncedValues = useDebounce(values, debounceValidation);
 
   // Validación optimizada
-  const validateForm = useCallback((valuesToValidate: T) => {
+  const validateForm = useCallback((valuesToValidate: T): Partial<Record<keyof T, string>> => {
     if (!validate) return {};
     return validate(valuesToValidate);
   }, [validate]);
@@ -64,17 +59,17 @@ export const useOptimizedForm = <T extends Record<string, any>>({
     if (validateOnChange) {
       const newValues = { ...values, [field]: value };
       const newErrors = validateForm(newValues);
-      setErrors(prev => ({ ...prev, [field]: newErrors[field] || null }));
+      setErrors(prev => ({ ...prev, [field]: newErrors[field as keyof T] || null }));
     }
   }, [values, validateForm, validateOnChange]);
 
   // Manejar blur de campos
-  const setTouched = useCallback((field: keyof T) => {
+  const setFieldTouched = useCallback((field: keyof T) => {
     setTouched(prev => ({ ...prev, [field]: true }));
 
     if (validateOnBlur) {
       const newErrors = validateForm(values);
-      setErrors(prev => ({ ...prev, [field]: newErrors[field] || null }));
+      setErrors(prev => ({ ...prev, [field]: newErrors[field as keyof T] || null }));
     }
   }, [values, validateForm, validateOnBlur]);
 
@@ -121,7 +116,6 @@ export const useOptimizedForm = <T extends Record<string, any>>({
   const formState = useMemo((): FormState<T> => {
     const hasErrors = Object.values(errors).some(error => error !== null);
     const hasDirtyFields = Object.values(dirty).some(isDirty => isDirty);
-    const hasTouchedFields = Object.values(touched).some(isTouched => isTouched);
 
     return {
       values,
@@ -145,7 +139,7 @@ export const useOptimizedForm = <T extends Record<string, any>>({
   return {
     ...formState,
     setValue,
-    setTouched,
+    setFieldTouched,
     handleSubmit,
     reset,
     setValues,
@@ -160,7 +154,7 @@ export const useFormField = <T>(
   name: keyof T,
   formState: FormState<T>,
   setValue: (field: keyof T, value: any) => void,
-  setTouched: (field: keyof T) => void
+  setFieldTouched: (field: keyof T) => void
 ) => {
   const value = formState.values[name];
   const error = formState.errors[name];
@@ -172,8 +166,8 @@ export const useFormField = <T>(
   }, [name, setValue]);
 
   const handleBlur = useCallback(() => {
-    setTouched(name);
-  }, [name, setTouched]);
+    setFieldTouched(name);
+  }, [name, setFieldTouched]);
 
   return {
     value,

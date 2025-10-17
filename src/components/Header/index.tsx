@@ -295,7 +295,10 @@ export default function Header() {
                   <CloseIcon aria-hidden="true" />
                 </button>
               </div>
-              <CreateStoryForm onStoryCreated={handleStoryCreated} />
+              <CreateStoryForm
+                onStoryCreated={handleStoryCreated}
+                onClose={() => setShowStoryForm(false)}
+              />
             </div>
           </div>
         </div>
@@ -305,6 +308,7 @@ export default function Header() {
         <CreateReelForm
           onReelCreated={() => setShowReelForm(false)}
           onClose={() => setShowReelForm(false)}
+          {...({} as any)}
         />
       )}
     </>

@@ -620,3 +620,78 @@ export const postService = new PostService()
 // Exportar función específica para compatibilidad
 export const getUserPosts = (userId: string, options: PostFeedOptions = {}) =>
   postService.getUserPosts(userId, options)
+
+// Funciones específicas para crear posts
+export const createImagePost = async (postData: CreatePostData): Promise<Post> => {
+  const formData = new FormData()
+
+  formData.append('caption', postData.caption || '')
+  formData.append('type', 'image')
+
+  if (postData.media && postData.media.length > 0) {
+    postData.media.forEach((file) => {
+      formData.append('media', file)
+    })
+  }
+
+  if (postData.location) {
+    formData.append('location', JSON.stringify(postData.location))
+  }
+
+  if (postData.hashtags && postData.hashtags.length > 0) {
+    formData.append('hashtags', JSON.stringify(postData.hashtags))
+  }
+
+  if (postData.mentions && postData.mentions.length > 0) {
+    formData.append('mentions', JSON.stringify(postData.mentions))
+  }
+
+  if (postData.isPublic !== undefined) {
+    formData.append('isPublic', String(postData.isPublic))
+  }
+
+  const response = await api.post('/posts', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+
+  return response.data.post
+}
+
+export const createVideoPost = async (postData: CreatePostData): Promise<Post> => {
+  const formData = new FormData()
+
+  formData.append('caption', postData.caption || '')
+  formData.append('type', 'video')
+
+  if (postData.media && postData.media.length > 0) {
+    postData.media.forEach((file) => {
+      formData.append('media', file)
+    })
+  }
+
+  if (postData.location) {
+    formData.append('location', JSON.stringify(postData.location))
+  }
+
+  if (postData.hashtags && postData.hashtags.length > 0) {
+    formData.append('hashtags', JSON.stringify(postData.hashtags))
+  }
+
+  if (postData.mentions && postData.mentions.length > 0) {
+    formData.append('mentions', JSON.stringify(postData.mentions))
+  }
+
+  if (postData.isPublic !== undefined) {
+    formData.append('isPublic', String(postData.isPublic))
+  }
+
+  const response = await api.post('/posts', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+
+  return response.data.post
+}

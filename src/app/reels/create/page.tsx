@@ -41,7 +41,7 @@ export default function CreateReelPage() {
 
         {/* Formulario de creación */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm dark:shadow-gray-900/50 border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <CreateReelForm onReelCreated={handleReelCreated} />
+          <CreateReelForm onReelCreated={handleReelCreated} onClose={() => router.push('/reels')} />
         </div>
       </div>
     </ProtectedRoute>

@@ -1,623 +1,304 @@
-"use client";
-
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Image from 'next/image';
-import { useAuth } from '@/features/auth/useAuth';
-import { deleteStory, Story } from '@/services/storyService';
-import logger from '@/utils/logger';
-import { useToast } from '@/components/Toast';
-
-// Iconos SVG modernos estilo Instagram
-const CloseIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-  </svg>
-);
-
-const HeartIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-  </svg>
-);
-
-const MessageIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-  </svg>
-);
-
-const SendIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-  </svg>
-);
-
-const MoreIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-  </svg>
-);
-
-const PauseIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-const PlayIcon = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-const TrashIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-  </svg>
-);
-
-const ReportIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-  </svg>
-);
+import React, { useState, useEffect, useCallback, memo } from 'react'
+import Image from 'next/image'
+import { Button } from '@/design-system/Button'
+import { Avatar } from '@/design-system/Avatar'
+import { X, ChevronLeft, ChevronRight, Heart, MessageCircle, Share2, MoreHorizontal } from 'lucide-react'
+import { Story } from '../types'
+import { useAuth } from '@/features/auth/AuthContext'
+import { viewStory } from '../services/storyService'
+import logger from '@/utils/logger'
 
 interface StoryViewerProps {
-  story: Story;
-  userId: string;
-  username: string;
-  onClose: () => void;
-  onStoryDeleted?: (storyId: string) => void;
+  stories: Story[]
+  initialIndex?: number
+  onClose: () => void
+  onStoryEnd?: () => void
+  className?: string
 }
 
-export default function StoryViewer({ story: initialStory, userId, username, onClose, onStoryDeleted }: StoryViewerProps) {
-  // Solo loggear en desarrollo (comentado temporalmente para evitar spam)
-  // if (process.env.NODE_ENV === 'development') {
-  //   console.log('🎬 StoryViewer renderizado con onClose:', typeof onClose, 'onStoryDeleted:', typeof onStoryDeleted);
-  // }
-  const { user } = useAuth();
-  const toast = useToast();
-  const [story, setStory] = useState<Story | null>(initialStory);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyText, setReplyText] = useState('');
-  const [sendingReply, setSendingReply] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [showReactionFeedback, setShowReactionFeedback] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+const StoryViewer = memo(({
+  stories,
+  initialIndex = 0,
+  onClose,
+  onStoryEnd,
+  className = ''
+}: StoryViewerProps) => {
+  const { user } = useAuth()
+  const [currentIndex, setCurrentIndex] = useState(initialIndex)
+  const [progress, setProgress] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [hasViewed, setHasViewed] = useState(false)
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const progressInterval = useRef<NodeJS.Timeout | null>(null);
-  const shouldCloseRef = useRef(false);
-  const storyDuration = 5000; // 5 segundos por story
+  const currentStory = stories[currentIndex]
 
-  // Iniciar progreso automático (definir ANTES del useEffect que lo usa)
-  const startProgress = useCallback(() => {
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current);
+  const markAsViewed = useCallback(async (storyId: string) => {
+    if (hasViewed || !user) return
+
+    try {
+      await viewStory(storyId)
+      setHasViewed(true)
+      logger.info('Story marked as viewed', { storyId, userId: user.id })
+    } catch (error) {
+      logger.error('Error marking story as viewed', error)
     }
+  }, [hasViewed, user])
 
-    progressInterval.current = setInterval(() => {
-      if (!isPaused) {
-        setProgress(prev => {
-          if (prev >= 100) {
-            // Story completada, marcar para cerrar
-            shouldCloseRef.current = true;
-            return 100;
-          }
-          return prev + (100 / (storyDuration / 100));
-        });
-      }
-    }, 100);
-  }, [isPaused, storyDuration]); // Agregado storyDuration como dependencia
-
-  // Inicializar la story y el progreso
-  useEffect(() => {
-    if (story) {
-      setLoading(false);
-      setError(null);
-      // Iniciar progreso automático
-      startProgress();
+  const nextStory = useCallback(() => {
+    if (currentIndex < stories.length - 1) {
+      setCurrentIndex(prev => prev + 1)
+      setProgress(0)
+      setHasViewed(false)
     } else {
-      setError('No se pudo cargar la historia');
-      setLoading(false);
+      onStoryEnd?.()
     }
+  }, [currentIndex, stories.length, onStoryEnd])
 
-    return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-    };
-  }, [story, startProgress]);
+  const previousStory = useCallback(() => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1)
+      setProgress(0)
+      setHasViewed(false)
+    }
+  }, [currentIndex])
 
-  // Verificar si debe cerrarse la story
+  const handlePlayPause = useCallback(() => {
+    setIsPlaying(prev => !prev)
+  }, [])
+
+  // Progress bar animation
   useEffect(() => {
-    if (shouldCloseRef.current) {
-      shouldCloseRef.current = false;
-      onClose();
-    }
-  }, [progress, onClose]); // Incluir onClose en las dependencias
+    if (!isPlaying || !currentStory) return
 
-  // Loggear información de la story en desarrollo
-  useEffect(() => {
-    if (story) {
-      logger.debug('StoryViewer: Showing story', {
-        storyId: story.id,
-        username,
-        userId
-      });
-    }
-  }, [story, userId, username]);
+    const duration = currentStory.duration || 5
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = prev + (100 / (duration * 10)) // 10 updates per second
 
-  // Pausar/reanudar story
-  const togglePause = useCallback(() => {
-
-    setIsPaused(prev => !prev);
-
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-
-        videoRef.current.play();
-      } else {
-
-        videoRef.current.pause();
-      }
-    }
-
-  }, []);
-
-  // Manejar reacción
-  const handleReaction = async (reactionType: 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry') => {
-
-    if (!story || !user) {
-
-      return;
-    }
-
-    try {
-      // Aquí iría la llamada real a la API
-
-      // Actualizar estado local
-      setStory(prev => {
-        if (!prev) return prev;
-
-        const existingReaction = prev.reactions.find(r => r.user === user.id);
-        if (existingReaction) {
-          existingReaction.type = reactionType;
-
-        } else {
-          prev.reactions.push({
-            user: user.id,
-            type: reactionType,
-            createdAt: new Date().toISOString()
-          });
-
+        if (newProgress >= 100) {
+          clearInterval(interval)
+          nextStory()
+          return 0
         }
-        return { ...prev };
-      });
 
-      // Mostrar feedback visual
-      setShowReactionFeedback(true);
-      setTimeout(() => setShowReactionFeedback(false), 1000);
-    } catch (error) {
-      // ✅ IMPLEMENTADO: Logging de error de reacción
-      logger.error('Error al reaccionar a story:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        storyId: story.id,
-        reactionType
-      });
-    }
-  };
+        return newProgress
+      })
+    }, 100)
 
-  // Manejar respuesta
-  const handleReply = async () => {
-    if (!story || !user || !replyText.trim()) return;
+    return () => clearInterval(interval)
+  }, [isPlaying, currentStory, nextStory])
 
-    try {
-      setSendingReply(true);
-
-      // Aquí iría la llamada real a la API
-
-      // Actualizar estado local
-      setStory(prev => {
-        if (!prev) return prev;
-        prev.replies.push({
-          user: user.id,
-          content: replyText,
-          createdAt: new Date().toISOString()
-        });
-        return { ...prev };
-      });
-
-      setReplyText('');
-      setShowReplyInput(false);
-    } catch (error) {
-      // ✅ IMPLEMENTADO: Logging de error de respuesta
-      logger.error('Error al enviar respuesta a story:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        storyId: story.id,
-        replyText: replyText.substring(0, 50) // Solo primeros 50 chars para log
-      });
-    } finally {
-      setSendingReply(false);
-    }
-  };
-
-  // Manejar eliminación de story
-  const handleDeleteStory = async () => {
-
-    if (!story || !user || story.user.id !== user.id) {
-
-      return;
-    }
-
-    try {
-      setIsDeleting(true);
-
-      // Llamada real a la API para eliminar la story
-      const token = localStorage.getItem('token');
-      logger.debug('Deleting story', {
-        storyId: story.id,
-        hasToken: !!token
-      });
-
-      const result = await deleteStory(story.id);
-
-      if (!result.success) {
-        throw new Error(result.message || 'Error al eliminar la story');
-      }
-
-      // Cerrar menú primero
-      setShowMoreMenu(false);
-
-      // Limpiar intervalos
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-
-      // Notificar que la story fue eliminada
-      if (onStoryDeleted && story) {
-
-        onStoryDeleted(story.id);
-      }
-
-      // Cerrar inmediatamente después de la eliminación exitosa
-
-      try {
-        onClose();
-
-      } catch {
-        // Ignorar errores al cerrar
-      }
-
-    } catch {
-
-      toast.error('Error al eliminar la story. Inténtalo de nuevo.');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  // Cerrar story
-  const handleClose = useCallback(() => {
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current);
-    }
-    onClose();
-  }, [onClose]);
-
-  // Manejar teclas
+  // Mark as viewed when story starts
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    if (currentStory && !hasViewed) {
+      markAsViewed(currentStory.id)
+    }
+  }, [currentStory, hasViewed, markAsViewed])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'Escape':
-          if (showMoreMenu) {
-            setShowMoreMenu(false);
-          } else {
-            handleClose();
-          }
-          break;
-        case ' ':
-          e.preventDefault();
-          togglePause();
-          break;
+          onClose()
+          break
         case 'ArrowLeft':
-          // Story anterior
-          break;
+          previousStory()
+          break
         case 'ArrowRight':
-          // Story siguiente
-          break;
+        case ' ':
+          e.preventDefault()
+          nextStory()
+          break
+        case 'p':
+        case 'P':
+          handlePlayPause()
+          break
       }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleClose, showMoreMenu, togglePause]);
-
-  // Cerrar menú al hacer clic fuera
-  useEffect(() => {
-    const handleClickOutside = () => {
-      if (showMoreMenu) {
-        setShowMoreMenu(false);
-      }
-    };
-
-    if (showMoreMenu) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
     }
 
-    return undefined;
-  }, [showMoreMenu]);
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [onClose, previousStory, nextStory, handlePlayPause])
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Cargando historia...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !story) {
-    return (
-      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-        <div className="text-white text-center">
-          <p className="mb-4">{error || 'No se pudo cargar la historia'}</p>
-          <button
-            onClick={handleClose}
-            className="px-4 py-2 bg-white dark:bg-gray-900 text-black rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 dark:bg-gray-800 transition-colors"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    );
+  if (!currentStory) {
+    return null
   }
 
   return (
-    <div className="fixed inset-0 bg-black z-50 story-viewer">
-      {/* Barra de progreso superior - Estilo Instagram */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gray-800 z-10">
-        <div
-          className="h-full bg-white dark:bg-gray-900 transition-all duration-100 ease-linear"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      {/* Header con información del usuario - Estilo Instagram */}
-      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-white/30 relative">
-            <Image
-              src={story.user.avatar || '/default-avatar.png'}
-              alt={`Avatar de ${story.user.username}`}
-              fill
-              className="object-cover"
-              sizes="32px"
+    <div className={`fixed inset-0 z-50 bg-black ${className}`}>
+      {/* Header */}
+      <div className="absolute top-0 left-0 right-0 z-10 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-3">
+            <Avatar
+              src={currentStory.user?.avatar}
+              alt={currentStory.user?.username || 'Usuario'}
+              size="sm"
             />
+            <div>
+              <p className="text-white font-semibold">
+                {currentStory.user?.username}
+              </p>
+              <p className="text-white/70 text-sm">
+                {new Date(currentStory.createdAt).toLocaleTimeString()}
+              </p>
+            </div>
           </div>
-          <div className="text-white">
-            <p className="font-semibold text-sm">{story.user.username}</p>
-            <p className="text-xs text-gray-300 opacity-80">hace 2h</p>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handlePlayPause}
+              className="text-white hover:bg-white/20"
+            >
+              {isPlaying ? '⏸️' : '▶️'}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="text-white hover:bg-white/20"
+            >
+              <X className="w-5 h-5" />
+            </Button>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          {/* Solo el botón de cerrar en el header */}
-          <button
-            onClick={handleClose}
-            className="w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 transition-colors flex items-center justify-center"
-          >
-            <CloseIcon />
-          </button>
+        {/* Progress Bars */}
+        <div className="flex space-x-1">
+          {stories.map((_, index) => (
+            <div
+              key={index}
+              className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden"
+            >
+              <div
+                className={`h-full bg-white transition-all duration-100 ${index < currentIndex
+                    ? 'w-full'
+                    : index === currentIndex
+                      ? 'w-full'
+                      : 'w-0'
+                  }`}
+                style={{
+                  width: index === currentIndex ? `${progress}%` : undefined,
+                  transition: index === currentIndex ? 'width 100ms linear' : undefined
+                }}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Contenido principal de la story - Estilo Instagram */}
-      <div
-        className="w-full h-full flex items-center justify-center"
-        onClick={togglePause}
-        style={{ cursor: 'pointer' }}
-      >
-        {story.type === 'image' && story.content.image && (
+      {/* Story Content */}
+      <div className="relative w-full h-full">
+        {currentStory.type === 'image' ? (
           <Image
-            src={story.content.image.url}
-            alt={story.content.image.alt || 'Story'}
+            src={currentStory.mediaUrl}
+            alt="Story"
             fill
             className="object-cover"
-            sizes="100vw"
-            draggable={false}
             priority
           />
-        )}
-
-        {story.type === 'video' && story.content.video && (
+        ) : (
           <video
-            ref={videoRef}
-            src={story.content.video.url}
-            className="max-w-full max-h-full object-cover"
+            src={currentStory.mediaUrl}
+            className="w-full h-full object-cover"
             autoPlay
             muted
-            playsInline
-            onEnded={() => onClose()}
+            loop
+            onEnded={nextStory}
           />
         )}
 
-        {story.type === 'text' && story.content.text && (
+        {/* Text Overlay */}
+        {currentStory.text && (
           <div
-            className="max-w-md mx-8 text-center p-8 rounded-2xl"
+            className="absolute bottom-20 left-0 right-0 p-4"
             style={{
-              backgroundColor: story.content.text.backgroundColor,
-              color: story.content.text.textColor,
-              fontSize: `${story.content.text.fontSize}px`,
-              fontFamily: story.content.text.fontFamily
+              backgroundColor: currentStory.backgroundColor,
+              color: currentStory.fontColor
             }}
           >
-            <p className="leading-relaxed">{story.content.text.content}</p>
-          </div>
-        )}
-
-        {/* Caption - Estilo Instagram */}
-        {story.caption && (
-          <div className="absolute bottom-32 left-4 right-4 text-center">
-            <p className="text-white text-lg font-medium bg-black/20 backdrop-blur-sm px-6 py-3 rounded-full inline-block">
-              {story.caption}
+            <p className="text-center text-lg font-semibold">
+              {currentStory.text}
             </p>
           </div>
         )}
 
-        {/* Feedback de reacción */}
-        {showReactionFeedback && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
-            <div className="text-6xl animate-bounce">
-              ❤️
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Botones de interacción - Estilo Instagram */}
-      <div className="absolute bottom-8 left-4 right-4 flex items-center justify-center space-x-6">
-        <button
-          onClick={() => {
-
-            handleReaction('like');
-          }}
-          className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${story?.reactions.some(r => r.user === user?.id)
-            ? 'bg-red-500/80 hover:bg-red-600/90'
-            : 'bg-black/20 hover:bg-black/40'
-            }`}
-        >
-          <HeartIcon />
-        </button>
-
-        <button
-          onClick={() => {
-
-            setShowReplyInput(!showReplyInput);
-          }}
-          className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${showReplyInput
-            ? 'bg-blue-500/80 hover:bg-blue-600/90 ring-2 ring-blue-300'
-            : 'bg-black/20 hover:bg-black/40'
-            }`}
-          title="Responder a la historia"
-        >
-          <MessageIcon />
-        </button>
-
-        <button
-          onClick={() => {
-
-            togglePause();
-          }}
-          className={`w-12 h-12 rounded-full backdrop-blur-sm transition-all duration-200 flex items-center justify-center group ${isPaused
-            ? 'bg-green-500/80 hover:bg-green-600/90'
-            : 'bg-black/20 hover:bg-black/40'
-            }`}
-        >
-          {isPaused ? <PlayIcon /> : <PauseIcon />}
-        </button>
-
-        <div className="relative">
-          <button
-            onClick={() => setShowMoreMenu(!showMoreMenu)}
-            className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40 transition-all duration-200 flex items-center justify-center group"
-            title="Más opciones"
-          >
-            <MoreIcon />
-          </button>
-
-          {/* Menú desplegable */}
-          {showMoreMenu && (
-            <div className="absolute bottom-16 right-0 w-48 bg-black/90 backdrop-blur-sm rounded-lg shadow-xl border border-white/10 z-50">
-              {/* Solo mostrar opción de eliminar si es el propietario de la story */}
-              {story?.user.id === user?.id && (
-                <button
-                  onClick={() => {
-
-                    handleDeleteStory();
-                  }}
-                  disabled={isDeleting}
-                  className={`w-full px-4 py-3 text-left transition-colors rounded-lg flex items-center space-x-3 ${isDeleting
-                    ? 'text-gray-400 dark:text-gray-500 dark:text-gray-400 bg-gray-800/50 cursor-not-allowed'
-                    : 'text-red-400 hover:bg-red-500/20'
-                    }`}
-                >
-                  {isDeleting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 dark:border-gray-500"></div>
-                      <span>Eliminando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <TrashIcon />
-                      <span>Eliminar story</span>
-                    </>
-                  )}
-                </button>
-              )}
-
-              {/* Opción para reportar (siempre visible) */}
-              <button
-                onClick={() => {
-
-                  // Aquí iría la lógica de reporte
-                  toast.info('Función de reporte en desarrollo');
-                  setShowMoreMenu(false);
-                }}
-                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10 transition-colors rounded-lg flex items-center space-x-3"
-              >
-                <ReportIcon />
-                <span>Reportar</span>
-              </button>
-
-              {/* Opción para cerrar menú */}
-              <button
-                onClick={() => setShowMoreMenu(false)}
-                className="w-full px-4 py-3 text-left text-gray-300 hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10 transition-colors rounded-lg flex items-center space-x-3"
-              >
-                <CloseIcon />
-                <span>Cerrar</span>
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Input de respuesta - Estilo Instagram */}
-      {showReplyInput && (
-        <div className="absolute bottom-8 left-4 right-4 flex items-center space-x-2">
-          <input
-            type="text"
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Responde a la historia..."
-            className="flex-1 bg-white dark:bg-gray-900 dark:bg-gray-900/95 backdrop-blur-sm rounded-full px-4 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            maxLength={200}
+        {/* Navigation Areas */}
+        <div className="absolute inset-0 flex">
+          <div
+            className="flex-1 cursor-pointer"
+            onClick={previousStory}
           />
-          <button
-            onClick={handleReply}
-            disabled={sendingReply || !replyText.trim()}
-            className="w-12 h-12 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 rounded-full flex items-center justify-center transition-colors"
-          >
-            {sendingReply ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            ) : (
-              <SendIcon />
-            )}
-          </button>
+          <div
+            className="flex-1 cursor-pointer"
+            onClick={nextStory}
+          />
         </div>
-      )}
 
-      {/* Controles de navegación - Estilo Instagram */}
-      <div className="absolute inset-y-0 left-0 w-1/3 cursor-w-resize" />
-      <div className="absolute inset-y-0 right-0 w-1/3 cursor-e-resize" />
+        {/* Navigation Buttons */}
+        <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={previousStory}
+            disabled={currentIndex === 0}
+            className="text-white hover:bg-white/20 disabled:opacity-50"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Button>
+        </div>
+
+        <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={nextStory}
+            disabled={currentIndex === stories.length - 1}
+            className="text-white hover:bg-white/20 disabled:opacity-50"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </Button>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="absolute bottom-4 left-4 right-4 flex justify-between">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20"
+            >
+              <Heart className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20"
+            >
+              <Share2 className="w-5 h-5" />
+            </Button>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-white/20"
+          >
+            <MoreHorizontal className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
     </div>
-  );
-}
+  )
+})
+
+StoryViewer.displayName = 'StoryViewer'
+
+export default StoryViewer

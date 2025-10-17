@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { liveCommentService } from '@/services/liveStreamService';
+import { liveCommentService } from '@/services/liveCommentService';
 import logger from '@/utils/logger'
 import type {
   LiveComment,

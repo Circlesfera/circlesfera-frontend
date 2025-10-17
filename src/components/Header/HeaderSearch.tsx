@@ -65,7 +65,14 @@ export function HeaderSearch({
           role="region"
           aria-label="Resultados de búsqueda"
         >
-          <UserSearch query={searchQuery} onResultClick={onResultClick} />
+          <UserSearch
+            query={searchQuery}
+            onResultClick={onResultClick}
+            onSelectUser={(user) => {
+              // TODO: Navigate to user profile
+              console.log('Selected user:', user)
+            }}
+          />
         </div>
       )}
     </div>

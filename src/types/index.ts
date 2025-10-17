@@ -51,49 +51,106 @@ export interface UserPreferences {
 
 export interface Post {
   id: string;
-  user: {
-    id: string;
-    username: string;
-    avatar?: string;
-    fullName?: string;
-    isVerified?: boolean;
-  };
-  type: 'image' | 'video' | 'text';
+  userId: string;
+  type: 'text' | 'image' | 'video' | 'reel' | 'story';
+  caption: string;
   content: {
-    images?: Array<{
+    text?: string;
+    media?: Array<{
+      id: string;
       url: string;
-      alt?: string;
+      type: 'image' | 'video';
+      size: number;
+      duration?: number;
+      thumbnail?: string;
       width?: number;
       height?: number;
     }>;
-    video?: {
+    images?: Array<{
+      id: string;
       url: string;
-      duration: number;
-      thumbnail: string;
+      type: 'image' | 'video';
+      size: number;
+      duration?: number;
+      thumbnail?: string;
       width?: number;
       height?: number;
+    }>; // Alias para compatibilidad
+    video?: {
+      id: string;
+      url: string;
+      type: 'image' | 'video';
+      size: number;
+      duration?: number;
+      thumbnail?: string;
+      width?: number;
+      height?: number;
+    }; // Alias para compatibilidad
+    location?: {
+      name: string;
+      latitude: number;
+      longitude: number;
+      address?: string;
     };
-    text?: string;
-    aspectRatio?: '1:1' | '4:5';
-    originalAspectRatio?: number;
   };
-  caption: string;
   location?: {
     name: string;
-    coordinates?: {
-      type: string;
-      coordinates: number[];
-    };
+    latitude: number;
+    longitude: number;
+    address?: string;
   };
-  tags?: string[];
+  tags: string[];
+  mentions: string[];
   likes: string[];
-  comments: string[];
-  views: number;
+  comments: Array<{
+    id: string;
+    userId: string;
+    text: string;
+    createdAt: string;
+    updatedAt: string;
+    user?: {
+      id: string;
+      username: string;
+      fullName: string;
+      avatar?: string;
+      isVerified: boolean;
+      followersCount: number;
+    };
+    likes: string[];
+    replies?: Array<{
+      id: string;
+      userId: string;
+      text: string;
+      createdAt: string;
+      updatedAt: string;
+      user?: {
+        id: string;
+        username: string;
+        fullName: string;
+        avatar?: string;
+        isVerified: boolean;
+        followersCount: number;
+      };
+      likes: string[];
+    }>;
+    isLiked?: boolean;
+  }>;
   shares: number;
+  views: number;
   isPublic: boolean;
+  isActive: boolean;
   isArchived: boolean;
   isDeleted: boolean;
+  user?: {
+    id: string;
+    username: string;
+    fullName: string;
+    avatar?: string;
+    isVerified: boolean;
+    followersCount: number;
+  };
   isLiked?: boolean;
+  isBookmarked?: boolean;
   createdAt: string;
   updatedAt: string;
 }

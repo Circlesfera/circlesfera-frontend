@@ -1,152 +1,152 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import logger from '@/utils/logger';
-import { searchUsers } from '@/services/userService';
-import { useAuth } from '@/features/auth/useAuth';
+import React, { useState, useEffect } from 'react'
+import { Search, User, X } from 'lucide-react'
+import { Button } from '@/design-system/Button'
+import { Input } from '@/design-system/Input'
+import { Avatar } from '@/design-system/Avatar'
+import { userService, UserSuggestion } from '@/services/userService'
 
 interface UserSearchProps {
-  query: string;
-  onResultClick: () => void;
+  onSelectUser: (user: UserSuggestion) => void
+  query?: string
+  onResultClick?: () => void
+  placeholder?: string
+  className?: string
 }
 
 interface SearchResult {
-  id: string;
-  username: string;
-  avatar?: string;
-  bio?: string;
-  fullName?: string;
-  isFollowing?: boolean;
+  id: string
+  username: string
+  fullName?: string
+  avatar?: string
+  isFollowing?: boolean
+  mutualFollowers?: number
 }
 
-export default function UserSearch({ query, onResultClick }: UserSearchProps) {
-  const { token } = useAuth();
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+export function UserSearch({ onSelectUser, query: initialQuery, onResultClick, placeholder = "Buscar usuarios...", className = "" }: UserSearchProps) {
+  const [query, setQuery] = useState(initialQuery || '')
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [showResults, setShowResults] = useState(false)
 
   useEffect(() => {
-    const searchUsersData = async () => {
-      if (!query.trim() || !token) return;
+    if (query.length < 2) {
+      setResults([])
+      setShowResults(false)
+      return
+    }
 
-      setLoading(true);
-      setError('');
-
+    const searchUsers = async () => {
+      setIsLoading(true)
       try {
-        const searchResults = await searchUsers(query);
-        setResults(searchResults);
-      } catch (err) {
-        logger.error('Error searching users:', {
-          error: err instanceof Error ? err.message : 'Unknown error',
-          query
-        });
-        setError('Error al buscar usuarios');
+        const response = await userService.searchUsers(query)
+        setResults(response.users.map(user => ({
+          id: user.id,
+          username: user.username,
+          fullName: user.fullName,
+          avatar: user.avatar,
+          isFollowing: user.isFollowing,
+          mutualFollowers: 0 // TODO: Implement mutual followers
+        })))
+        setShowResults(true)
+      } catch (error) {
+        console.error('Error searching users:', error)
+        setResults([])
       } finally {
-        setLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    // Debounce para evitar demasiadas llamadas
-    const timeoutId = setTimeout(searchUsersData, 300);
-    return () => clearTimeout(timeoutId);
-  }, [query, token]);
+    const debounceTimer = setTimeout(searchUsers, 300)
+    return () => clearTimeout(debounceTimer)
+  }, [query])
 
-  if (loading) {
-    return (
-      <div className="p-4">
-        <div className="space-y-3">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center space-x-3 animate-pulse">
-              <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full"></div>
-              <div className="flex-1">
-                <div className="h-4 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded w-1/2"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  const handleSelectUser = (user: SearchResult) => {
+    onSelectUser(user as UserSuggestion)
+    setQuery('')
+    setResults([])
+    setShowResults(false)
+    onResultClick?.()
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-center">
-        <div className="text-red-500 text-sm">{error}</div>
-      </div>
-    );
-  }
-
-  if (results.length === 0 && query.trim()) {
-    return (
-      <div className="p-4 text-center">
-        <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">No se encontraron usuarios</div>
-      </div>
-    );
+  const clearSearch = () => {
+    setQuery('')
+    setResults([])
+    setShowResults(false)
   }
 
   return (
-    <div className="p-2">
-      <div className="space-y-1">
-        {results.map((user) => (
-          <Link
-            key={user.id}
-            href={`/${user.username}`}
-            onClick={onResultClick}
-            className="flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 rounded-lg transition-colors"
+    <div className={`relative ${className}`}>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <Input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={placeholder}
+          className="pl-10 pr-10"
+        />
+        {query && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
           >
-            {user.avatar ? (
-              <Image
-                src={user.avatar}
-                alt={`Avatar de ${user.username}`}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm">
-                {user?.username?.[0]?.toUpperCase() || '?'}
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2">
-                <span className="font-medium text-gray-900 dark:text-gray-100 truncate">
-                  {user.username}
-                </span>
-                {user.isFollowing && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 px-2 py-1 rounded-full">
-                    Siguiendo
-                  </span>
-                )}
-              </div>
-              {user.fullName && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate">
-                  {user.fullName}
-                </div>
-              )}
-              {user.bio && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 truncate">
-                  {user.bio}
-                </div>
-              )}
-            </div>
-          </Link>
-        ))}
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      {results.length > 0 && (
-        <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
-          <Link
-            href={`/search?q=${encodeURIComponent(query)}`}
-            onClick={onResultClick}
-            className="block text-center text-blue-600 hover:text-blue-800 text-sm font-medium py-2"
-          >
-            Ver todos los resultados
-          </Link>
+      {showResults && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+          {isLoading ? (
+            <div className="p-4 text-center text-gray-500">
+              Buscando...
+            </div>
+          ) : results.length > 0 ? (
+            <div className="py-2">
+              {results.map((user) => (
+                <button
+                  key={user.id}
+                  onClick={() => handleSelectUser(user)}
+                  className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors"
+                >
+                  <Avatar
+                    src={user.avatar}
+                    alt={user.username}
+                    size="sm"
+                    fallback={user.fullName || user.username}
+                  />
+                  <div className="flex-1 text-left">
+                    <div className="font-medium text-gray-900">
+                      {user.fullName || user.username}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      @{user.username}
+                    </div>
+                    {user.mutualFollowers && user.mutualFollowers > 0 && (
+                      <div className="text-xs text-gray-400">
+                        {user.mutualFollowers} amigos en común
+                      </div>
+                    )}
+                  </div>
+                  {user.isFollowing && (
+                    <div className="text-xs text-blue-600 font-medium">
+                      Siguiendo
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          ) : query.length >= 2 ? (
+            <div className="p-4 text-center text-gray-500">
+              No se encontraron usuarios
+            </div>
+          ) : null}
         </div>
       )}
     </div>
-  );
+  )
 }
+
+export default UserSearch

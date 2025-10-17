@@ -1,40 +1,51 @@
 export interface Story {
   id: string
   userId: string
-  user: {
+  type: 'image' | 'video'
+  mediaUrl: string
+  thumbnailUrl?: string
+  duration?: number
+  text?: string
+  backgroundColor?: string
+  fontColor?: string
+  views: string[]
+  isActive: boolean
+  expiresAt: string
+  createdAt: string
+  updatedAt: string
+  user?: {
     id: string
     username: string
     avatar?: string
   }
-  type: 'image' | 'video'
-  mediaUrl: string
-  caption?: string
-  views: string[]
-  createdAt: string
-  expiresAt: string
-  isActive: boolean
+  hasViewed?: boolean
 }
 
 export interface CreateStoryData {
   type: 'image' | 'video'
   media: File
-  caption?: string
-}
-
-export interface StoryResponse {
-  success: boolean
-  data: Story
-  message?: string
-}
-
-export interface StoriesResponse {
-  success: boolean
-  data: Story[]
-  message?: string
+  text?: string
+  backgroundColor?: string
+  fontColor?: string
+  duration?: number
 }
 
 export interface StoryStats {
   views: number
-  interactions: number
-  reach: number
+  uniqueViewers: number
+  completionRate: number
+  shares: number
+}
+
+export interface StoryFilters {
+  type?: 'image' | 'video'
+  isActive?: boolean
+  sortBy?: 'recent' | 'popular' | 'trending'
+}
+
+export interface StorySearchOptions {
+  query?: string
+  filters?: StoryFilters
+  page?: number
+  limit?: number
 }

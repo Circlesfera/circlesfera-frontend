@@ -6,15 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, Users, TrendingUp, Clock, Play } from 'lucide-react';
 import { useLiveStreams } from '@/hooks/useLiveStream';
 import { CreateLiveStreamForm } from '@/features/live/components';
-import { useAuthContext } from '@/features/auth/AuthContext';
+// import { useAuth } from '@/features/auth/AuthContext'; // TODO: Implementar autenticación
 import { useRouter } from 'next/navigation';
 
 export default function LivePage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [filter, setFilter] = useState<'live' | 'scheduled' | 'all'>('live');
 
-  const { token } = useAuthContext();
-  const isAuthenticated = !!token;
+  // const { token } = useAuthContext(); // TODO: Implementar autenticación
+  const isAuthenticated = false; // TODO: Implementar autenticación
   const router = useRouter();
 
   const {

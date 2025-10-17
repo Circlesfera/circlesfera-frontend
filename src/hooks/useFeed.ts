@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { getFeedPosts } from '@/services/postService'
-import { Post } from '@/types'
+import { Post } from '@/features/posts/types'
 
 interface UseFeedReturn {
   posts: Post[]

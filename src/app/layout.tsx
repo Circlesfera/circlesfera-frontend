@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import { ThemeProvider } from '@/features/theme/ThemeProvider';
 import { ToastProvider } from '@/components/Toast';
-import { ToastContainer } from '@/components/Toast';
+// ToastContainer está incluido en ToastProvider
 import AppLayout from '@/components/layout/AppLayout';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import OfflineIndicator from '@/components/OfflineIndicator';
@@ -158,7 +158,7 @@ export default function RootLayout({
                 <AppLayout>
                   {children}
                 </AppLayout>
-                <ToastContainer />
+                {/* ToastContainer está incluido en ToastProvider */}
               </AuthProvider>
             </ToastProvider>
           </ThemeProvider>

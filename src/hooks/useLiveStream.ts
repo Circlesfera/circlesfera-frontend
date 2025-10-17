@@ -3,10 +3,23 @@ import { liveStreamService } from '@/services/liveStreamService';
 import type {
   LiveStream,
   CreateLiveStreamData,
-  StartLiveStreamData,
-  EndLiveStreamData,
   LiveStreamFilters,
-} from '@/types/live';
+} from '@/features/live/types';
+
+// Tipos locales para compatibilidad
+interface StartLiveStreamData {
+  streamKey: string;
+  rtmpUrl?: string;
+  playbackUrl?: string;
+  thumbnailUrl?: string;
+}
+
+interface EndLiveStreamData {
+  saveToCSTV?: boolean;
+  cstvTitle?: string;
+  cstvDescription?: string;
+  cstvCategory?: string;
+}
 import type { CSTVVideo } from '@/types/cstv';
 import logger from '@/utils/logger';
 
@@ -17,7 +30,7 @@ export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: filters.limit || 20,
+    limit: 20,
     total: 0,
     pages: 0,
   });
@@ -30,12 +43,17 @@ export const useLiveStreams = (filters: LiveStreamFilters = {}) => {
       const response = await liveStreamService.getLiveStreams({
         ...filters,
         page: currentPage,
-        limit: filters.limit || 20,
+        limit: 20,
       });
 
-      setStreams(prev => currentPage === 1 ? response.data : [...prev, ...response.data]);
-      setPagination(response.pagination);
-      logger.debug('Live streams loaded:', { count: response.data.length, page: currentPage });
+      setStreams(prev => currentPage === 1 ? response.liveStreams : [...prev, ...response.liveStreams]);
+      setPagination({
+        page: response.page,
+        limit: response.limit,
+        total: response.total,
+        pages: Math.ceil(response.total / response.limit)
+      });
+      logger.debug('Live streams loaded:', { count: response.liveStreams.length, page: currentPage });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error cargando transmisiones';
       setError(errorMessage);
@@ -151,13 +169,13 @@ export const useStartLiveStream = () => {
 
   const startStream = useCallback(async (
     streamId: string,
-    data: StartLiveStreamData
+    _data: StartLiveStreamData
   ): Promise<LiveStream | null> => {
     try {
       setLoading(true);
       setError(null);
 
-      const stream = await liveStreamService.startLiveStream(streamId, data);
+      const stream = await liveStreamService.startLiveStream(streamId);
       logger.info('Live stream started:', { streamId });
       return stream;
     } catch (err) {
@@ -183,15 +201,15 @@ export const useEndLiveStream = () => {
 
   const endStream = useCallback(async (
     streamId: string,
-    data: EndLiveStreamData = {}
+    _data: EndLiveStreamData = {}
   ): Promise<{ liveStream: LiveStream; cstvVideo?: CSTVVideo } | null> => {
     try {
       setLoading(true);
       setError(null);
 
-      const result = await liveStreamService.endLiveStream(streamId, data);
+      const result = await liveStreamService.endLiveStream(streamId);
       logger.info('Live stream ended:', { streamId });
-      return result;
+      return { liveStream: result };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error terminando transmisión';
       setError(errorMessage);
@@ -220,12 +238,12 @@ export const useLiveStreamViewers = (streamId: string | null) => {
     if (!streamId) return;
 
     try {
-      const result = await liveStreamService.addViewer(streamId);
-      setViewers({
-        current: result.currentViewers,
-        total: result.totalViewers,
-        peak: result.peakViewers,
-      });
+      await liveStreamService.addViewer(streamId);
+      setViewers(prev => ({
+        current: prev.current + 1,
+        total: prev.total + 1,
+        peak: Math.max(prev.peak, prev.current + 1),
+      }));
       logger.debug('Viewer added:', { streamId });
     } catch (err) {
       logger.error('Error adding viewer:', {
@@ -239,12 +257,12 @@ export const useLiveStreamViewers = (streamId: string | null) => {
     if (!streamId) return;
 
     try {
-      const result = await liveStreamService.removeViewer(streamId);
-      setViewers({
-        current: result.currentViewers,
-        total: result.totalViewers,
-        peak: result.peakViewers,
-      });
+      await liveStreamService.removeViewer(streamId);
+      setViewers(prev => ({
+        current: Math.max(0, prev.current - 1),
+        total: prev.total,
+        peak: prev.peak,
+      }));
       logger.debug('Viewer removed:', { streamId });
     } catch (err) {
       logger.error('Error removing viewer:', {
@@ -273,7 +291,8 @@ export const useCoHostInvitation = () => {
       setLoading(true);
       setError(null);
 
-      const stream = await liveStreamService.inviteCoHost(streamId, userId);
+      await liveStreamService.inviteCoHost(streamId, userId);
+      const stream = await liveStreamService.getLiveStream(streamId);
       logger.info('Co-host invited:', { streamId, userId });
       return stream;
     } catch (err) {

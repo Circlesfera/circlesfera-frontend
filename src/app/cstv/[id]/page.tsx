@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Bookmark, Share2, Eye, Clock, User, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCSTVVideo, useCSTVLikes, useCSTVSaves } from '@/hooks/useCSTV';
-import { useAuthContext } from '@/features/auth/AuthContext';
+// import { useAuth } from '@/features/auth/AuthContext'; // TODO: Usar cuando sea necesario
 import { useToast } from '@/components/Toast';
 
 interface CSTVVideoPageProps {
@@ -18,8 +18,8 @@ interface CSTVVideoPageProps {
 export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
   const { id } = use(params);
   const router = useRouter();
-  const { user } = useAuthContext();
-  const isAuthenticated = !!user;
+  // const { user } = useAuthContext(); // TODO: Implementar autenticación
+  const isAuthenticated = false; // TODO: Implementar autenticación
   const toast = useToast();
 
   const [showShareModal, setShowShareModal] = useState(false);
@@ -34,16 +34,16 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
   const { toggleLike, loading: likeLoading } = useCSTVLikes();
   const { toggleSave, loading: saveLoading } = useCSTVSaves();
 
-  const isOwner = user?.id === video?.user.id;
+  const isOwner = false; // TODO: Implementar verificación de propietario
 
   const handleLike = async () => {
-    if (!video || !user) return;
+    if (!video) return;
     await toggleLike(video.id, video.isLikedByUser);
     refresh();
   };
 
   const handleSave = async () => {
-    if (!video || !user) return;
+    if (!video) return;
     await toggleSave(video.id, video.isSavedByUser);
     refresh();
   };

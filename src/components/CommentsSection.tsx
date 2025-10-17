@@ -109,9 +109,9 @@ const CommentsSection = memo(({ postId }: { postId: string }) => {
           {comments.slice(0, 1).map(c => (
             <div key={c.id} className="mb-1">
               <span className="font-semibold text-gray-900 dark:text-gray-100 text-base mr-2">
-                {c.user.username}
+                {c.user?.username || 'Usuario'}
               </span>
-              <span className="text-gray-900 dark:text-gray-100 text-base">{c.content}</span>
+              <span className="text-gray-900 dark:text-gray-100 text-base">{(c as any).content || c.text}</span>
             </div>
           ))}
           {comments.length > 1 && (

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
 import { CompactCreatePostForm } from '@/features/posts/components';
-import { CompactCreateStoryForm } from '@/features/stories/components';
+import { CreateStoryForm } from '@/features/stories/components';
 import { CompactCreateReelForm } from '@/features/reels/components';
 import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifications';
 import { useUnreadConversations } from '@/features/messages/useUnreadConversations';
@@ -876,7 +876,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <CompactCreatePostForm onPostCreated={handleCloseCreateModal} />
                   )}
                   {createType === 'story' && (
-                    <CompactCreateStoryForm onClose={handleCloseCreateModal} />
+                    <CreateStoryForm
+                      onClose={handleCloseCreateModal}
+                      onStoryCreated={handleCloseCreateModal}
+                    />
                   )}
                   {createType === 'reel' && (
                     <CompactCreateReelForm

@@ -1,225 +1,222 @@
-import api from './axios';
-import type {
+import api from './api'
+import {
   LiveStream,
   CreateLiveStreamData,
-  StartLiveStreamData,
-  EndLiveStreamData,
-  LiveStreamFilters,
-  LiveComment,
-  CreateLiveCommentData,
-  LiveCommentFilters,
   LiveStreamStats,
-} from '@/types/live';
-import type { CSTVVideo } from '@/types/cstv';
+  LiveChatMessage,
+  LiveStreamSearchOptions
+} from '@/features/live/types'
+import logger from '@/utils/logger'
 
-export const liveStreamService = {
-  // Crear una nueva transmisión en vivo
-  async createLiveStream(data: CreateLiveStreamData): Promise<LiveStream> {
-    const response = await api.post('/live-streams', data);
-    return response.data.data;
-  },
+export const createLiveStream = async (data: CreateLiveStreamData): Promise<LiveStream> => {
+  try {
+    const response = await api.post('/live-streams', data)
+    return response.data.liveStream
+  } catch (error) {
+    logger.error('Error creating live stream', error)
+    throw new Error('Error creating live stream')
+  }
+}
 
-  // Obtener transmisiones en vivo
-  async getLiveStreams(filters: LiveStreamFilters = {}): Promise<{
-    data: LiveStream[];
-    pagination: {
-      page: number;
-      limit: number;
-      total: number;
-      pages: number;
-    };
-  }> {
-    const params = new URLSearchParams();
+export const getLiveStream = async (id: string): Promise<LiveStream> => {
+  try {
+    const response = await api.get(`/live-streams/${id}`)
+    return response.data.liveStream
+  } catch (error) {
+    logger.error('Error fetching live stream', error)
+    throw new Error('Error fetching live stream')
+  }
+}
 
-    if (filters.status) params.append('status', filters.status);
-    if (filters.category) params.append('category', filters.category);
-    if (filters.userId) params.append('userId', filters.userId);
-    if (filters.page) params.append('page', filters.page.toString());
-    if (filters.limit) params.append('limit', filters.limit.toString());
+export const updateLiveStream = async (id: string, data: Partial<CreateLiveStreamData>): Promise<LiveStream> => {
+  try {
+    const response = await api.put(`/live-streams/${id}`, data)
+    return response.data.liveStream
+  } catch (error) {
+    logger.error('Error updating live stream', error)
+    throw new Error('Error updating live stream')
+  }
+}
 
-    const response = await api.get(`/live-streams?${params.toString()}`);
-    return response.data;
-  },
+export const deleteLiveStream = async (id: string): Promise<void> => {
+  try {
+    await api.delete(`/live-streams/${id}`)
+  } catch (error) {
+    logger.error('Error deleting live stream', error)
+    throw new Error('Error deleting live stream')
+  }
+}
 
-  // Obtener una transmisión específica
-  async getLiveStream(streamId: string): Promise<LiveStream> {
-    const response = await api.get(`/live-streams/${streamId}`);
-    return response.data.data;
-  },
+export const startLiveStream = async (id: string): Promise<LiveStream> => {
+  try {
+    const response = await api.post(`/live-streams/${id}/start`)
+    return response.data.liveStream
+  } catch (error) {
+    logger.error('Error starting live stream', error)
+    throw new Error('Error starting live stream')
+  }
+}
 
-  // Iniciar una transmisión en vivo
-  async startLiveStream(
-    streamId: string,
-    data: StartLiveStreamData
-  ): Promise<LiveStream> {
-    const response = await api.put(`/live-streams/${streamId}/start`, data);
-    return response.data.data;
-  },
+export const endLiveStream = async (id: string): Promise<LiveStream> => {
+  try {
+    const response = await api.post(`/live-streams/${id}/end`)
+    return response.data.liveStream
+  } catch (error) {
+    logger.error('Error ending live stream', error)
+    throw new Error('Error ending live stream')
+  }
+}
 
-  // Terminar una transmisión en vivo
-  async endLiveStream(
-    streamId: string,
-    data: EndLiveStreamData = {}
-  ): Promise<{ liveStream: LiveStream; cstvVideo?: CSTVVideo }> {
-    const response = await api.put(`/live-streams/${streamId}/end`, data);
-    return response.data.data;
-  },
+export const joinLiveStream = async (id: string): Promise<void> => {
+  try {
+    await api.post(`/live-streams/${id}/join`)
+  } catch (error) {
+    logger.error('Error joining live stream', error)
+    throw new Error('Error joining live stream')
+  }
+}
 
-  // Agregar viewer a la transmisión
-  async addViewer(streamId: string): Promise<{
-    currentViewers: number;
-    totalViewers: number;
-    peakViewers: number;
-  }> {
-    const response = await api.post(`/live-streams/${streamId}/viewer`);
-    return response.data.data;
-  },
+export const leaveLiveStream = async (id: string): Promise<void> => {
+  try {
+    await api.post(`/live-streams/${id}/leave`)
+  } catch (error) {
+    logger.error('Error leaving live stream', error)
+    throw new Error('Error leaving live stream')
+  }
+}
 
-  // Remover viewer de la transmisión
-  async removeViewer(streamId: string): Promise<{
-    currentViewers: number;
-    totalViewers: number;
-    peakViewers: number;
-  }> {
-    const response = await api.delete(`/live-streams/${streamId}/viewer`);
-    return response.data.data;
-  },
+export const likeLiveStream = async (id: string): Promise<void> => {
+  try {
+    await api.post(`/live-streams/${id}/like`)
+  } catch (error) {
+    logger.error('Error liking live stream', error)
+    throw new Error('Error liking live stream')
+  }
+}
 
-  // Invitar co-host
-  async inviteCoHost(streamId: string, userId: string): Promise<LiveStream> {
-    const response = await api.post(`/live-streams/${streamId}/invite-cohost`, {
-      userId,
-    });
-    return response.data.data;
-  },
+export const unlikeLiveStream = async (id: string): Promise<void> => {
+  try {
+    await api.delete(`/live-streams/${id}/like`)
+  } catch (error) {
+    logger.error('Error unliking live stream', error)
+    throw new Error('Error unliking live stream')
+  }
+}
 
-  // Dar like a una transmisión
-  async likeLiveStream(streamId: string): Promise<{
-    success: boolean;
-    message: string;
-    isLiked: boolean;
-    likesCount: number;
-  }> {
-    const response = await api.post(`/live-streams/${streamId}/like`);
-    return response.data;
-  },
+export const getLiveStreams = async (options: LiveStreamSearchOptions = {}): Promise<{
+  liveStreams: LiveStream[]
+  total: number
+  page: number
+  limit: number
+}> => {
+  try {
+    const params = new URLSearchParams()
 
-  // Quitar like de una transmisión
-  async unlikeLiveStream(streamId: string): Promise<{
-    success: boolean;
-    message: string;
-    isLiked: boolean;
-    likesCount: number;
-  }> {
-    const response = await api.delete(`/live-streams/${streamId}/like`);
-    return response.data;
-  },
-};
-
-export const liveCommentService = {
-  // Crear un comentario en transmisión en vivo
-  async createComment(
-    streamId: string,
-    data: CreateLiveCommentData
-  ): Promise<LiveComment> {
-    const response = await api.post(`/live-streams/${streamId}/comments`, data);
-    return response.data.data;
-  },
-
-  // Obtener comentarios de una transmisión
-  async getComments(
-    streamId: string,
-    filters: LiveCommentFilters = {}
-  ): Promise<{
-    data: LiveComment[];
-    pagination?: {
-      page: number;
-      limit: number;
-      total: number;
-    };
-  }> {
-    const params = new URLSearchParams();
-
-    if (filters.page) params.append('page', filters.page.toString());
-    if (filters.limit) params.append('limit', filters.limit.toString());
-    if (filters.since) params.append('since', filters.since);
-    if (filters.type) params.append('type', filters.type);
-    if (filters.sortByPinned !== undefined) {
-      params.append('sortByPinned', filters.sortByPinned.toString());
+    if (options.query) params.append('query', options.query)
+    if (options.page) params.append('page', options.page.toString())
+    if (options.limit) params.append('limit', options.limit.toString())
+    if (options.filters?.category) params.append('category', options.filters.category)
+    if (options.filters?.isLive !== undefined) params.append('isLive', options.filters.isLive.toString())
+    if (options.filters?.sortBy) params.append('sortBy', options.filters.sortBy)
+    if (options.filters?.tags?.length) {
+      options.filters.tags.forEach(tag => params.append('tags', tag))
     }
 
-    const response = await api.get(
-      `/live-streams/${streamId}/comments?${params.toString()}`
-    );
-    return response.data;
-  },
+    const response = await api.get(`/live-streams?${params.toString()}`)
+    return response.data
+  } catch (error) {
+    logger.error('Error fetching live streams', error)
+    throw new Error('Error fetching live streams')
+  }
+}
 
-  // Reaccionar a un comentario
-  async reactToComment(
-    streamId: string,
-    commentId: string,
-    reactionType: 'like' | 'love' | 'laugh' | 'wow' | 'angry'
-  ): Promise<{
-    reactionCount: number;
-    userReaction: string;
-  }> {
-    const response = await api.post(
-      `/live-streams/${streamId}/comments/${commentId}/react`,
-      { reactionType }
-    );
-    return response.data.data;
-  },
+export const getUserLiveStreams = async (userId: string): Promise<LiveStream[]> => {
+  try {
+    const response = await api.get(`/users/${userId}/live-streams`)
+    return response.data.liveStreams
+  } catch (error) {
+    logger.error('Error fetching user live streams', error)
+    throw new Error('Error fetching user live streams')
+  }
+}
 
-  // Remover reacción de un comentario
-  async removeReaction(
-    streamId: string,
-    commentId: string
-  ): Promise<{
-    reactionCount: number;
-    userReaction: null;
-  }> {
-    const response = await api.delete(
-      `/live-streams/${streamId}/comments/${commentId}/react`
-    );
-    return response.data.data;
-  },
+export const getLiveStreamStats = async (id: string): Promise<LiveStreamStats> => {
+  try {
+    const response = await api.get(`/live-streams/${id}/stats`)
+    return response.data.stats
+  } catch (error) {
+    logger.error('Error fetching live stream stats', error)
+    throw new Error('Error fetching live stream stats')
+  }
+}
 
-  // Moderar un comentario
-  async moderateComment(
-    streamId: string,
-    commentId: string,
-    action: 'hide' | 'delete' | 'pin' | 'unpin',
-    reason?: string
-  ): Promise<{ success: boolean; data?: unknown; message?: string }> {
-    const response = await api.put(
-      `/live-streams/${streamId}/comments/${commentId}/moderate`,
-      { action, reason }
-    );
-    return response.data.data;
-  },
+export const getLiveStreamChat = async (id: string): Promise<LiveChatMessage[]> => {
+  try {
+    const response = await api.get(`/live-streams/${id}/chat`)
+    return response.data.messages
+  } catch (error) {
+    logger.error('Error fetching live stream chat', error)
+    throw new Error('Error fetching live stream chat')
+  }
+}
 
-  // Obtener estadísticas de comentarios
-  async getCommentStats(streamId: string): Promise<LiveStreamStats> {
-    const response = await api.get(`/live-streams/${streamId}/comments/stats`);
-    return response.data.data;
-  },
+export const sendChatMessage = async (id: string, message: string): Promise<LiveChatMessage> => {
+  try {
+    const response = await api.post(`/live-streams/${id}/chat`, { message })
+    return response.data.message
+  } catch (error) {
+    logger.error('Error sending chat message', error)
+    throw new Error('Error sending chat message')
+  }
+}
 
-  // Obtener transmisiones en vivo de un usuario específico
-  async getUserLiveStreams(username: string, page = 1, limit = 20, status?: string): Promise<{
-    data: LiveStream[];
-    pagination: {
-      page: number;
-      limit: number;
-      total: number;
-      pages: number;
-    };
-  }> {
-    const params = new URLSearchParams();
-    params.append('page', page.toString());
-    params.append('limit', limit.toString());
-    if (status) params.append('status', status);
+// Add viewer to live stream
+export const addViewer = async (id: string): Promise<void> => {
+  try {
+    await api.post(`/live-streams/${id}/viewers`)
+  } catch (error) {
+    logger.error('Error adding viewer to live stream', error)
+    throw new Error('Error adding viewer to live stream')
+  }
+}
 
-    const response = await api.get(`/${username}/live?${params.toString()}`);
-    return response.data;
-  },
-};
+// Remove viewer from live stream
+export const removeViewer = async (id: string): Promise<void> => {
+  try {
+    await api.delete(`/live-streams/${id}/viewers`)
+  } catch (error) {
+    logger.error('Error removing viewer from live stream', error)
+    throw new Error('Error removing viewer from live stream')
+  }
+}
+
+// Invite co-host
+export const inviteCoHost = async (id: string, userId: string): Promise<void> => {
+  try {
+    await api.post(`/live-streams/${id}/co-hosts`, { userId })
+  } catch (error) {
+    logger.error('Error inviting co-host', error)
+    throw new Error('Error inviting co-host')
+  }
+}
+
+export const liveStreamService = {
+  createLiveStream,
+  getLiveStream,
+  updateLiveStream,
+  deleteLiveStream,
+  startLiveStream,
+  endLiveStream,
+  joinLiveStream,
+  leaveLiveStream,
+  likeLiveStream,
+  unlikeLiveStream,
+  getLiveStreams,
+  getUserLiveStreams,
+  getLiveStreamStats,
+  getLiveStreamChat,
+  sendChatMessage,
+  addViewer,
+  removeViewer,
+  inviteCoHost
+}
