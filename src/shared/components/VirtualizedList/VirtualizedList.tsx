@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 interface VirtualizedListProps<T> {

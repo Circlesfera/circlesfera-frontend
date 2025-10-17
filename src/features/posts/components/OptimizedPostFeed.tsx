@@ -32,6 +32,27 @@ export default function OptimizedPostFeed({
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
+  // Función para cargar más posts
+  const loadMorePosts = useCallback(async () => {
+    if (loading || !hasNextPage) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await (postService as any).getFeedPosts?.(page + 1, PAGE_SIZE) || { data: [] };
+
+      setPosts(prevPosts => [...prevPosts, ...response.data]);
+      setPage(prevPage => prevPage + 1);
+      setHasNextPage(response.data.length === PAGE_SIZE);
+    } catch (error) {
+      logger.error('Error loading more posts:', error);
+      setError('Error al cargar más publicaciones');
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, hasNextPage, page]);
+
   // Debounce para evitar múltiples llamadas
   const debouncedLoadMore = useDebounce(loadMorePosts, 300);
 
@@ -113,27 +134,6 @@ export default function OptimizedPostFeed({
     []
   );
 
-  // Función para cargar más posts
-  async function loadMorePosts() {
-    if (loading || !hasNextPage) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await (postService as any).getFeedPosts?.(page + 1, PAGE_SIZE) || { data: [] };
-
-      setPosts(prevPosts => [...prevPosts, ...response.data]);
-      setPage(prevPage => prevPage + 1);
-      setHasNextPage(response.data.length === PAGE_SIZE);
-    } catch (error) {
-      logger.error('Error loading more posts:', error);
-      setError('Error al cargar más publicaciones');
-    } finally {
-      setLoading(false);
-    }
-  }
-
   // Hook de scroll infinito
   const { ref: scrollRef, isFetching } = useInfiniteScroll(
     debouncedLoadMore,
@@ -206,7 +206,7 @@ export default function OptimizedPostFeed({
         </button>
       </div>
     ),
-    [error]
+    [error, loadMorePosts]
   );
 
   // Componente vacío

@@ -71,11 +71,14 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
       { rootMargin, threshold }
     );
 
-    observer.observe(containerRef.current);
+    const currentElement = containerRef.current;
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
 
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (currentElement) {
+        observer.unobserve(currentElement);
       }
       observer.disconnect();
     };

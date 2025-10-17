@@ -229,12 +229,14 @@ export const Avatar = forwardRef<HTMLDivElement, Omit<ImageProps, 'fallbackSrc' 
   width = 40,
   height = 40,
   className,
+  alt = "Avatar",
   ...props
 }, ref) => (
   <Image
     ref={ref}
     width={width}
     height={height}
+    alt={alt}
     fallbackSrc="/default-avatar.png"
     objectFit="cover"
     className={cn('rounded-full', className)}
@@ -246,10 +248,12 @@ Avatar.displayName = 'Avatar'
 
 export const PostImage = forwardRef<HTMLDivElement, Omit<ImageProps, 'objectFit'>>(({
   className,
+  alt = "Post image",
   ...props
 }, ref) => (
   <Image
     ref={ref}
+    alt={alt}
     objectFit="cover"
     className={cn('w-full h-auto', className)}
     {...props}
@@ -262,12 +266,14 @@ export const StoryImage = forwardRef<HTMLDivElement, Omit<ImageProps, 'objectFit
   width = 80,
   height = 80,
   className,
+  alt = "Story image",
   ...props
 }, ref) => (
   <Image
     ref={ref}
     width={width}
     height={height}
+    alt={alt}
     objectFit="cover"
     className={cn('rounded-full border-2 border-white shadow-lg', className)}
     {...props}
