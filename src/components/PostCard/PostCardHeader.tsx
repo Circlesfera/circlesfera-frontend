@@ -10,7 +10,7 @@
 'use client'
 
 import React from 'react'
-import LazyImage from '@/components/LazyImage'
+import { Avatar } from '@/shared/components/Image'
 import { MoreIcon, EditIcon, PinIcon, DeleteIcon, ReportIcon } from '@/components/icons/PostIcons'
 import { formatTimeAgo } from '@/utils/formatters'
 import { ARIA_LABELS, getButtonA11yProps, getMenuButtonA11yProps, getMenuA11yProps } from '@/utils/accessibilityHelpers'
@@ -56,10 +56,12 @@ export function PostCardHeader({
           {...getButtonA11yProps(ARIA_LABELS.user.profile(post.user.username))}
         >
           {post.user.avatar ? (
-            <LazyImage
+            <Avatar
               src={post.user.avatar}
               alt={ARIA_LABELS.user.avatar(post.user.username)}
-              className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
+              width={40}
+              height={40}
+              className="rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
             />
           ) : (
             <div

@@ -8,7 +8,7 @@ import CommentsSection from './CommentsSection';
 import { useAuth } from '@/features/auth/useAuth';
 import { motion } from 'framer-motion';
 import { fadeInUp, useInViewAnimation, useCardAnimation } from '@/hooks/useAnimations';
-import SimpleImage from './SimpleImage';
+import { Image } from '@/shared/components/Image';
 import ReportModal from './ReportModal';
 import ImageModal from './ImageModal';
 import logger from '@/utils/logger';
@@ -276,7 +276,7 @@ export default function PostCard({
           return (
             <div className="relative overflow-hidden">
               <div className={`relative ${aspectRatioClass} bg-black`}>
-                <SimpleImage
+                <Image
                   src={post.content.images[currentImageIndex]?.url || ''}
                   alt={post.content.images[currentImageIndex]?.alt || "post"}
                   fill
@@ -322,7 +322,7 @@ export default function PostCard({
             <div
               className={`relative overflow-hidden ${aspectRatioClass} bg-black`}
             >
-              <SimpleImage
+              <Image
                 src={post.content.images?.[0]?.url || ''}
                 alt={post.content.images?.[0]?.alt || "post"}
                 fill
@@ -399,10 +399,12 @@ export default function PostCard({
             className="group"
           >
             {post.user.avatar ? (
-              <SimpleImage
+              <Image
                 src={post.user.avatar || ''}
                 alt="avatar"
-                className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
+                width={32}
+                height={32}
+                className="rounded-full object-cover ring-2 ring-gray-200 group-hover:ring-blue-300 transition-all duration-200"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow-lg">

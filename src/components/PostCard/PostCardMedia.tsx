@@ -11,7 +11,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import LazyImage from '@/components/LazyImage'
+import { PostImage } from '@/shared/components/Image'
 import ImageModal from '@/components/ImageModal'
 import { PlayIconLarge, ChevronLeftIcon, ChevronRightIcon, ZoomIcon } from '@/components/icons/PostIcons'
 import { formatDuration } from '@/utils/formatters'
@@ -94,10 +94,11 @@ export function PostCardMedia({ post }: PostCardMediaProps) {
           >
             <div className={`relative ${aspectRatioClass} bg-black`}>
               {/* Imagen actual */}
-              <LazyImage
+              <PostImage
                 src={post.content.images[currentImageIndex]?.url || ''}
                 alt={post.content.images[currentImageIndex]?.alt || `Imagen ${currentImageIndex + 1} de ${totalImages}`}
                 className="w-full h-full object-contain"
+                fill
               />
 
               {/* Indicadores de posición */}
@@ -163,10 +164,11 @@ export function PostCardMedia({ post }: PostCardMediaProps) {
             className={`relative overflow-hidden ${aspectRatioClass} bg-black w-full group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
             {...getButtonA11yProps(ARIA_LABELS.media.zoom)}
           >
-            <LazyImage
+            <PostImage
               src={post.content.images?.[0]?.url || ''}
               alt={post.content.images?.[0]?.alt || 'Imagen del post'}
               className="w-full h-full object-contain transition-opacity group-hover:opacity-90"
+              fill
             />
 
             {/* Indicador de zoom en hover/focus */}
