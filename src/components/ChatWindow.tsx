@@ -107,9 +107,9 @@ export default function ChatWindow({ conversationId, conversationName, participa
             participants: conversation.participants,
             ...(conversation.lastMessage && {
               lastMessage: {
-                content: conversation.lastMessage.content.text || '',
+                content: conversation.lastMessage.content?.text || '',
                 createdAt: conversation.lastMessage.createdAt || new Date().toISOString(),
-                senderId: conversation.lastMessage.sender._id
+                senderId: conversation.lastMessage.sender?._id
               }
             })
           });
@@ -492,7 +492,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
       return null;
     }
 
-    const isOwnMessage = message.sender._id === user?._id;
+    const isOwnMessage = message.sender?._id === user?._id;
     const isTextMessage = message.type === 'text';
     const isImageMessage = message.type === 'image';
     const isVideoMessage = message.type === 'video';
@@ -553,7 +553,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                       className="absolute left-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50 min-w-[160px]"
                     >
                       <button
-                        onClick={() => handleEditMessage(message._id, message.content.text || '')}
+                        onClick={() => handleEditMessage(message._id, message.content?.text || '')}
                         className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 flex items-center space-x-2"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -619,7 +619,7 @@ export default function ChatWindow({ conversationId, conversationName, participa
                     </div>
                   ) : (
                     <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">
-                      {message.content.text}
+                      {message.content?.text || ''}
                       {message.isEdited && (
                         <span className="ml-2 text-xs opacity-70 italic">(editado)</span>
                       )}

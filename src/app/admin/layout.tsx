@@ -182,7 +182,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className="font-semibold text-gray-900 dark:text-gray-100 truncate text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-left"
                 title="Ver perfil de usuario"
               >
-                {user.displayName || user.username}
+                {user.fullName || user.username}
               </button>
               <div className="flex items-center gap-1 mt-1">
                 <p className="text-xs text-blue-600 dark:text-blue-400 font-medium capitalize">

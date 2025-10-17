@@ -82,10 +82,11 @@ export default function OptimizedImage({
           )}
           style={fill ? { width: '100%', height: '100%' } : undefined}
           onLoad={handleLoad}
-          onError={handleError}
+          onError={(e) => {
+            console.error('Error loading image:', src, e);
+            handleError();
+          }}
           loading={priority ? 'eager' : 'lazy'}
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
         />
       </div>
     );

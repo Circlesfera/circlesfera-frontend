@@ -82,6 +82,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
     const { name, value, type } = e.target;
     const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
 
+
     setFormData(prev => ({
       ...prev,
       [name]: newValue
@@ -220,8 +221,45 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
     }
 
     setLoading(true);
+    setAvatarUploading(true);
+
     try {
-      // Preparar datos para envío, excluyendo campos vacíos
+      let avatarUrl = profile.avatar; // Mantener avatar actual por defecto
+
+      // Si hay un avatar nuevo, subirlo primero
+      if (avatarFile) {
+        try {
+          // Crear FormData solo para subir el avatar
+          const avatarFormData = new FormData();
+          avatarFormData.append('avatar', avatarFile);
+
+          const response = await fetch('/api/auth/profile', {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: avatarFormData
+          });
+
+          if (!response.ok) {
+            throw new Error('Error al subir el avatar');
+          }
+
+          const result = await response.json();
+          avatarUrl = result.user.avatar; // Obtener la nueva URL del avatar
+          logger.info('Avatar uploaded successfully:', { avatarUrl });
+        } catch (uploadError) {
+          logger.error('Error uploading avatar:', uploadError);
+          setErrors(prev => ({
+            ...prev,
+            avatar: 'Error al subir el avatar. Inténtalo de nuevo.'
+          }));
+          setAvatarUploading(false);
+          return;
+        }
+      }
+
+      // Preparar datos para envío, incluyendo la URL del avatar
       const dataToSave: Partial<User> = {
         username: formData.username,
         fullName: formData.fullName,
@@ -233,11 +271,24 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
         isPrivate: formData.isPrivate,
       };
 
+      // Solo incluir avatar si tiene valor
+      if (avatarUrl) {
+        dataToSave.avatar = avatarUrl;
+      }
+
       if (formData.birthDate) {
         dataToSave.birthDate = formData.birthDate;
       }
 
+      // Log de datos que se van a enviar
+      logger.info('🔍 EditProfileForm - Datos a enviar:', dataToSave);
+
+      // Guardar los datos del perfil (sin archivo, solo datos)
       await onSave(dataToSave);
+
+      // Actualizar el contexto de autenticación
+      await refreshUser();
+
       logger.info('Profile updated successfully');
     } catch (saveError) {
       logger.error('Error saving profile:', {
@@ -245,6 +296,7 @@ export default function EditProfileForm({ profile, onSave, onCancel }: EditProfi
       });
     } finally {
       setLoading(false);
+      setAvatarUploading(false);
     }
   };
 

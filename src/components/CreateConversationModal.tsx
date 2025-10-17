@@ -157,13 +157,13 @@ export default function CreateConversationModal({
                     {selectedUsers.map((user) => (
                       <div
                         key={user._id}
-                        className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full text-sm"
+                        className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 px-3 py-1.5 rounded-full text-sm"
                       >
-                        <div className="w-6 h-6 rounded-full overflow-hidden bg-blue-200 relative">
+                        <div className="w-6 h-6 rounded-full overflow-hidden bg-blue-200 dark:bg-blue-800 relative">
                           {user.avatar ? (
                             <Image src={user.avatar} alt={`Avatar de ${user.username}`} fill className="object-cover" sizes="24px" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-xs font-bold">
+                            <div className="w-full h-full flex items-center justify-center text-xs font-bold text-blue-600 dark:text-blue-200">
                               {user.username?.[0]?.toUpperCase() || 'U'}
                             </div>
                           )}
@@ -171,7 +171,7 @@ export default function CreateConversationModal({
                         <span>{user.fullName || user.username}</span>
                         <button
                           onClick={() => handleRemoveUser(user._id)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100"
                         >
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -231,8 +231,8 @@ export default function CreateConversationModal({
                           key={user._id}
                           onClick={() => handleUserSelect(user)}
                           className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${isSelected
-                            ? 'bg-blue-50 border border-blue-200'
-                            : 'hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800'
+                            ? 'bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700'
+                            : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                         >
                           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 relative">

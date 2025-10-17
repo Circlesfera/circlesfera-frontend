@@ -1,112 +1,46 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '@/features/auth/useAuth';
 import { createReel } from '@/services/reelService';
 import logger from '@/utils/logger';
 
 interface CreateReelFormProps {
   onReelCreated: () => void;
-  onClose: () => void;
 }
 
-interface ReelFormData {
-  caption: string;
-  hashtags: string;
-  location: string;
-  audioTitle: string;
-  audioArtist: string;
-  allowComments: boolean;
-  allowDuets: boolean;
-  allowStitches: boolean;
-}
-
-export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFormProps) {
+export default function CreateReelForm({ onReelCreated }: CreateReelFormProps) {
   const { user } = useAuth();
-  const [formData, setFormData] = useState<ReelFormData>({
-    caption: '',
-    hashtags: '',
-    location: '',
-    audioTitle: '',
-    audioArtist: '',
-    allowComments: true,
-    allowDuets: true,
-    allowStitches: true
-  });
-
+  const [caption, setCaption] = useState('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Manejar cambios en el formulario
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
+  const handleFileSelect = (selectedFile: File) => {
+    if (selectedFile) {
+      // Validar tipo de archivo
+      if (!selectedFile.type.startsWith('video/')) {
+        setError('Por favor selecciona un video válido');
+        return;
+      }
 
-    if (type === 'checkbox') {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData(prev => ({
-        ...prev,
-        [name]: checked
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
+      // Validar tamaño (máximo 100MB para reels)
+      if (selectedFile.size > 100 * 1024 * 1024) {
+        setError('El video es demasiado grande. Máximo 100MB');
+        return;
+      }
+
+      setVideoFile(selectedFile);
+      setError('');
+
+      // Crear preview
+      const fileUrl = URL.createObjectURL(selectedFile);
+      setVideoPreview(fileUrl);
     }
   };
 
-  // Manejar selección de video
-  const handleVideoSelect = useCallback((file: File) => {
-    // Validar tipo de archivo
-    if (!file.type.startsWith('video/')) {
-      setError('Por favor selecciona un archivo de video válido');
-      return;
-    }
-
-    // Validar tamaño (máximo 100MB para reels)
-    const maxSize = 100 * 1024 * 1024; // 100MB
-    if (file.size > maxSize) {
-      setError('El video es demasiado grande. Máximo 100MB');
-      return;
-    }
-
-    setVideoFile(file);
-    setError(null);
-
-    // Crear preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setVideoPreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  }, []);
-
-  // Manejar drop de archivos
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0 && files[0]) {
-      handleVideoSelect(files[0]);
-    }
-  }, [handleVideoSelect]);
-
-  // Manejar drag over
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-  }, []);
-
-  // Abrir selector de archivos
-  const openFileSelector = () => {
-    fileInputRef.current?.click();
-  };
-
-  // Crear el reel
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -122,107 +56,74 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
 
     setIsUploading(true);
     setError(null);
-    setUploadProgress(0);
 
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('video', videoFile);
-      formDataToSend.append('caption', formData.caption);
-      formDataToSend.append('hashtags', formData.hashtags);
-      formDataToSend.append('location', formData.location);
-      formDataToSend.append('audioTitle', formData.audioTitle);
-      formDataToSend.append('audioArtist', formData.audioArtist);
-      formDataToSend.append('allowComments', formData.allowComments.toString());
-      formDataToSend.append('allowDuets', formData.allowDuets.toString());
-      formDataToSend.append('allowStitches', formData.allowStitches.toString());
-
-      // Simular progreso de upload
-      const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
+      formDataToSend.append('caption', caption);
 
       const response = await createReel(formDataToSend);
 
-      clearInterval(progressInterval);
-      setUploadProgress(100);
-
       if (response.success) {
-        // Esperar un momento para mostrar el progreso completo
-        setTimeout(() => {
-          onReelCreated();
-        }, 500);
+        // Limpiar formulario
+        setCaption('');
+        setVideoFile(null);
+        setVideoPreview(null);
+        onReelCreated();
       } else {
         throw new Error(response.message || 'Error al crear el reel');
       }
-
     } catch (createReelError) {
       logger.error('Error creating reel:', {
         error: createReelError instanceof Error ? createReelError.message : 'Unknown error',
         videoSize: videoFile?.size,
-        caption: formData.caption.substring(0, 50)
+        caption: caption.substring(0, 50)
       });
       setError(createReelError instanceof Error ? createReelError.message : 'Error al crear el reel');
     } finally {
       setIsUploading(false);
-      setUploadProgress(0);
     }
   };
 
-  // Limpiar formulario
-  const handleReset = () => {
-    setFormData({
-      caption: '',
-      hashtags: '',
-      location: '',
-      audioTitle: '',
-      audioArtist: '',
-      allowComments: true,
-      allowDuets: true,
-      allowStitches: true
-    });
+  const resetForm = () => {
+    setCaption('');
     setVideoFile(null);
     setVideoPreview(null);
-    setError(null);
+    setError('');
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Crear Reel</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700 transition-colors"
-          >
-            <svg className="w-6 h-6 text-gray-500 dark:text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+    <div>
+      <div className="p-6">
+        <div className="flex items-center space-x-4 mb-6">
+          {user?.avatar ? (
+            <img src={user.avatar} alt={`Avatar de ${user.username}`} className="w-10 h-10 rounded-full object-cover" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white">
+              {user?.username?.[0]?.toUpperCase()}
+            </div>
+          )}
+
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Crear Reel</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">Comparte un video corto con tus amigos</p>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Área de video */}
-          <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Video (Proporción 9:16 recomendada)
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Video (Proporción 9:16 vertical)
             </label>
 
             {!videoPreview ? (
               <div
-                className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-400 transition-colors cursor-pointer"
-                onClick={openFileSelector}
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
+                className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-400 transition-colors cursor-pointer aspect-[9/16] max-w-xs mx-auto"
+                onClick={() => fileInputRef.current?.click()}
               >
                 <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M4 7h16M4 4h16M4 16h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                   <span className="font-medium text-blue-600 hover:text-blue-500">
@@ -235,11 +136,10 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
                 </p>
               </div>
             ) : (
-              <div className="relative">
+              <div className="relative aspect-[9/16] max-w-xs mx-auto">
                 <video
-                  ref={videoRef}
                   src={videoPreview}
-                  className="w-full h-64 object-cover rounded-xl"
+                  className="w-full h-full object-cover rounded-xl"
                   controls
                 />
                 <button
@@ -263,7 +163,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
               accept="video/*"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) handleVideoSelect(file);
+                if (file) handleFileSelect(file);
               }}
               className="hidden"
             />
@@ -276,143 +176,17 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
             </label>
             <textarea
               id="caption"
-              name="caption"
-              value={formData.caption}
-              onChange={handleInputChange}
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
               rows={3}
               maxLength={2200}
               placeholder="Cuenta tu historia..."
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 dark:text-gray-100"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-right">
-              {formData.caption.length}/2200
+              {caption.length}/2200
             </p>
           </div>
-
-          {/* Hashtags */}
-          <div>
-            <label htmlFor="hashtags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Hashtags
-            </label>
-            <input
-              type="text"
-              id="hashtags"
-              name="hashtags"
-              value={formData.hashtags}
-              onChange={handleInputChange}
-              placeholder="hashtag1, hashtag2, hashtag3..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
-            />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
-              Separa los hashtags con comas
-            </p>
-          </div>
-
-          {/* Ubicación */}
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Ubicación
-            </label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              placeholder="¿Dónde estás?"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
-            />
-          </div>
-
-          {/* Información de audio */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="audioTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Título del audio
-              </label>
-              <input
-                type="text"
-                id="audioTitle"
-                name="audioTitle"
-                value={formData.audioTitle}
-                onChange={handleInputChange}
-                placeholder="Nombre de la canción"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
-              />
-            </div>
-            <div>
-              <label htmlFor="audioArtist" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Artista
-              </label>
-              <input
-                type="text"
-                id="audioArtist"
-                name="audioArtist"
-                value={formData.audioArtist}
-                onChange={handleInputChange}
-                placeholder="Nombre del artista"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100"
-              />
-            </div>
-          </div>
-
-          {/* Configuraciones */}
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Configuraciones
-            </label>
-
-            <div className="space-y-2">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="allowComments"
-                  checked={formData.allowComments}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Permitir comentarios</span>
-              </label>
-
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="allowDuets"
-                  checked={formData.allowDuets}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Permitir duets</span>
-              </label>
-
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="allowStitches"
-                  checked={formData.allowStitches}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Permitir stitches</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Barra de progreso */}
-          {isUploading && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
-                <span>Subiendo video...</span>
-                <span>{uploadProgress}%</span>
-              </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-600 dark:bg-gray-700 rounded-full h-2">
-                <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
-                />
-              </div>
-            </div>
-          )}
 
           {/* Mensaje de error */}
           {error && (
@@ -425,7 +199,7 @@ export default function CreateReelForm({ onReelCreated, onClose }: CreateReelFor
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
-              onClick={handleReset}
+              onClick={resetForm}
               disabled={isUploading}
               className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 dark:bg-gray-600 transition-colors disabled:opacity-50"
             >

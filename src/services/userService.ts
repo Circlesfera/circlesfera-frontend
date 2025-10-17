@@ -31,6 +31,8 @@ export interface UserProfile {
   totalLikes?: number;
   totalComments?: number;
   isFollowing?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const getUserProfile = async (): Promise<User> => {
@@ -50,9 +52,15 @@ export const updateUserProfile = async (userData: Partial<User>): Promise<User> 
       }
     });
 
-    logger.debug('Enviando datos de perfil:', cleanedData);
+    logger.info('🔍 userService - Enviando datos de perfil:', cleanedData);
 
     const res = await api.put('/auth/profile', cleanedData);
+
+    logger.info('🔍 userService - Respuesta del servidor:', {
+      status: res.status,
+      data: res.data
+    });
+
     return res.data.user;
   } catch (error: unknown) {
     logger.error('Error en updateUserProfile:', {

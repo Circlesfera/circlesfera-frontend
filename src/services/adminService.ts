@@ -127,7 +127,7 @@ export interface RealtimeActivityResponse {
  * Obtener actividad en tiempo real
  */
 export const getRealtimeActivity = async (hours = 24): Promise<RealtimeActivityResponse> => {
-  const response = await api.get('/analytics/realtime-activity', {
+  const response = await api.get('/analytics/realtime-activity-debug', {
     params: { hours }
   });
   return response.data;
