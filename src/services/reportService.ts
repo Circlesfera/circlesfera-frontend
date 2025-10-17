@@ -86,8 +86,8 @@ export const getReportStats = async (): Promise<{
   stats?: {
     total: number;
     byStatus?: Record<string, number>;
-    byReason?: Array<{ _id: string; count: number }>;
-    byContentType?: Array<{ _id: string; count: number }>;
+    byReason?: Array<{ id: string; count: number }>;
+    byContentType?: Array<{ id: string; count: number }>;
     averageResolutionTime?: string;
   };
 }> => {

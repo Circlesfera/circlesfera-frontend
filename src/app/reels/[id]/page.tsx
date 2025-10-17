@@ -7,8 +7,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { getReel, Reel } from '@/services/reelService';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import CommentsModal from '@/components/CommentsModal';
-import CreateDuetForm from '@/components/CreateDuetForm';
-import CreateStitchForm from '@/components/CreateStitchForm';
+import { CreateDuetForm, CreateStitchForm } from '@/features/posts/components';
 import { Video, Heart, MessageCircle, Share2, MoreHorizontal, ArrowLeft, Copy, Scissors } from 'lucide-react';
 import logger from '@/utils/logger';
 
@@ -54,7 +53,7 @@ export default function ReelPage() {
     if (!reel) return;
     try {
       const { likeReel, unlikeReel } = await import('@/services/reelService');
-      const isCurrentlyLiked = reel.likes.some(like => like.user === user?._id);
+      const isCurrentlyLiked = reel.likes.some(like => like.user === user?.id);
 
       if (isCurrentlyLiked) {
         await unlikeReel(reelId);
@@ -68,8 +67,8 @@ export default function ReelPage() {
         return {
           ...prev,
           likes: isCurrentlyLiked
-            ? prev.likes.filter(like => like.user !== user?._id)
-            : [...prev.likes, { user: user?._id || '', createdAt: new Date().toISOString() }]
+            ? prev.likes.filter(like => like.user !== user?.id)
+            : [...prev.likes, { user: user?.id || '', createdAt: new Date().toISOString() }]
         };
       });
 
@@ -179,7 +178,7 @@ export default function ReelPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleShare(reel._id)}
+                onClick={() => handleShare(reel.id)}
                 className="text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
               >
                 Compartir
@@ -222,7 +221,7 @@ export default function ReelPage() {
                   size="lg"
                   fallback={reel.user.fullName || reel.user.username}
                   interactive
-                  onClick={() => handleUserClick(reel.user._id)}
+                  onClick={() => handleUserClick(reel.user.id)}
                 />
                 <div className="ml-4">
                   <p className="text-white font-semibold text-lg">
@@ -308,7 +307,7 @@ export default function ReelPage() {
                 variant="ghost"
                 size="lg"
                 className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
-                onClick={() => handleLike(reel._id)}
+                onClick={() => handleLike(reel.id)}
               >
                 <Heart className="w-8 h-8 mb-2" fill="currentColor" />
                 <span className="text-sm">Me gusta</span>
@@ -318,7 +317,7 @@ export default function ReelPage() {
                 variant="ghost"
                 size="lg"
                 className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
-                onClick={() => handleComment(reel._id)}
+                onClick={() => handleComment(reel.id)}
               >
                 <MessageCircle className="w-8 h-8 mb-2" />
                 <span className="text-sm">Comentar</span>
@@ -356,7 +355,7 @@ export default function ReelPage() {
                 variant="ghost"
                 size="lg"
                 className="flex flex-col items-center text-white hover:bg-white dark:bg-gray-900 dark:bg-gray-900/10"
-                onClick={() => handleShare(reel._id)}
+                onClick={() => handleShare(reel.id)}
               >
                 <Share2 className="w-8 h-8 mb-2" />
                 <span className="text-sm">Compartir</span>

@@ -20,7 +20,7 @@ import {
   Globe
 } from 'lucide-react'
 import { analyticsService, formatAnalyticsData, type UserAnalytics, type AnalyticsParams } from '@/services/analyticsService'
-import { Chart } from '@/components/analytics/Chart'
+import { Chart } from '@/features/analytics/components'
 
 export default function UserAnalyticsPage() {
   const [analytics, setAnalytics] = useState<UserAnalytics | null>(null)
@@ -301,10 +301,10 @@ export default function UserAnalyticsPage() {
                   <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                        {location._id.country}
+                        {location.id.country}
                       </h4>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {location._id.region || 'N/A'}
+                        {location.id.region || 'N/A'}
                       </span>
                     </div>
                     <div className="space-y-1">
@@ -588,7 +588,7 @@ export default function UserAnalyticsPage() {
                   const percentage = (geo.count / total) * 100
 
                   return (
-                    <div key={`${geo._id.country}-${geo._id.region}`} className="flex items-center justify-between">
+                    <div key={`${geo.id.country}-${geo.id.region}`} className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-blue-500' :
                           index === 1 ? 'bg-green-500' :
@@ -596,8 +596,8 @@ export default function UserAnalyticsPage() {
                               index === 3 ? 'bg-orange-500' : 'bg-gray-500'
                           }`}></div>
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {geo._id.country}
-                          {geo._id.region && `, ${geo._id.region}`}
+                          {geo.id.country}
+                          {geo.id.region && `, ${geo.id.region}`}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -639,7 +639,7 @@ export default function UserAnalyticsPage() {
 
               <Chart
                 data={analytics.geographicDistribution.slice(0, 8).map(geo => ({
-                  label: geo._id.country,
+                  label: geo.id.country,
                   value: geo.count
                 }))}
                 type="doughnut"

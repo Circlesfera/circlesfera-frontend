@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { toggleLike } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 
@@ -21,12 +21,12 @@ const HeartIcon = ({ filled }: { filled: boolean }) => (
   </svg>
 );
 
-export default function LikeButton({ postId, initialLiked, onLikeAction }: { postId: string; initialLiked: boolean; onLikeAction?: (postId: string) => void }) {
+const LikeButton = memo(({ postId, initialLiked, onLikeAction }: { postId: string; initialLiked: boolean; onLikeAction?: (postId: string) => void }) => {
   const { user } = useAuth();
   const [liked, setLiked] = useState(initialLiked);
   const [loading, setLoading] = useState(false);
 
-  const handleLike = async () => {
+  const handleLike = useCallback(async () => {
     if (loading || !user) return;
     setLoading(true);
     try {
@@ -39,7 +39,7 @@ export default function LikeButton({ postId, initialLiked, onLikeAction }: { pos
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading, user, postId, onLikeAction]);
 
   return (
     <button
@@ -53,4 +53,8 @@ export default function LikeButton({ postId, initialLiked, onLikeAction }: { pos
       <HeartIcon filled={liked} />
     </button>
   );
-}
+});
+
+LikeButton.displayName = 'LikeButton';
+
+export default LikeButton;

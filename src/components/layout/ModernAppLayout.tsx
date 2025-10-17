@@ -79,7 +79,7 @@ const ModernAppLayout: React.FC<ModernAppLayoutProps> = ({ children }) => {
 
   // Transformar el usuario para que coincida con los tipos esperados
   const transformedUser = user ? {
-    id: user._id,
+    id: user.id,
     username: user.username,
     ...(user.avatar && { avatar: user.avatar }),
     ...(user.fullName && { fullName: user.fullName })

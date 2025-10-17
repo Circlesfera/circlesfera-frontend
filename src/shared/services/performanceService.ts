@@ -159,9 +159,9 @@ class PerformanceService {
     try {
       const observer = new PerformanceObserver((list) => {
         for (const _entry of list.getEntries()) {
-          const entry = _entry as any; // PerformanceEventTiming no está disponible en todos los navegadores
+          const entry = _entry as unknown as Record<string, unknown>; // PerformanceEventTiming no está disponible en todos los navegadores
           if (entry.processingStart && entry.startTime) {
-            this.vitals.FID = entry.processingStart - entry.startTime;
+            this.vitals.FID = (entry.processingStart as number) - (entry.startTime as number);
             observer.disconnect();
           }
         }
@@ -183,8 +183,9 @@ class PerformanceService {
       let clsValue = 0;
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
+          const layoutEntry = entry as unknown as Record<string, unknown>;
+          if (!layoutEntry.hadRecentInput) {
+            clsValue += (layoutEntry.value as number) || 0;
           }
         }
         this.vitals.CLS = clsValue;
@@ -203,9 +204,9 @@ class PerformanceService {
     if (typeof window === 'undefined' || !('memory' in performance)) return;
 
     setInterval(() => {
-      const memory = (performance as any).memory;
+      const memory = (performance as unknown as Record<string, unknown>).memory;
       if (memory) {
-        this.recordMemoryUsage(memory);
+        this.recordMemoryUsage(memory as Record<string, unknown>);
       }
     }, 30000); // Cada 30 segundos
   }
@@ -262,10 +263,10 @@ class PerformanceService {
   /**
    * Registrar uso de memoria
    */
-  private recordMemoryUsage(memory: any): void {
+  private recordMemoryUsage(memory: Record<string, unknown>): void {
     const latestMetric = this.metrics[this.metrics.length - 1];
     if (latestMetric) {
-      latestMetric.memoryUsage = memory.usedJSHeapSize / 1024 / 1024; // MB
+      latestMetric.memoryUsage = (memory.usedJSHeapSize as number) / 1024 / 1024; // MB
     }
   }
 
@@ -287,8 +288,8 @@ class PerformanceService {
   private getMemoryUsage(): number {
     if (typeof window === 'undefined' || !('memory' in performance)) return 0;
 
-    const memory = (performance as any).memory;
-    return memory ? memory.usedJSHeapSize / 1024 / 1024 : 0; // MB
+    const memory = (performance as unknown as Record<string, unknown>).memory;
+    return memory ? ((memory as Record<string, unknown>).usedJSHeapSize as number) / 1024 / 1024 : 0; // MB
   }
 
   /**

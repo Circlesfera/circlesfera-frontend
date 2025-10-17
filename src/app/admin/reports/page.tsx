@@ -320,13 +320,13 @@ export default function ReportsPage() {
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                   {reports.map((report) => (
                     <tr
-                      key={report._id}
+                      key={report.id}
                       className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 transition-colors"
                     >
                       {/* ID */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-mono text-gray-900 dark:text-gray-100">
-                          #{report._id.slice(-6)}
+                          #{report.id.slice(-6)}
                         </div>
                       </td>
 
@@ -397,7 +397,7 @@ export default function ReportsPage() {
                       {/* Acciones */}
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <Link
-                          href={`/admin/reports/${report._id}`}
+                          href={`/admin/reports/${report.id}`}
                           className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors text-sm font-medium"
                         >
                           <Eye className="w-4 h-4" />

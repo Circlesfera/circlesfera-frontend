@@ -52,7 +52,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
         const readData = wsMessage.data as { messageId: string; conversation: string };
         setMessages(prev =>
           prev.map(msg =>
-            msg._id === readData.messageId
+            msg.id === readData.messageId
               ? { ...msg, read: true }
               : msg
           )
@@ -145,7 +145,7 @@ export function useChat({ conversationId }: UseChatOptions): UseChatReturn {
   const markAsRead = useCallback((messageId: string) => {
     setMessages(prev =>
       prev.map(msg =>
-        msg._id === messageId ? { ...msg, read: true } : msg
+        msg.id === messageId ? { ...msg, read: true } : msg
       )
     );
   }, []);

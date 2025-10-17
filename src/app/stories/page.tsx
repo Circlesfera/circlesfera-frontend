@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, Button, Avatar } from '@/design-system';
-import { useAuth } from '@/features/auth/useAuth';
-import { getUsersWithStories, UserWithStories } from '@/services/storyService';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { getUsersWithStories, UserWithStories } from '@/features/stories/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import StoryViewer from '@/components/StoryViewer';
+import { StoryViewer } from '@/features/stories/components';
 import { Plus } from 'lucide-react';
 import logger from '@/utils/logger';
 
@@ -85,7 +85,7 @@ export default function StoriesPage() {
     return (
       <StoryViewer
         story={currentStory}
-        userId={selectedUser._id}
+        userId={selectedUser.id}
         username={selectedUser.username}
         onClose={handleCloseViewer}
         onStoryDeleted={() => {
@@ -166,7 +166,7 @@ export default function StoriesPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {stories.map((userWithStories) => (
                   <Card
-                    key={userWithStories._id}
+                    key={userWithStories.id}
                     className="p-4 hover:shadow-md transition-shadow cursor-pointer"
                     onClick={() => handleUserSelect(userWithStories)}
                   >

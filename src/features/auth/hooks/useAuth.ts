@@ -76,13 +76,13 @@ export const useAuth = () => {
           tokens: null
         })
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error inicializando autenticación:', error)
       setAuthState({
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : 'Error desconocido',
         tokens: null
       })
     }
@@ -107,7 +107,7 @@ export const useAuth = () => {
       })
 
       return response
-    } catch (error: any) {
+    } catch (error: unknown) {
       const authError = error as AuthError
       setAuthState(prev => ({
         ...prev,
@@ -140,7 +140,7 @@ export const useAuth = () => {
       })
 
       return response
-    } catch (error: any) {
+    } catch (error: unknown) {
       const authError = error as AuthError
       setAuthState(prev => ({
         ...prev,
@@ -170,7 +170,7 @@ export const useAuth = () => {
         error: null,
         tokens: null
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error en logout:', error)
       // Continuar con logout local aunque falle
       setAuthState({
@@ -197,7 +197,7 @@ export const useAuth = () => {
       }))
 
       return tokens
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error refrescando token:', error)
 
       // Si falla el refresh, hacer logout
@@ -224,7 +224,7 @@ export const useAuth = () => {
       }))
 
       return updatedUser
-    } catch (error: any) {
+    } catch (error: unknown) {
       const authError = error as AuthError
       setAuthState(prev => ({
         ...prev,
@@ -251,7 +251,7 @@ export const useAuth = () => {
         isLoading: false,
         error: null
       }))
-    } catch (error: any) {
+    } catch (error: unknown) {
       const authError = error as AuthError
       setAuthState(prev => ({
         ...prev,
@@ -277,7 +277,7 @@ export const useAuth = () => {
         isLoading: false,
         error: null
       }))
-    } catch (error: any) {
+    } catch (error: unknown) {
       const authError = error as AuthError
       setAuthState(prev => ({
         ...prev,
@@ -303,7 +303,7 @@ export const useAuth = () => {
         isLoading: false,
         error: null
       }))
-    } catch (error: any) {
+    } catch (error: unknown) {
       const authError = error as AuthError
       setAuthState(prev => ({
         ...prev,

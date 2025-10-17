@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import CreateStoryForm from '@/components/CreateStoryForm'
+import { CreateStoryForm } from '@/features/stories/components'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { ArrowLeft } from 'lucide-react'
 

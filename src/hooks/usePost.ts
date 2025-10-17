@@ -40,7 +40,7 @@ export function usePost(
       setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
 
       // Llamar al servicio
-      const response = await toggleLike(post._id);
+      const response = await toggleLike(post.id);
 
       if (!response.success) {
         // Revertir si falla
@@ -54,14 +54,14 @@ export function usePost(
       // ✅ IMPLEMENTADO: Logging de error al dar like
       logger.error('Error toggling like:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        postId: post._id,
+        postId: post.id,
         action: isLiked ? 'unlike' : 'like'
       });
       // Revertir en caso de error
       setIsLiked(previousLiked);
       setLikesCount(previousCount);
     }
-  }, [post._id, isLiked, likesCount]);
+  }, [post.id, isLiked, likesCount]);
 
   const handleDelete = useCallback(async () => {
     if (!window.confirm('¿Estás seguro de que quieres eliminar este post?')) {
@@ -70,25 +70,25 @@ export function usePost(
 
     try {
       setLoading(true);
-      const response = await deletePost(post._id);
+      const response = await deletePost(post.id);
 
       if (response.success) {
         setIsDeleted(true);
         if (onDeleted) {
-          onDeleted(post._id);
+          onDeleted(post.id);
         }
       }
     } catch (error) {
       // ✅ IMPLEMENTADO: Logging de error al eliminar post
       logger.error('Error deleting post:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        postId: post._id
+        postId: post.id
       });
       // El error se maneja en el componente que usa el hook
     } finally {
       setLoading(false);
     }
-  }, [post._id, onDeleted]);
+  }, [post.id, onDeleted]);
 
   return {
     isLiked,

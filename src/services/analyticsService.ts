@@ -26,7 +26,7 @@ export interface DashboardMetrics {
 }
 
 export interface ContentMetric {
-  _id: string
+  id: string
   contentType: 'post' | 'reel' | 'story'
   likes: number
   comments: number
@@ -41,7 +41,7 @@ export interface GrowthData {
 }
 
 export interface GeographicData {
-  _id: {
+  id: {
     country: string
     region?: string
   }
@@ -50,13 +50,13 @@ export interface GeographicData {
 }
 
 export interface PlatformData {
-  _id: string
+  id: string
   count: number
   uniqueUserCount: number
 }
 
 export interface ErrorMetric {
-  _id: string
+  id: string
   count: number
   severity: string[]
 }
@@ -108,7 +108,7 @@ export interface ContentAnalytics {
 }
 
 export interface ContentTrendData {
-  _id: {
+  id: {
     date: string
     contentType: string
   }
@@ -116,7 +116,7 @@ export interface ContentTrendData {
 }
 
 export interface ContentDistributionData {
-  _id: string
+  id: string
   count: number
 }
 
@@ -136,7 +136,7 @@ export interface EngagementAnalytics {
 }
 
 export interface EngagementTrendData {
-  _id: {
+  id: {
     date: string
     eventType: string
   }
@@ -144,7 +144,7 @@ export interface EngagementTrendData {
 }
 
 export interface ContentTypeEngagementData {
-  _id: string
+  id: string
   likes: number
   comments: number
   views: number
@@ -152,12 +152,12 @@ export interface ContentTypeEngagementData {
 }
 
 export interface TimeEngagementData {
-  _id: number
+  id: number
   count: number
 }
 
 export interface DayEngagementData {
-  _id: number
+  id: number
   count: number
 }
 
@@ -170,7 +170,7 @@ export interface GeographicAnalytics {
 }
 
 export interface GeographicTrendData {
-  _id: {
+  id: {
     date: string
     country: string
   }
@@ -178,13 +178,13 @@ export interface GeographicTrendData {
 }
 
 export interface CountryData {
-  _id: string
+  id: string
   count: number
   uniqueUserCount: number
 }
 
 export interface RegionData {
-  _id: {
+  id: {
     country: string
     region: string
   }
@@ -193,7 +193,7 @@ export interface RegionData {
 }
 
 export interface GeographicEngagementData {
-  _id: string
+  id: string
   engagementCount: number
   uniqueUserCount: number
   avgEngagementPerUser: number
@@ -207,7 +207,7 @@ export interface PlatformAnalytics {
 }
 
 export interface PlatformTrendData {
-  _id: {
+  id: {
     date: string
     platform: string
   }
@@ -215,14 +215,14 @@ export interface PlatformTrendData {
 }
 
 export interface PlatformEngagementData {
-  _id: string
+  id: string
   engagementCount: number
   uniqueUserCount: number
   avgEngagementPerUser: number
 }
 
 export interface PlatformRetentionData {
-  _id: string
+  id: string
   uniqueUsers: string[]
   totalLogins: number
   uniqueUserCount: number

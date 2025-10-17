@@ -12,8 +12,17 @@ import type {
   AuthTokens,
   // PasswordResetRequest,
   PasswordResetData,
-  ApiResponse
+  ApiResponse,
 } from '../types'
+
+interface ApiError {
+  response?: {
+    data?: { message?: string }
+    status?: number
+  }
+  code?: string
+  message?: string
+}
 
 export class AuthService {
   private readonly baseUrl = '/api/auth'
@@ -40,7 +49,7 @@ export class AuthService {
       }
 
       return response.data.data!
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -90,7 +99,7 @@ export class AuthService {
       }
 
       return response.data.data!
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -135,7 +144,7 @@ export class AuthService {
       this.setTokens(response.data.data.tokens)
 
       return response.data.data.tokens
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Si falla el refresh, limpiar tokens
       this.clearTokens()
       throw this.handleAuthError(error)
@@ -155,7 +164,7 @@ export class AuthService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -196,7 +205,7 @@ export class AuthService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -220,7 +229,7 @@ export class AuthService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error cambiando contraseña')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -240,7 +249,7 @@ export class AuthService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error solicitando reset de contraseña')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -260,7 +269,7 @@ export class AuthService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error reseteando contraseña')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error)
     }
   }
@@ -282,7 +291,7 @@ export class AuthService {
       const tokenData = this.parseJWT(accessToken)
       const currentTime = Date.now() / 1000
 
-      return tokenData.exp > currentTime
+      return (tokenData.exp as number) > currentTime
     } catch {
       return false
     }
@@ -328,7 +337,7 @@ export class AuthService {
    * @param token - JWT token
    * @returns object con payload del token
    */
-  private parseJWT(token: string): any {
+  private parseJWT(token: string): Record<string, unknown> {
     try {
       const base64Url = token.split('.')[1]
       if (!base64Url) {
@@ -352,26 +361,32 @@ export class AuthService {
    * @param error - Error capturado
    * @returns Error procesado
    */
-  private handleAuthError(error: any): Error {
-    if (error.response?.data?.message) {
-      return new Error(error.response.data.message)
+  private handleAuthError(error: unknown): Error {
+    if (error && typeof error === 'object') {
+      const apiError = error as ApiError
+
+      if (apiError.response?.data?.message) {
+        return new Error(apiError.response.data.message)
+      }
+
+      if (apiError.response?.status === 401) {
+        // Token expirado o inválido
+        this.clearTokens()
+        return new Error('Sesión expirada. Por favor, inicia sesión nuevamente.')
+      }
+
+      if (apiError.response?.status === 403) {
+        return new Error('No tienes permisos para realizar esta acción.')
+      }
+
+      if (apiError.response?.status && apiError.response.status >= 500) {
+        return new Error('Error del servidor. Por favor, intenta más tarde.')
+      }
+
+      return new Error(apiError.message || 'Error de autenticación')
     }
 
-    if (error.response?.status === 401) {
-      // Token expirado o inválido
-      this.clearTokens()
-      return new Error('Sesión expirada. Por favor, inicia sesión nuevamente.')
-    }
-
-    if (error.response?.status === 403) {
-      return new Error('No tienes permisos para realizar esta acción.')
-    }
-
-    if (error.response?.status >= 500) {
-      return new Error('Error del servidor. Por favor, intenta más tarde.')
-    }
-
-    return new Error(error.message || 'Error de autenticación')
+    return new Error('Error de autenticación')
   }
 }
 

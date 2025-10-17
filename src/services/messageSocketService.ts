@@ -19,7 +19,7 @@ interface MessageSocketEvents {
   'user_stopped_typing': (data: { userId: string; conversationId: string }) => void;
 
   // Notificaciones
-  'new_notification': (notification: { _id: string; type: string; content: string }) => void;
+  'new_notification': (notification: { id: string; type: string; content: string }) => void;
 
   // Errores
   'error': (error: { message: string }) => void;

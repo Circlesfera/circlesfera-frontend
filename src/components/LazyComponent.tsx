@@ -68,22 +68,22 @@ export const createLazyComponent = <P extends object>(
 
 // Componentes lazy predefinidos
 export const LazyPostCard = createLazyComponent(
-  () => import('./PostCard'),
+  () => import('@/features/posts/components/PostCard'),
   <DefaultFallback minHeight="400px" />
 );
 
 export const LazyUserSuggestions = createLazyComponent(
-  () => import('./UserSuggestions'),
+  () => import('@/features/explore/components/UserSuggestions'),
   <DefaultFallback minHeight="200px" />
 );
 
 export const LazyNotificationList = createLazyComponent(
-  () => import('./NotificationList'),
+  () => import('@/features/notifications/components/NotificationList'),
   <DefaultFallback minHeight="300px" />
 );
 
 export const LazyChatWindow = createLazyComponent(
-  () => import('./ChatWindow'),
+  () => import('@/features/messages/components/ChatWindow'),
   <DefaultFallback minHeight="500px" />
 );
 

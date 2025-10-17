@@ -1,12 +1,11 @@
 "use client";
 
 import ProtectedRoute from '@/components/ProtectedRoute';
-import ConversationsList from '@/components/ConversationsList';
-import ChatWindow from '@/components/ChatWindow';
+import { ConversationsList, ChatWindow } from '@/features/messages/components';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Conversation } from '@/services/conversationService';
-import CreateConversationModal from '@/components/CreateConversationModal';
+import { CreateConversationModal } from '@/features/messages/components';
 
 export default function MessagesPage() {
   const searchParams = useSearchParams();
@@ -16,7 +15,7 @@ export default function MessagesPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleSelectConversation = (conversation: Conversation) => {
-    setSelected(conversation._id);
+    setSelected(conversation.id);
     setSelectedConversation(conversation);
     setShowChat(true);
   };
@@ -135,7 +134,14 @@ export default function MessagesPage() {
                 {selected ? (
                   <ChatWindow
                     conversationId={selected}
-                    {...(selectedConversation?.participants && { participants: selectedConversation.participants })}
+                    {...(selectedConversation?.participants && {
+                      participants: selectedConversation.participants.map(p => ({
+                        id: p.id,
+                        username: p.username,
+                        ...(p.avatar && { avatar: p.avatar }),
+                        ...(p.fullName && { fullName: p.fullName })
+                      }))
+                    })}
                   />
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center p-6">

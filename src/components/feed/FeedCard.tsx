@@ -62,19 +62,19 @@ export default function FeedCard({
 
   const handleLike = () => {
     setIsLiked(!isLiked);
-    onLike?.(post._id);
+    onLike?.(post.id);
   };
 
   const handleComment = () => {
-    onComment?.(post._id, post.user.username);
+    onComment?.(post.id, post.user.username);
   };
 
   const handleShare = () => {
-    onShare?.(post._id, post.user.username);
+    onShare?.(post.id, post.user.username);
   };
 
   const handleDelete = () => {
-    onDelete?.(post._id);
+    onDelete?.(post.id);
     setShowMore(false);
   };
 

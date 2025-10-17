@@ -32,12 +32,12 @@ export default function ReelsPage() {
     if (!currentReel) return;
 
     try {
-      const isLiked = currentReel.likes.some(like => like.user === user?._id);
+      const isLiked = currentReel.likes.some(like => like.user === user?.id);
 
       // Actualizar estado optimista
       const updatedLikes = isLiked
-        ? currentReel.likes.filter(like => like.user !== user?._id)
-        : [...currentReel.likes, { user: user?._id || '', createdAt: new Date().toISOString() }];
+        ? currentReel.likes.filter(like => like.user !== user?.id)
+        : [...currentReel.likes, { user: user?.id || '', createdAt: new Date().toISOString() }];
 
       updateReel(reelId, { likes: updatedLikes });
 
@@ -168,7 +168,7 @@ export default function ReelsPage() {
                   size="md"
                   fallback={currentReel.user.fullName || currentReel.user.username}
                   interactive
-                  onClick={() => handleUserClick(currentReel.user._id)}
+                  onClick={() => handleUserClick(currentReel.user.id)}
                 />
                 <div className="ml-3">
                   <p className="text-white font-semibold">
@@ -228,13 +228,13 @@ export default function ReelsPage() {
               <Button
                 variant="ghost"
                 size="lg"
-                className={`w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white ${currentReel.likes.some(like => like.user === user?._id) ? 'text-red-500' : ''
+                className={`w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white ${currentReel.likes.some(like => like.user === user?.id) ? 'text-red-500' : ''
                   }`}
-                onClick={() => handleLike(currentReel._id)}
+                onClick={() => handleLike(currentReel.id)}
               >
                 <Heart
                   className="w-6 h-6"
-                  fill={currentReel.likes.some(like => like.user === user?._id) ? "currentColor" : "none"}
+                  fill={currentReel.likes.some(like => like.user === user?.id) ? "currentColor" : "none"}
                 />
               </Button>
               <span className="text-white text-sm mt-1">
@@ -248,7 +248,7 @@ export default function ReelsPage() {
                 variant="ghost"
                 size="lg"
                 className="w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white"
-                onClick={() => handleComment(currentReel._id)}
+                onClick={() => handleComment(currentReel.id)}
               >
                 <MessageCircle className="w-6 h-6" />
               </Button>
@@ -263,7 +263,7 @@ export default function ReelsPage() {
                 variant="ghost"
                 size="lg"
                 className="w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white"
-                onClick={() => handleShare(currentReel._id)}
+                onClick={() => handleShare(currentReel.id)}
               >
                 <Share2 className="w-6 h-6" />
               </Button>

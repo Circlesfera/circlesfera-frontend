@@ -377,7 +377,7 @@ export default function CSTVPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {videos.map((video) => (
                 <motion.div
-                  key={video._id}
+                  key={video.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
@@ -387,7 +387,7 @@ export default function CSTVPage() {
                     onLike={handleVideoLike}
                     onSave={handleVideoSave}
                     onShare={handleVideoShare}
-                    currentUser={user ? { id: user._id, username: user.username } : undefined}
+                    currentUser={user ? { id: user.id, username: user.username } : undefined}
                     size="medium"
                   />
                 </motion.div>

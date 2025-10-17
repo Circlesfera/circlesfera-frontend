@@ -221,7 +221,7 @@ export interface PostApiError {
   errors?: PostValidationError[]
 }
 
-export interface PostApiResponse<T = any> {
+export interface PostApiResponse<T = unknown> {
   success: boolean
   data?: T
   message?: string
@@ -269,7 +269,7 @@ export interface PostFormHookReturn {
   isSubmitting: boolean
   errors: Record<string, string>
   touched: Record<string, boolean>
-  setFieldValue: (field: string, value: any) => void
+  setFieldValue: (field: string, value: unknown) => void
   setFieldTouched: (field: string, touched: boolean) => void
   handleSubmit: (data: PostFormData) => Promise<void>
   resetForm: () => void

@@ -128,7 +128,7 @@ export default function CommentsModal({
 
     try {
       await deleteComment(commentId);
-      setComments(prev => prev.filter(comment => comment._id !== commentId));
+      setComments(prev => prev.filter(comment => comment.id !== commentId));
     } catch (err) {
       logger.error('Error deleting comment:', err);
       setError('Error al eliminar el comentario');
@@ -137,7 +137,7 @@ export default function CommentsModal({
 
   // Función para editar comentario
   const handleEditComment = (comment: Comment) => {
-    setEditingComment(comment._id);
+    setEditingComment(comment.id);
     setEditText(comment.content);
   };
 
@@ -148,7 +148,7 @@ export default function CommentsModal({
       const response = await updateComment(editingComment, editText);
       if (response.success) {
         setComments(prev => prev.map(comment =>
-          comment._id === editingComment
+          comment.id === editingComment
             ? { ...comment, content: editText }
             : comment
         ));
@@ -335,7 +335,7 @@ export default function CommentsModal({
               <div className="space-y-4">
                 {comments.map((comment) => (
                   <motion.div
-                    key={comment._id}
+                    key={comment.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
@@ -373,7 +373,7 @@ export default function CommentsModal({
                           </div>
 
                           {/* Menú de opciones */}
-                          {user && (comment.user._id === user._id || user.role === 'admin') && (
+                          {user && (comment.user.id === user.id || user.role === 'admin') && (
                             <div className="relative">
                               <button
                                 className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full transition-all"
@@ -389,7 +389,7 @@ export default function CommentsModal({
                         </div>
 
                         {/* Contenido del comentario */}
-                        {editingComment === comment._id ? (
+                        {editingComment === comment.id ? (
                           <div className="space-y-2">
                             <textarea
                               value={editText}
@@ -421,7 +421,7 @@ export default function CommentsModal({
                         )}
 
                         {/* Botones de acción para el autor del comentario */}
-                        {user && comment.user._id === user._id && editingComment !== comment._id && (
+                        {user && comment.user.id === user.id && editingComment !== comment.id && (
                           <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleEditComment(comment)}
@@ -431,7 +431,7 @@ export default function CommentsModal({
                               <span>Editar</span>
                             </button>
                             <button
-                              onClick={() => handleDeleteComment(comment._id)}
+                              onClick={() => handleDeleteComment(comment.id)}
                               className="flex items-center space-x-1 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded-full transition-colors"
                             >
                               <Trash2 className="w-3 h-3" />
@@ -441,10 +441,10 @@ export default function CommentsModal({
                         )}
 
                         {/* Botón de reportar para otros usuarios */}
-                        {user && comment.user._id !== user._id && (
+                        {user && comment.user.id !== user.id && (
                           <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
-                              onClick={() => handleReportComment(comment._id)}
+                              onClick={() => handleReportComment(comment.id)}
                               className="flex items-center space-x-1 text-xs text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 px-2 py-1 rounded-full transition-colors"
                             >
                               <Flag className="w-3 h-3" />

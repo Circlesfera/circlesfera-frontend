@@ -3,8 +3,8 @@ import { VirtualizedList } from '@/shared/components/VirtualizedList';
 import { useInfiniteScroll } from '@/shared/hooks/useInfiniteScroll';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import { useOptimizedCallback } from '@/shared/hooks/useOptimizedCallback';
-import PostCard from '@/components/PostCard';
-import PostSkeleton from '@/components/PostSkeleton';
+import { PostCard } from '@/features/posts/components';
+import { PostSkeleton } from '@/features/posts/components';
 import { postService } from '../services/postService';
 import { Post } from '../types';
 import logger from '@/utils/logger';
@@ -40,11 +40,13 @@ export default function OptimizedPostFeed({
     setError(null);
 
     try {
-      const response = await (postService as any).getFeedPosts?.(page + 1, PAGE_SIZE) || { data: [] };
+      const response = await postService.getFeed({
+        pagination: { page: page + 1, limit: PAGE_SIZE }
+      });
 
-      setPosts(prevPosts => [...prevPosts, ...response.data]);
+      setPosts(prevPosts => [...prevPosts, ...response.posts]);
       setPage(prevPage => prevPage + 1);
-      setHasNextPage(response.data.length === PAGE_SIZE);
+      setHasNextPage(response.posts.length === PAGE_SIZE);
     } catch (error) {
       logger.error('Error loading more posts:', error);
       setError('Error al cargar más publicaciones');
@@ -57,45 +59,11 @@ export default function OptimizedPostFeed({
   const debouncedLoadMore = useDebounce(loadMorePosts, 300);
 
   // Callbacks optimizados
-  const handlePostLike = useOptimizedCallback(
-    async (postId: string) => {
-      try {
-        // Optimistic update
-        setPosts(prevPosts =>
-          prevPosts.map(post =>
-            post.id === postId
-              ? {
-                ...post,
-                isLiked: !post.isLiked,
-                likesCount: post.isLiked ? (post as any).likesCount - 1 : (post as any).likesCount + 1,
-              }
-              : post
-          )
-        );
-
-        // TODO: Implementar llamada a API para like
-        logger.info(`Post ${postId} liked`);
-      } catch (error) {
-        logger.error('Error liking post:', error);
-        // Revert optimistic update
-        setPosts(prevPosts =>
-          prevPosts.map(post =>
-            post.id === postId
-              ? {
-                ...post,
-                isLiked: !post.isLiked,
-                likesCount: post.isLiked ? (post as any).likesCount - 1 : (post as any).likesCount + 1,
-              }
-              : post
-          )
-        );
-      }
-    },
-    []
-  );
+  // handlePostLike removido - no se usa en PostCard
 
   const handlePostComment = useOptimizedCallback(
-    (postId: string, _postAuthor: string, _postImage?: string) => {
+    (...args: unknown[]) => {
+      const postId = args[0] as string;
       // TODO: Implementar lógica de comentarios
       logger.info(`Comment on post ${postId}`);
     },
@@ -103,7 +71,8 @@ export default function OptimizedPostFeed({
   );
 
   const handlePostShare = useOptimizedCallback(
-    (postId: string, _postUrl?: string, _postCaption?: string) => {
+    (...args: unknown[]) => {
+      const postId = args[0] as string;
       // TODO: Implementar lógica de compartir
       logger.info(`Share post ${postId}`);
     },
@@ -111,7 +80,8 @@ export default function OptimizedPostFeed({
   );
 
   const handlePostDelete = useOptimizedCallback(
-    (postId: string) => {
+    (...args: unknown[]) => {
+      const postId = args[0] as string;
       setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
       onPostDelete?.(postId);
     },
@@ -119,7 +89,8 @@ export default function OptimizedPostFeed({
   );
 
   const handleUserClick = useOptimizedCallback(
-    (userId: string) => {
+    (...args: unknown[]) => {
+      const userId = args[0] as string;
       // TODO: Navegar al perfil del usuario
       logger.info(`Navigate to user ${userId}`);
     },
@@ -127,7 +98,8 @@ export default function OptimizedPostFeed({
   );
 
   const handlePostClick = useOptimizedCallback(
-    (postId: string, _username: string) => {
+    (...args: unknown[]) => {
+      const postId = args[0] as string;
       // TODO: Navegar al post individual
       logger.info(`Navigate to post ${postId}`);
     },
@@ -150,8 +122,7 @@ export default function OptimizedPostFeed({
       <div className="p-4">
         <PostCard
           key={post.id}
-          post={post as any}
-          onLike={handlePostLike}
+          post={post}
           onComment={handlePostComment}
           onShare={handlePostShare}
           onPostDeleted={handlePostDelete}
@@ -160,7 +131,7 @@ export default function OptimizedPostFeed({
         />
       </div>
     ),
-    [handlePostLike, handlePostComment, handlePostShare, handlePostDelete, handleUserClick, handlePostClick]
+    [handlePostComment, handlePostShare, handlePostDelete, handleUserClick, handlePostClick]
   );
 
   // Componente de loading

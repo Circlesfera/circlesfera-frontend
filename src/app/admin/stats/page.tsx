@@ -48,16 +48,16 @@ export default function StatsPage() {
 
         // Convertir arrays de byReason a objeto
         if (Array.isArray(statsData.byReason)) {
-          statsData.byReason.forEach((item: { _id: string; count: number }) => {
-            processedStats.byReason[item._id] = item.count
+          statsData.byReason.forEach((item: { id: string; count: number }) => {
+            processedStats.byReason[item.id] = item.count
             processedStats.total += item.count
           })
         }
 
         // Convertir arrays de byContentType a objeto
         if (Array.isArray(statsData.byContentType)) {
-          statsData.byContentType.forEach((item: { _id: string; count: number }) => {
-            processedStats.byContentType[item._id] = item.count
+          statsData.byContentType.forEach((item: { id: string; count: number }) => {
+            processedStats.byContentType[item.id] = item.count
           })
         }
 

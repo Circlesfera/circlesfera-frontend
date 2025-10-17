@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/features/auth/useAuth'
-import LoginModal from '@/components/landing/LoginModal'
-import RegisterModal from '@/components/landing/RegisterModal'
+import { LoginModal, RegisterModal } from '@/features/auth/components'
 
 export default function LandingPage() {
   const [showLoginModal, setShowLoginModal] = useState(false)

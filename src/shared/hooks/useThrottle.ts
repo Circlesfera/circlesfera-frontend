@@ -4,7 +4,7 @@ import { useRef, useCallback } from 'react';
  * Hook para throttling de callbacks
  * Útil para limitar la frecuencia de ejecución de funciones
  */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T {
@@ -39,7 +39,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
  * Hook para throttling con leading edge
  * Ejecuta inmediatamente en la primera llamada
  */
-export function useThrottleLeading<T extends (...args: any[]) => any>(
+export function useThrottleLeading<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T {

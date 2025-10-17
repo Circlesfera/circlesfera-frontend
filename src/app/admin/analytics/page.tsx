@@ -469,14 +469,14 @@ export default function AnalyticsDashboard() {
               const percentage = total > 0 ? (platform.count / total) * 100 : 0
 
               return (
-                <div key={platform._id} className="flex items-center justify-between">
+                <div key={platform.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-blue-500' :
                       index === 1 ? 'bg-green-500' :
                         index === 2 ? 'bg-purple-500' : 'bg-gray-500'
                       }`}></div>
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
-                      {platform._id}
+                      {platform.id}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -517,7 +517,7 @@ export default function AnalyticsDashboard() {
 
           <div className="space-y-4">
             {metrics.geographic.slice(0, 5).map((geo, index) => (
-              <div key={`${geo._id.country}-${geo._id.region}`} className="flex items-center justify-between">
+              <div key={`${geo.id.country}-${geo.id.region}`} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-blue-500' :
                     index === 1 ? 'bg-green-500' :
@@ -525,8 +525,8 @@ export default function AnalyticsDashboard() {
                         index === 3 ? 'bg-orange-500' : 'bg-gray-500'
                     }`}></div>
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {geo._id.country}
-                    {geo._id.region && `, ${geo._id.region}`}
+                    {geo.id.country}
+                    {geo.id.region && `, ${geo.id.region}`}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -661,14 +661,14 @@ export default function AnalyticsDashboard() {
             </thead>
             <tbody>
               {metrics.topContent.slice(0, 10).map((content, index) => (
-                <tr key={content._id} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                <tr key={content.id} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                   <td className="py-3 px-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white text-sm font-bold">
                         {index + 1}
                       </div>
                       <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
-                        {content._id.slice(-8)}
+                        {content.id.slice(-8)}
                       </span>
                     </div>
                   </td>
@@ -802,11 +802,11 @@ export default function AnalyticsDashboard() {
 
           <div className="space-y-3">
             {metrics.errors.slice(0, 5).map((error) => (
-              <div key={error._id} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg p-3">
+              <div key={error.id} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg p-3">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                   <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
-                    {error._id || 'Error desconocido'}
+                    {error.id || 'Error desconocido'}
                   </span>
                 </div>
                 <span className="text-sm font-medium text-red-600 dark:text-red-400">

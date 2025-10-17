@@ -206,7 +206,7 @@ export default function ReportDetailPage() {
             </h1>
             <div className="flex items-center space-x-3">
               <span className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 font-mono">
-                ID: {report._id}
+                ID: {report.id}
               </span>
               {getStatusBadge(report.status)}
             </div>

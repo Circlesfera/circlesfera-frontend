@@ -19,9 +19,8 @@ import { useUnreadNotifications } from '@/features/notifications/useUnreadNotifi
 import { useHeaderState } from '@/hooks/useHeaderState'
 import { HeaderSearch } from './HeaderSearch'
 import { DesktopNavigation } from './DesktopNavigation'
-import CreatePostForm from '@/components/CreatePostForm'
-import CreateStoryForm from '@/components/CreateStoryForm'
-import CreateReelForm from '@/components/CreateReelForm'
+import { CreatePostForm, CreateReelForm } from '@/features/posts/components'
+import { CreateStoryForm } from '@/features/stories/components'
 import {
   NotificationIcon,
   MenuIcon,

@@ -22,6 +22,15 @@ import type {
   PostApiResponse
 } from '../types'
 
+interface ApiError {
+  response?: {
+    data?: { message?: string }
+    status?: number
+  }
+  code?: string
+  message?: string
+}
+
 export class PostService {
   private readonly baseUrl = '/api/posts'
 
@@ -68,7 +77,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -87,7 +96,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -141,7 +150,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -164,7 +173,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -181,7 +190,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error eliminando post')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -198,7 +207,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error dando like')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -215,7 +224,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error quitando like')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -227,9 +236,9 @@ export class PostService {
    * @param limit - Límite por página
    * @returns Promise con usuarios que dieron like
    */
-  async getPostLikes(id: string, page: number = 1, limit: number = 20): Promise<any> {
+  async getPostLikes(id: string, page: number = 1, limit: number = 20): Promise<unknown> {
     try {
-      const response = await api.get<PostApiResponse<any>>(
+      const response = await api.get<PostApiResponse<unknown>>(
         `${this.baseUrl}/${id}/likes?page=${page}&limit=${limit}`
       )
 
@@ -238,7 +247,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -263,7 +272,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -283,7 +292,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error eliminando comentario')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -295,9 +304,9 @@ export class PostService {
    * @param limit - Límite por página
    * @returns Promise con comentarios
    */
-  async getPostComments(id: string, page: number = 1, limit: number = 20): Promise<any> {
+  async getPostComments(id: string, page: number = 1, limit: number = 20): Promise<unknown> {
     try {
-      const response = await api.get<PostApiResponse<any>>(
+      const response = await api.get<PostApiResponse<unknown>>(
         `${this.baseUrl}/${id}/comments?page=${page}&limit=${limit}`
       )
 
@@ -306,7 +315,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -326,7 +335,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error dando like al comentario')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -346,7 +355,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error quitando like del comentario')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -369,7 +378,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error compartiendo post')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -392,7 +401,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error reportando post')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -409,7 +418,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error guardando post')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -426,7 +435,7 @@ export class PostService {
       if (!response.data.success) {
         throw new Error(response.data.message || 'Error quitando post de favoritos')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -448,7 +457,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -471,7 +480,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -492,7 +501,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -511,7 +520,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -532,7 +541,7 @@ export class PostService {
       }
 
       return response.data.data
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleError(error)
     }
   }
@@ -542,26 +551,72 @@ export class PostService {
    * @param error - Error capturado
    * @returns Error procesado
    */
-  private handleError(error: any): Error {
-    if (error.response?.data?.message) {
-      return new Error(error.response.data.message)
+  private handleError(error: unknown): Error {
+    if (error && typeof error === 'object') {
+      const apiError = error as ApiError
+
+      if (apiError.response?.data?.message) {
+        return new Error(apiError.response.data.message)
+      }
+
+      if (apiError.response?.status === 401) {
+        return new Error('No tienes permisos para realizar esta acción')
+      }
+
+      if (apiError.response?.status === 404) {
+        return new Error('Post no encontrado')
+      }
+
+      if (apiError.response?.status && apiError.response.status >= 500) {
+        return new Error('Error del servidor. Por favor, intenta más tarde')
+      }
+
+      return new Error(apiError.message || 'Error de posts')
     }
 
-    if (error.response?.status === 401) {
-      return new Error('No tienes permisos para realizar esta acción')
-    }
+    return new Error('Error de posts')
+  }
 
-    if (error.response?.status === 404) {
-      return new Error('Post no encontrado')
-    }
+  /**
+   * Obtener posts de un usuario específico
+   * @param userId - ID del usuario
+   * @param options - Opciones de paginación
+   * @returns Promise con posts del usuario
+   */
+  async getUserPosts(userId: string, options: PostFeedOptions = {}): Promise<PostsResponse> {
+    try {
+      const params = new URLSearchParams()
 
-    if (error.response?.status >= 500) {
-      return new Error('Error del servidor. Por favor, intenta más tarde')
-    }
+      if (options.pagination?.page) {
+        params.append('page', options.pagination.page.toString())
+      }
 
-    return new Error(error.message || 'Error de posts')
+      if (options.pagination?.limit) {
+        params.append('limit', options.pagination.limit.toString())
+      }
+
+      if (options.type) {
+        params.append('type', options.type)
+      }
+
+      const response = await api.get<PostApiResponse<Post[]>>(
+        `${this.baseUrl}/user/${userId}?${params.toString()}`
+      )
+
+      return {
+        posts: response.data.data || [],
+        pagination: { page: 1, limit: 20, total: 0, pages: 1 }
+      }
+    } catch (error) {
+      console.error('Error fetching user posts:', error)
+      throw this.handleError(error)
+    }
   }
 }
 
 // Instancia singleton del servicio
 export const postService = new PostService()
+
+// Exportar función específica para compatibilidad
+export const getUserPosts = (userId: string, options: PostFeedOptions = {}) =>
+  postService.getUserPosts(userId, options)

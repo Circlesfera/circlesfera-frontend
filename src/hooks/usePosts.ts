@@ -80,7 +80,7 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
         setPosts(prev => {
           // Evitar duplicados
           const newPosts = response.posts.filter(
-            newPost => !prev.some(existingPost => existingPost._id === newPost._id)
+            newPost => !prev.some(existingPost => existingPost.id === newPost.id)
           );
           return [...prev, ...newPosts];
         });
@@ -111,14 +111,14 @@ export function usePosts({ username, initialPosts = [] }: UsePostsOptions): UseP
   const updatePost = useCallback((postId: string, updates: Partial<Post>) => {
     setPosts(prev =>
       prev.map(post =>
-        post._id === postId ? { ...post, ...updates } : post
+        post.id === postId ? { ...post, ...updates } : post
       )
     );
   }, []);
 
   // Eliminar un post
   const removePost = useCallback((postId: string) => {
-    setPosts(prev => prev.filter(post => post._id !== postId));
+    setPosts(prev => prev.filter(post => post.id !== postId));
   }, []);
 
   // Agregar un nuevo post al inicio

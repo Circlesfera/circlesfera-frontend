@@ -10,7 +10,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import logger from '@/utils/logger';
 
 interface SearchResult {
-  _id: string;
+  id: string;
   username: string;
   avatar?: string;
   bio?: string;
@@ -41,7 +41,7 @@ function SearchContent() {
         const searchResults = await searchUsers(query);
         // Filtrar resultados para excluir al usuario actual si está logueado
         const filteredResults = user
-          ? searchResults.filter(result => result._id !== user._id)
+          ? searchResults.filter(result => result.id !== user.id)
           : searchResults;
         setResults(filteredResults);
       } catch (searchError) {
@@ -138,7 +138,7 @@ function SearchContent() {
 
               {results.map((user) => (
                 <Link
-                  key={user._id}
+                  key={user.id}
                   href={`/${user.username}`}
                   className="block bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-4 hover:shadow-lg transition-shadow"
                 >

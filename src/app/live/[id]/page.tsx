@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Users, Heart, Share2, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLiveStream, useStartLiveStream, useEndLiveStream } from '@/hooks/useLiveStream';
-import { LivePlayer } from '@/components/live/LivePlayer';
+import { LivePlayer } from '@/features/live/components';
 import { useAuthContext } from '@/features/auth/AuthContext';
 import { useToast } from '@/components/Toast';
 import { liveStreamService } from '@/services/liveStreamService';
@@ -37,7 +37,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
   const { startStream, loading: starting } = useStartLiveStream();
   const { endStream, loading: ending } = useEndLiveStream();
 
-  const isOwner = user?._id === stream?.user._id;
+  const isOwner = user?.id === stream?.user.id;
   const isLive = stream?.status === 'live';
   const isScheduled = stream?.status === 'scheduled';
 
@@ -45,7 +45,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
   useEffect(() => {
     if (stream && user) {
       // Verificar si el usuario actual dio like
-      const userLiked = stream.likes?.some((like: { user: string }) => like.user === user._id);
+      const userLiked = stream.likes?.some((like: { user: string }) => like.user === user.id);
       setIsLiked(userLiked || false);
       setLikesCount(stream.likes?.length || 0);
     }
@@ -56,9 +56,9 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
     // En un entorno real, aquí obtendrías las credenciales del streaming service
     const streamData = {
-      streamKey: `stream_${stream._id}_${Date.now()}`,
-      rtmpUrl: `rtmp://your-streaming-server/live/${stream._id}`,
-      playbackUrl: `https://your-cdn.com/live/${stream._id}/index.m3u8`,
+      streamKey: `stream_${stream.id}_${Date.now()}`,
+      rtmpUrl: `rtmp://your-streaming-server/live/${stream.id}`,
+      playbackUrl: `https://your-cdn.com/live/${stream.id}/index.m3u8`,
       ...(stream.thumbnailUrl && { thumbnailUrl: stream.thumbnailUrl }),
     };
 
@@ -224,7 +224,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
         {isLive ? (
           <LivePlayer
             stream={stream}
-            currentUser={user ? { id: user._id, username: user.username } : undefined}
+            currentUser={user ? { id: user.id, username: user.username } : undefined}
             isOwner={isOwner}
           />
         ) : isScheduled ? (
@@ -332,7 +332,7 @@ export default function LiveStreamPage({ params }: LiveStreamPageProps) {
 
                 {stream.cstvVideo && (
                   <button
-                    onClick={() => router.push(`/cstv/${stream.cstvVideo!._id}`)}
+                    onClick={() => router.push(`/cstv/${stream.cstvVideo!.id}`)}
                     className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
                   >
                     Ver en CSTV

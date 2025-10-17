@@ -37,7 +37,7 @@ export interface CommentReelResponse {
   success: boolean;
   message: string;
   comment?: {
-    _id: string;
+    id: string;
     user: string;
     content: string;
     createdAt: Date;

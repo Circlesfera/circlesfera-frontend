@@ -6,17 +6,15 @@ import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
 import { getFollowers, getFollowing, UserProfile, UserSuggestion, updateUserProfile, User } from '@/services/userService';
 import { createDirectConversation } from '@/services/conversationService';
-import FollowButton from '@/components/FollowButton';
-import EditProfileForm from '@/components/EditProfileForm';
-import UserListModal from '@/components/UserListModal';
-import ModernProfileHeader from '@/components/profile/ModernProfileHeader';
-import ModernProfileTabs from '@/components/profile/ModernProfileTabs';
+import { FollowButton, EditProfileForm } from '@/features/profile/components';
+import { UserListModal } from '@/features/profile/components';
+import { ModernProfileHeader, ModernProfileTabs } from '@/features/profile/components';
 import { useToast } from '@/components/Toast';
 
 // Función para convertir UserProfile a User compatible con EditProfileForm
 const convertToFormData = (profile: UserProfile): User => {
   const converted = {
-    _id: profile._id,
+    id: profile.id,
     username: profile.username,
     email: profile.email,
     avatar: profile.avatar || '',           // ✅ Siempre incluir, aunque esté vacío
@@ -30,7 +28,7 @@ const convertToFormData = (profile: UserProfile): User => {
     isPrivate: profile.isPrivate !== undefined ? profile.isPrivate : false,
     followers: profile.followers || [],
     following: profile.following || [],
-    posts: profile.posts?.map(p => p._id) || [],
+    posts: profile.posts?.map(p => p.id) || [],
     savedPosts: [],
     blockedUsers: [],
     createdAt: profile.createdAt || new Date().toISOString(),
@@ -62,16 +60,16 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
     try {
       // Crear conversación directa
-      const response = await createDirectConversation(profile._id);
+      const response = await createDirectConversation(profile.id);
 
       if (response.success) {
         // Redirigir a la página de mensajes con la conversación seleccionada
-        router.push(`/messages?conversation=${response.conversation._id}`);
+        router.push(`/messages?conversation=${response.conversation.id}`);
       }
     } catch (error) {
       logger.error('Error creating conversation:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        profileId: profile._id
+        profileId: profile.id
       });
       // Si falla, redirigir a la página de mensajes para que el usuario pueda crear la conversación manualmente
       router.push('/messages');
@@ -114,7 +112,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
         setIsFollowingProfile(isFollowing);
       }
     }
-  }, [profileData?.isFollowing, profileData?._id, profileData, user, isOwnProfile, isFollowingProfile]);
+  }, [profileData?.isFollowing, profileData?.id, profileData, user, isOwnProfile, isFollowingProfile]);
 
   const reloadProfile = useCallback(async () => {
     try {
@@ -211,10 +209,10 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
 
   // Handlers para abrir modales
   const handleShowFollowers = async () => {
-    if (!profileData?._id) return;
+    if (!profileData?.id) return;
     setShowFollowers(true);
     try {
-      const data = await getFollowers(profileData._id);
+      const data = await getFollowers(profileData.id);
       setFollowersList(data);
     } catch (error) {
       // Solo logear errores críticos
@@ -226,10 +224,10 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
   };
 
   const handleShowFollowing = async () => {
-    if (!profileData?._id) return;
+    if (!profileData?.id) return;
     setShowFollowing(true);
     try {
-      const data = await getFollowing(profileData._id);
+      const data = await getFollowing(profileData.id);
       setFollowingList(data);
     } catch (error) {
       // Solo logear errores críticos
@@ -284,7 +282,7 @@ export default function ClientProfilePage({ profile }: { profile: UserProfile })
           followButton={!isOwnProfile ? (
             <div className="flex flex-col gap-2">
               <ProfileFollowButton
-                userId={profileData._id}
+                userId={profileData.id}
                 username={profileData.username}
                 isFollowing={isFollowingProfile}
                 onFollowChange={handleFollowChange}

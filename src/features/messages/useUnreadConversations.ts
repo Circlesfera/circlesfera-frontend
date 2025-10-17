@@ -30,7 +30,7 @@ export function useUnreadConversations() {
           }
 
           // Si el último mensaje fue enviado por el usuario actual, no hay nada sin leer
-          if (conversation.lastMessage.sender._id === user._id) {
+          if (conversation.lastMessage.sender.id === user.id) {
             return false;
           }
 
@@ -57,7 +57,7 @@ export function useUnreadConversations() {
         logger.debug('Unread conversations count:', {
           total: response.conversations.length,
           unread: unreadConversations.length,
-          userId: user._id
+          userId: user.id
         });
       } else {
         setUnreadCount(0);
@@ -65,7 +65,7 @@ export function useUnreadConversations() {
     } catch (error) {
       logger.error('Error fetching unread conversations count:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        userId: user._id
+        userId: user.id
       });
       setUnreadCount(0);
     }

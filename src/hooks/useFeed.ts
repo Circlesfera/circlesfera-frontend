@@ -73,7 +73,7 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
         setPosts(prev => {
           // Evitar duplicados
           const newPosts = response.posts.filter(
-            newPost => !prev.some(existingPost => existingPost._id === newPost._id)
+            newPost => !prev.some(existingPost => existingPost.id === newPost.id)
           )
           return [...prev, ...newPosts]
         })
@@ -99,14 +99,14 @@ export function useFeed(options: UseFeedOptions = {}): UseFeedReturn {
   const updatePost = useCallback((postId: string, updates: Partial<Post>) => {
     setPosts(prev =>
       prev.map(post =>
-        post._id === postId ? { ...post, ...updates } : post
+        post.id === postId ? { ...post, ...updates } : post
       )
     )
   }, [])
 
   // Eliminar un post
   const removePost = useCallback((postId: string) => {
-    setPosts(prev => prev.filter(post => post._id !== postId))
+    setPosts(prev => prev.filter(post => post.id !== postId))
   }, [])
 
   // Cargar posts iniciales solo si está autenticado

@@ -1,5 +1,5 @@
 import ProtectedRoute from '@/components/ProtectedRoute';
-import NotificationList from '@/components/NotificationList';
+import { NotificationList } from '@/features/notifications/components';
 
 export default function NotificationsPage() {
   return (

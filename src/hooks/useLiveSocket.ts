@@ -92,18 +92,18 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
       });
     };
 
-    const handleCommentReaction = (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: { _id: string; username: string }) => {
+    const handleCommentReaction = (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: { id: string; username: string }) => {
       setState(prev => {
         const updatedComments = prev.comments.map(comment => {
-          if (comment._id === commentId) {
-            const existingReaction = comment.reactions.find(r => r.user._id === user._id);
+          if (comment.id === commentId) {
+            const existingReaction = comment.reactions.find(r => r.user.id === user.id);
 
             if (existingReaction) {
               // Actualizar reacción existente
               return {
                 ...comment,
                 reactions: comment.reactions.map(r =>
-                  r.user._id === user._id ? { ...r, type: reaction } : r
+                  r.user.id === user.id ? { ...r, type: reaction } : r
                 ),
               };
             } else {
@@ -112,7 +112,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
                 ...comment,
                 reactions: [...comment.reactions, {
                   user: {
-                    _id: user._id,
+                    id: user.id,
                     username: user.username,
                     avatar: '' // Valor por defecto
                   },
@@ -137,7 +137,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     const handleCommentReply = (parentId: string, comment: LiveComment) => {
       setState(prev => {
         const updatedComments = prev.comments.map(parentComment => {
-          if (parentComment._id === parentId) {
+          if (parentComment.id === parentId) {
             return {
               ...parentComment,
               replies: [...(parentComment.replies || []), comment],
@@ -158,7 +158,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
     const handleCommentModerate = (commentId: string, action: string) => {
       setState(prev => {
         const updatedComments = prev.comments.filter(comment => {
-          if (comment._id === commentId) {
+          if (comment.id === commentId) {
             if (action === 'delete') return false;
             if (action === 'hide') {
               return {
@@ -208,7 +208,7 @@ export const useLiveSocket = (options: UseLiveSocketOptions) => {
 
     const handleViewerLeave = (viewerId: string) => {
       setState(prev => {
-        const updatedViewers = prev.viewers.filter(v => v._id !== viewerId);
+        const updatedViewers = prev.viewers.filter(v => v.id !== viewerId);
         viewersRef.current = updatedViewers;
         return {
           ...prev,

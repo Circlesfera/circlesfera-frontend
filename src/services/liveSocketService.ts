@@ -7,7 +7,7 @@ import type { LiveComment, LiveStreamViewer, LiveStream } from '@/types/live';
 interface LiveSocketEvents {
   // Comentarios
   'comment:new': (comment: LiveComment) => void;
-  'comment:reaction': (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: { _id: string; username: string }) => void;
+  'comment:reaction': (commentId: string, reaction: 'like' | 'love' | 'laugh' | 'wow' | 'angry', user: { id: string; username: string }) => void;
   'comment:reply': (parentId: string, comment: LiveComment) => void;
   'comment:moderate': (commentId: string, action: string) => void;
 
@@ -22,11 +22,11 @@ interface LiveSocketEvents {
   'stream:update': (stream: Partial<LiveStream>) => void;
 
   // Reacciones del stream
-  'stream:like': (streamId: string, user: { _id: string; username: string }) => void;
-  'stream:share': (streamId: string, user: { _id: string; username: string }) => void;
+  'stream:like': (streamId: string, user: { id: string; username: string }) => void;
+  'stream:share': (streamId: string, user: { id: string; username: string }) => void;
 
   // Notificaciones
-  'notification:new': (notification: { _id: string; type: string; content: string }) => void;
+  'notification:new': (notification: { id: string; type: string; content: string }) => void;
 
   // WebRTC
   'webrtc:offer': (data: { streamId: string; offer: RTCSessionDescriptionInit; from: string }) => void;

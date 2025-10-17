@@ -142,7 +142,7 @@ vi.mock('next/image', () => ({
  * Helper para crear mock de usuario
  */
 export const createMockUser = (overrides = {}) => ({
-  _id: `user_${Date.now()}`,
+  id: `user_${Date.now()}`,
   username: `testuser_${Date.now()}`,
   email: `test_${Date.now()}@example.com`,
   fullName: 'Test User',
@@ -158,7 +158,7 @@ export const createMockUser = (overrides = {}) => ({
  * Helper para crear mock de post
  */
 export const createMockPost = (overrides = {}) => ({
-  _id: `post_${Date.now()}`,
+  id: `post_${Date.now()}`,
   user: createMockUser(),
   caption: 'Test caption',
   media: ['image1.jpg'],

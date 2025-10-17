@@ -83,40 +83,55 @@ api.interceptors.response.use(
 )
 
 // Funciones de utilidad para manejo de errores
-export const handleApiError = (error: any): string => {
-  if (error.response?.data?.message) {
-    return error.response.data.message
+interface ApiError {
+  response?: {
+    data?: { message?: string }
+    status?: number
+  }
+  code?: string
+  message?: string
+}
+
+export const handleApiError = (error: unknown): string => {
+  if (error && typeof error === 'object') {
+    const apiError = error as ApiError
+
+    if (apiError.response?.data?.message) {
+      return apiError.response.data.message
+    }
+
+    if (apiError.response?.status === 401) {
+      return 'No tienes permisos para realizar esta acción'
+    }
+
+    if (apiError.response?.status === 403) {
+      return 'Acceso denegado'
+    }
+
+    if (apiError.response?.status === 404) {
+      return 'Recurso no encontrado'
+    }
+
+    if (apiError.response?.status === 422) {
+      return 'Datos inválidos'
+    }
+
+    if (apiError.response?.status && apiError.response.status >= 500) {
+      return 'Error del servidor. Por favor, intenta más tarde'
+    }
+
+    if (apiError.code === 'NETWORK_ERROR') {
+      return 'Error de conexión. Verifica tu internet'
+    }
+
+    return apiError.message || 'Error desconocido'
   }
 
-  if (error.response?.status === 401) {
-    return 'No tienes permisos para realizar esta acción'
-  }
-
-  if (error.response?.status === 403) {
-    return 'Acceso denegado'
-  }
-
-  if (error.response?.status === 404) {
-    return 'Recurso no encontrado'
-  }
-
-  if (error.response?.status === 422) {
-    return 'Datos inválidos'
-  }
-
-  if (error.response?.status >= 500) {
-    return 'Error del servidor. Por favor, intenta más tarde'
-  }
-
-  if (error.code === 'NETWORK_ERROR') {
-    return 'Error de conexión. Verifica tu internet'
-  }
-
-  return error.message || 'Error desconocido'
+  return 'Error desconocido'
 }
 
 // Función para crear URLs con parámetros
-export const createApiUrl = (endpoint: string, params?: Record<string, any>): string => {
+export const createApiUrl = (endpoint: string, params?: Record<string, unknown>): string => {
   const url = new URL(endpoint, API_BASE_URL)
 
   if (params) {
@@ -159,17 +174,20 @@ export const apiWithRetry = async (
   maxRetries: number = 3,
   delay: number = 1000
 ): Promise<AxiosResponse> => {
-  let lastError: any
+  let lastError: unknown
 
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await requestFn()
-    } catch (error: any) {
+    } catch (error: unknown) {
       lastError = error
 
       // No reintentar en errores 4xx (excepto 429)
-      if (error.response?.status >= 400 && error.response?.status < 500 && error.response?.status !== 429) {
-        throw error
+      if (error && typeof error === 'object') {
+        const apiError = error as ApiError
+        if (apiError.response?.status && apiError.response.status >= 400 && apiError.response.status < 500 && apiError.response.status !== 429) {
+          throw error
+        }
       }
 
       // Esperar antes del siguiente intento
@@ -188,7 +206,7 @@ export const createCancelToken = () => {
 }
 
 // Función para verificar si un error es de cancelación
-export const isCancelError = (error: any): boolean => {
+export const isCancelError = (error: unknown): boolean => {
   return axios.isCancel(error)
 }
 

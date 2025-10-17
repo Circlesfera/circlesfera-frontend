@@ -6,7 +6,7 @@ interface UseLazyComponentOptions {
 }
 
 interface LazyComponentState {
-  Component: React.ComponentType<any> | null;
+  Component: React.ComponentType<unknown> | null;
   loading: boolean;
   error: string | null;
 }
@@ -20,7 +20,7 @@ interface LazyComponentState {
  * @param options Opciones de configuración para el Intersection Observer.
  * @returns Un objeto con el componente cargado, el estado de carga y una ref para adjuntar al contenedor.
  */
-export function useLazyComponent<T extends React.ComponentType<any>>(
+export function useLazyComponent<T extends React.ComponentType<unknown>>(
   importComponent: () => Promise<{ default: T }>,
   options: UseLazyComponentOptions = {}
 ): [T | null, React.RefObject<HTMLDivElement | null>, LazyComponentState] {
@@ -95,7 +95,7 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
  * @param options Opciones de configuración.
  * @returns El componente cargado y una ref para adjuntar al contenedor.
  */
-export function useSimpleLazyComponent<T extends React.ComponentType<any>>(
+export function useSimpleLazyComponent<T extends React.ComponentType<unknown>>(
   importComponent: () => Promise<{ default: T }>,
   options: UseLazyComponentOptions = {}
 ): [T | null, React.RefObject<HTMLDivElement | null>] {

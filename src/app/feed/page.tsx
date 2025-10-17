@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Card, Avatar, Button } from '@/design-system';
-import PostCard from '@/components/PostCard';
+import { PostCard } from '@/features/posts/components';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUsersWithStories, UserWithStories } from '@/services/storyService';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import UserSuggestions from '@/components/UserSuggestions';
+import { UserSuggestions } from '@/features/explore/components';
 import { useRouter } from 'next/navigation';
 import { useFeed } from '@/hooks/useFeed';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
@@ -29,7 +29,7 @@ export default function HomePage() {
     hasMore,
     loadMore,
     refresh,
-    updatePost,
+    // updatePost,
     removePost
   } = useFeed({ isAuthenticated: !!user && !authLoading });
 
@@ -102,18 +102,18 @@ export default function HomePage() {
     };
   }, [user, authLoading, refresh]);
 
-  const handleLike = useCallback((postId: string) => {
-    if (!posts || !Array.isArray(posts)) return;
-    const post = posts.find(p => p._id === postId);
-    if (!post) return;
+  // const handleLike = useCallback((postId: string) => {
+  //   if (!posts || !Array.isArray(posts)) return;
+  //   const post = posts.find(p => p.id === postId);
+  //   if (!post) return;
 
-    updatePost(postId, {
-      isLiked: !post.isLiked,
-      likes: post.isLiked
-        ? post.likes.filter(id => id !== user?._id)
-        : [...post.likes, user?._id || '']
-    });
-  }, [posts, user, updatePost]);
+  //   updatePost(postId, {
+  //     isLiked: !post.isLiked,
+  //     likes: post.isLiked
+  //       ? post.likes.filter(id => id !== user?.id)
+  //       : [...post.likes, user?.id || '']
+  //   });
+  // }, [posts, user, updatePost]);
 
   const handleComment = useCallback((postId: string, postAuthor: string, postImage?: string) => {
     setCommentsModal({
@@ -123,6 +123,7 @@ export default function HomePage() {
       ...(postImage && { postImage })
     });
   }, []);
+
 
   const handleShare = useCallback((postId: string, postUrl?: string, postCaption?: string) => {
     setShareModal({
@@ -141,9 +142,13 @@ export default function HomePage() {
     removePost(postId);
   }, [removePost]);
 
-  const handlePostClick = useCallback((postId: string, username: string) => {
-    router.push(`/${username}/post/${postId}`);
-  }, [router]);
+  const handlePostClick = useCallback((postId: string) => {
+    if (!posts || !Array.isArray(posts)) return;
+    const post = posts.find(p => p.id === postId);
+    if (post && post.user) {
+      router.push(`/${post.user.username}/post/${postId}`);
+    }
+  }, [router, posts]);
 
 
   const PlusIcon = () => (
@@ -200,9 +205,9 @@ export default function HomePage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Stories Section */}
             <Card className="p-6">
-              <AnimatedStoryList stories={[{ _id: 'add-story', isAddStory: true }, ...stories]}>
+              <AnimatedStoryList stories={[{ id: 'add-story', isAddStory: true }, ...stories]}>
                 {(item: unknown) => {
-                  const typedItem = item as { _id: string; isAddStory?: boolean; avatar?: string | null; username?: string; fullName?: string; storiesCount?: number };
+                  const typedItem = item as { id: string; isAddStory?: boolean; avatar?: string | null; username?: string; fullName?: string; storiesCount?: number };
                   if (typedItem.isAddStory) {
                     return (
                       <div key="add-story" className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
@@ -226,7 +231,7 @@ export default function HomePage() {
 
                   const storyItem = typedItem;
                   return (
-                    <div key={storyItem._id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
+                    <div key={storyItem.id} className="flex-shrink-0 flex flex-col items-center space-y-2 px-2">
                       <div className="relative p-2">
                         <Avatar
                           src={storyItem.avatar}
@@ -257,31 +262,30 @@ export default function HomePage() {
             <AnimatedPostList posts={posts || []}>
               {(post: unknown) => {
                 const typedPost = post as Post;
+                const completePost = {
+                  ...typedPost,
+                  userId: typedPost.user?.id || '',
+                  mentions: [],
+                  isActive: true
+                } as any;
                 return (
                   <PostCard
-                    key={typedPost._id}
-                    post={typedPost}
-                    onLike={handleLike}
+                    key={completePost.id}
+                    post={completePost}
                     onPostClick={handlePostClick}
-                    onComment={(postId) => {
-                      if (!posts || !Array.isArray(posts)) return;
-                      const foundPost = posts.find(p => p._id === postId);
-                      if (foundPost) {
-                        handleComment(postId, foundPost.user.username, foundPost.content?.images?.[0]?.url);
-                      }
-                    }}
+                    onComment={handleComment as any}
                     onShare={(postId) => {
                       if (!posts || !Array.isArray(posts)) return;
-                      const foundPost = posts.find(p => p._id === postId);
+                      const foundPost = posts.find(p => p.id === postId);
                       if (foundPost) {
                         handleShare(postId, `${window.location.origin}/${foundPost.user.username}/post/${postId}`, foundPost.caption);
                       }
                     }}
                     onUserClick={(userId) => {
                       if (!posts || !Array.isArray(posts)) return;
-                      const post = posts.find(p => p.user._id === userId);
+                      const post = posts.find(p => p.user.id === userId);
                       if (post) {
-                        handleUserClick(post.user._id);
+                        handleUserClick(post.user.id);
                       }
                     }}
                     onPostDeleted={(postId) => {

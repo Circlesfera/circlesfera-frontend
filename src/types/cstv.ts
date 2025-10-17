@@ -1,7 +1,7 @@
 export interface CSTVVideo {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar: string;
     fullName: string;

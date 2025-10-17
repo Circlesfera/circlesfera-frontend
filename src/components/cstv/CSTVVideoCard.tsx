@@ -60,24 +60,24 @@ export function CSTVVideoCard({
   const handleLike = () => {
     const newLikedState = !isLiked;
     setIsLiked(newLikedState);
-    onLike?.(video._id, newLikedState);
+    onLike?.(video.id, newLikedState);
   };
 
   const handleSave = () => {
     const newSavedState = !isSaved;
     setIsSaved(newSavedState);
-    onSave?.(video._id, newSavedState);
+    onSave?.(video.id, newSavedState);
   };
 
   const handleShare = () => {
-    onShare?.(video._id);
+    onShare?.(video.id);
   };
 
   const handlePlay = () => {
-    onPlay?.(video._id);
+    onPlay?.(video.id);
   };
 
-  const isOwner = currentUser?.id === video.user._id;
+  const isOwner = currentUser?.id === video.user.id;
 
   const sizeClasses = {
     small: 'w-64',

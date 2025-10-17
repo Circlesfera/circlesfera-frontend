@@ -39,7 +39,7 @@ const createWrapper = () => {
 
 // Mock data sin hardcode
 const createMockUser = () => ({
-  _id: `user_${Date.now()}`,
+  id: `user_${Date.now()}`,
   username: `testuser_${Date.now()}`,
   email: `test_${Date.now()}@example.com`,
   fullName: 'Test User',

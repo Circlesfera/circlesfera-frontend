@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import CreateReelForm from '@/components/CreateReelForm'
+import { CreateReelForm } from '@/features/reels/components'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { ArrowLeft } from 'lucide-react'
 

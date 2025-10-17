@@ -67,7 +67,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
 
       // Unirse a la sala de analytics
       socketInstance.emit('join-analytics', {
-        userId: user._id,
+        userId: user.id,
         userRole: user.role,
         timeRange: '24h'
       })
@@ -166,7 +166,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
   const changeTimeRange = useCallback((timeRange: string) => {
     if (socket?.connected && user) {
       socket.emit('change-time-range', {
-        userId: user._id,
+        userId: user.id,
         timeRange
       })
     }
@@ -175,7 +175,7 @@ export function useAnalyticsSocket(): UseAnalyticsSocketReturn {
   const requestData = useCallback((dataType: string, params: Record<string, unknown> = {}) => {
     if (socket?.connected && user) {
       socket.emit('request-analytics-data', {
-        userId: user._id,
+        userId: user.id,
         dataType,
         params
       })

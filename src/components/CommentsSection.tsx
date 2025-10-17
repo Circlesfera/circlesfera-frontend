@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, memo } from 'react';
 import { getComments, createComment, Comment } from '@/services/postService';
 import { useAuth } from '@/features/auth/useAuth';
 import logger from '@/utils/logger';
 
-export default function CommentsSection({ postId }: { postId: string }) {
+const CommentsSection = memo(({ postId }: { postId: string }) => {
   const { user, token, loading: authLoading } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState('');
@@ -107,7 +107,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
       {!loading && comments.length > 0 && (
         <div className="mb-2">
           {comments.slice(0, 1).map(c => (
-            <div key={c._id} className="mb-1">
+            <div key={c.id} className="mb-1">
               <span className="font-semibold text-gray-900 dark:text-gray-100 text-base mr-2">
                 {c.user.username}
               </span>
@@ -145,4 +145,8 @@ export default function CommentsSection({ postId }: { postId: string }) {
       {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
     </div>
   );
-}
+});
+
+CommentsSection.displayName = 'CommentsSection';
+
+export default CommentsSection;

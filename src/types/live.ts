@@ -1,7 +1,7 @@
 export interface LiveStream {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar: string;
     fullName: string;
@@ -36,7 +36,7 @@ export interface LiveStream {
   playbackUrl?: string;
   scheduledAt?: string;
   cstvVideo?: {
-    _id: string;
+    id: string;
     url: string;
   };
   createdAt: string;
@@ -45,7 +45,7 @@ export interface LiveStream {
 
 export interface CoHost {
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar: string;
     fullName: string;
@@ -56,9 +56,9 @@ export interface CoHost {
 }
 
 export interface LiveStreamViewer {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar: string;
     fullName: string;
@@ -70,10 +70,10 @@ export interface LiveStreamViewer {
 }
 
 export interface LiveComment {
-  _id: string;
+  id: string;
   liveStream: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar: string;
     fullName: string;
@@ -84,9 +84,9 @@ export interface LiveComment {
   timestamp: number;
   clientId?: string;
   replyTo?: {
-    _id: string;
+    id: string;
     user: {
-      _id: string;
+      id: string;
       username: string;
       avatar: string;
       fullName: string;
@@ -110,7 +110,7 @@ export interface LiveComment {
 
 export interface LiveReaction {
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar: string;
   };

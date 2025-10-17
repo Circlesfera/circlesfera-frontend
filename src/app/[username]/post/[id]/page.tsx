@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { getPostById } from '@/services/postService'
-import PostCard from '@/components/PostCard'
+import { PostCard } from '@/features/posts/components'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { Post } from '@/types'
 import logger from '@/utils/logger'

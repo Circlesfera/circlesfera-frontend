@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, Users, TrendingUp, Clock, Play } from 'lucide-react';
 import { useLiveStreams } from '@/hooks/useLiveStream';
-import { CreateLiveStreamForm } from '@/components/live/CreateLiveStreamForm';
+import { CreateLiveStreamForm } from '@/features/live/components';
 import { useAuthContext } from '@/features/auth/AuthContext';
 import { useRouter } from 'next/navigation';
 
@@ -193,11 +193,11 @@ export default function LivePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {streams.map((stream) => (
               <motion.div
-                key={stream._id}
+                key={stream.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden cursor-pointer"
-                onClick={() => router.push(`/live/${stream._id}`)}
+                onClick={() => router.push(`/live/${stream.id}`)}
               >
                 {/* Thumbnail */}
                 <div className="relative aspect-video bg-gray-200 dark:bg-gray-600 dark:bg-gray-700">

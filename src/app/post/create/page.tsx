@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import CreatePostForm from '@/components/CreatePostForm'
+import { CreatePostForm } from '@/features/posts/components'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { ArrowLeft } from 'lucide-react'
 

@@ -6,7 +6,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/features/auth/useAuth';
 import { getUserProfile, updateUserProfile, User } from '@/services/userService';
 import { getUserSettings, updatePrivacySettings, updateNotificationSettings, updateSecuritySettings, changePassword, toggleTwoFactor, PrivacySettings, NotificationSettings, SecuritySettings } from '@/services/settingsService';
-import EditProfileForm from '@/components/EditProfileForm';
+import { EditProfileForm } from '@/features/profile/components';
 import Link from 'next/link';
 import { useFormValidation } from '@/hooks/useFormValidation';
 import {
@@ -147,11 +147,11 @@ export default function SettingsPage() {
     } catch (settingsError) {
       logger.error('Error loading user settings:', {
         error: settingsError instanceof Error ? settingsError.message : 'Unknown error',
-        userId: user?._id
+        userId: user?.id
       });
       showMessage('error', 'Error al cargar la configuración');
     }
-  }, [user?._id, showMessage]);
+  }, [user?.id, showMessage]);
 
   useEffect(() => {
     if (user) {

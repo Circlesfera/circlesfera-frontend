@@ -34,8 +34,8 @@ export default function UserStoryPage({ params }: Props) {
     } catch (error) {
       logger.error('Error registering story view:', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        storyId: story._id,
-        userId: currentUser._id
+        storyId: story.id,
+        userId: currentUser.id
       });
     }
   }, [story, currentUser]);
@@ -81,7 +81,7 @@ export default function UserStoryPage({ params }: Props) {
 
   // Registrar visualización automáticamente cuando se carga la story
   useEffect(() => {
-    if (story && currentUser && story.user._id !== currentUser._id) {
+    if (story && currentUser && story.user.id !== currentUser.id) {
       handleView();
     }
   }, [story, currentUser, handleView]);
@@ -127,7 +127,7 @@ export default function UserStoryPage({ params }: Props) {
     } catch (shareError) {
       logger.error('Error sharing story:', {
         error: shareError instanceof Error ? shareError.message : 'Unknown error',
-        storyId: story?._id
+        storyId: story?.id
       });
       // Fallback: mostrar mensaje de error al usuario
       toast.error('Error al compartir la story');

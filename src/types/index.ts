@@ -1,7 +1,7 @@
 // Tipos base para el proyecto CircleSfera
 
 export interface User {
-  _id: string;
+  id: string;
   username: string;
   email: string;
   avatar?: string;
@@ -50,9 +50,9 @@ export interface UserPreferences {
 }
 
 export interface Post {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -99,9 +99,9 @@ export interface Post {
 }
 
 export interface Comment {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -130,9 +130,9 @@ export interface MediaFile {
 }
 
 export interface Story {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -191,7 +191,7 @@ export interface Story {
 }
 
 export interface UserWithStories {
-  _id: string;
+  id: string;
   username: string;
   avatar?: string;
   fullName?: string;
@@ -202,9 +202,9 @@ export interface UserWithStories {
 }
 
 export interface Reel {
-  _id: string;
+  id: string;
   user: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -256,9 +256,9 @@ export interface Reel {
   isDuet?: boolean;
   isStitch?: boolean;
   originalReel?: string | {
-    _id: string;
+    id: string;
     user: {
-      _id: string;
+      id: string;
       username: string;
       avatar?: string;
     };
@@ -279,10 +279,10 @@ export interface Reel {
 }
 
 export interface Notification {
-  _id: string;
+  id: string;
   user: string;
   from: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -301,25 +301,25 @@ export interface Notification {
 }
 
 export interface Conversation {
-  _id: string;
+  id: string;
   type: 'direct' | 'group';
   name?: string;
   description?: string;
   avatar?: string;
   participants: Array<{
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
   }>;
   admins?: Array<{
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
   }>;
   lastMessage?: {
-    _id: string;
+    id: string;
     type: 'text' | 'image' | 'video' | 'audio' | 'file' | 'location' | 'contact';
     content: {
       text?: string;
@@ -337,7 +337,7 @@ export interface Conversation {
       };
     };
     sender: {
-      _id: string;
+      id: string;
       username: string;
       avatar?: string;
       fullName?: string;
@@ -361,10 +361,10 @@ export interface Conversation {
 }
 
 export interface Message {
-  _id: string;
+  id: string;
   conversation: string;
   sender: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -647,13 +647,13 @@ export type ReportAction =
   | 'user_banned';
 
 export interface Report {
-  _id: string;
+  id: string;
   reportedContent: string;
   contentType: ReportContentType;
   reason: ReportReason;
   description?: string;
   reportedBy: {
-    _id: string;
+    id: string;
     username: string;
     avatar?: string;
     fullName?: string;
@@ -662,7 +662,7 @@ export interface Report {
   moderatorNotes?: string;
   actionTaken?: ReportAction;
   resolvedBy?: {
-    _id: string;
+    id: string;
     username: string;
   };
   resolvedAt?: string;

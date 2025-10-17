@@ -3,7 +3,7 @@ import { useCallback, useRef, useMemo } from 'react';
 /**
  * Hook para crear callbacks optimizados que evitan re-renders innecesarios
  */
-export function useOptimizedCallback<T extends (...args: any[]) => any>(
+export function useOptimizedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   deps: React.DependencyList
 ): T {
@@ -32,7 +32,7 @@ export function useOptimizedMemo<T>(
  * Hook para crear un callback estable que no cambia entre renders
  * Útil para pasar como prop a componentes memoizados
  */
-export function useStableCallback<T extends (...args: any[]) => any>(
+export function useStableCallback<T extends (...args: unknown[]) => unknown>(
   callback: T
 ): T {
   const callbackRef = useRef(callback);

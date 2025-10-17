@@ -146,7 +146,7 @@ export const useCreateLiveComment = () => {
       setError(null);
 
       const comment = await liveCommentService.createComment(streamId, data);
-      logger.info('Live comment created:', { streamId, commentId: comment._id });
+      logger.info('Live comment created:', { streamId, commentId: comment.id });
       return comment;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error creando comentario';

@@ -10,7 +10,7 @@
 
 import React from 'react'
 import { SearchIcon } from '@/components/icons/NavigationIcons'
-import UserSearch from '@/components/UserSearch'
+import { UserSearch } from '@/features/explore/components'
 import { ARIA_LABELS } from '@/utils/accessibilityHelpers'
 
 export interface HeaderSearchProps {

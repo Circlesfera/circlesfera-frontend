@@ -479,7 +479,7 @@ export default function UsersPage() {
               <AnimatePresence>
                 {users.map((user) => (
                   <motion.tr
-                    key={user._id}
+                    key={user.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -575,7 +575,7 @@ export default function UsersPage() {
                         </button>
                         {user.isBanned ? (
                           <button
-                            onClick={() => handleUnbanUser(user._id)}
+                            onClick={() => handleUnbanUser(user.id)}
                             className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
                             title="Desbanear usuario"
                           >
@@ -596,7 +596,7 @@ export default function UsersPage() {
 
                         {!user.isActive && !user.isBanned ? (
                           <button
-                            onClick={() => handleUnsuspendUser(user._id)}
+                            onClick={() => handleUnsuspendUser(user.id)}
                             className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
                             title="Desuspender usuario"
                           >
@@ -615,7 +615,7 @@ export default function UsersPage() {
                           </button>
                         ) : null}
                         <button
-                          onClick={() => handleDeleteUser(user._id)}
+                          onClick={() => handleDeleteUser(user.id)}
                           className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                           title="Eliminar usuario"
                         >
@@ -986,7 +986,7 @@ export default function UsersPage() {
                     {selectedUser.isBanned ? (
                       <button
                         onClick={() => {
-                          handleUnbanUser(selectedUser._id)
+                          handleUnbanUser(selectedUser.id)
                           setShowUserDetails(false)
                         }}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -1010,7 +1010,7 @@ export default function UsersPage() {
                     {selectedUser.isVerified ? (
                       <button
                         onClick={() => {
-                          handleUnverifyUser(selectedUser._id)
+                          handleUnverifyUser(selectedUser.id)
                           setShowUserDetails(false)
                         }}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
@@ -1021,7 +1021,7 @@ export default function UsersPage() {
                     ) : (
                       <button
                         onClick={() => {
-                          handleVerifyUser(selectedUser._id)
+                          handleVerifyUser(selectedUser.id)
                           setShowUserDetails(false)
                         }}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -1034,7 +1034,7 @@ export default function UsersPage() {
                     {!selectedUser.isActive && !selectedUser.isBanned ? (
                       <button
                         onClick={() => {
-                          handleUnsuspendUser(selectedUser._id)
+                          handleUnsuspendUser(selectedUser.id)
                           setShowUserDetails(false)
                         }}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -1189,7 +1189,7 @@ export default function UsersPage() {
                       onClick={() => {
                         const newRoleInput = document.querySelector('input[name="newRole"]:checked') as HTMLInputElement
                         if (newRoleInput && selectedUser) {
-                          handleRoleChange(selectedUser._id, newRoleInput.value as 'user' | 'moderator' | 'admin')
+                          handleRoleChange(selectedUser.id, newRoleInput.value as 'user' | 'moderator' | 'admin')
                         }
                       }}
                       className="flex-1 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -1281,7 +1281,7 @@ export default function UsersPage() {
                     const durationDays = duration ? parseInt(duration) : undefined
 
                     if (reason.trim()) {
-                      handleBanUser(selectedUser._id, reason, durationDays)
+                      handleBanUser(selectedUser.id, reason, durationDays)
                     }
                   }} className="space-y-4">
                     {/* Razón del Ban */}
@@ -1424,7 +1424,7 @@ export default function UsersPage() {
                     const durationDays = parseInt(duration)
 
                     if (reason.trim() && durationDays > 0) {
-                      handleSuspendUser(selectedUser._id, reason, durationDays)
+                      handleSuspendUser(selectedUser.id, reason, durationDays)
                     }
                   }} className="space-y-4">
                     {/* Razón de la Suspensión */}
@@ -1547,7 +1547,7 @@ export default function UsersPage() {
                   const formData = new FormData(e.currentTarget)
                   const subject = formData.get('subject') as string
                   const message = formData.get('message') as string
-                  handleSendEmail(selectedUser._id, subject, message)
+                  handleSendEmail(selectedUser.id, subject, message)
                 }}>
                   <div className="space-y-4">
                     <div>

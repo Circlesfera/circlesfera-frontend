@@ -1,4 +1,4 @@
-import api from './axios';
+import api from './api';
 import logger from '@/utils/logger';
 import type { User, Story } from '@/types';
 import type { Post } from './postService';
@@ -7,7 +7,7 @@ import type { Post } from './postService';
 export type { User };
 
 export interface UserProfile {
-  _id: string;
+  id: string;
   username: string;
   email: string;
   avatar?: string;
@@ -103,7 +103,7 @@ export const editProfile = async (formData: FormData) => {
 };
 
 export interface UserSuggestion {
-  _id: string;
+  id: string;
   username: string;
   avatar?: string;
   bio?: string;
@@ -170,7 +170,7 @@ export const checkUsernameAvailability = async (username: string): Promise<{ ava
 
 // Funciones específicas para administración de usuarios
 export interface AdminUser {
-  _id: string;
+  id: string;
   username: string;
   email: string;
   avatar?: string;

@@ -34,17 +34,17 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
   const { toggleLike, loading: likeLoading } = useCSTVLikes();
   const { toggleSave, loading: saveLoading } = useCSTVSaves();
 
-  const isOwner = user?._id === video?.user._id;
+  const isOwner = user?.id === video?.user.id;
 
   const handleLike = async () => {
     if (!video || !user) return;
-    await toggleLike(video._id, video.isLikedByUser);
+    await toggleLike(video.id, video.isLikedByUser);
     refresh();
   };
 
   const handleSave = async () => {
     if (!video || !user) return;
-    await toggleSave(video._id, video.isSavedByUser);
+    await toggleSave(video.id, video.isSavedByUser);
     refresh();
   };
 
@@ -337,7 +337,7 @@ export default function CSTVVideoPage({ params }: CSTVVideoPageProps) {
 
             {isOwner && (
               <button
-                onClick={() => router.push(`/cstv/${video._id}/edit`)}
+                onClick={() => router.push(`/cstv/${video.id}/edit`)}
                 className="w-full flex items-center space-x-2 px-4 py-2 rounded-lg bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
               >
                 <User className="w-4 h-4" />

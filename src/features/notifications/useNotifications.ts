@@ -46,7 +46,7 @@ export function useNotifications() {
       // Actualizar el estado local
       setNotifications(prev =>
         prev.map(notification =>
-          notification._id === notificationId
+          notification.id === notificationId
             ? { ...notification, isRead: true }
             : notification
         )
@@ -90,7 +90,7 @@ export function useNotifications() {
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?._id]); // Solo depende del ID del usuario para evitar recrear interval
+  }, [user?.id]); // Solo depende del ID del usuario para evitar recrear interval
 
   return {
     notifications,

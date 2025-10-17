@@ -126,7 +126,7 @@ export const useCreateLiveStream = () => {
       setError(null);
 
       const stream = await liveStreamService.createLiveStream(data);
-      logger.info('Live stream created:', { streamId: stream._id });
+      logger.info('Live stream created:', { streamId: stream.id });
       return stream;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error creando transmisión';

@@ -1,8 +1,7 @@
 "use client";
 
 import ProtectedRoute from '@/components/ProtectedRoute';
-import UserSearch from '@/components/UserSearch';
-import ExploreGrid from '@/components/ExploreGrid';
+import { UserSearch, ExploreGrid } from '@/features/explore/components';
 import Image from 'next/image';
 import { Card, Button } from '@/design-system';
 import { useState, useEffect, useCallback } from 'react';
@@ -116,9 +115,9 @@ export default function ExplorePage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {trendingReels.map((reel) => (
                 <Card
-                  key={reel._id}
+                  key={reel.id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/${reel.user.username}/reel/${reel._id}`)}
+                  onClick={() => router.push(`/${reel.user.username}/reel/${reel.id}`)}
                 >
                   <div className="aspect-[9/16] relative">
                     <video
@@ -165,9 +164,9 @@ export default function ExplorePage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {trendingPosts.map((post) => (
                 <Card
-                  key={post._id}
+                  key={post.id}
                   className="p-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => router.push(`/${post.user.username}/post/${post._id}`)}
+                  onClick={() => router.push(`/${post.user.username}/post/${post.id}`)}
                 >
                   <div className="aspect-[9/16] relative">
                     {post.content.images && post.content.images[0] ? (
@@ -230,7 +229,7 @@ export default function ExplorePage() {
             <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
               {recentStories.map((user) => (
                 <Card
-                  key={user._id}
+                  key={user.id}
                   className="p-3 text-center cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => router.push(`/stories?user=${user.username}`)}
                 >

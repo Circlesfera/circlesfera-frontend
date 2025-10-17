@@ -68,7 +68,7 @@ export function useReels(): UseReelsReturn {
         setReels(prev => {
           // Evitar duplicados
           const newReels = response.reels.filter(
-            newReel => !prev.some(existingReel => existingReel._id === newReel._id)
+            newReel => !prev.some(existingReel => existingReel.id === newReel.id)
           )
           return [...prev, ...newReels]
         })
@@ -110,7 +110,7 @@ export function useReels(): UseReelsReturn {
   const updateReel = useCallback((reelId: string, updates: Partial<Reel>) => {
     setReels(prev =>
       prev.map(reel =>
-        reel._id === reelId ? { ...reel, ...updates } : reel
+        reel.id === reelId ? { ...reel, ...updates } : reel
       )
     )
     logger.debug('Reel updated:', { reelId, updates })
@@ -119,7 +119,7 @@ export function useReels(): UseReelsReturn {
   // Eliminar un reel
   const removeReel = useCallback((reelId: string) => {
     setReels(prev => {
-      const filtered = prev.filter(reel => reel._id !== reelId)
+      const filtered = prev.filter(reel => reel.id !== reelId)
       // Si eliminamos el reel actual, ajustar el índice
       if (filtered.length > 0 && currentIndex >= filtered.length) {
         setCurrentIndex(filtered.length - 1)
@@ -142,7 +142,7 @@ export function useReels(): UseReelsReturn {
 
       // Actualizar estado local
       setReels(prev => prev.map(reel =>
-        reel._id === videoId ? { ...reel, isLiked: !isLiked } : reel
+        reel.id === videoId ? { ...reel, isLiked: !isLiked } : reel
       ))
     } catch (likeError) {
       logger.error('Error toggling like:', {
@@ -169,7 +169,7 @@ export function useReels(): UseReelsReturn {
 
       // Actualizar estado local
       setReels(prev => prev.map(reel =>
-        reel._id === videoId ? { ...reel, isSaved: !isSaved } : reel
+        reel.id === videoId ? { ...reel, isSaved: !isSaved } : reel
       ))
     } catch (saveError) {
       logger.error('Error toggling save:', {

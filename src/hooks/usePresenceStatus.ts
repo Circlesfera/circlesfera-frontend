@@ -53,7 +53,7 @@ export function usePresenceStatus(userId?: string): PresenceStatus {
 
   useEffect(() => {
     // Si no hay userId o es el usuario actual, no hacer nada
-    if (!userId || userId === user?._id) {
+    if (!userId || userId === user?.id) {
       setPresence({
         isOnline: true,
         status: 'online'
@@ -94,7 +94,7 @@ export function usePresenceStatus(userId?: string): PresenceStatus {
       socket.off('presence:change', handlePresenceChange);
       socket.off('presence:bulk', handlePresenceBulk);
     };
-  }, [userId, user?._id]);
+  }, [userId, user?.id]);
 
   return presence;
 }
@@ -126,7 +126,7 @@ export function useMultiplePresenceStatus(userIds: string[]): Record<string, Pre
     // Inicializar presencia del usuario actual
     const initialMap: Record<string, PresenceStatus> = {};
     userIds.forEach(userId => {
-      if (userId === user?._id) {
+      if (userId === user?.id) {
         initialMap[userId] = {
           isOnline: true,
           status: 'online'
@@ -144,7 +144,7 @@ export function useMultiplePresenceStatus(userIds: string[]): Record<string, Pre
     const socket = getPresenceSocket();
 
     // Filtrar solo usuarios que no son el actual
-    const otherUserIds = userIds.filter(id => id !== user?._id);
+    const otherUserIds = userIds.filter(id => id !== user?.id);
 
     if (otherUserIds.length > 0) {
       // Pedir estados iniciales
@@ -174,7 +174,7 @@ export function useMultiplePresenceStatus(userIds: string[]): Record<string, Pre
       socket.off('presence:change', handlePresenceChange);
       socket.off('presence:bulk', handlePresenceBulk);
     };
-  }, [userIds, user?._id, updatePresenceStatus]);
+  }, [userIds, user?.id, updatePresenceStatus]);
 
   return presenceMap;
 }
