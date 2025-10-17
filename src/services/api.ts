@@ -4,14 +4,18 @@
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { config } from '@/config/env'
+import { TIMEOUTS } from '@/config/constants'
+// import logger from '@/utils/logger'
 
 // Configuración base de la API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+const API_BASE_URL = config.apiUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
 // Crear instancia de Axios
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || String(TIMEOUTS.API_REQUEST)),
+  withCredentials: true, // Permitir cookies para CSRF
   headers: {
     'Content-Type': 'application/json'
   }
