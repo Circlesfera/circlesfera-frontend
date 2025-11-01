@@ -32,3 +32,54 @@ export const searchUsers = async ({ q, limit = 20 }: SearchUsersParams): Promise
   return data.users;
 };
 
+export interface UserStats {
+  posts: number;
+  followers: number;
+  following: number;
+}
+
+export interface ProfileResponse {
+  user: PublicProfile;
+  stats: UserStats;
+}
+
+export const getProfile = async (handle: string): Promise<ProfileResponse> => {
+  const { data } = await apiClient.get<ProfileResponse>(`/users/${handle}`);
+  return data;
+};
+
+export interface UserPostsParams {
+  handle: string;
+  cursor?: string | null;
+  limit?: number;
+}
+
+export interface UserPostsResponse {
+  data: Array<{
+    id: string;
+    caption: string;
+    media: Array<{
+      id: string;
+      kind: 'image' | 'video';
+      url: string;
+      thumbnailUrl: string;
+    }>;
+    stats: {
+      likes: number;
+      comments: number;
+      saves: number;
+      shares: number;
+      views: number;
+    };
+    createdAt: string;
+  }>;
+  nextCursor: string | null;
+}
+
+export const getUserPosts = async ({ handle, cursor, limit = 20 }: UserPostsParams): Promise<UserPostsResponse> => {
+  const { data } = await apiClient.get<UserPostsResponse>(`/users/${handle}/posts`, {
+    params: { cursor: cursor ?? undefined, limit }
+  });
+  return data;
+};
+

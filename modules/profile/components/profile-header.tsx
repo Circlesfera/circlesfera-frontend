@@ -5,15 +5,17 @@ import { useState, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { followUser, unfollowUser } from '@/services/api/follows';
-import type { PublicProfile } from '@/services/api/users';
+import type { PublicProfile, UserStats } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 interface ProfileHeaderProps {
   readonly profile: PublicProfile;
+  readonly stats: UserStats;
 }
 
-export function ProfileHeader({ profile }: ProfileHeaderProps): ReactElement {
+export function ProfileHeader({ profile, stats }: ProfileHeaderProps): ReactElement {
   const router = useRouter();
   const currentUser = useSessionStore((state) => state.user);
   const isOwnProfile = currentUser?.id === profile.id;
@@ -59,8 +61,33 @@ export function ProfileHeader({ profile }: ProfileHeaderProps): ReactElement {
         <h1 className="text-2xl font-semibold text-white">{profile.displayName}</h1>
         <p className="text-sm text-white/60">@{profile.handle}</p>
       </div>
+
+      {/* Estadísticas */}
+      <div className="flex gap-6 text-center">
+        <div>
+          <div className="text-lg font-semibold text-white">{stats.posts.toLocaleString('es')}</div>
+          <div className="text-xs text-white/60">publicaciones</div>
+        </div>
+        <div>
+          <div className="text-lg font-semibold text-white">{stats.followers.toLocaleString('es')}</div>
+          <div className="text-xs text-white/60">seguidores</div>
+        </div>
+        <div>
+          <div className="text-lg font-semibold text-white">{stats.following.toLocaleString('es')}</div>
+          <div className="text-xs text-white/60">siguiendo</div>
+        </div>
+      </div>
+
       {profile.bio ? <p className="max-w-lg text-sm text-white/70">{profile.bio}</p> : null}
-      {!isOwnProfile ? (
+
+      {isOwnProfile ? (
+        <Link
+          href={`/${profile.handle}/edit`}
+          className="mt-2 rounded-full border border-white/20 bg-transparent px-6 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+        >
+          Editar perfil
+        </Link>
+      ) : (
         <button
           type="button"
           onClick={handleFollow}
@@ -73,7 +100,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps): ReactElement {
         >
           {isLoading ? 'Procesando...' : isFollowing ? 'Siguiendo' : 'Seguir'}
         </button>
-      ) : null}
+      )}
     </header>
   );
 }
