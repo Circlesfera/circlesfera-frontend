@@ -4,4 +4,6 @@ export * from './types/feed';
 export * from './auth';
 export * from './users';
 export * from './follows';
+export * from './likes';
+export * from './comments';
 

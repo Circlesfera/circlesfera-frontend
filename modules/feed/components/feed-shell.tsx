@@ -1,11 +1,10 @@
 'use client';
 
-import Image from 'next/image';
-import { Fragment, type ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { useFeedStream } from '../hooks/use-feed-stream';
-import { formatRelativeTime } from '../utils/formatters';
 import { CreatePostForm } from './create-post-form';
+import { FeedItemComponent } from './feed-item';
 
 /**
  * Renderiza el listado principal del feed con soporte para carga incremental.
@@ -34,63 +33,7 @@ export const FeedShell = (): ReactElement => {
     <section className="flex w-full flex-col gap-6 p-6">
       <CreatePostForm />
       {items.map((item) => (
-        <article
-          key={item.id}
-          className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-soft-lg"
-        >
-          <header className="flex items-center gap-3 px-6 py-4">
-            <Image
-              src={item.author.avatarUrl}
-              alt={item.author.displayName}
-              width={48}
-              height={48}
-              className="size-12 rounded-full object-cover"
-            />
-            <div className="flex flex-col">
-              <span className="font-semibold text-slate-50">{item.author.displayName}</span>
-              <span className="text-sm text-slate-400">
-                @{item.author.handle} • {formatRelativeTime(item.createdAt)}
-              </span>
-            </div>
-          </header>
-
-          <div className="flex flex-col gap-4 px-6">
-            <p className="text-base text-slate-100">{item.caption}</p>
-
-            {item.media.map((media) => (
-              <Fragment key={media.id}>
-                {media.kind === 'image' ? (
-                  <Image
-                    src={media.url}
-                    alt={item.caption}
-                    width={media.width ?? 1080}
-                    height={media.height ?? 1920}
-                    className="max-h-[640px] w-full rounded-2xl object-cover"
-                  />
-                ) : (
-                  <video
-                    src={media.url}
-                    poster={media.thumbnailUrl}
-                    controls
-                    preload="metadata"
-                    className="max-h-[640px] w-full rounded-2xl"
-                  />
-                )}
-              </Fragment>
-            ))}
-          </div>
-
-          <footer className="flex items-center justify-between px-6 py-4 text-sm text-slate-300">
-            <div className="flex items-center gap-4">
-              <span>❤️ {item.stats.likes.toLocaleString('es')}</span>
-              <span>💬 {item.stats.comments.toLocaleString('es')}</span>
-              <span>🔁 {item.stats.shares.toLocaleString('es')}</span>
-            </div>
-            <span className="text-xs text-slate-500">
-              {item.stats.views.toLocaleString('es')} visualizaciones
-            </span>
-          </footer>
-        </article>
+        <FeedItemComponent key={item.id} item={item} />
       ))}
 
       {hasNextPage ? (
