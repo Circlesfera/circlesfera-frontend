@@ -20,3 +20,15 @@ export const updateProfile = async (payload: UpdateProfilePayload): Promise<Publ
   return data.user;
 };
 
+export interface SearchUsersParams {
+  q: string;
+  limit?: number;
+}
+
+export const searchUsers = async ({ q, limit = 20 }: SearchUsersParams): Promise<PublicProfile[]> => {
+  const { data } = await apiClient.get<{ users: PublicProfile[] }>('/users/search', {
+    params: { q, limit }
+  });
+  return data.users;
+};
+
