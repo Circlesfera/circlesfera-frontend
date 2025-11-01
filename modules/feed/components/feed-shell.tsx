@@ -5,6 +5,7 @@ import { Fragment, type ReactElement } from 'react';
 
 import { useFeedStream } from '../hooks/use-feed-stream';
 import { formatRelativeTime } from '../utils/formatters';
+import { CreatePostForm } from './create-post-form';
 
 /**
  * Renderiza el listado principal del feed con soporte para carga incremental.
@@ -31,6 +32,7 @@ export const FeedShell = (): ReactElement => {
 
   return (
     <section className="flex w-full flex-col gap-6 p-6">
+      <CreatePostForm />
       {items.map((item) => (
         <article
           key={item.id}

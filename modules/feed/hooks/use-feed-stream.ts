@@ -21,12 +21,12 @@ export const useFeedStream = ({ initialCursor }: UseFeedStreamOptions = {}) =>
     const accessToken = useSessionStore((state) => state.accessToken);
 
     return useInfiniteQuery<FeedCursorResponse>({
-      queryKey: [...FEED_QUERY_KEY, { cursor: initialCursor ?? null }],
-      queryFn: ({ pageParam }) => fetchHomeFeed({ cursor: (pageParam as string | null) ?? null }),
-      initialPageParam: initialCursor ?? null,
-      getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
+    queryKey: [...FEED_QUERY_KEY, { cursor: initialCursor ?? null }],
+    queryFn: ({ pageParam }) => fetchHomeFeed({ cursor: (pageParam as string | null) ?? null }),
+    initialPageParam: initialCursor ?? null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
       staleTime: 15_000,
       enabled: isHydrated && Boolean(accessToken)
-    });
+  });
   };
 
