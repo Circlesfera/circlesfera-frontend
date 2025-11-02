@@ -5,10 +5,12 @@ import { useState, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { followUser, unfollowUser } from '@/services/api/follows';
+import { blockUser, unblockUser, getBlockStatus, type BlockStatusResponse } from '@/services/api/blocks';
 import type { PublicProfile, UserStats } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ProfileHeaderProps {
   readonly profile: PublicProfile;
@@ -17,13 +19,50 @@ interface ProfileHeaderProps {
 
 export function ProfileHeader({ profile, stats }: ProfileHeaderProps): ReactElement {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const currentUser = useSessionStore((state) => state.user);
   const isOwnProfile = currentUser?.id === profile.id;
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Obtener estado de bloqueo
+  const { data: blockStatus } = useQuery<BlockStatusResponse>({
+    queryKey: ['block-status', profile.handle],
+    queryFn: () => getBlockStatus(profile.handle),
+    enabled: !isOwnProfile && !!currentUser
+  });
+
+  const isBlocked = blockStatus?.isBlocked ?? false;
+  const hasBlockedYou = blockStatus?.hasBlockedYou ?? false;
+
+  const blockMutation = useMutation({
+    mutationFn: () => blockUser(profile.handle),
+    onSuccess: () => {
+      toast.success('Usuario bloqueado');
+      queryClient.invalidateQueries({ queryKey: ['block-status', profile.handle] });
+      queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
+      router.refresh();
+    },
+    onError: () => {
+      toast.error('No se pudo bloquear al usuario');
+    }
+  });
+
+  const unblockMutation = useMutation({
+    mutationFn: () => unblockUser(profile.handle),
+    onSuccess: () => {
+      toast.success('Usuario desbloqueado');
+      queryClient.invalidateQueries({ queryKey: ['block-status', profile.handle] });
+      queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
+      router.refresh();
+    },
+    onError: () => {
+      toast.error('No se pudo desbloquear al usuario');
+    }
+  });
+
   const handleFollow = async (): Promise<void> => {
-    if (isLoading || isOwnProfile) {
+    if (isLoading || isOwnProfile || isBlocked || hasBlockedYou) {
       return;
     }
 
@@ -44,6 +83,22 @@ export function ProfileHeader({ profile, stats }: ProfileHeaderProps): ReactElem
       console.error(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleBlock = async (): Promise<void> => {
+    if (isOwnProfile) {
+      return;
+    }
+
+    if (isBlocked) {
+      if (window.confirm('¿Estás seguro de que quieres desbloquear a este usuario?')) {
+        unblockMutation.mutate();
+      }
+    } else {
+      if (window.confirm('¿Estás seguro de que quieres bloquear a este usuario? No podrás ver su contenido ni él el tuyo.')) {
+        blockMutation.mutate();
+      }
     }
   };
 
@@ -88,18 +143,44 @@ export function ProfileHeader({ profile, stats }: ProfileHeaderProps): ReactElem
           Editar perfil
         </Link>
       ) : (
-        <button
-          type="button"
-          onClick={handleFollow}
-          disabled={isLoading}
-          className={`mt-2 rounded-full px-6 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
-            isFollowing
-              ? 'border border-white/20 bg-transparent text-white hover:bg-white/10'
-              : 'bg-primary-500 text-white hover:bg-primary-400'
-          }`}
-        >
-          {isLoading ? 'Procesando...' : isFollowing ? 'Siguiendo' : 'Seguir'}
-        </button>
+        <div className="mt-2 flex gap-2">
+          {hasBlockedYou ? (
+            <div className="rounded-full border border-red-500/50 bg-red-900/20 px-6 py-2 text-sm font-semibold text-red-400">
+              Este usuario te ha bloqueado
+            </div>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={handleFollow}
+                disabled={isLoading || isBlocked}
+                className={`rounded-full px-6 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                  isFollowing
+                    ? 'border border-white/20 bg-transparent text-white hover:bg-white/10'
+                    : 'bg-primary-500 text-white hover:bg-primary-400'
+                }`}
+              >
+                {isLoading ? 'Procesando...' : isFollowing ? 'Siguiendo' : 'Seguir'}
+              </button>
+              <button
+                type="button"
+                onClick={handleBlock}
+                disabled={blockMutation.isPending || unblockMutation.isPending}
+                className={`rounded-full border px-6 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                  isBlocked
+                    ? 'border-green-500/50 bg-green-900/20 text-green-400 hover:bg-green-900/30'
+                    : 'border-red-500/50 bg-red-900/20 text-red-400 hover:bg-red-900/30'
+                }`}
+              >
+                {blockMutation.isPending || unblockMutation.isPending
+                  ? 'Procesando...'
+                  : isBlocked
+                    ? 'Desbloquear'
+                    : 'Bloquear'}
+              </button>
+            </>
+          )}
+        </div>
       )}
     </header>
   );
