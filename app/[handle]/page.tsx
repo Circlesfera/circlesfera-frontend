@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { ProfileHeader } from '@/modules/profile/components/profile-header';
+import { ProfileHighlights } from '@/modules/profile/components/profile-highlights';
 import { ProfilePostsGrid } from '@/modules/profile/components/profile-posts-grid';
 import type { ProfileResponse, UserStats } from '@/services/api/users';
 
@@ -36,6 +37,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ handle
   return (
     <main className="flex min-h-screen flex-col items-center gap-10 bg-slate-950 px-6 py-16 text-white">
       <ProfileHeader profile={profile} stats={stats} />
+      <ProfileHighlights profileHandle={handle} isOwnProfile={false} />
       <ProfilePostsGrid handle={handle} />
     </main>
   );
