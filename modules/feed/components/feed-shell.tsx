@@ -5,6 +5,7 @@ import { useState, type ReactElement } from 'react';
 import { useFeedStream } from '../hooks/use-feed-stream';
 import { CreatePostForm } from './create-post-form';
 import { FeedItemComponent } from './feed-item';
+import { StoriesBar } from '@/modules/stories/components/stories-bar';
 
 type SortOption = 'recent' | 'relevance';
 
@@ -34,6 +35,9 @@ export const FeedShell = (): ReactElement => {
 
   return (
     <section className="flex w-full flex-col gap-6 p-6">
+      {/* Stories Bar */}
+      <StoriesBar />
+
       {/* Header con opciones de ordenamiento */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <h2 className="text-xl font-bold text-white">Tu feed</h2>
