@@ -9,4 +9,7 @@ export * from './comments';
 export * from './saves';
 export * from './notifications';
 export * from './hashtags';
+export * from './analytics';
+export * from './highlights';
+export * from './verification';
 
