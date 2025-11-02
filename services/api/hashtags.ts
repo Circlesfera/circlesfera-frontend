@@ -1,4 +1,5 @@
 import { apiClient } from './client';
+import type { FeedCursorResponse } from './types/feed';
 
 export interface Hashtag {
   id: string;
@@ -33,30 +34,8 @@ export interface HashtagPostsParams {
   limit?: number;
 }
 
-export interface HashtagPostsResponse {
-  data: Array<{
-    id: string;
-    caption: string;
-    media: Array<{
-      id: string;
-      kind: 'image' | 'video';
-      url: string;
-      thumbnailUrl: string;
-    }>;
-    stats: {
-      likes: number;
-      comments: number;
-      saves: number;
-      shares: number;
-      views: number;
-    };
-    createdAt: string;
-  }>;
-  nextCursor: string | null;
-}
-
-export const getHashtagPosts = async ({ tag, cursor, limit = 20 }: HashtagPostsParams): Promise<HashtagPostsResponse> => {
-  const { data } = await apiClient.get<HashtagPostsResponse>(`/hashtags/${tag}/posts`, {
+export const getHashtagPosts = async ({ tag, cursor, limit = 20 }: HashtagPostsParams): Promise<FeedCursorResponse> => {
+  const { data } = await apiClient.get<FeedCursorResponse>(`/hashtags/${tag}/posts`, {
     params: { cursor: cursor ?? undefined, limit }
   });
   return data;
