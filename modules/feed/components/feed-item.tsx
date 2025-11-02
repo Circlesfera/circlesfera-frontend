@@ -11,6 +11,9 @@ import { likePost, unlikePost } from '@/services/api/likes';
 import { savePost, unsavePost } from '@/services/api/saves';
 import { fetchComments, createComment, type Comment } from '@/services/api/comments';
 import { toast } from 'sonner';
+import { sharePost, copyPostLink } from '@/lib/share';
+import { ReportDialog } from '@/modules/moderation/components/report-dialog';
+import { renderCaptionWithLinks } from '../utils/caption-renderer';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -18,6 +21,62 @@ const formatDuration = (ms: number): string => {
   const remainingSeconds = seconds % 60;
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
+
+interface CommentWithReportProps {
+  readonly comment: Comment;
+}
+
+function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
+  const [showReportDialog, setShowReportDialog] = useState(false);
+
+  return (
+    <>
+      <div className="flex gap-3">
+        <Image
+          src={comment.author?.avatarUrl ?? ''}
+          alt={comment.author?.displayName ?? ''}
+          width={32}
+          height={32}
+          className="size-8 shrink-0 rounded-full object-cover"
+        />
+        <div className="flex-1 rounded-lg bg-slate-800/40 p-3">
+          <div className="mb-1 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-slate-200">
+                {comment.author?.displayName ?? 'Usuario'}
+              </span>
+              <span className="text-xs text-slate-500">@{comment.author?.handle ?? ''}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowReportDialog(true);
+              }}
+              className="rounded-full p-1 text-slate-500 transition hover:bg-slate-700 hover:text-slate-300"
+              title="Reportar comentario"
+            >
+              <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+              </svg>
+            </button>
+          </div>
+          <p className="text-sm text-slate-300">{comment.content}</p>
+          <span className="mt-1 block text-xs text-slate-500">{formatRelativeTime(comment.createdAt)}</span>
+        </div>
+      </div>
+      {showReportDialog && (
+        <ReportDialog
+          targetType="comment"
+          targetId={comment.id}
+          targetName={`Comentario de @${comment.author?.handle ?? 'usuario'}`}
+          onClose={() => {
+            setShowReportDialog(false);
+          }}
+        />
+      )}
+    </>
+  );
+}
 
 interface FeedItemProps {
   readonly item: FeedItem;
@@ -27,6 +86,7 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
   const queryClient = useQueryClient();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [showReportDialog, setShowReportDialog] = useState(false);
 
   const likeMutation = useMutation({
     mutationFn: item.isLikedByViewer ? unlikePost : likePost,
@@ -76,6 +136,21 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
     saveMutation.mutate(item.id);
   };
 
+  const handleShare = async (): Promise<void> => {
+    const shared = await sharePost(item.id, `Publicación de @${item.author.handle}`);
+    if (shared) {
+      toast.success('Enlace copiado al portapapeles');
+    } else {
+      // Si falla sharePost, intentar copiar directamente
+      const copied = await copyPostLink(item.id);
+      if (copied) {
+        toast.success('Enlace copiado al portapapeles');
+      } else {
+        toast.error('No se pudo copiar el enlace');
+      }
+    }
+  };
+
   const handleSubmitComment = (e: React.FormEvent): void => {
     e.preventDefault();
     if (commentText.trim().length === 0) {
@@ -86,31 +161,47 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
 
   return (
     <article className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-soft-lg">
-      <header className="flex items-center gap-3 px-6 py-4">
-        <Link href={`/${item.author.handle}`}>
-          <Image
-            src={item.author.avatarUrl}
-            alt={item.author.displayName}
-            width={48}
-            height={48}
-            className="size-12 rounded-full object-cover"
-          />
-        </Link>
-        <div className="flex flex-col">
-          <Link href={`/${item.author.handle}`} className="font-semibold text-slate-50 hover:underline">
-            {item.author.displayName}
+      <header className="flex items-center justify-between gap-3 px-6 py-4">
+        <div className="flex items-center gap-3">
+          <Link href={`/${item.author.handle}`}>
+            <Image
+              src={item.author.avatarUrl}
+              alt={item.author.displayName}
+              width={48}
+              height={48}
+              className="size-12 rounded-full object-cover"
+            />
           </Link>
-          <Link
-            href={`/posts/${item.id}`}
-            className="text-sm text-slate-400 hover:text-slate-300 transition"
-          >
-            @{item.author.handle} • {formatRelativeTime(item.createdAt)}
-          </Link>
+          <div className="flex flex-col">
+            <Link href={`/${item.author.handle}`} className="font-semibold text-slate-50 hover:underline">
+              {item.author.displayName}
+            </Link>
+            <Link
+              href={`/posts/${item.id}`}
+              className="text-sm text-slate-400 hover:text-slate-300 transition"
+            >
+              @{item.author.handle} • {formatRelativeTime(item.createdAt)}
+            </Link>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            setShowReportDialog(true);
+          }}
+          className="rounded-full p-2 text-slate-400 transition hover:bg-slate-800 hover:text-slate-300"
+          title="Más opciones"
+        >
+          <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+          </svg>
+        </button>
       </header>
 
       <div className="flex flex-col gap-4 px-6">
-        {item.caption ? <p className="text-base text-slate-100">{item.caption}</p> : null}
+        {item.caption ? (
+          <p className="text-base text-slate-100">{renderCaptionWithLinks(item.caption)}</p>
+        ) : null}
 
         {item.media.map((media) => (
           <Link key={media.id} href={`/posts/${item.id}`} className="block">
@@ -211,6 +302,25 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
               />
             </svg>
           </button>
+
+          <button
+            type="button"
+            onClick={handleShare}
+            className="flex items-center gap-2 text-slate-400 transition hover:text-slate-300"
+            title="Compartir"
+          >
+            <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8.684 13.342c-.400 0-.816-.039-1.236-.115l-.866-2.322c-.35-.937.062-1.954.938-2.305l2.322-.866c.402-.15.81-.231 1.221-.231.4 0 .816.039 1.236.115l.866 2.322c.35.937-.062 1.954-.938 2.305l-2.322.866c-.402.15-.81.231-1.221.231zM13.342 8.684c.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231zM21.316 13.342c.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231zM16.658 21.316c-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231z"
+              />
+            </svg>
+            {item.stats.shares > 0 && (
+              <span className="text-sm font-medium">{item.stats.shares.toLocaleString('es')}</span>
+            )}
+          </button>
         </div>
 
         <div className="text-xs text-slate-500">
@@ -246,30 +356,24 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
             ) : (
               <div className="space-y-3">
                 {commentsQuery.data?.data.map((comment: Comment) => (
-                  <div key={comment.id} className="flex gap-3">
-                    <Image
-                      src={comment.author?.avatarUrl ?? ''}
-                      alt={comment.author?.displayName ?? ''}
-                      width={32}
-                      height={32}
-                      className="size-8 shrink-0 rounded-full object-cover"
-                    />
-                    <div className="flex-1 rounded-lg bg-slate-800/40 p-3">
-                      <div className="mb-1 flex items-center gap-2">
-                        <span className="text-sm font-semibold text-slate-200">
-                          {comment.author?.displayName ?? 'Usuario'}
-                        </span>
-                        <span className="text-xs text-slate-500">@{comment.author?.handle ?? ''}</span>
-                      </div>
-                      <p className="text-sm text-slate-300">{comment.content}</p>
-                    </div>
-                  </div>
+                  <CommentWithReport key={comment.id} comment={comment} />
                 ))}
               </div>
             )}
           </div>
         ) : null}
       </footer>
+
+      {showReportDialog && (
+        <ReportDialog
+          targetType="post"
+          targetId={item.id}
+          targetName={`Publicación de @${item.author.handle}`}
+          onClose={() => {
+            setShowReportDialog(false);
+          }}
+        />
+      )}
     </article>
   );
 }

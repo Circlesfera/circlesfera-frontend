@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { getPostById } from '@/services/api/feed';
 import { formatRelativeTime } from '@/modules/feed/utils/formatters';
 import { formatNumber } from '@/lib/utils';
+import { renderCaptionWithLinks } from '@/modules/feed/utils/caption-renderer';
 
 export const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -68,7 +69,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
       {/* Media */}
       <div className="flex flex-col gap-4 px-6 py-6">
         {post.caption ? (
-          <div className="whitespace-pre-wrap text-base text-slate-100">{post.caption}</div>
+          <div className="whitespace-pre-wrap text-base text-slate-100">{renderCaptionWithLinks(post.caption)}</div>
         ) : null}
 
         {post.media.map((media) => (
