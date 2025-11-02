@@ -10,6 +10,8 @@ export interface SessionUser {
   readonly displayName: string;
   readonly bio: string | null;
   readonly avatarUrl: string | null;
+  readonly isVerified: boolean;
+  readonly isAdmin?: boolean;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
