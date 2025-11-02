@@ -4,6 +4,7 @@ import type { FeedCursorResponse, FeedItem } from './types/feed';
 interface FetchFeedParams {
   readonly cursor?: string | null;
   readonly limit?: number;
+  readonly sortBy?: 'recent' | 'relevance';
 }
 
 interface CreatePostPayload {
@@ -18,8 +19,19 @@ interface CreatePostResponse {
 /**
  * Consulta el feed principal del usuario autenticado.
  */
-export const fetchHomeFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+export const fetchHomeFeed = async ({ cursor, limit = 20, sortBy = 'recent' }: FetchFeedParams): Promise<FeedCursorResponse> => {
   const response = await apiClient.get<FeedCursorResponse>('/feed', {
+    params: { cursor: cursor ?? undefined, limit, sortBy }
+  });
+
+  return response.data;
+};
+
+/**
+ * Consulta el feed de menciones (posts donde el usuario fue mencionado).
+ */
+export const fetchMentionsFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+  const response = await apiClient.get<FeedCursorResponse>('/feed/mentions', {
     params: { cursor: cursor ?? undefined, limit }
   });
 
@@ -52,6 +64,24 @@ export const getRelatedPosts = async (postId: string, limit = 6): Promise<{ post
   const { data } = await apiClient.get<{ posts: FeedItem[] }>(`/feed/${postId}/related`, {
     params: { limit }
   });
+  return data;
+};
+
+export interface SearchPostsParams {
+  q: string;
+  limit?: number;
+  cursor?: string | null;
+}
+
+/**
+ * Busca posts por texto en caption o hashtags.
+ */
+export const searchPosts = async ({ q, limit = 20, cursor }: SearchPostsParams): Promise<FeedCursorResponse> => {
+  const params: Record<string, string | number> = { q, limit };
+  if (cursor) {
+    params.cursor = cursor;
+  }
+  const { data } = await apiClient.get<FeedCursorResponse>('/feed/search', { params });
   return data;
 };
 

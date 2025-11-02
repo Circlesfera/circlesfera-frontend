@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 
 import { searchUsers, type PublicProfile } from '@/services/api/users';
 import { searchHashtags, getTrendingHashtags, type Hashtag } from '@/services/api/hashtags';
+import { searchPosts } from '@/services/api/feed';
+import type { FeedItem } from '@/services/api/types/feed';
 
 export function SearchBar(): ReactElement {
   const router = useRouter();
@@ -35,6 +37,16 @@ export function SearchBar(): ReactElement {
   });
 
   const hashtags = hashtagsData?.hashtags ?? [];
+
+  // Búsqueda de posts
+  const { data: postsData, isLoading: isLoadingPosts } = useQuery({
+    queryKey: ['search', 'posts', query],
+    queryFn: () => searchPosts({ q: query, limit: 5 }),
+    enabled: hasQuery,
+    staleTime: 30000
+  });
+
+  const posts = postsData?.data ?? [];
 
   // Trending hashtags (cuando no hay query)
   const { data: trendingData } = useQuery({
@@ -144,9 +156,9 @@ export function SearchBar(): ReactElement {
           ) : hasQuery ? (
             // Mostrar resultados de búsqueda
             <div className="max-h-96 overflow-y-auto">
-              {isLoadingUsers || isLoadingHashtags ? (
+              {isLoadingUsers || isLoadingHashtags || isLoadingPosts ? (
                 <div className="p-6 text-center text-sm text-slate-400">Buscando...</div>
-              ) : users.length === 0 && hashtags.length === 0 ? (
+              ) : users.length === 0 && hashtags.length === 0 && posts.length === 0 ? (
                 <div className="p-6 text-center text-sm text-slate-400">No se encontraron resultados</div>
               ) : (
                 <>
@@ -188,7 +200,7 @@ export function SearchBar(): ReactElement {
                           key={hashtag.id}
                           href={`/hashtags/${hashtag.tag}`}
                           onClick={handleItemClick}
-                          className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5 last:border-b-0"
+                          className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5"
                         >
                           <div className="flex size-10 items-center justify-center rounded-full bg-primary-500/20">
                             <svg className="size-5 text-primary-400" fill="currentColor" viewBox="0 0 24 24">
@@ -203,6 +215,70 @@ export function SearchBar(): ReactElement {
                           </div>
                         </Link>
                       ))}
+                    </>
+                  )}
+
+                  {posts.length > 0 && (
+                    <>
+                      <div className="border-b border-white/10 px-4 py-3">
+                        <h3 className="text-sm font-semibold text-white">Publicaciones</h3>
+                      </div>
+                      {posts.map((post: FeedItem) => {
+                        const firstMedia = post.media[0];
+                        return (
+                          <Link
+                            key={post.id}
+                            href={`/posts/${post.id}`}
+                            onClick={handleItemClick}
+                            className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5 last:border-b-0"
+                          >
+                            {firstMedia ? (
+                              firstMedia.kind === 'image' ? (
+                                <Image
+                                  src={firstMedia.url}
+                                  alt={post.caption || 'Post'}
+                                  width={40}
+                                  height={40}
+                                  className="size-10 flex-shrink-0 rounded object-cover"
+                                />
+                              ) : (
+                                <div className="relative size-10 flex-shrink-0 overflow-hidden rounded">
+                                  <Image
+                                    src={firstMedia.thumbnailUrl}
+                                    alt={post.caption || 'Post'}
+                                    fill
+                                    className="object-cover"
+                                  />
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                    <svg className="size-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              )
+                            ) : (
+                              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded bg-slate-700">
+                                <svg className="size-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                            <div className="flex-1 overflow-hidden">
+                              <div className="truncate text-sm font-medium text-white">
+                                {post.caption || 'Publicación sin descripción'}
+                              </div>
+                              <div className="truncate text-xs text-slate-400">
+                                por @{post.author.handle} • {post.stats.likes.toLocaleString('es')} me gusta
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </>
                   )}
                 </>

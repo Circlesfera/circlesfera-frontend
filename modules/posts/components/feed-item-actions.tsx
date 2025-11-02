@@ -8,6 +8,7 @@ import Link from 'next/link';
 import type { FeedItem } from '@/services/api/types/feed';
 import { likePost, unlikePost } from '@/services/api/likes';
 import { savePost, unsavePost } from '@/services/api/saves';
+import { sharePost, copyPostLink } from '@/lib/share';
 
 interface FeedItemActionsProps {
   readonly post: FeedItem;
@@ -48,6 +49,21 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
 
   const handleSave = (): void => {
     saveMutation.mutate(post.id);
+  };
+
+  const handleShare = async (): Promise<void> => {
+    const shared = await sharePost(post.id, `Publicación de @${post.author.handle}`);
+    if (shared) {
+      toast.success('Enlace copiado al portapapeles');
+    } else {
+      // Si falla sharePost, intentar copiar directamente
+      const copied = await copyPostLink(post.id);
+      if (copied) {
+        toast.success('Enlace copiado al portapapeles');
+      } else {
+        toast.error('No se pudo copiar el enlace');
+      }
+    }
   };
 
   return (
@@ -112,6 +128,25 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
             d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
           />
         </svg>
+      </button>
+
+      <button
+        type="button"
+        onClick={handleShare}
+        className="flex items-center gap-2 text-slate-400 transition hover:text-slate-300"
+        title="Compartir"
+      >
+        <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8.684 13.342c-.400 0-.816-.039-1.236-.115l-.866-2.322c-.35-.937.062-1.954.938-2.305l2.322-.866c.402-.15.81-.231 1.221-.231.4 0 .816.039 1.236.115l.866 2.322c.35.937-.062 1.954-.938 2.305l-2.322.866c-.402.15-.81.231-1.221.231zM13.342 8.684c.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231zM21.316 13.342c.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231zM16.658 21.316c-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231z"
+          />
+        </svg>
+        {post.stats.shares > 0 && (
+          <span className="text-sm font-medium">{post.stats.shares.toLocaleString('es')}</span>
+        )}
       </button>
     </div>
   );
