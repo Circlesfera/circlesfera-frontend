@@ -27,6 +27,17 @@ export const fetchHomeFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Pr
 };
 
 /**
+ * Consulta el feed de explorar (posts populares de usuarios no seguidos).
+ */
+export const fetchExploreFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+  const response = await apiClient.get<FeedCursorResponse>('/feed/explore', {
+    params: { cursor: cursor ?? undefined, limit }
+  });
+
+  return response.data;
+};
+
+/**
  * Crea una nueva publicación con media.
  */
 export const createPost = async ({ caption, media }: CreatePostPayload): Promise<CreatePostResponse> => {
