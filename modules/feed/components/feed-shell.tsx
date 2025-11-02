@@ -1,16 +1,19 @@
 'use client';
 
-import { type ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 
 import { useFeedStream } from '../hooks/use-feed-stream';
 import { CreatePostForm } from './create-post-form';
 import { FeedItemComponent } from './feed-item';
 
+type SortOption = 'recent' | 'relevance';
+
 /**
  * Renderiza el listado principal del feed con soporte para carga incremental.
  */
 export const FeedShell = (): ReactElement => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useFeedStream();
+  const [sortBy, setSortBy] = useState<SortOption>('recent');
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useFeedStream({ sortBy });
 
   if (status === 'pending') {
     return <div className="p-6 text-sm text-slate-400">Preparando tu experiencia...</div>;
@@ -31,6 +34,39 @@ export const FeedShell = (): ReactElement => {
 
   return (
     <section className="flex w-full flex-col gap-6 p-6">
+      {/* Header con opciones de ordenamiento */}
+      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <h2 className="text-xl font-bold text-white">Tu feed</h2>
+        <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/40 p-1">
+          <button
+            type="button"
+            onClick={() => {
+              setSortBy('recent');
+            }}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+              sortBy === 'recent'
+                ? 'bg-primary-600 text-white'
+                : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+            }`}
+          >
+            Recientes
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSortBy('relevance');
+            }}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+              sortBy === 'relevance'
+                ? 'bg-primary-600 text-white'
+                : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+            }`}
+          >
+            Relevantes
+          </button>
+        </div>
+      </div>
+
       <CreatePostForm />
       {items.map((item) => (
         <FeedItemComponent key={item.id} item={item} />
