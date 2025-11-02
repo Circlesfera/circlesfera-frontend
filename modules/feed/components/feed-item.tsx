@@ -11,6 +11,13 @@ import { savePost, unsavePost } from '@/services/api/saves';
 import { fetchComments, createComment, type Comment } from '@/services/api/comments';
 import { toast } from 'sonner';
 
+const formatDuration = (ms: number): string => {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
 interface FeedItemProps {
   readonly item: FeedItem;
 }
@@ -108,13 +115,20 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
                 className="max-h-[640px] w-full rounded-2xl object-cover"
               />
             ) : (
-              <video
-                src={media.url}
-                poster={media.thumbnailUrl}
-                controls
-                preload="metadata"
-                className="max-h-[640px] w-full rounded-2xl"
-              />
+              <div className="relative">
+                <video
+                  src={media.url}
+                  poster={media.thumbnailUrl}
+                  controls
+                  preload="metadata"
+                  className="max-h-[640px] w-full rounded-2xl"
+                />
+                {media.durationMs ? (
+                  <div className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
+                    {formatDuration(media.durationMs)}
+                  </div>
+                ) : null}
+              </div>
             )}
           </Fragment>
         ))}
