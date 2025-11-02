@@ -5,6 +5,7 @@ export interface CommentAuthor {
   handle: string;
   displayName: string;
   avatarUrl: string;
+  isVerified: boolean;
 }
 
 export interface Comment {

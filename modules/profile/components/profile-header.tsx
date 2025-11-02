@@ -11,6 +11,7 @@ import { useSessionStore } from '@/store/session';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { VerifiedBadge } from '@/components/verified-badge';
 
 interface ProfileHeaderProps {
   readonly profile: PublicProfile;
@@ -113,7 +114,10 @@ export function ProfileHeader({ profile, stats }: ProfileHeaderProps): ReactElem
         />
       </div>
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">{profile.displayName}</h1>
+        <div className="flex items-center justify-center gap-2">
+          <h1 className="text-2xl font-semibold text-white">{profile.displayName}</h1>
+          {profile.isVerified && <VerifiedBadge size="md" />}
+        </div>
         <p className="text-sm text-white/60">@{profile.handle}</p>
       </div>
 
