@@ -57,6 +57,25 @@ export const getPostById = async (postId: string): Promise<CreatePostResponse> =
   return data;
 };
 
+export interface UpdatePostPayload {
+  readonly caption: string;
+}
+
+/**
+ * Actualiza el caption de un post.
+ */
+export const updatePost = async (postId: string, payload: UpdatePostPayload): Promise<CreatePostResponse> => {
+  const { data } = await apiClient.patch<CreatePostResponse>(`/feed/${postId}`, payload);
+  return data;
+};
+
+/**
+ * Elimina un post.
+ */
+export const deletePost = async (postId: string): Promise<void> => {
+  await apiClient.delete(`/feed/${postId}`);
+};
+
 /**
  * Obtiene posts relacionados a un post específico.
  */
