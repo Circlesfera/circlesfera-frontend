@@ -92,3 +92,18 @@ export const viewStory = async (storyId: string): Promise<void> => {
   await apiClient.post(`/stories/${storyId}/view`);
 };
 
+export interface StoryViewersResponse {
+  viewers: StoryUser[];
+  count: number;
+}
+
+/**
+ * Obtiene la lista de usuarios que vieron una story (solo para el autor).
+ */
+export const getStoryViewers = async (storyId: string, limit = 50): Promise<StoryViewersResponse> => {
+  const { data } = await apiClient.get<StoryViewersResponse>(`/stories/${storyId}/viewers`, {
+    params: { limit }
+  });
+  return data;
+};
+

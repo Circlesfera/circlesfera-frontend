@@ -1,11 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect, type ReactElement } from 'react';
 
 import type { StoryGroup, StoryItem } from '@/services/api/stories';
-import { viewStory } from '@/services/api/stories';
-import { useQueryClient } from '@tanstack/react-query';
+import { viewStory, getStoryViewers, type StoryUser } from '@/services/api/stories';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { useSessionStore } from '@/store/session';
+import { VerifiedBadge } from '@/components/verified-badge';
 
 interface StoriesViewerProps {
   readonly groups: StoryGroup[];
@@ -21,12 +24,27 @@ export function StoriesViewer({
   onClose
 }: StoriesViewerProps): ReactElement {
   const queryClient = useQueryClient();
+  const currentUser = useSessionStore((state) => state.user);
   const [currentGroupIndex, setCurrentGroupIndex] = useState(initialGroupIndex);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(initialStoryIndex);
   const [isPaused, setIsPaused] = useState(false);
+  const [showViewers, setShowViewers] = useState(false);
 
   const currentGroup = groups[currentGroupIndex];
   const currentStory = currentGroup?.stories[currentStoryIndex];
+  
+  // Verificar si el usuario actual es el autor de la story
+  const isAuthor = currentUser?.id === currentStory?.author.id;
+
+  // Obtener viewers solo si es el autor y está mostrando el modal
+  const { data: viewersData } = useQuery({
+    queryKey: ['story-viewers', currentStory?.id],
+    queryFn: () => (currentStory ? getStoryViewers(currentStory.id) : Promise.resolve({ viewers: [], count: 0 })),
+    enabled: isAuthor && showViewers && !!currentStory,
+    staleTime: 1000 * 60 // 1 minuto
+  });
+
+  const viewers = viewersData?.viewers ?? [];
 
   useEffect(() => {
     if (!currentStory || currentStory.hasViewed) {
@@ -150,15 +168,47 @@ export function StoriesViewer({
           </div>
           <span className="text-xs text-white/70">@{currentGroup.author.handle}</span>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-full p-2 text-white transition hover:bg-white/20"
-        >
-          <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Botón para ver viewers (solo si es el autor) */}
+          {isAuthor && currentStory && currentStory.viewCount > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowViewers(true);
+              }}
+              className="rounded-full p-2 text-white transition hover:bg-white/20"
+              title={`Ver ${currentStory.viewCount} ${currentStory.viewCount === 1 ? 'visualización' : 'visualizaciones'}`}
+            >
+              <div className="flex items-center gap-1">
+                <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                <span className="text-sm font-medium">{currentStory.viewCount}</span>
+              </div>
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-2 text-white transition hover:bg-white/20"
+          >
+            <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Contenido de la story */}
@@ -219,6 +269,83 @@ export function StoriesViewer({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
+
+      {/* Modal de viewers */}
+      {showViewers && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => {
+            setShowViewers(false);
+          }}
+        >
+          <div
+            className="relative max-h-[80vh] w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-xl"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {/* Header del modal */}
+            <div className="border-b border-white/10 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-white">
+                  Visualizaciones ({currentStory?.viewCount ?? 0})
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowViewers(false);
+                  }}
+                  className="rounded-full p-1 text-white/70 transition hover:bg-white/10 hover:text-white"
+                >
+                  <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Lista de viewers */}
+            <div className="max-h-[60vh] overflow-y-auto">
+              {viewers.length === 0 ? (
+                <div className="px-6 py-12 text-center text-sm text-slate-400">
+                  Aún no hay visualizaciones
+                </div>
+              ) : (
+                <div className="divide-y divide-white/5">
+                  {viewers.map((viewer) => (
+                    <Link
+                      key={viewer.id}
+                      href={`/${viewer.handle}`}
+                      onClick={() => {
+                        setShowViewers(false);
+                        onClose();
+                      }}
+                      className="flex items-center gap-3 px-6 py-4 transition hover:bg-white/5"
+                    >
+                      <div className="relative size-12 overflow-hidden rounded-full">
+                        <Image
+                          src={viewer.avatarUrl || `https://api.dicebear.com/7.x/thumbs/svg?seed=${viewer.handle}`}
+                          alt={viewer.displayName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-white">{viewer.displayName}</span>
+                          {viewer.isVerified && <VerifiedBadge size="sm" />}
+                        </div>
+                        <span className="text-sm text-slate-400">@{viewer.handle}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
