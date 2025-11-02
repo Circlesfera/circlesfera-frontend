@@ -46,6 +46,16 @@ export const getPostById = async (postId: string): Promise<CreatePostResponse> =
 };
 
 /**
+ * Obtiene posts relacionados a un post específico.
+ */
+export const getRelatedPosts = async (postId: string, limit = 6): Promise<{ posts: FeedItem[] }> => {
+  const { data } = await apiClient.get<{ posts: FeedItem[] }>(`/feed/${postId}/related`, {
+    params: { limit }
+  });
+  return data;
+};
+
+/**
  * Crea una nueva publicación con media.
  */
 export const createPost = async ({ caption, media }: CreatePostPayload): Promise<CreatePostResponse> => {

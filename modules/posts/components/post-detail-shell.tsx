@@ -1,16 +1,15 @@
 'use client';
 
-import { type ReactElement } from 'react';
+import { Fragment, type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment } from 'react';
 
 import { getPostById } from '@/services/api/feed';
 import { formatRelativeTime } from '@/modules/feed/utils/formatters';
 import { formatNumber } from '@/lib/utils';
 
-const formatDuration = (ms: number): string => {
+export const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
@@ -18,6 +17,7 @@ const formatDuration = (ms: number): string => {
 };
 import { FeedItemActions } from './feed-item-actions';
 import { PostComments } from './post-comments';
+import { RelatedPosts } from './related-posts';
 
 /**
  * Renderiza la vista detallada de un post individual.
@@ -40,7 +40,8 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
   const post = data.post;
 
   return (
-    <article className="w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-soft-lg">
+    <>
+      <article className="w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-soft-lg">
       {/* Header con autor */}
       <header className="flex items-center gap-3 border-b border-slate-800 px-6 py-4">
         <Link href={`/${post.author.handle}`} className="relative size-12 shrink-0 overflow-hidden rounded-full">
@@ -117,7 +118,11 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
 
       {/* Comentarios */}
       <PostComments postId={postId} />
-    </article>
+      </article>
+
+      {/* Posts relacionados */}
+      <RelatedPosts postId={postId} />
+    </>
   );
 }
 

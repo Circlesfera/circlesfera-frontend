@@ -1,14 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState, type ReactElement } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { fetchComments, createComment, type Comment } from '@/services/api/comments';
-import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { fetchComments, createComment } from '@/services/api/comments';
 import { useSessionStore } from '@/store/session';
+import { CommentItem } from './comment-item';
 
 interface PostCommentsProps {
   readonly postId: string;
@@ -90,39 +89,9 @@ export function PostComments({ postId }: PostCommentsProps): ReactElement {
         <div className="py-4 text-center text-sm text-slate-400">Sé el primero en comentar</div>
       ) : (
         <div className="space-y-4">
-          {comments.map((comment: Comment) => {
-            if (!comment.author) {
-              return null;
-            }
-
-            return (
-              <div key={comment.id} className="flex gap-3">
-                <Link href={`/${comment.author.handle}`} className="relative size-8 shrink-0 overflow-hidden rounded-full">
-                  <Image
-                    src={comment.author.avatarUrl ?? `https://api.dicebear.com/7.x/thumbs/svg?seed=${comment.author.handle}`}
-                    alt={comment.author.displayName}
-                    fill
-                    className="object-cover"
-                  />
-                </Link>
-                <div className="flex-1">
-                  <div className="rounded-lg bg-slate-800/60 px-3 py-2">
-                    <Link
-                      href={`/${comment.author.handle}`}
-                      className="font-semibold text-white hover:underline"
-                    >
-                      {comment.author.displayName}
-                    </Link>
-                    <p className="mt-1 whitespace-pre-wrap text-sm text-slate-100">{comment.content}</p>
-                  </div>
-                  <div className="mt-1 flex items-center gap-4 text-xs text-slate-500">
-                    <span>{formatRelativeTime(comment.createdAt)}</span>
-                    {comment.likes > 0 && <span>{comment.likes.toLocaleString('es')} me gusta</span>}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {comments.map((comment) => (
+            <CommentItem key={comment.id} comment={comment} postId={postId} />
+          ))}
         </div>
       )}
     </div>
