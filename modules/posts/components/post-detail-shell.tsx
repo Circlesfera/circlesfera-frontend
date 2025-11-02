@@ -21,6 +21,7 @@ export const formatDuration = (ms: number): string => {
 import { FeedItemActions } from './feed-item-actions';
 import { PostComments } from './post-comments';
 import { RelatedPosts } from './related-posts';
+import { VerifiedBadge } from '@/components/verified-badge';
 
 /**
  * Renderiza la vista detallada de un post individual.
@@ -63,12 +64,15 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
             />
           </Link>
           <div className="flex-1">
-            <Link
-              href={`/${post.author.handle}`}
-              className="block font-semibold text-white hover:underline"
-            >
-              {post.author.displayName}
-            </Link>
+            <div className="flex items-center gap-1.5">
+              <Link
+                href={`/${post.author.handle}`}
+                className="block font-semibold text-white hover:underline"
+              >
+                {post.author.displayName}
+              </Link>
+              {post.author.isVerified && <VerifiedBadge size="sm" />}
+            </div>
             <p className="text-xs text-slate-400">
               @{post.author.handle} • {formatRelativeTime(post.createdAt)}
             </p>

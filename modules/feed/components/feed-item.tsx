@@ -9,6 +9,7 @@ import type { FeedItem } from '@/services/api/types/feed';
 import { formatRelativeTime } from '../utils/formatters';
 import { likePost, unlikePost } from '@/services/api/likes';
 import { savePost, unsavePost } from '@/services/api/saves';
+import { getCollections, type Collection } from '@/services/api/collections';
 import { fetchComments, createComment, type Comment } from '@/services/api/comments';
 import { toast } from 'sonner';
 import { sharePost, copyPostLink } from '@/lib/share';
@@ -16,6 +17,7 @@ import { ReportDialog } from '@/modules/moderation/components/report-dialog';
 import { renderCaptionWithLinks } from '../utils/caption-renderer';
 import { updatePost, deletePost } from '@/services/api/feed';
 import { useSessionStore } from '@/store/session';
+import { VerifiedBadge } from '@/components/verified-badge';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -47,6 +49,7 @@ function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
               <span className="text-sm font-semibold text-slate-200">
                 {comment.author?.displayName ?? 'Usuario'}
               </span>
+              {comment.author?.isVerified && <VerifiedBadge size="sm" />}
               <span className="text-xs text-slate-500">@{comment.author?.handle ?? ''}</span>
             </div>
             <button
@@ -94,6 +97,7 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const likeMutation = useMutation({
     mutationFn: item.isLikedByViewer ? unlikePost : likePost,
@@ -106,10 +110,12 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
   });
 
   const saveMutation = useMutation({
-    mutationFn: item.isSavedByViewer ? unsavePost : savePost,
+    mutationFn: (collectionId?: string) => (item.isSavedByViewer ? unsavePost(item.id) : savePost(item.id, collectionId)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
       queryClient.invalidateQueries({ queryKey: ['saved'] });
+      setShowSaveDialog(false);
+      toast.success(item.isSavedByViewer ? 'Post desguardado' : 'Post guardado');
     },
     onError: () => {
       toast.error('No se pudo actualizar el guardado');
@@ -140,7 +146,13 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
   };
 
   const handleSave = (): void => {
-    saveMutation.mutate(item.id);
+    if (item.isSavedByViewer) {
+      // Si ya está guardado, desguardar directamente (no necesita collectionId)
+      saveMutation.mutate(undefined);
+    } else {
+      // Si no está guardado, mostrar selector de colecciones
+      setShowSaveDialog(true);
+    }
   };
 
   const handleShare = async (): Promise<void> => {
@@ -180,9 +192,12 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
             />
           </Link>
           <div className="flex flex-col">
-            <Link href={`/${item.author.handle}`} className="font-semibold text-slate-50 hover:underline">
-              {item.author.displayName}
-            </Link>
+            <div className="flex items-center gap-1.5">
+              <Link href={`/${item.author.handle}`} className="font-semibold text-slate-50 hover:underline">
+                {item.author.displayName}
+              </Link>
+              {item.author.isVerified && <VerifiedBadge size="sm" />}
+            </div>
             <Link
               href={`/posts/${item.id}`}
               className="text-sm text-slate-400 hover:text-slate-300 transition"
@@ -457,7 +472,142 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
           }}
         />
       )}
+
+      {/* Dialog para seleccionar colección al guardar */}
+      {showSaveDialog && (
+        <SaveToCollectionDialog
+          postId={item.id}
+          onClose={() => {
+            setShowSaveDialog(false);
+          }}
+          onSave={(collectionId) => {
+            saveMutation.mutate(collectionId);
+          }}
+        />
+      )}
     </article>
+  );
+}
+
+interface SaveToCollectionDialogProps {
+  readonly postId: string;
+  readonly onClose: () => void;
+  readonly onSave: (collectionId?: string) => void;
+}
+
+function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps): ReactElement {
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['collections'],
+    queryFn: getCollections
+  });
+
+  const collections = data?.collections ?? [];
+  const defaultCollection = collections.find((c) => c.id === 'default');
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+        <h2 className="mb-4 text-xl font-bold text-white">Guardar en colección</h2>
+
+        {isLoading ? (
+          <div className="py-8 text-center text-sm text-slate-400">Cargando colecciones...</div>
+        ) : (
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {/* Opción por defecto */}
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCollectionId(null);
+              }}
+              className={`w-full rounded-lg border p-3 text-left transition ${
+                selectedCollectionId === null
+                  ? 'border-primary-500 bg-primary-500/10'
+                  : 'border-slate-700 bg-slate-800/40 hover:border-slate-600'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex size-12 items-center justify-center rounded-lg bg-slate-700">
+                  <svg className="size-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-white">{defaultCollection?.name ?? 'Guardados'}</h3>
+                  <p className="text-xs text-slate-400">{defaultCollection?.postCount ?? 0} posts</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Otras colecciones */}
+            {collections
+              .filter((c) => c.id !== 'default')
+              .map((collection) => (
+                <button
+                  key={collection.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCollectionId(collection.id);
+                  }}
+                  className={`w-full rounded-lg border p-3 text-left transition ${
+                    selectedCollectionId === collection.id
+                      ? 'border-primary-500 bg-primary-500/10'
+                      : 'border-slate-700 bg-slate-800/40 hover:border-slate-600'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {collection.coverImageUrl ? (
+                      <div className="relative size-12 overflow-hidden rounded-lg">
+                        <Image src={collection.coverImageUrl} alt={collection.name} fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="flex size-12 items-center justify-center rounded-lg bg-slate-700">
+                        <svg className="size-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white">{collection.name}</h3>
+                      <p className="text-xs text-slate-400">{collection.postCount} posts</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+          </div>
+        )}
+
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onSave(selectedCollectionId === null ? undefined : selectedCollectionId);
+            }}
+            className="rounded-xl bg-primary-500 px-6 py-2 text-sm font-medium text-white transition hover:bg-primary-400"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

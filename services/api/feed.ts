@@ -50,6 +50,19 @@ export const fetchExploreFeed = async ({ cursor, limit = 20 }: FetchFeedParams):
 };
 
 /**
+ * Obtiene el feed de Reels (videos cortos).
+ */
+export const getReelsFeed = async (options: { limit?: number; cursor?: string | null } = {}): Promise<FeedCursorResponse> => {
+  const { data } = await apiClient.get<FeedCursorResponse>('/feed/reels', {
+    params: {
+      limit: options.limit ?? 20,
+      cursor: options.cursor ?? undefined
+    }
+  });
+  return data;
+};
+
+/**
  * Obtiene un post individual por ID.
  */
 export const getPostById = async (postId: string): Promise<CreatePostResponse> => {
