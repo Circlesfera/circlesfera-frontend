@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Fragment, useState, type ReactElement } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -86,18 +87,25 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
   return (
     <article className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-soft-lg">
       <header className="flex items-center gap-3 px-6 py-4">
-        <Image
-          src={item.author.avatarUrl}
-          alt={item.author.displayName}
-          width={48}
-          height={48}
-          className="size-12 rounded-full object-cover"
-        />
+        <Link href={`/${item.author.handle}`}>
+          <Image
+            src={item.author.avatarUrl}
+            alt={item.author.displayName}
+            width={48}
+            height={48}
+            className="size-12 rounded-full object-cover"
+          />
+        </Link>
         <div className="flex flex-col">
-          <span className="font-semibold text-slate-50">{item.author.displayName}</span>
-          <span className="text-sm text-slate-400">
+          <Link href={`/${item.author.handle}`} className="font-semibold text-slate-50 hover:underline">
+            {item.author.displayName}
+          </Link>
+          <Link
+            href={`/posts/${item.id}`}
+            className="text-sm text-slate-400 hover:text-slate-300 transition"
+          >
             @{item.author.handle} • {formatRelativeTime(item.createdAt)}
-          </span>
+          </Link>
         </div>
       </header>
 
@@ -105,32 +113,38 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
         {item.caption ? <p className="text-base text-slate-100">{item.caption}</p> : null}
 
         {item.media.map((media) => (
-          <Fragment key={media.id}>
-            {media.kind === 'image' ? (
-              <Image
-                src={media.url}
-                alt={item.caption}
-                width={media.width ?? 1080}
-                height={media.height ?? 1920}
-                className="max-h-[640px] w-full rounded-2xl object-cover"
-              />
-            ) : (
-              <div className="relative">
-                <video
+          <Link key={media.id} href={`/posts/${item.id}`} className="block">
+            <Fragment>
+              {media.kind === 'image' ? (
+                <Image
                   src={media.url}
-                  poster={media.thumbnailUrl}
-                  controls
-                  preload="metadata"
-                  className="max-h-[640px] w-full rounded-2xl"
+                  alt={item.caption}
+                  width={media.width ?? 1080}
+                  height={media.height ?? 1920}
+                  className="max-h-[640px] w-full rounded-2xl object-cover transition hover:opacity-90"
                 />
-                {media.durationMs ? (
-                  <div className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
-                    {formatDuration(media.durationMs)}
-                  </div>
-                ) : null}
-              </div>
-            )}
-          </Fragment>
+              ) : (
+                <div className="relative">
+                  <video
+                    src={media.url}
+                    poster={media.thumbnailUrl}
+                    controls
+                    preload="metadata"
+                    className="max-h-[640px] w-full rounded-2xl"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = `/posts/${item.id}`;
+                    }}
+                  />
+                  {media.durationMs ? (
+                    <div className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
+                      {formatDuration(media.durationMs)}
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </Fragment>
+          </Link>
         ))}
       </div>
 
@@ -160,11 +174,8 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
             <span className="text-sm font-medium">{item.stats.likes.toLocaleString('es')}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setShowComments(!showComments);
-            }}
+          <Link
+            href={`/posts/${item.id}#comments`}
             className="flex items-center gap-2 text-slate-400 transition hover:text-slate-300"
           >
             <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,7 +187,7 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
               />
             </svg>
             <span className="text-sm font-medium">{item.stats.comments.toLocaleString('es')}</span>
-          </button>
+          </Link>
 
           <button
             type="button"

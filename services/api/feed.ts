@@ -38,6 +38,14 @@ export const fetchExploreFeed = async ({ cursor, limit = 20 }: FetchFeedParams):
 };
 
 /**
+ * Obtiene un post individual por ID.
+ */
+export const getPostById = async (postId: string): Promise<CreatePostResponse> => {
+  const { data } = await apiClient.get<CreatePostResponse>(`/feed/${postId}`);
+  return data;
+};
+
+/**
  * Crea una nueva publicación con media.
  */
 export const createPost = async ({ caption, media }: CreatePostPayload): Promise<CreatePostResponse> => {
