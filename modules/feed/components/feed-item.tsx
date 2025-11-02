@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import { sharePost, copyPostLink } from '@/lib/share';
 import { ReportDialog } from '@/modules/moderation/components/report-dialog';
 import { renderCaptionWithLinks } from '../utils/caption-renderer';
-import { updatePost, deletePost } from '@/services/api/feed';
+import { updatePost, deletePost, archivePost, unarchivePost } from '@/services/api/feed';
 import { useSessionStore } from '@/store/session';
 import { VerifiedBadge } from '@/components/verified-badge';
 
@@ -85,9 +85,10 @@ function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
 
 interface FeedItemProps {
   readonly item: FeedItem;
+  readonly isArchivedPage?: boolean; // Si true, muestra opción de desarchivar en lugar de archivar
 }
 
-export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
+export function FeedItemComponent({ item, isArchivedPage = false }: FeedItemProps): ReactElement {
   const queryClient = useQueryClient();
   const currentUser = useSessionStore((state) => state.user);
   const isAuthor = currentUser?.id === item.author.id;
@@ -98,6 +99,33 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+
+  const archiveMutation = useMutation({
+    mutationFn: () => archivePost(item.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
+      setShowOptionsMenu(false);
+      toast.success('Publicación archivada');
+    },
+    onError: () => {
+      toast.error('No se pudo archivar la publicación');
+    }
+  });
+
+  const unarchiveMutation = useMutation({
+    mutationFn: () => unarchivePost(item.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feed', 'archived'] });
+      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
+      setShowOptionsMenu(false);
+      toast.success('Publicación desarchivada');
+    },
+    onError: () => {
+      toast.error('No se pudo desarchivar la publicación');
+    }
+  });
 
   const likeMutation = useMutation({
     mutationFn: item.isLikedByViewer ? unlikePost : likePost,
@@ -245,6 +273,35 @@ export function FeedItemComponent({ item }: FeedItemProps): ReactElement {
                   </svg>
                   Editar publicación
                 </button>
+                {isArchivedPage ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      unarchiveMutation.mutate();
+                    }}
+                    disabled={unarchiveMutation.isPending}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition hover:bg-slate-800 disabled:opacity-50"
+                  >
+                    <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Desarchivar publicación
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      archiveMutation.mutate();
+                    }}
+                    disabled={archiveMutation.isPending}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition hover:bg-slate-800 disabled:opacity-50"
+                  >
+                    <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                    </svg>
+                    Archivar publicación
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => {

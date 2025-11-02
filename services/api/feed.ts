@@ -90,6 +90,30 @@ export const deletePost = async (postId: string): Promise<void> => {
 };
 
 /**
+ * Archiva un post (oculta del perfil público).
+ */
+export const archivePost = async (postId: string): Promise<void> => {
+  await apiClient.post(`/feed/${postId}/archive`);
+};
+
+/**
+ * Desarchiva un post.
+ */
+export const unarchivePost = async (postId: string): Promise<void> => {
+  await apiClient.delete(`/feed/${postId}/archive`);
+};
+
+/**
+ * Obtiene los posts archivados del usuario autenticado.
+ */
+export const getArchivedPosts = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+  const { data } = await apiClient.get<FeedCursorResponse>('/feed/archived', {
+    params: { cursor: cursor ?? undefined, limit }
+  });
+  return data;
+};
+
+/**
  * Obtiene posts relacionados a un post específico.
  */
 export const getRelatedPosts = async (postId: string, limit = 6): Promise<{ posts: FeedItem[] }> => {
