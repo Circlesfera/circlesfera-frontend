@@ -10,6 +10,7 @@ import { searchUsers, type PublicProfile } from '@/services/api/users';
 import { searchHashtags, getTrendingHashtags, type Hashtag } from '@/services/api/hashtags';
 import { searchPosts } from '@/services/api/feed';
 import type { FeedItem } from '@/services/api/types/feed';
+import { FollowHashtagButton } from '@/modules/hashtags/components/follow-hashtag-button';
 
 export function SearchBar(): ReactElement {
   const router = useRouter();
@@ -132,24 +133,29 @@ export function SearchBar(): ReactElement {
                 <div className="p-6 text-center text-sm text-slate-400">No hay hashtags trending</div>
               ) : (
                 trendingHashtags.map((hashtag: Hashtag) => (
-                  <Link
+                  <div
                     key={hashtag.id}
-                    href={`/hashtags/${hashtag.tag}`}
-                    onClick={handleItemClick}
                     className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5 last:border-b-0"
                   >
-                    <div className="flex size-10 items-center justify-center rounded-full bg-primary-500/20">
-                      <svg className="size-5 text-primary-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M7.5 2h9a5.5 5.5 0 010 11h-9a5.5 5.5 0 010-11z" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 overflow-hidden">
-                      <div className="truncate font-medium text-white">#{hashtag.tag}</div>
-                      <div className="truncate text-sm text-slate-400">
-                        {hashtag.postCount.toLocaleString('es')} publicaciones
+                    <Link
+                      href={`/hashtags/${hashtag.tag}`}
+                      onClick={handleItemClick}
+                      className="flex flex-1 items-center gap-3"
+                    >
+                      <div className="flex size-10 items-center justify-center rounded-full bg-primary-500/20">
+                        <svg className="size-5 text-primary-400" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M7.5 2h9a5.5 5.5 0 010 11h-9a5.5 5.5 0 010-11z" />
+                        </svg>
                       </div>
-                    </div>
-                  </Link>
+                      <div className="flex-1 overflow-hidden">
+                        <div className="truncate font-medium text-white">#{hashtag.tag}</div>
+                        <div className="truncate text-sm text-slate-400">
+                          {hashtag.postCount.toLocaleString('es')} publicaciones
+                        </div>
+                      </div>
+                    </Link>
+                    <FollowHashtagButton tag={hashtag.tag} variant="compact" />
+                  </div>
                 ))
               )}
             </div>
@@ -196,24 +202,29 @@ export function SearchBar(): ReactElement {
                         <h3 className="text-sm font-semibold text-white">Hashtags</h3>
                       </div>
                       {hashtags.map((hashtag: Hashtag) => (
-                        <Link
+                        <div
                           key={hashtag.id}
-                          href={`/hashtags/${hashtag.tag}`}
-                          onClick={handleItemClick}
                           className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5"
                         >
-                          <div className="flex size-10 items-center justify-center rounded-full bg-primary-500/20">
-                            <svg className="size-5 text-primary-400" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M7.5 2h9a5.5 5.5 0 010 11h-9a5.5 5.5 0 010-11z" />
-                            </svg>
-                          </div>
-                          <div className="flex-1 overflow-hidden">
-                            <div className="truncate font-medium text-white">#{hashtag.tag}</div>
-                            <div className="truncate text-sm text-slate-400">
-                              {hashtag.postCount.toLocaleString('es')} publicaciones
+                          <Link
+                            href={`/hashtags/${hashtag.tag}`}
+                            onClick={handleItemClick}
+                            className="flex flex-1 items-center gap-3"
+                          >
+                            <div className="flex size-10 items-center justify-center rounded-full bg-primary-500/20">
+                              <svg className="size-5 text-primary-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7.5 2h9a5.5 5.5 0 010 11h-9a5.5 5.5 0 010-11z" />
+                              </svg>
                             </div>
-                          </div>
-                        </Link>
+                            <div className="flex-1 overflow-hidden">
+                              <div className="truncate font-medium text-white">#{hashtag.tag}</div>
+                              <div className="truncate text-sm text-slate-400">
+                                {hashtag.postCount.toLocaleString('es')} publicaciones
+                              </div>
+                            </div>
+                          </Link>
+                          <FollowHashtagButton tag={hashtag.tag} variant="compact" />
+                        </div>
                       ))}
                     </>
                   )}
