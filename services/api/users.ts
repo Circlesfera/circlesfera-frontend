@@ -83,3 +83,16 @@ export const getUserPosts = async ({ handle, cursor, limit = 20 }: UserPostsPara
   return data;
 };
 
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export const changePassword = async (payload: ChangePasswordPayload): Promise<void> => {
+  await apiClient.patch('/users/me/password', payload);
+};
+
+export const deleteAccount = async (): Promise<void> => {
+  await apiClient.delete('/users/me');
+};
+
