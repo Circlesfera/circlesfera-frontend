@@ -11,8 +11,12 @@ export interface SavedPostsResponse {
   nextCursor: string | null;
 }
 
-export const savePost = async (postId: string): Promise<SaveResponse> => {
-  const { data } = await apiClient.post<SaveResponse>(`/posts/${postId}/save`);
+export interface SavePostPayload {
+  collectionId?: string;
+}
+
+export const savePost = async (postId: string, collectionId?: string): Promise<SaveResponse> => {
+  const { data } = await apiClient.post<SaveResponse>(`/posts/${postId}/save`, { collectionId });
   return data;
 };
 
@@ -21,9 +25,9 @@ export const unsavePost = async (postId: string): Promise<SaveResponse> => {
   return data;
 };
 
-export const fetchSavedPosts = async (cursor?: string | null, limit = 20): Promise<SavedPostsResponse> => {
+export const fetchSavedPosts = async (cursor?: string | null, limit = 20, collectionId?: string): Promise<SavedPostsResponse> => {
   const { data } = await apiClient.get<SavedPostsResponse>('/saved', {
-    params: { cursor: cursor ?? undefined, limit }
+    params: { cursor: cursor ?? undefined, limit, collectionId: collectionId ?? undefined }
   });
   return data;
 };

@@ -1,18 +1,21 @@
 'use client';
 
-import { type ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchSavedPosts, type SavedPostsResponse } from '@/services/api/saves';
 import { FeedItemComponent } from '@/modules/feed/components/feed-item';
+import { CollectionsSidebar } from './collections-sidebar';
 
 /**
- * Renderiza el listado de posts guardados con soporte para carga incremental.
+ * Renderiza el listado de posts guardados con soporte para carga incremental y colecciones.
  */
 export function SavedPostsShell(): ReactElement {
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useInfiniteQuery<SavedPostsResponse>({
-    queryKey: ['saved'],
-    queryFn: ({ pageParam }) => fetchSavedPosts(pageParam as string | null | undefined, 20),
+    queryKey: ['saved', selectedCollectionId],
+    queryFn: ({ pageParam }) => fetchSavedPosts(pageParam as string | null | undefined, 20, selectedCollectionId ?? undefined),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: 60000
@@ -55,26 +58,30 @@ export function SavedPostsShell(): ReactElement {
   }
 
   return (
-    <section className="flex w-full flex-col gap-6 p-6">
-      {items.map((item) => (
-        <FeedItemComponent key={item.id} item={item} />
-      ))}
+    <div className="flex w-full">
+      <CollectionsSidebar selectedCollectionId={selectedCollectionId} onSelectCollection={setSelectedCollectionId} />
 
-      {hasNextPage ? (
-        <button
-          type="button"
-          onClick={() => {
-            void fetchNextPage();
-          }}
-          disabled={isFetchingNextPage}
-          className="mx-auto mt-2 rounded-full bg-primary-500 px-6 py-2 text-sm font-medium text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:bg-slate-700"
-        >
-          {isFetchingNextPage ? 'Cargando...' : 'Cargar más'}
-        </button>
-      ) : (
-        <p className="mx-auto mt-2 text-xs text-slate-500">Has visto todos tus posts guardados.</p>
-      )}
-    </section>
+      <section className="flex flex-1 flex-col gap-6 p-6">
+        {items.map((item) => (
+          <FeedItemComponent key={item.id} item={item} />
+        ))}
+
+        {hasNextPage ? (
+          <button
+            type="button"
+            onClick={() => {
+              void fetchNextPage();
+            }}
+            disabled={isFetchingNextPage}
+            className="mx-auto mt-2 rounded-full bg-primary-500 px-6 py-2 text-sm font-medium text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:bg-slate-700"
+          >
+            {isFetchingNextPage ? 'Cargando...' : 'Cargar más'}
+          </button>
+        ) : (
+          <p className="mx-auto mt-2 text-xs text-slate-500">Has visto todos tus posts guardados.</p>
+        )}
+      </section>
+    </div>
   );
 }
 
