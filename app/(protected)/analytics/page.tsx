@@ -1,6 +1,12 @@
-import { Suspense, type ReactElement } from 'react';
+import { lazy, Suspense, type ReactElement } from 'react';
 
-import { AnalyticsShell } from '@/modules/analytics/components/analytics-shell';
+import { AnalyticsShellSkeleton } from '@/components/skeletons';
+
+const AnalyticsShell = lazy(() =>
+  import('@/modules/analytics/components/analytics-shell').then((module) => ({
+    default: module.AnalyticsShell
+  }))
+);
 
 export const metadata = {
   title: 'Analytics — CircleSfera'
@@ -8,13 +14,18 @@ export const metadata = {
 
 export default function AnalyticsPage(): ReactElement {
   return (
-    <main className="flex min-h-screen flex-col bg-slate-950 px-6 py-8 text-white">
-      <div className="mx-auto w-full max-w-7xl">
-        <h1 className="mb-6 text-3xl font-bold">Analytics</h1>
-        <Suspense fallback={<div className="p-6 text-sm text-slate-400">Cargando analytics...</div>}>
-          <AnalyticsShell />
-        </Suspense>
+    <main className="flex min-h-screen flex-col">
+      <div className="mb-8 rounded-2xl glass-card p-6 md:p-8 animate-fade-in">
+        <h1 className="text-gradient-primary text-3xl font-bold md:text-4xl">
+          Analytics
+        </h1>
+        <p className="mt-2 text-sm md:text-base text-slate-400">
+          Analiza el rendimiento de tu contenido y audiencia
+        </p>
       </div>
+      <Suspense fallback={<AnalyticsShellSkeleton />}>
+        <AnalyticsShell />
+      </Suspense>
     </main>
   );
 }

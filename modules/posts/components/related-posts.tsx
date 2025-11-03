@@ -4,8 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 
 import { getRelatedPosts } from '@/services/api/feed';
+import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -35,9 +37,19 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
   }
 
   return (
-    <section className="mt-8 w-full max-w-4xl">
-      <h2 className="mb-4 text-xl font-semibold text-white">Publicaciones relacionadas</h2>
-      <div className="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
+    <motion.section
+      variants={fadeUpVariants}
+      initial="hidden"
+      animate="visible"
+      className="mt-10 w-full max-w-4xl"
+    >
+      <h2 className="mb-6 text-xl font-bold text-gradient-primary">Publicaciones relacionadas</h2>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6"
+      >
         {relatedPosts.map((post) => {
           const firstMedia = post.media[0];
           if (!firstMedia) {
@@ -45,17 +57,22 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
           }
 
           return (
-            <Link
+            <motion.div
               key={post.id}
-              href={`/posts/${post.id}`}
-              className="group relative aspect-square overflow-hidden rounded-2xl bg-slate-800"
+              variants={staggerItem}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
+              <Link
+                href={`/posts/${post.id}`}
+                className="group relative block aspect-square overflow-hidden rounded-xl bg-slate-900/50 border border-white/5"
+              >
               {firstMedia.kind === 'image' ? (
                 <Image
                   src={firstMedia.url}
                   alt={post.caption || 'Publicación relacionada'}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               ) : (
                 <Fragment>
@@ -63,7 +80,7 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
                     src={firstMedia.thumbnailUrl}
                     alt={post.caption || 'Publicación relacionada'}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                     <svg className="size-6 text-white/90" fill="currentColor" viewBox="0 0 24 24">
@@ -79,30 +96,35 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
               )}
 
               {/* Overlay con estadísticas */}
-              <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <div className="flex items-center gap-1 text-white">
-                  <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                  <span className="text-xs font-semibold">{post.stats.likes.toLocaleString('es')}</span>
+              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-gradient-to-t from-black/90 via-black/70 to-black/50 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-[2px]">
+                <div className="flex items-center gap-1.5 text-white">
+                  <div className="rounded-full bg-red-500/20 p-1.5 backdrop-blur-sm">
+                    <svg className="size-4 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                  </div>
+                  <span className="text-sm font-bold">{post.stats.likes.toLocaleString('es')}</span>
                 </div>
-                <div className="flex items-center gap-1 text-white">
-                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
-                  <span className="text-xs font-semibold">{post.stats.comments.toLocaleString('es')}</span>
+                <div className="flex items-center gap-1.5 text-white">
+                  <div className="rounded-full bg-blue-500/20 p-1.5 backdrop-blur-sm">
+                    <svg className="size-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-sm font-bold">{post.stats.comments.toLocaleString('es')}</span>
                 </div>
               </div>
             </Link>
+            </motion.div>
           );
         })}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
 

@@ -18,12 +18,27 @@ export interface StoryUser {
   isVerified: boolean;
 }
 
+export interface SharedPostInfo {
+  id: string;
+  author: {
+    id: string;
+    handle: string;
+    displayName: string;
+    avatarUrl: string;
+  };
+  caption: string;
+  mediaThumbnail: string;
+}
+
 export interface StoryItem {
   id: string;
   author: StoryUser;
   media: StoryMedia;
   viewCount: number;
   hasViewed: boolean;
+  reactionCounts: { [emoji: string]: number };
+  userReaction: string | null; // Emoji de la reacción del usuario actual
+  sharedPost?: SharedPostInfo; // Información del post compartido (si existe)
   expiresAt: string;
   createdAt: string;
 }
@@ -34,7 +49,8 @@ export interface StoryGroup {
 }
 
 export interface CreateStoryPayload {
-  media: StoryMedia;
+  media: Omit<StoryMedia, 'id'>; // El backend generará el ID
+  sharedPostId?: string; // ID del post a compartir (opcional)
 }
 
 export interface CreateStoryResponse {

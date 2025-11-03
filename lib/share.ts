@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 /**
  * Utilidad para compartir posts.
  */
@@ -21,7 +23,7 @@ export const copyPostLink = async (postId: string): Promise<boolean> => {
     await navigator.clipboard.writeText(url);
     return true;
   } catch (error) {
-    console.error('Error al copiar enlace:', error);
+    logger.error('Error al copiar enlace', { error, postId });
     // Fallback para navegadores antiguos
     try {
       const textArea = document.createElement('textarea');
@@ -34,7 +36,7 @@ export const copyPostLink = async (postId: string): Promise<boolean> => {
       document.body.removeChild(textArea);
       return true;
     } catch (fallbackError) {
-      console.error('Error en fallback de copiar:', fallbackError);
+      logger.error('Error en fallback de copiar', { error: fallbackError, postId });
       return false;
     }
   }
@@ -61,7 +63,7 @@ export const sharePost = async (postId: string, title: string, text?: string): P
   } catch (error) {
     // El usuario canceló o hubo un error
     if ((error as Error).name !== 'AbortError') {
-      console.error('Error al compartir:', error);
+      logger.error('Error al compartir', { error, postId, title });
     }
     return false;
   }

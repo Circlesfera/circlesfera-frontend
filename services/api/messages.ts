@@ -2,12 +2,21 @@ import { apiClient } from './client';
 
 export interface Conversation {
   id: string;
-  otherUser: {
+  type: 'direct' | 'group';
+  otherUser?: {
     id: string;
     handle: string;
     displayName: string;
     avatarUrl: string;
   };
+  groupName?: string;
+  participants?: Array<{
+    id: string;
+    handle: string;
+    displayName: string;
+    avatarUrl: string;
+  }>;
+  createdBy?: string;
   lastMessage?: {
     id: string;
     content: string;
@@ -15,6 +24,7 @@ export interface Conversation {
     createdAt: string;
   };
   unreadCount: number;
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -72,6 +82,39 @@ export const getMessages = async (conversationId: string, limit = 50, cursor?: s
 
 export const sendMessage = async (conversationId: string, payload: SendMessagePayload): Promise<{ message: Message }> => {
   const { data } = await apiClient.post<{ message: Message }>(`/messages/conversations/${conversationId}/messages`, payload);
+  return data;
+};
+
+export interface CreateGroupPayload {
+  participantIds: string[];
+  groupName: string;
+}
+
+export interface AddParticipantPayload {
+  userId: string;
+}
+
+export interface UpdateGroupNamePayload {
+  groupName: string;
+}
+
+export const createGroup = async (payload: CreateGroupPayload): Promise<{ id: string }> => {
+  const { data } = await apiClient.post<{ id: string }>('/messages/conversations/group', payload);
+  return data;
+};
+
+export const addParticipant = async (conversationId: string, payload: AddParticipantPayload): Promise<{ success: boolean }> => {
+  const { data } = await apiClient.post<{ success: boolean }>(`/messages/conversations/${conversationId}/members`, payload);
+  return data;
+};
+
+export const removeParticipant = async (conversationId: string, userId: string): Promise<{ success: boolean }> => {
+  const { data } = await apiClient.delete<{ success: boolean }>(`/messages/conversations/${conversationId}/members/${userId}`);
+  return data;
+};
+
+export const updateGroupName = async (conversationId: string, payload: UpdateGroupNamePayload): Promise<{ success: boolean }> => {
+  const { data } = await apiClient.patch<{ success: boolean }>(`/messages/conversations/${conversationId}/name`, payload);
   return data;
 };
 

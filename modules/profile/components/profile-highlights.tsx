@@ -73,25 +73,25 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
 
   return (
     <>
-      <div className="w-full max-w-5xl px-4 py-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Highlights</h2>
+      <div className="w-full max-w-5xl px-4 py-3">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold text-white">Highlights</h2>
           {isOwnProfile && (
             <button
               type="button"
               onClick={() => {
                 setShowCreateDialog(true);
               }}
-              className="rounded-full bg-primary-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-400"
+              className="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-400"
             >
               Nuevo
             </button>
           )}
         </div>
 
-        <div className="flex gap-6 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto pb-2">
           {highlights.map((highlight) => (
-            <div key={highlight.id} className="flex flex-col items-center gap-2 min-w-[80px]">
+            <div key={highlight.id} className="flex flex-col items-center gap-1.5 min-w-[70px]">
               <button
                 type="button"
                 onClick={() => {
@@ -99,7 +99,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
                 }}
                 className="relative group"
               >
-                <div className="relative size-16 overflow-hidden rounded-full border-2 border-white/30 p-0.5">
+                <div className="relative size-14 overflow-hidden rounded-full border-2 border-white/30 p-0.5">
                   {highlight.coverImageUrl ? (
                     <Image
                       src={highlight.coverImageUrl}
@@ -135,13 +135,13 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
                   </button>
                 )}
               </button>
-              <span className="max-w-[80px] truncate text-xs text-white/80 text-center">{highlight.name}</span>
+              <span className="max-w-[70px] truncate text-xs text-white/80 text-center">{highlight.name}</span>
             </div>
           ))}
 
           {highlights.length === 0 && (
-            <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-slate-400">
-              <svg className="size-12 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex flex-col items-center justify-center gap-1.5 py-6 text-center text-xs text-slate-400">
+              <svg className="size-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -156,7 +156,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
                   onClick={() => {
                     setShowCreateDialog(true);
                   }}
-                  className="mt-2 rounded-full bg-primary-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-400"
+                  className="mt-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-400"
                 >
                   Crear tu primer highlight
                 </button>

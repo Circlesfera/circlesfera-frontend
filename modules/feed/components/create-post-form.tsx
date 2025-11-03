@@ -3,9 +3,16 @@
 import Image from 'next/image';
 import { useState, type ReactElement, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+
+import { fadeUpVariants } from '@/lib/motion-config';
 
 import { createPost } from '@/services/api/feed';
+import { logger } from '@/lib/logger';
 import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface CreatePostFormProps {
   readonly onSuccess?: () => void;
@@ -28,9 +35,20 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement
       toast.success('Publicación creada exitosamente');
       onSuccess?.();
     },
-    onError: (error) => {
-      toast.error('No se pudo crear la publicación');
-      console.error(error);
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { status?: number; data?: { code?: string; message?: string } } };
+      const status = axiosError.response?.status;
+      const code = axiosError.response?.data?.code;
+      const message = axiosError.response?.data?.message;
+
+      if (status === 503 || code === 'STORAGE_SERVICE_UNAVAILABLE') {
+        toast.error('El servicio de almacenamiento no está disponible. Por favor, verifica que MinIO esté corriendo.', {
+          duration: 5000
+        });
+      } else {
+        toast.error(message || 'No se pudo crear la publicación');
+      }
+      logger.error('Error al crear publicación', { error });
     }
   });
 
@@ -84,41 +102,56 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement
   };
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-3xl border border-white/10 bg-slate-900/60 p-6">
-      <div className="space-y-4">
-        <textarea
+    <motion.div
+      variants={fadeUpVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <Card padding="lg" variant="glass" className="w-full">
+        <form onSubmit={handleSubmit} className="space-y-6">
+        <Textarea
           value={caption}
           onChange={(e) => {
             setCaption(e.target.value);
           }}
-          placeholder="¿Qué está pasando?"
+          placeholder="¿Qué estás pensando?"
           maxLength={2200}
-          rows={4}
-          className="w-full resize-none rounded-xl border border-white/10 bg-slate-800/60 p-4 text-sm text-white placeholder:text-white/40 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40"
+          showCount
+          className="min-h-[100px]"
         />
-        <div className="text-xs text-white/50 text-right">
-          {caption.length}/2200
-        </div>
 
         {previews.length > 0 ? (
-          <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/10 p-2">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+          >
             {previews.map((preview, index) => (
-              <div key={index} className="relative aspect-square">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
+                whileHover={{ scale: 1.02 }}
+                className="relative aspect-square group rounded-xl overflow-hidden glass-card transition-all duration-300"
+              >
                 <Image
                   src={preview}
                   alt={`Preview ${index + 1}`}
                   fill
-                  className="rounded-lg object-cover"
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <button
                   type="button"
                   onClick={() => {
                     removeFile(index);
                   }}
-                  className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white transition hover:bg-red-600"
+                  className="absolute right-2 top-2 rounded-full bg-red-600/90 backdrop-blur-sm p-1.5 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-600 hover:scale-110 shadow-lg"
                 >
                   <svg
-                    className="size-4"
+                    className="size-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -126,41 +159,46 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth={2.5}
                       d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
                 </button>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : null}
 
-        <div className="flex items-center justify-between">
-          <button
+        <div className="flex items-center justify-between pt-3 border-t divider">
+          <Button
             type="button"
+            intent="ghost"
+            size="md"
             onClick={() => {
               fileInputRef.current?.click();
             }}
-            className="flex items-center gap-2 rounded-full border border-white/20 bg-transparent px-4 py-2 text-sm text-white transition hover:bg-white/10"
+            leftIcon={
+              <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            }
           >
-            <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-            Media ({files.length}/10)
-          </button>
-          <button
+            Fotos/Videos
+          </Button>
+          <Button
             type="submit"
-            disabled={createPostMutation.isPending || (caption.trim().length === 0 && files.length === 0)}
-            className="rounded-full bg-primary-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-50"
+            intent="primary"
+            size="md"
+            loading={createPostMutation.isPending}
+            disabled={caption.trim().length === 0 && files.length === 0}
           >
-            {createPostMutation.isPending ? 'Publicando...' : 'Publicar'}
-          </button>
+            Publicar
+          </Button>
         </div>
 
         <input
@@ -171,8 +209,9 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement
           onChange={handleFileChange}
           className="hidden"
         />
-      </div>
-    </form>
+      </form>
+    </Card>
+    </motion.div>
   );
 }
 

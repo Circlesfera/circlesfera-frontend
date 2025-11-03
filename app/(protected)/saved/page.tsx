@@ -22,10 +22,14 @@ export default async function SavedPage(): Promise<ReactElement> {
   }
 
   return (
-    <main className="flex h-full flex-col">
-      <div className="border-b border-white/10 bg-slate-950/80 px-6 py-4">
-        <h1 className="text-2xl font-bold text-white">Guardados</h1>
-        <p className="mt-1 text-sm text-slate-400">Posts que has guardado</p>
+    <main className="flex min-h-screen flex-col">
+      <div className="mb-8 rounded-2xl glass-card p-6 md:p-8 animate-fade-in">
+        <h1 className="text-gradient-primary text-3xl font-bold md:text-4xl">
+          Guardados
+        </h1>
+        <p className="mt-2 text-sm md:text-base text-slate-400">
+          Posts que has guardado
+        </p>
       </div>
       <Suspense fallback={<div className="p-6 text-sm text-slate-400">Cargando guardados...</div>}>
         <SavedPostsShell />

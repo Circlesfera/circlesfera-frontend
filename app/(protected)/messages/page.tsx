@@ -1,4 +1,12 @@
-import { MessagesShell } from '@/modules/messaging/components/messages-shell';
+import { lazy, Suspense } from 'react';
+
+import { MessagesShellSkeleton } from '@/components/skeletons';
+
+const MessagesShell = lazy(() =>
+  import('@/modules/messaging/components/messages-shell').then((module) => ({
+    default: module.MessagesShell
+  }))
+);
 
 export const metadata = {
   title: 'Mensajes — CircleSfera'
@@ -6,8 +14,10 @@ export const metadata = {
 
 export default function MessagesPage() {
   return (
-    <main className="flex min-h-screen flex-col bg-slate-950 text-white">
-      <MessagesShell />
+    <main className="flex min-h-screen flex-col bg-black text-white">
+      <Suspense fallback={<MessagesShellSkeleton />}>
+        <MessagesShell />
+      </Suspense>
     </main>
   );
 }

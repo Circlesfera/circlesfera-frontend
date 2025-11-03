@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const PROTECTED_ROUTES = ['/feed', '/explore', '/upload', '/notifications', '/settings'];
+const PROTECTED_ROUTES = ['/feed', '/explore', '/upload', '/notifications', '/settings', '/posts'];
 const AUTH_ROUTES = ['/login', '/register'];
 
 /**

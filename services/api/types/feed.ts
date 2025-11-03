@@ -12,6 +12,25 @@ export interface FeedUser {
 export type MediaKind = 'image' | 'video';
 
 /**
+ * Tag de usuario en una imagen.
+ */
+export interface FeedTag {
+  readonly id: string;
+  readonly userId: string;
+  readonly user: {
+    readonly id: string;
+    readonly handle: string;
+    readonly displayName: string;
+    readonly avatarUrl: string;
+  };
+  readonly x: number;
+  readonly y: number;
+  readonly width?: number;
+  readonly height?: number;
+  readonly isNormalized: boolean;
+}
+
+/**
  * Metadatos del recurso multimedia asociado a una publicación.
  */
 export interface FeedMedia {
@@ -22,6 +41,7 @@ export interface FeedMedia {
   readonly durationMs?: number;
   readonly width?: number;
   readonly height?: number;
+  readonly tags?: FeedTag[];
 }
 
 /**

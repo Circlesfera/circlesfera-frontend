@@ -19,7 +19,7 @@ export default async function HomePage() {
   return (
     <>
       <MarketingNav />
-      <main className="flex min-h-screen flex-col bg-slate-950 text-white">
+      <main className="flex min-h-screen flex-col bg-black text-white">
         <HeroSection />
         <FeaturesSection />
         <MetricsSection />

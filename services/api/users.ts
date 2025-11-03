@@ -13,6 +13,7 @@ export interface UpdateProfilePayload {
   displayName?: string;
   bio?: string | null;
   avatarUrl?: string | null;
+  handle?: string;
 }
 
 export const updateProfile = async (payload: UpdateProfilePayload): Promise<PublicProfile> => {

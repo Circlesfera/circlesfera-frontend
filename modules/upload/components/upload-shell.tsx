@@ -4,6 +4,11 @@ import { useState, useRef, useEffect, type ReactElement, type ChangeEvent } from
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
+
+import { fadeUpVariants } from '@/lib/motion-config';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 import { createPost } from '@/services/api/feed';
 import { MediaPreview } from './media-preview';
@@ -27,8 +32,19 @@ export function UploadShell(): ReactElement {
       toast.success('Publicación creada exitosamente');
       router.push(`/posts/${data.post.id}`);
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'No se pudo crear la publicación');
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { status?: number; data?: { code?: string; message?: string } } };
+      const status = axiosError.response?.status;
+      const code = axiosError.response?.data?.code;
+      const message = axiosError.response?.data?.message;
+
+      if (status === 503 || code === 'STORAGE_SERVICE_UNAVAILABLE') {
+        toast.error('El servicio de almacenamiento no está disponible. Por favor, verifica que MinIO esté corriendo.', {
+          duration: 5000
+        });
+      } else {
+        toast.error(message || 'No se pudo crear la publicación');
+      }
     }
   });
 
@@ -105,17 +121,24 @@ export function UploadShell(): ReactElement {
   }, [selectedFiles]);
 
   return (
-    <div className="w-full max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Crear nueva publicación</h1>
+    <motion.div
+      variants={fadeUpVariants}
+      initial="hidden"
+      animate="visible"
+      className="w-full max-w-4xl"
+    >
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold text-gradient-primary">
+          Crear nueva publicación
+        </h1>
         <p className="mt-2 text-sm text-slate-400">Comparte tus momentos con la comunidad</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Selector de archivos */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+        <Card padding="lg" variant="glass">
           <div className="mb-4">
-            <label htmlFor="media-input" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="media-input" className="block text-sm font-semibold text-slate-300 mb-3">
               Seleccionar imágenes o videos
             </label>
             <input
@@ -128,15 +151,21 @@ export function UploadShell(): ReactElement {
               disabled={selectedFiles.length >= 10 || createPostMutation.isPending}
               className="hidden"
             />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               type="button"
               onClick={() => {
                 fileInputRef.current?.click();
               }}
               disabled={selectedFiles.length >= 10 || createPostMutation.isPending}
-              className="w-full rounded-xl border-2 border-dashed border-slate-700 bg-slate-800/40 p-8 text-center transition hover:border-primary-500 hover:bg-slate-800/60 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group w-full rounded-xl border-2 border-dashed border-slate-700/50 glass-dark p-12 text-center transition-all duration-300 hover:border-primary-500/50 hover:bg-primary-500/5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <svg className="mx-auto mb-2 size-12 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex flex-col items-center gap-4">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+                  <div className="relative size-14 rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/10 to-transparent flex items-center justify-center group-hover:border-primary-500/50 group-hover:scale-110 transition-all duration-300">
+                    <svg className="size-7 text-primary-400 group-hover:text-primary-300 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -144,50 +173,58 @@ export function UploadShell(): ReactElement {
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
-              <p className="text-sm font-medium text-slate-400">
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-300 group-hover:text-white transition-colors duration-300">
                 {selectedFiles.length === 0
                   ? 'Haz clic para seleccionar archivos'
                   : `${selectedFiles.length} archivo${selectedFiles.length > 1 ? 's' : ''} seleccionado${selectedFiles.length > 1 ? 's' : ''}`}
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-slate-500">
                 Máximo 10 archivos (imágenes: JPG, PNG, WebP, GIF | videos: MP4, WebM)
               </p>
-            </button>
+                </div>
+              </div>
+            </motion.button>
           </div>
 
           {/* Preview de archivos */}
           {selectedFiles.length > 0 && (
             <MediaPreview files={selectedFiles} onRemove={handleRemoveFile} />
           )}
-        </div>
+        </Card>
 
         {/* Editor de caption */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+        <Card padding="lg" variant="glass">
           <CaptionEditor value={caption} onChange={setCaption} />
-        </div>
+        </Card>
 
         {/* Botones de acción */}
         <div className="flex justify-end gap-4">
-          <button
+          <Button
             type="button"
             onClick={() => {
               router.back();
             }}
             disabled={createPostMutation.isPending}
-            className="rounded-xl border border-slate-700 bg-transparent px-6 py-3 font-medium text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
+            intent="ghost"
+            size="lg"
           >
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             disabled={selectedFiles.length === 0 || caption.trim().length === 0 || createPostMutation.isPending}
-            className="rounded-xl bg-primary-600 px-6 py-3 font-medium text-white transition hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            intent="primary"
+            size="lg"
+            loading={createPostMutation.isPending}
           >
-            {createPostMutation.isPending ? 'Publicando...' : 'Publicar'}
-          </button>
+            Publicar
+          </Button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }
 

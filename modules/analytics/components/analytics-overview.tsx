@@ -1,7 +1,9 @@
 'use client';
 
 import React, { type ReactElement } from 'react';
+import { motion } from 'framer-motion';
 import type { ProfileOverview, ProfileGrowth } from '../../../services/api/analytics';
+import { staggerContainer, staggerItem } from '@/lib/motion-config';
 
 interface AnalyticsOverviewProps {
   readonly overview: ProfileOverview;
@@ -71,25 +73,44 @@ export function AnalyticsOverview({ overview, growth }: AnalyticsOverviewProps):
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
+    >
       {stats.map((stat, index) => (
-        <div
+        <motion.div
           key={index}
-          className={`rounded-xl border bg-slate-900/60 p-6 transition hover:bg-slate-900/80 ${
-            stat.highlight ? 'border-primary-500/50 bg-primary-500/10' : 'border-slate-800'
+          variants={staggerItem}
+          whileHover={{ scale: 1.02, y: -4 }}
+          className={`rounded-2xl glass-card p-6 transition-all hover:shadow-elegant-lg ${
+            stat.highlight 
+              ? 'border-primary-500/50 bg-gradient-to-br from-primary-500/10 via-primary-500/5 to-transparent border-2 shadow-lg shadow-primary-500/20' 
+              : 'border border-white/5 hover:border-white/10'
           }`}
         >
           <div className="mb-4 flex items-center justify-between">
-            <div className="rounded-lg bg-slate-800 p-2">{stat.icon}</div>
+            <div className={`rounded-xl p-3 transition-all duration-300 ${
+              stat.highlight 
+                ? 'bg-gradient-to-br from-primary-500/20 to-accent-500/20 border border-primary-500/30' 
+                : 'glass-dark'
+            }`}>
+              {stat.icon}
+            </div>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-400">{stat.label}</p>
-            <p className="mt-2 text-2xl font-bold text-white">{stat.value}</p>
-            <p className="mt-1 text-xs text-slate-500">{stat.subtitle}</p>
+            <p className="text-sm font-medium text-slate-400 mb-2">{stat.label}</p>
+            <p className={`text-3xl font-bold mb-1 ${
+              stat.highlight ? 'text-gradient-primary' : 'text-white'
+            }`}>
+              {stat.value}
+            </p>
+            <p className="text-xs text-slate-500">{stat.subtitle}</p>
           </div>
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }
 

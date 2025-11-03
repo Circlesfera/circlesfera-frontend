@@ -3,11 +3,14 @@
 import Image from 'next/image';
 import { useState, type ReactElement } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 import { fetchComments, createComment } from '@/services/api/comments';
 import { useSessionStore } from '@/store/session';
 import { CommentItem } from './comment-item';
+import { getAvatarUrl } from '@/lib/image-utils';
+import { fadeUpVariants } from '@/lib/motion-config';
 
 interface PostCommentsProps {
   readonly postId: string;
@@ -53,12 +56,18 @@ export function PostComments({ postId }: PostCommentsProps): ReactElement {
   const isLoading = commentsQuery.isLoading;
 
   return (
-    <div id="comments" className="border-t border-slate-800 px-6 py-4">
+    <div id="comments" className="px-6 py-5">
       {currentUser && (
-        <form onSubmit={handleSubmit} className="mb-4 flex gap-3">
-          <div className="relative size-8 shrink-0 overflow-hidden rounded-full">
+        <motion.form
+          variants={fadeUpVariants}
+          initial="hidden"
+          animate="visible"
+          onSubmit={handleSubmit}
+          className="mb-6 flex gap-3"
+        >
+          <div className="relative size-10 shrink-0 overflow-hidden rounded-full ring-2 ring-white/10">
             <Image
-              src={currentUser.avatarUrl ?? `https://api.dicebear.com/7.x/thumbs/svg?seed=${currentUser.handle}`}
+              src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
               alt={currentUser.displayName}
               fill
               className="object-cover"
@@ -71,28 +80,60 @@ export function PostComments({ postId }: PostCommentsProps): ReactElement {
               setCommentText(e.target.value);
             }}
             placeholder="Añade un comentario..."
-            className="flex-1 rounded-lg border border-white/10 bg-slate-800/60 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40"
+            className="flex-1 rounded-xl input-base text-sm"
           />
-          <button
+          <motion.button
             type="submit"
             disabled={createCommentMutation.isPending || commentText.trim().length === 0}
-            className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-50"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
           >
-            {createCommentMutation.isPending ? 'Publicando...' : 'Publicar'}
-          </button>
-        </form>
+            {createCommentMutation.isPending ? (
+              <span className="flex items-center gap-2">
+                <span className="size-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Publicando...
+              </span>
+            ) : (
+              'Publicar'
+            )}
+          </motion.button>
+        </motion.form>
       )}
 
       {isLoading ? (
-        <div className="py-4 text-center text-sm text-slate-400">Cargando comentarios...</div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="py-8 text-center"
+        >
+          <div className="size-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent mx-auto mb-3" />
+          <p className="text-sm text-slate-400">Cargando comentarios...</p>
+        </motion.div>
       ) : comments.length === 0 ? (
-        <div className="py-4 text-center text-sm text-slate-400">Sé el primero en comentar</div>
+        <motion.div
+          variants={fadeUpVariants}
+          initial="hidden"
+          animate="visible"
+          className="py-8 text-center"
+        >
+          <div className="size-16 rounded-full glass-dark mx-auto mb-3 flex items-center justify-center">
+            <svg className="size-7 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium text-slate-300">Sé el primero en comentar</p>
+        </motion.div>
       ) : (
-        <div className="space-y-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-4"
+        >
           {comments.map((comment) => (
             <CommentItem key={comment.id} comment={comment} postId={postId} />
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

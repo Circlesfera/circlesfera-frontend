@@ -104,10 +104,10 @@ export function SearchBar(): ReactElement {
             }
           }}
           placeholder="Buscar usuarios, hashtags..."
-          className="w-full rounded-full border border-white/10 bg-slate-800/60 px-4 py-2 pl-10 text-sm text-white placeholder:text-white/40 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40"
+          className="w-full rounded-xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm px-4 py-2.5 pl-11 text-sm text-white placeholder:text-slate-500 focus:border-primary-500/50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:bg-slate-800/70 transition-all duration-200"
         />
         <svg
-          className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-white/40"
+          className="absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-slate-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -115,14 +115,14 @@ export function SearchBar(): ReactElement {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth={2}
+            strokeWidth={2.5}
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
         </svg>
       </div>
 
       {isOpen ? (
-        <div className="absolute top-full z-50 mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/95 backdrop-blur-md shadow-xl">
+        <div className="absolute top-full z-50 mt-2 w-full rounded-2xl border border-slate-800/50 bg-slate-900/95 backdrop-blur-xl shadow-soft-xl animate-scale-in">
           {showTrending && !hasQuery ? (
             // Mostrar trending hashtags cuando no hay query
             <div className="max-h-96 overflow-y-auto">

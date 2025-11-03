@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { fetchReplies, createComment, type Comment } from '@/services/api/comments';
 import { formatRelativeTime } from '@/modules/feed/utils/formatters';
 import { useSessionStore } from '@/store/session';
+import { getAvatarUrl } from '@/lib/image-utils';
 
 interface CommentItemProps {
   readonly comment: Comment;
@@ -73,7 +74,7 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
       <div className="flex gap-3">
         <Link href={`/${comment.author.handle}`} className="relative size-8 shrink-0 overflow-hidden rounded-full">
           <Image
-            src={comment.author.avatarUrl ?? `https://api.dicebear.com/7.x/thumbs/svg?seed=${comment.author.handle}`}
+            src={getAvatarUrl(comment.author.avatarUrl, comment.author.handle)}
             alt={comment.author.displayName}
             fill
             className="object-cover"
@@ -121,7 +122,7 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
             <form onSubmit={handleSubmitReply} className="mt-3 flex gap-2">
               <div className="relative size-6 shrink-0 overflow-hidden rounded-full">
                 <Image
-                  src={currentUser.avatarUrl ?? `https://api.dicebear.com/7.x/thumbs/svg?seed=${currentUser.handle}`}
+                  src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
                   alt={currentUser.displayName}
                   fill
                   className="object-cover"

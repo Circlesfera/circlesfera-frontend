@@ -35,11 +35,17 @@ export default async function ProfilePage({ params }: { params: Promise<{ handle
   const { user: profile, stats } = await getProfile(handle);
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-10 bg-slate-950 px-6 py-16 text-white">
-      <ProfileHeader profile={profile} stats={stats} />
-      <ProfileHighlights profileHandle={handle} isOwnProfile={false} />
-      <ProfilePostsGrid handle={handle} />
-    </main>
+    <div className="w-full px-0 py-8">
+      <div className="mx-auto max-w-[935px]">
+        <div className="animate-fade-in">
+          <ProfileHeader profile={profile} stats={stats} />
+          <ProfileHighlights profileHandle={handle} isOwnProfile={false} />
+          <div className="mt-12 border-t border-white/5 pt-8">
+            <ProfilePostsGrid handle={handle} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

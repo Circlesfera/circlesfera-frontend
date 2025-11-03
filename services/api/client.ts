@@ -25,9 +25,14 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const code = error.response?.data?.code;
+
+    // Limpiar sesión si hay errores de autenticación o usuario no encontrado
+    if (status === 401 || (status === 404 && code === 'USER_NOT_FOUND')) {
       sessionStore.getState().clearSession();
     }
+    
     return Promise.reject(error);
   }
 );

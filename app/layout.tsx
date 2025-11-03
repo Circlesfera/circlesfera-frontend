@@ -5,6 +5,7 @@ import type { ReactElement, ReactNode } from 'react';
 import '@/styles/globals.css';
 
 import { Providers } from './providers';
+import { ErrorBoundary } from '@/components/error-boundary';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -44,8 +45,10 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps): ReactElement {
   return (
     <html lang="es" className={inter.variable} suppressHydrationWarning>
-      <body className="bg-slate-950 text-slate-50">
-        <Providers>{children}</Providers>
+      <body className="bg-black text-white">
+        <ErrorBoundary>
+          <Providers>{children}</Providers>
+        </ErrorBoundary>
       </body>
     </html>
   );

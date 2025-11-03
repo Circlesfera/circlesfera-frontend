@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form';
 import { useState, type ReactElement } from 'react';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 import { changePassword } from '@/services/api/users';
+import { fadeUpVariants } from '@/lib/motion-config';
 
 const passwordSchema = z
   .object({
@@ -20,10 +22,6 @@ const passwordSchema = z
   });
 
 type PasswordFormValues = z.infer<typeof passwordSchema>;
-
-const inputClass =
-  'w-full rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40';
-const errorClass = 'text-xs text-red-400';
 
 export function PasswordChangeForm(): ReactElement {
   const [formError, setFormError] = useState<string | null>(null);
@@ -60,64 +58,112 @@ export function PasswordChangeForm(): ReactElement {
   });
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-white">Cambiar contraseña</h2>
+    <div className="space-y-8">
+      <motion.div
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <h2 className="text-gradient-primary text-2xl font-bold md:text-3xl">
+          Cambiar contraseña
+        </h2>
         <p className="mt-2 text-sm text-slate-400">Actualiza tu contraseña para mantener tu cuenta segura</p>
-      </div>
+      </motion.div>
 
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label htmlFor="currentPassword" className="text-sm font-medium text-white">
+          <label htmlFor="currentPassword" className="block text-sm font-semibold text-slate-200">
             Contraseña actual
           </label>
           <input
             id="currentPassword"
             type="password"
-            className={inputClass}
+            className="input-base"
             {...register('currentPassword')}
             placeholder="Introduce tu contraseña actual"
           />
-          {errors.currentPassword ? <p className={errorClass}>{errors.currentPassword.message}</p> : null}
+          {errors.currentPassword ? (
+            <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
+              <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {errors.currentPassword.message}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="newPassword" className="text-sm font-medium text-white">
+          <label htmlFor="newPassword" className="block text-sm font-semibold text-slate-200">
             Nueva contraseña
           </label>
           <input
             id="newPassword"
             type="password"
-            className={inputClass}
+            className="input-base"
             {...register('newPassword')}
             placeholder="Mínimo 8 caracteres"
           />
-          {errors.newPassword ? <p className={errorClass}>{errors.newPassword.message}</p> : null}
+          <p className="text-xs text-slate-500">La contraseña debe tener al menos 8 caracteres</p>
+          {errors.newPassword ? (
+            <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
+              <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {errors.newPassword.message}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="confirmPassword" className="text-sm font-medium text-white">
+          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-200">
             Confirmar nueva contraseña
           </label>
           <input
             id="confirmPassword"
             type="password"
-            className={inputClass}
+            className="input-base"
             {...register('confirmPassword')}
             placeholder="Repite la nueva contraseña"
           />
-          {errors.confirmPassword ? <p className={errorClass}>{errors.confirmPassword.message}</p> : null}
+          {errors.confirmPassword ? (
+            <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
+              <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {errors.confirmPassword.message}
+            </p>
+          ) : null}
         </div>
 
-        {formError ? <p className={errorClass}>{formError}</p> : null}
+        {formError ? (
+          <div className="rounded-xl glass-card border-red-500/30 bg-red-500/10 p-4">
+            <p className="text-sm text-red-400 flex items-center gap-2">
+              <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {formError}
+            </p>
+          </div>
+        ) : null}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-full bg-primary-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:bg-primary-500/60"
-        >
-          {isSubmitting ? 'Actualizando...' : 'Actualizar contraseña'}
-        </button>
+        <div className="flex items-center justify-end gap-4 pt-6 border-t border-white/5">
+          <motion.button
+            type="submit"
+            disabled={isSubmitting}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Actualizando...
+              </span>
+            ) : (
+              'Actualizar contraseña'
+            )}
+          </motion.button>
+        </div>
       </form>
     </div>
   );

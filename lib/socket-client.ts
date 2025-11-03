@@ -1,6 +1,7 @@
 import { io, type Socket } from 'socket.io-client';
 
 import { clientEnv } from './env';
+import { logger } from './logger';
 import { sessionStore } from '@/store/session';
 
 let socketInstance: Socket | null = null;
@@ -32,15 +33,19 @@ export const getSocketClient = (): Socket | null => {
   });
 
   socketInstance.on('connect', () => {
-    console.log('Conectado a Socket.IO');
+    logger.info('Conectado a Socket.IO');
   });
 
   socketInstance.on('disconnect', (reason) => {
-    console.log('Desconectado de Socket.IO:', reason);
+    logger.info('Desconectado de Socket.IO', { reason });
   });
 
   socketInstance.on('connect_error', (error) => {
-    console.error('Error de conexión Socket.IO:', error);
+    logger.error('Error de conexión Socket.IO', { 
+      error: error.message, 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      type: (error as any).type 
+    });
   });
 
   return socketInstance;

@@ -1,5 +1,7 @@
 import type { ReactElement } from 'react';
 
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+
 const FEATURES: Array<{ title: string; description: string }> = [
   {
     title: 'Feed ultraveloz',
@@ -20,21 +22,30 @@ const FEATURES: Array<{ title: string; description: string }> = [
 
 export function FeaturesSection(): ReactElement {
   return (
-    <section className="bg-slate-900 py-24">
+    <section className="bg-black py-24 sm:py-32">
       <div className="mx-auto max-w-5xl px-6 text-center">
-        <h2 className="text-3xl font-semibold text-white sm:text-5xl">Creada para creadores obsesionados con la calidad</h2>
-        <p className="mt-4 text-lg text-white/70">
+        <h2 className="bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
+          Creada para creadores obsesionados con la calidad
+        </h2>
+        <p className="mt-4 text-lg text-slate-400 sm:text-xl">
           CircleSfera ofrece un ecosistema moderno para narrativas inmersivas, eventos en directo y comunidades comprometidas.
         </p>
-        <div className="mt-16 grid gap-8 sm:grid-cols-3">
+        <div className="mt-16 grid gap-6 sm:grid-cols-3">
           {FEATURES.map((feature) => (
-            <article
+            <Card
               key={feature.title}
-              className="rounded-3xl border border-white/10 bg-slate-950/50 p-8 text-left shadow-[0_20px_60px_-30px_rgba(15,23,42,0.7)]"
+              variant="glass"
+              interactive
+              padding="lg"
+              className="text-left transition-all duration-300 hover:scale-[1.02]"
             >
-              <h3 className="text-xl font-semibold text-white">{feature.title}</h3>
-              <p className="mt-3 text-sm text-white/70">{feature.description}</p>
-            </article>
+              <CardHeader className="px-0 pt-0">
+                <CardTitle className="text-xl">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="px-0 pb-0">
+                <p className="text-sm text-slate-400">{feature.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

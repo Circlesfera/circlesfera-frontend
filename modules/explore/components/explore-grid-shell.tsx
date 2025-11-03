@@ -4,9 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 
 import { fetchExploreFeed } from '@/services/api/feed';
 import { formatNumber } from '@/lib/utils';
+import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 
 /**
  * Renderiza el grid de explorar con posts populares.
@@ -24,32 +26,81 @@ export const ExploreGridShell = (): ReactElement => {
     return (
       <div className="grid grid-cols-3 gap-1 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 20 }).map((_, i) => (
-          <div key={i} className="aspect-square animate-pulse bg-slate-800" />
+          <div key={i} className="aspect-square animate-pulse rounded-lg glass-card" />
         ))}
       </div>
     );
   }
 
   if (isError) {
-    return <div className="p-6 text-sm text-red-400">Error al cargar el feed de explorar.</div>;
+    return (
+      <motion.div
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        className="rounded-2xl glass-card p-8 text-center"
+      >
+        <div className="size-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+          <svg className="size-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p className="text-sm font-medium text-red-400 mb-2">
+          Error al cargar el feed de explorar
+        </p>
+        <p className="text-xs text-slate-500">
+          Intenta nuevamente más tarde
+        </p>
+      </motion.div>
+    );
   }
 
   const posts = data?.pages.flatMap((page) => page.data) ?? [];
 
   if (posts.length === 0) {
     return (
-      <div className="p-6 text-center text-sm text-slate-400">
-        Aún no hay publicaciones para explorar.
-      </div>
+      <motion.div
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex min-h-[500px] flex-col items-center justify-center"
+      >
+        <div className="rounded-2xl glass-card p-12 text-center max-w-md">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative mx-auto mb-6"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-primary-400/20 to-accent-500/20 blur-2xl" />
+            <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-900/50 to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+              <svg className="size-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
+            <h2 className="text-xl font-bold text-white mb-2">No hay contenido para explorar</h2>
+            <p className="text-sm text-slate-400">
+              Aún no hay publicaciones disponibles
+            </p>
+          </motion.div>
+        </div>
+      </motion.div>
     );
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl">
-      <div className="mb-6 px-6 pt-6">
-        <h1 className="text-2xl font-bold text-white">Explorar</h1>
-      </div>
-
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className="mx-auto w-full max-w-6xl"
+    >
       <div className="grid grid-cols-3 gap-1 md:grid-cols-4 lg:grid-cols-5">
         {posts.map((post) => {
           const firstMedia = post.media[0];
@@ -58,17 +109,22 @@ export const ExploreGridShell = (): ReactElement => {
           }
 
           return (
-            <Link
+            <motion.div
               key={post.id}
-              href={`/posts/${post.id}`}
-              className="group relative aspect-square overflow-hidden bg-slate-800"
+              variants={staggerItem}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
+              <Link
+                href={`/posts/${post.id}`}
+                className="group relative block aspect-square overflow-hidden rounded-lg bg-slate-900"
+              >
               {firstMedia.kind === 'image' ? (
                 <Image
                   src={firstMedia.url}
                   alt={post.caption}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               ) : (
                 <Fragment>
@@ -76,7 +132,7 @@ export const ExploreGridShell = (): ReactElement => {
                     src={firstMedia.thumbnailUrl}
                     alt={post.caption}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                     <svg className="size-8 text-white/90" fill="currentColor" viewBox="0 0 24 24">
@@ -92,43 +148,64 @@ export const ExploreGridShell = (): ReactElement => {
               )}
 
               {/* Overlay con estadísticas en hover */}
-              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <div className="flex items-center gap-1 text-white">
-                  <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                  <span className="text-sm font-semibold">{formatNumber(post.stats.likes)}</span>
+              <div className="absolute inset-0 flex items-center justify-center gap-6 bg-gradient-to-t from-black/90 via-black/70 to-black/50 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-[2px]">
+                <div className="flex items-center gap-2 text-white">
+                  <div className="rounded-full bg-red-500/20 p-2 backdrop-blur-sm">
+                    <svg className="size-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                  </div>
+                  <span className="text-base font-bold">{formatNumber(post.stats.likes)}</span>
                 </div>
-                <div className="flex items-center gap-1 text-white">
-                  <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
-                  <span className="text-sm font-semibold">{formatNumber(post.stats.comments)}</span>
+                <div className="flex items-center gap-2 text-white">
+                  <div className="rounded-full bg-blue-500/20 p-2 backdrop-blur-sm">
+                    <svg className="size-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-base font-bold">{formatNumber(post.stats.comments)}</span>
                 </div>
               </div>
             </Link>
+            </motion.div>
           );
         })}
       </div>
 
       {hasNextPage ? (
-        <button
-          type="button"
-          onClick={() => {
-            void fetchNextPage();
-          }}
-          disabled={isFetchingNextPage}
-          className="mx-auto mt-6 block rounded-full bg-primary-500 px-6 py-2 text-sm font-medium text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:bg-slate-700"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex justify-center mt-10"
         >
-          {isFetchingNextPage ? 'Cargando...' : 'Cargar más'}
-        </button>
+          <motion.button
+            type="button"
+            onClick={() => {
+              void fetchNextPage();
+            }}
+            disabled={isFetchingNextPage}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
+          >
+            {isFetchingNextPage ? (
+              <span className="flex items-center gap-2">
+                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Cargando...
+              </span>
+            ) : (
+              'Cargar más'
+            )}
+          </motion.button>
+        </motion.div>
       ) : null}
-    </section>
+    </motion.section>
   );
 };
 

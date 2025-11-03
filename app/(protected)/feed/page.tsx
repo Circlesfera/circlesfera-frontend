@@ -23,11 +23,9 @@ export default async function FeedPage(): Promise<ReactElement> {
   }
 
   return (
-    <main className="flex h-full flex-col">
-      <Suspense fallback={<div className="p-6 text-sm text-slate-400">Cargando feed...</div>}>
-        <FeedShell />
-      </Suspense>
-    </main>
+    <Suspense fallback={<div className="flex items-center justify-center py-16 text-sm text-slate-400">Cargando feed...</div>}>
+      <FeedShell />
+    </Suspense>
   );
 }
 
