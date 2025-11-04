@@ -4,8 +4,10 @@ import { type ReactElement } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
-import type { FeedItem } from '@/services/api/types/feed';
+import type { InfiniteData } from '@tanstack/react-query';
+import type { FeedItem, FeedCursorResponse } from '@/services/api/types/feed';
 import { likePost, unlikePost } from '@/services/api/likes';
 import { savePost, unsavePost } from '@/services/api/saves';
 import { sharePost, copyPostLink } from '@/lib/share';
@@ -15,19 +17,182 @@ interface FeedItemActionsProps {
 }
 
 /**
- * Componente reutilizable para las acciones de un post (like, comment, save).
+ * Componente mejorado para las acciones de un post con mejor diseño y animaciones.
  */
 export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
   const queryClient = useQueryClient();
 
   const likeMutation = useMutation({
-    mutationFn: post.isLikedByViewer ? unlikePost : likePost,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['post', post.id] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+    mutationFn: async (postId: string) => {
+      // Obtener el estado actual del post desde el cache para determinar qué acción tomar
+      const feedData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      let currentPost: FeedItem | undefined;
+      
+      if (feedData) {
+        for (const page of feedData.pages) {
+          currentPost = page.data.find((item) => item.id === postId);
+          if (currentPost) break;
+        }
+      }
+      
+      // Usar el estado actual del post, o el prop como fallback
+      const isCurrentlyLiked = currentPost?.isLikedByViewer ?? post.isLikedByViewer;
+      
+      // Ejecutar la acción correspondiente
+      if (isCurrentlyLiked) {
+        return await unlikePost(postId);
+      } else {
+        return await likePost(postId);
+      }
     },
-    onError: () => {
+    onMutate: async (postId: string) => {
+      // Cancelar cualquier query en progreso para evitar sobrescribir nuestro update optimista
+      await queryClient.cancelQueries({ queryKey: ['feed', 'home'] });
+      await queryClient.cancelQueries({ queryKey: ['post', postId] });
+
+      // Snapshot del valor anterior
+      const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      const previousPost = queryClient.getQueryData<{ post: FeedItem }>(['post', postId]);
+
+      // Obtener el estado actual del post antes de actualizar
+      let currentPostState: FeedItem | undefined;
+      if (previousFeed) {
+        for (const page of previousFeed.pages) {
+          currentPostState = page.data.find((item) => item.id === postId);
+          if (currentPostState) break;
+        }
+      }
+      
+      // Si no está en el feed, usar el post individual
+      if (!currentPostState && previousPost) {
+        currentPostState = previousPost.post;
+      }
+      
+      // Si no está en ninguno, usar el prop
+      const isCurrentlyLiked = currentPostState?.isLikedByViewer ?? post.isLikedByViewer;
+
+      // Actualización optimista del feed
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { queryKey: ['feed', 'home'] },
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  const newLikes = isCurrentlyLiked 
+                    ? Math.max(0, item.stats.likes - 1)
+                    : item.stats.likes + 1;
+                  
+                  return {
+                    ...item,
+                    isLikedByViewer: !isCurrentlyLiked,
+                    stats: {
+                      ...item.stats,
+                      likes: newLikes
+                    }
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualización optimista del post individual
+      queryClient.setQueryData<{ post: FeedItem }>(
+        ['post', postId],
+        (old) => {
+          if (!old) return old;
+          
+          const newLikes = isCurrentlyLiked 
+            ? Math.max(0, old.post.stats.likes - 1)
+            : old.post.stats.likes + 1;
+          
+          return {
+            ...old,
+            post: {
+              ...old.post,
+              isLikedByViewer: !isCurrentlyLiked,
+              stats: {
+                ...old.post.stats,
+                likes: newLikes
+              }
+            }
+          };
+        }
+      );
+
+      // Retornar contexto con snapshot para rollback
+      return { previousFeed, previousPost };
+    },
+    onError: (err, postId, context) => {
+      // Revertir al valor anterior en caso de error
+      if (context?.previousFeed) {
+        queryClient.setQueryData(['feed', 'home'], context.previousFeed);
+      }
+      if (context?.previousPost) {
+        queryClient.setQueryData(['post', postId], context.previousPost);
+      }
       toast.error('No se pudo actualizar el like');
+    },
+    onSuccess: async (data, postId) => {
+      // Confirmar el estado con la respuesta del servidor
+      // La actualización optimista ya ajustó el contador, solo necesitamos confirmar isLikedByViewer
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { queryKey: ['feed', 'home'] },
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  // Confirmar el estado del like con la respuesta del servidor
+                  // El contador ya fue actualizado en onMutate, solo sincronizamos el estado
+                  return {
+                    ...item,
+                    isLikedByViewer: data.liked
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar el post individual también
+      queryClient.setQueryData<{ post: FeedItem }>(
+        ['post', postId],
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            post: {
+              ...old.post,
+              isLikedByViewer: data.liked
+            }
+          };
+        }
+      );
+
+      // Invalidar analytics en background sin bloquear la UI
+      queryClient.invalidateQueries({ 
+        queryKey: ['analytics'],
+        exact: false 
+      });
+    },
+    onSettled: () => {
+      // No hacer nada adicional aquí para mantener la fluidez de la UI
+      // La actualización optimista ya está aplicada y se sincronizó con el servidor
     }
   });
 
@@ -37,6 +202,7 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
       queryClient.invalidateQueries({ queryKey: ['post', post.id] });
       queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
       queryClient.invalidateQueries({ queryKey: ['saved'] });
+      toast.success(post.isSavedByViewer ? 'Post desguardado' : 'Post guardado');
     },
     onError: () => {
       toast.error('No se pudo actualizar el guardado');
@@ -67,22 +233,38 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
   };
 
   return (
-    <div className="flex items-center gap-1">
-      <button
+    <div className="flex items-center gap-0.5">
+      {/* Like Button */}
+      <motion.button
         type="button"
         onClick={handleLike}
         disabled={likeMutation.isPending}
-        className={`group relative rounded-xl p-2.5 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className={`group relative rounded-xl p-2 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
           post.isLikedByViewer 
-            ? 'text-red-500 hover:text-red-400 hover:bg-red-500/10' 
-            : 'text-slate-400 hover:text-red-500 hover:bg-red-500/10'
-        } active:scale-90`}
+            ? 'text-red-500 hover:text-red-400 hover:bg-red-500/25' 
+            : 'text-slate-400 hover:text-red-500 hover:bg-red-500/15'
+        }`}
+        title={post.isLikedByViewer ? 'Quitar me gusta' : 'Me gusta'}
       >
-        <svg
-          className="size-6 transition-transform duration-300 group-hover:scale-110"
+        {post.isLikedByViewer && (
+          <motion.div
+            className="absolute inset-0 rounded-xl bg-red-500/25 backdrop-blur-sm"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          />
+        )}
+        <motion.svg
+          className="relative z-10 h-6 w-6"
           fill={post.isLikedByViewer ? 'currentColor' : 'none'}
           stroke="currentColor"
           viewBox="0 0 24 24"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
         >
           <path
             strokeLinecap="round"
@@ -90,14 +272,30 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
             strokeWidth={post.isLikedByViewer ? 2.5 : 2}
             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
           />
-        </svg>
-      </button>
+        </motion.svg>
+        {likeMutation.isPending && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent opacity-50" />
+          </div>
+        )}
+      </motion.button>
 
+      {/* Comment Button */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
       <Link
         href={`/posts/${post.id}#comments`}
-        className="group rounded-xl p-2.5 text-slate-400 hover:text-primary-400 hover:bg-primary-500/10 transition-all duration-300 active:scale-90"
+          className="group flex rounded-xl p-2 text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"
+          title="Comentar"
       >
-        <svg className="size-6 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg 
+            className="h-6 w-6 transition-transform duration-300 group-hover:scale-105" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -106,14 +304,23 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
           />
         </svg>
       </Link>
+      </motion.div>
 
-      <button
+      {/* Share Button */}
+      <motion.button
         type="button"
         onClick={handleShare}
-        className="group rounded-xl p-2.5 text-slate-400 hover:text-primary-400 hover:bg-primary-500/10 transition-all duration-300 active:scale-90"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="group rounded-xl p-2 text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"
         title="Compartir"
       >
-        <svg className="size-6 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg 
+          className="h-6 w-6 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-12" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -121,25 +328,42 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
             d="M8.684 13.342c-.400 0-.816-.039-1.236-.115l-.866-2.322c-.35-.937.062-1.954.938-2.305l2.322-.866c.402-.15.81-.231 1.221-.231.4 0 .816.039 1.236.115l.866 2.322c.35.937-.062 1.954-.938 2.305l-2.322.866c-.402.15-.81.231-1.221.231zM13.342 8.684c.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231zM21.316 13.342c.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231zM16.658 21.316c-.4 0-.816.039-1.236.115l-.866 2.322c-.35.937.062 1.954.938 2.305l2.322.866c.402.15.81.231 1.221.231.4 0 .816-.039 1.236-.115l.866-2.322c.35-.937-.062-1.954-.938-2.305l-2.322-.866c-.402-.15-.81-.231-1.221-.231z"
           />
         </svg>
-      </button>
+      </motion.button>
 
+      {/* Spacer */}
       <div className="flex-1" />
 
-      <button
+      {/* Save Button */}
+      <motion.button
         type="button"
         onClick={handleSave}
         disabled={saveMutation.isPending}
-        className={`group rounded-xl p-2.5 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 active:scale-90 ${
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className={`group relative rounded-xl p-2 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
           post.isSavedByViewer 
-            ? 'text-primary-400 hover:text-primary-300 hover:bg-primary-500/10' 
-            : 'text-slate-400 hover:text-primary-400 hover:bg-primary-500/10'
+            ? 'text-primary-400 hover:text-primary-300 hover:bg-primary-500/25' 
+            : 'text-slate-400 hover:text-primary-400 hover:bg-primary-500/15'
         }`}
+        title={post.isSavedByViewer ? 'Desguardar' : 'Guardar'}
       >
-        <svg
-          className="size-6 transition-transform duration-300 group-hover:scale-110"
+        {post.isSavedByViewer && (
+          <motion.div
+            className="absolute inset-0 rounded-xl bg-primary-500/25 backdrop-blur-sm"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          />
+        )}
+        <motion.svg
+          className="relative z-10 h-6 w-6"
           fill={post.isSavedByViewer ? 'currentColor' : 'none'}
           stroke="currentColor"
           viewBox="0 0 24 24"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
         >
           <path
             strokeLinecap="round"
@@ -147,9 +371,13 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
             strokeWidth={post.isSavedByViewer ? 2.5 : 2}
             d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
           />
-        </svg>
-      </button>
+        </motion.svg>
+        {saveMutation.isPending && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent opacity-50" />
+          </div>
+        )}
+      </motion.button>
     </div>
   );
 }
-
