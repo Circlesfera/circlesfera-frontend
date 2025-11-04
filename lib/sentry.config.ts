@@ -1,15 +1,18 @@
-import * as Sentry from '@sentry/nextjs';
 import { clientEnv } from './env';
 
 /**
  * Inicializa Sentry para error tracking en el frontend.
- * Solo se inicializa si NEXT_PUBLIC_SENTRY_DSN está configurado.
+ * Solo se inicializa si NEXT_PUBLIC_SENTRY_DSN está configurado y Sentry está instalado.
  */
 export const initSentry = (): void => {
   if (!clientEnv.NEXT_PUBLIC_SENTRY_DSN) {
     return; // Sentry no configurado, continuar sin él
   }
 
+  // Dynamic import para evitar errores si Sentry no está instalado
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - Sentry es opcional y puede no estar instalado
+  import('@sentry/nextjs').then((Sentry) => {
   Sentry.init({
     dsn: clientEnv.NEXT_PUBLIC_SENTRY_DSN,
     environment: process.env.NODE_ENV || 'development',
@@ -26,7 +29,7 @@ export const initSentry = (): void => {
       'Failed to fetch'
     ],
     // Filtros de URLs
-    beforeSend(event, hint) {
+      beforeSend(event: unknown, hint: unknown): unknown {
       // No enviar errores de desarrollo local
       if (process.env.NODE_ENV === 'development') {
         // Solo loguear en consola
@@ -35,6 +38,9 @@ export const initSentry = (): void => {
       }
       return event;
     }
+    });
+  }).catch(() => {
+    // Sentry no disponible, ignorar silenciosamente
   });
 };
 

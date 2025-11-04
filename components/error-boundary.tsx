@@ -48,6 +48,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Enviar a Sentry en producción
     if (process.env.NODE_ENV === 'production') {
       // Dynamic import para evitar bundle de Sentry si no está configurado
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Sentry es opcional y puede no estar instalado
       import('@sentry/nextjs').then((Sentry) => {
         Sentry.captureException(error, {
           contexts: {

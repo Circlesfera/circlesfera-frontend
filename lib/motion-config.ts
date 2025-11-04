@@ -277,12 +277,17 @@ export const createDelayedVariants = (
   baseVariants: Variants,
   delay: number
 ): Variants => {
+  // Type guard para verificar si visible es un objeto y no una función
+  const visibleVariant = typeof baseVariants.visible === 'object' && baseVariants.visible !== null
+    ? baseVariants.visible
+    : {};
+
   return {
     ...baseVariants,
     visible: {
-      ...baseVariants.visible,
+      ...visibleVariant,
       transition: {
-        ...(baseVariants.visible?.transition as object),
+        ...(visibleVariant.transition as object | undefined),
         delay
       }
     }
