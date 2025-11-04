@@ -19,38 +19,12 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com'
       },
       {
-        protocol: 'https',
-        hostname: 'api.dicebear.com'
-      },
-      // MinIO local y desarrollo
-      {
         protocol: 'http',
         hostname: 'localhost',
         port: '9000',
-        pathname: '/**'
-      },
-      {
-        protocol: 'http',
-        hostname: '127.0.0.1',
-        port: '9000',
-        pathname: '/**'
-      },
-      {
-        protocol: 'http',
-        hostname: '::1',
-        port: '9000',
-        pathname: '/**'
-      },
-      // MinIO Docker (cuando frontend corre en Docker)
-      {
-        protocol: 'http',
-        hostname: 'minio',
-        port: '9000',
-        pathname: '/**'
+        pathname: '/circlesfera-media/**'
       }
-    ],
-    dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
+    ]
   },
   headers: async () => [
     {

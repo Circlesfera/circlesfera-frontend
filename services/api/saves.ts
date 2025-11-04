@@ -16,17 +16,17 @@ export interface SavePostPayload {
 }
 
 export const savePost = async (postId: string, collectionId?: string): Promise<SaveResponse> => {
-  const { data } = await apiClient.post<SaveResponse>(`/posts/${postId}/save`, { collectionId });
+  const { data } = await apiClient.post<SaveResponse>(`/saves/posts/${postId}/save`, { collectionId });
   return data;
 };
 
 export const unsavePost = async (postId: string): Promise<SaveResponse> => {
-  const { data } = await apiClient.delete<SaveResponse>(`/posts/${postId}/save`);
+  const { data } = await apiClient.delete<SaveResponse>(`/saves/posts/${postId}/save`);
   return data;
 };
 
 export const fetchSavedPosts = async (cursor?: string | null, limit = 20, collectionId?: string): Promise<SavedPostsResponse> => {
-  const { data } = await apiClient.get<SavedPostsResponse>('/saved', {
+  const { data } = await apiClient.get<SavedPostsResponse>('/saves/saved', {
     params: { cursor: cursor ?? undefined, limit, collectionId: collectionId ?? undefined }
   });
   return data;

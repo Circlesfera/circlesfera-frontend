@@ -6,12 +6,12 @@ export interface LikeResponse {
 }
 
 export const likePost = async (postId: string): Promise<LikeResponse> => {
-  const { data } = await apiClient.post<LikeResponse>(`/posts/${postId}/like`);
+  const { data } = await apiClient.post<LikeResponse>(`/likes/posts/${postId}/like`);
   return data;
 };
 
 export const unlikePost = async (postId: string): Promise<LikeResponse> => {
-  const { data } = await apiClient.delete<LikeResponse>(`/posts/${postId}/like`);
+  const { data } = await apiClient.delete<LikeResponse>(`/likes/posts/${postId}/like`);
   return data;
 };
 

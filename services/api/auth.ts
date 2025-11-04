@@ -35,14 +35,8 @@ export const refreshSession = async (): Promise<{ accessToken: string; expiresIn
   return data;
 };
 
-export const fetchCurrentUser = async (accessToken?: string): Promise<{ user: SessionUser }> => {
-  const { data } = await apiClient.get<{ user: SessionUser }>('/auth/me', {
-    headers: accessToken
-      ? {
-          Authorization: `Bearer ${accessToken}`
-        }
-      : undefined
-  });
+export const fetchCurrentUser = async (): Promise<{ user: SessionUser }> => {
+  const { data } = await apiClient.get<{ user: SessionUser }>('/auth/me');
   return data;
 };
 

@@ -27,7 +27,7 @@ export interface FeedTag {
   readonly y: number;
   readonly width?: number;
   readonly height?: number;
-  readonly isNormalized: boolean;
+  readonly isNormalized?: boolean;
 }
 
 /**

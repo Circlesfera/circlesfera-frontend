@@ -4,7 +4,6 @@ import type { FeedCursorResponse, FeedItem } from './types/feed';
 interface FetchFeedParams {
   readonly cursor?: string | null;
   readonly limit?: number;
-  readonly sortBy?: 'recent' | 'relevance';
 }
 
 interface CreatePostPayload {
@@ -12,26 +11,19 @@ interface CreatePostPayload {
   readonly media: File[];
 }
 
-interface CreatePostResponse {
-  readonly post: FeedItem;
+interface UpdatePostPayload {
+  readonly caption: string;
+}
+
+interface SearchPostsParams extends FetchFeedParams {
+  readonly q: string;
 }
 
 /**
  * Consulta el feed principal del usuario autenticado.
  */
-export const fetchHomeFeed = async ({ cursor, limit = 20, sortBy = 'recent' }: FetchFeedParams): Promise<FeedCursorResponse> => {
+export const fetchHomeFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
   const response = await apiClient.get<FeedCursorResponse>('/feed', {
-    params: { cursor: cursor ?? undefined, limit, sortBy }
-  });
-
-  return response.data;
-};
-
-/**
- * Consulta el feed de menciones (posts donde el usuario fue mencionado).
- */
-export const fetchMentionsFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
-  const response = await apiClient.get<FeedCursorResponse>('/feed/mentions', {
     params: { cursor: cursor ?? undefined, limit }
   });
 
@@ -39,7 +31,7 @@ export const fetchMentionsFeed = async ({ cursor, limit = 20 }: FetchFeedParams)
 };
 
 /**
- * Consulta el feed de explorar (posts populares de usuarios no seguidos).
+ * Consulta el feed de exploración (posts populares).
  */
 export const fetchExploreFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
   const response = await apiClient.get<FeedCursorResponse>('/feed/explore', {
@@ -50,36 +42,96 @@ export const fetchExploreFeed = async ({ cursor, limit = 20 }: FetchFeedParams):
 };
 
 /**
- * Obtiene el feed de Reels (videos cortos).
+ * Consulta el feed de reels (videos cortos).
  */
-export const getReelsFeed = async (options: { limit?: number; cursor?: string | null } = {}): Promise<FeedCursorResponse> => {
-  const { data } = await apiClient.get<FeedCursorResponse>('/feed/reels', {
-    params: {
-      limit: options.limit ?? 20,
-      cursor: options.cursor ?? undefined
-    }
+export const getReelsFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+  const response = await apiClient.get<FeedCursorResponse>('/feed/reels', {
+    params: { cursor: cursor ?? undefined, limit }
   });
-  return data;
+
+  return response.data;
 };
 
 /**
- * Obtiene un post individual por ID.
+ * Consulta posts archivados del usuario autenticado.
  */
-export const getPostById = async (postId: string): Promise<CreatePostResponse> => {
-  const { data } = await apiClient.get<CreatePostResponse>(`/feed/${postId}`);
-  return data;
+export const getArchivedPosts = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+  const response = await apiClient.get<FeedCursorResponse>('/feed/archived', {
+    params: { cursor: cursor ?? undefined, limit }
+  });
+
+  return response.data;
 };
 
-export interface UpdatePostPayload {
-  readonly caption: string;
-}
+/**
+ * Consulta el feed de menciones del usuario autenticado.
+ */
+export const fetchMentionsFeed = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
+  const response = await apiClient.get<FeedCursorResponse>('/feed/mentions', {
+    params: { cursor: cursor ?? undefined, limit }
+  });
+
+  return response.data;
+};
+
+/**
+ * Busca posts por texto.
+ */
+export const searchPosts = async ({ q, cursor, limit = 20 }: SearchPostsParams): Promise<FeedCursorResponse> => {
+  const response = await apiClient.get<FeedCursorResponse>('/feed/search', {
+    params: { q, cursor: cursor ?? undefined, limit }
+  });
+
+  return response.data;
+};
+
+/**
+ * Obtiene un post por ID.
+ */
+export const getPostById = async (postId: string): Promise<{ post: FeedItem }> => {
+  const response = await apiClient.get<{ post: FeedItem }>(`/feed/${postId}`);
+
+  return response.data;
+};
+
+/**
+ * Obtiene posts relacionados.
+ */
+export const getRelatedPosts = async (postId: string, limit = 6): Promise<{ posts: FeedItem[] }> => {
+  const response = await apiClient.get<{ posts: FeedItem[] }>(`/feed/${postId}/related`, {
+    params: { limit }
+  });
+
+  return response.data;
+};
+
+/**
+ * Crea un nuevo post.
+ */
+export const createPost = async (payload: CreatePostPayload): Promise<{ post: FeedItem }> => {
+  const formData = new FormData();
+  formData.append('caption', payload.caption);
+
+  payload.media.forEach((file) => {
+    formData.append('media', file);
+  });
+
+  const response = await apiClient.post<{ post: FeedItem }>('/feed', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+
+  return response.data;
+};
 
 /**
  * Actualiza el caption de un post.
  */
-export const updatePost = async (postId: string, payload: UpdatePostPayload): Promise<CreatePostResponse> => {
-  const { data } = await apiClient.patch<CreatePostResponse>(`/feed/${postId}`, payload);
-  return data;
+export const updatePost = async (postId: string, payload: UpdatePostPayload): Promise<{ post: FeedItem }> => {
+  const response = await apiClient.patch<{ post: FeedItem }>(`/feed/${postId}`, payload);
+
+  return response.data;
 };
 
 /**
@@ -90,7 +142,7 @@ export const deletePost = async (postId: string): Promise<void> => {
 };
 
 /**
- * Archiva un post (oculta del perfil público).
+ * Archiva un post.
  */
 export const archivePost = async (postId: string): Promise<void> => {
   await apiClient.post(`/feed/${postId}/archive`);
@@ -102,61 +154,3 @@ export const archivePost = async (postId: string): Promise<void> => {
 export const unarchivePost = async (postId: string): Promise<void> => {
   await apiClient.delete(`/feed/${postId}/archive`);
 };
-
-/**
- * Obtiene los posts archivados del usuario autenticado.
- */
-export const getArchivedPosts = async ({ cursor, limit = 20 }: FetchFeedParams): Promise<FeedCursorResponse> => {
-  const { data } = await apiClient.get<FeedCursorResponse>('/feed/archived', {
-    params: { cursor: cursor ?? undefined, limit }
-  });
-  return data;
-};
-
-/**
- * Obtiene posts relacionados a un post específico.
- */
-export const getRelatedPosts = async (postId: string, limit = 6): Promise<{ posts: FeedItem[] }> => {
-  const { data } = await apiClient.get<{ posts: FeedItem[] }>(`/feed/${postId}/related`, {
-    params: { limit }
-  });
-  return data;
-};
-
-export interface SearchPostsParams {
-  q: string;
-  limit?: number;
-  cursor?: string | null;
-}
-
-/**
- * Busca posts por texto en caption o hashtags.
- */
-export const searchPosts = async ({ q, limit = 20, cursor }: SearchPostsParams): Promise<FeedCursorResponse> => {
-  const params: Record<string, string | number> = { q, limit };
-  if (cursor) {
-    params.cursor = cursor;
-  }
-  const { data } = await apiClient.get<FeedCursorResponse>('/feed/search', { params });
-  return data;
-};
-
-/**
- * Crea una nueva publicación con media.
- */
-export const createPost = async ({ caption, media }: CreatePostPayload): Promise<CreatePostResponse> => {
-  const formData = new FormData();
-  formData.append('caption', caption);
-  media.forEach((file) => {
-    formData.append('media', file);
-  });
-
-  const { data } = await apiClient.post<CreatePostResponse>('/feed', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  });
-
-  return data;
-};
-
