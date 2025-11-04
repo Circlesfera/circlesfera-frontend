@@ -1,25 +1,19 @@
 'use client';
 
 import React, { type ReactElement } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 // API imports
-import { getTaggedPosts, type TaggedPost } from '@/services/api/tags';
 import { getPostById } from '@/services/api/feed';
 import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { useTaggedPosts } from '../hooks/use-tagged-posts';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import type { TaggedPost } from '@/services/api/tags';
 
 export function TaggedPostsShell(): ReactElement {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
-    queryKey: ['tagged-posts'],
-    queryFn: ({ pageParam }) => getTaggedPosts(20, pageParam as string | undefined),
-    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    initialPageParam: undefined as string | undefined
-  });
-
-  const allTaggedPosts: TaggedPost[] = data?.pages.flatMap((page) => page.items) ?? [];
+  const { taggedPosts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useTaggedPosts();
 
   if (isLoading) {
     return (
@@ -32,7 +26,7 @@ export function TaggedPostsShell(): ReactElement {
     );
   }
 
-  if (allTaggedPosts.length === 0) {
+  if (taggedPosts.length === 0) {
     return (
       <motion.div
         variants={fadeUpVariants}
@@ -75,7 +69,7 @@ export function TaggedPostsShell(): ReactElement {
   }
 
   // Agrupar por postId para evitar duplicados
-  const uniquePostIds = Array.from(new Set(allTaggedPosts.map((tp) => tp.postId)));
+  const uniquePostIds = Array.from(new Set(taggedPosts.map((tp) => tp.postId)));
 
   return (
     <div className="space-y-8">
@@ -86,7 +80,7 @@ export function TaggedPostsShell(): ReactElement {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
         {uniquePostIds.map((postId) => {
-          const taggedPost = allTaggedPosts.find((tp) => tp.postId === postId);
+          const taggedPost = taggedPosts.find((tp) => tp.postId === postId);
           return taggedPost ? (
             <motion.div key={postId} variants={staggerItem}>
               <TaggedPostCard taggedPost={taggedPost} />

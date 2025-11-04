@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { getSocketClient, disconnectSocket } from '@/lib/socket-client';
+import { getSocketClient } from '@/lib/socket-client';
 import { fetchNotifications, getUnreadCount, type Notification } from '@/services/api/notifications';
 import { useSessionStore } from '@/store/session';
 
@@ -88,14 +88,9 @@ export const useNotifications = (unreadOnly = false) => {
     };
   }, [isHydrated, accessToken, queryClient]);
 
-  // Limpiar conexión al desmontar
-  useEffect(() => {
-    return () => {
-      if (socketRef.current) {
-        disconnectSocket();
-      }
-    };
-  }, []);
+  // Nota: No desconectamos el socket aquí porque puede ser usado por otros componentes.
+  // El socket se desconectará automáticamente cuando no haya más referencias o cuando
+  // el usuario cierre sesión.
 
   return {
     notifications: notificationsQuery.data?.pages.flatMap((page) => page.data) ?? [],

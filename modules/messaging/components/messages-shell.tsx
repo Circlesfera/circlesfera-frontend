@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, type ReactElement } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
@@ -12,7 +13,11 @@ import { CreateGroupDialog } from './create-group-dialog';
 import { fadeUpVariants } from '@/lib/motion-config';
 
 export function MessagesShell(): ReactElement {
-  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const conversationParam = searchParams.get('conversation');
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(
+    conversationParam || null
+  );
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -48,20 +53,36 @@ export function MessagesShell(): ReactElement {
     };
   }, [queryClient]);
 
+  // Si hay un parámetro de conversación en la URL, seleccionarla (y esperar a que se cargue si no está aún)
+  useEffect(() => {
+    if (conversationParam) {
+      // Esperar a que se carguen las conversaciones si aún están cargando
+      if (!isLoading && conversations.length > 0) {
+        const conversation = conversations.find((c) => c.id === conversationParam);
+        if (conversation) {
+          setSelectedConversationId(conversation.id);
+        } else {
+          // Si no se encuentra, podría ser una nueva conversación - forzar recarga
+          queryClient.invalidateQueries({ queryKey: ['conversations'] });
+        }
+      }
+    }
+  }, [conversationParam, conversations, isLoading, queryClient]);
+
   // Si hay conversaciones y no hay una seleccionada, seleccionar la primera
   useEffect(() => {
-    if (!selectedConversationId && conversations.length > 0) {
+    if (!selectedConversationId && conversations.length > 0 && !conversationParam) {
       const firstConversation = conversations[0];
       if (firstConversation) {
         setSelectedConversationId(firstConversation.id);
       }
     }
-  }, [conversations, selectedConversationId]);
+  }, [conversations, selectedConversationId, conversationParam]);
 
   const selectedConversation = conversations.find((conv) => conv.id === selectedConversationId) ?? null;
 
   return (
-    <div className="flex h-screen bg-black">
+    <div className="flex h-screen">
       {/* Lista de conversaciones */}
       <div className="w-full md:w-96 border-r border-white/5 glass-sidebar flex flex-col">
         <div className="p-5 border-b border-white/5 flex items-center justify-between">
@@ -133,7 +154,7 @@ export function MessagesShell(): ReactElement {
       </div>
 
       {/* Vista de chat */}
-      <div className="hidden md:flex flex-1 flex-col bg-black">
+      <div className="hidden md:flex flex-1 flex-col">
         {selectedConversation ? (
           <ChatView conversation={selectedConversation} />
         ) : (

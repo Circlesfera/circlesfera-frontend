@@ -25,11 +25,14 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
   // Calcular si es el perfil propio comparando handles
   const isOwnProfile = currentUser?.handle?.toLowerCase() === profileHandle.toLowerCase() || isOwnProfileProp;
 
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
+
   // Solo cargar highlights si es el propio perfil
   const { data, isLoading } = useQuery({
     queryKey: ['highlights'],
     queryFn: getHighlights,
-    enabled: isOwnProfile && !!currentUser,
+    enabled: isOwnProfile && !!currentUser && isHydrated && !!accessToken,
     staleTime: 1000 * 60 * 5 // 5 minutos
   });
 

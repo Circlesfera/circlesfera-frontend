@@ -27,10 +27,15 @@ export function StoriesBar(): ReactElement {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
+
   const { data, isLoading } = useQuery({
     queryKey: ['stories', 'feed'],
     queryFn: getStoryFeed,
-    staleTime: 1000 * 60 // 1 minuto
+    staleTime: 1000 * 60, // 1 minuto
+    // Solo ejecutar cuando la sesión esté hidratada y haya un token
+    enabled: isHydrated && !!accessToken
   });
 
   // Detectar scroll para mostrar/ocultar flechas
@@ -63,11 +68,11 @@ export function StoriesBar(): ReactElement {
         animate="visible"
         className="relative rounded-2xl glass-card p-4"
       >
-        <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar px-1">
+        <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar px-1">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="flex-shrink-0 flex flex-col items-center gap-1.5">
-              <div className="animate-pulse size-[77px] rounded-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-2 border-white/10" />
-              <div className="h-3 w-16 bg-slate-800/50 rounded-full" />
+              <div className="animate-pulse size-[64px] rounded-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-2 border-white/10" />
+              <div className="h-3 w-14 bg-slate-800/50 rounded-full" />
             </div>
           ))}
         </div>
@@ -92,6 +97,8 @@ export function StoriesBar(): ReactElement {
   };
 
   const stories = data?.groups ?? [];
+  // Verificar si el usuario actual tiene stories
+  const currentUserStoryGroup = stories.find((group) => group.author.id === currentUser?.id);
   const hasStories = stories.length > 0 || currentUser;
 
   if (!hasStories) {
@@ -104,7 +111,7 @@ export function StoriesBar(): ReactElement {
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
-        className="relative rounded-2xl glass-card p-4 md:p-5 mb-1"
+        className="relative rounded-2xl glass-card border border-white/[0.08] p-2.5 md:p-3.5 mb-1 shadow-[0_4px_16px_rgba(0,0,0,0.1)]"
       >
         {/* Flecha izquierda */}
         <AnimatePresence>
@@ -120,7 +127,7 @@ export function StoriesBar(): ReactElement {
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full glass-dark border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all shadow-elegant-lg backdrop-blur-xl"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-10 rounded-full bg-black/50 backdrop-blur-xl border border-white/20 flex items-center justify-center hover:bg-black/70 hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/30"
               aria-label="Scroll izquierda"
             >
               <svg className="size-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,11 +140,50 @@ export function StoriesBar(): ReactElement {
         {/* Container de stories */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar px-1"
+          className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar px-1"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {/* Story propia - Con botón para crear */}
+          {/* Story propia - Mostrar si tiene stories, sino botón para crear */}
           {currentUser && (
+            <>
+              {currentUserStoryGroup ? (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  type="button"
+                  onClick={() => {
+                    // Buscar el índice del grupo del usuario actual
+                    const currentIndex = stories.findIndex((g) => g.author.id === currentUser.id);
+                    if (currentIndex !== -1) {
+                      handleStoryClick(currentIndex);
+                    }
+                  }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex-shrink-0 flex flex-col items-center gap-2 group"
+                >
+                  <div className={`relative size-[64px] rounded-full transition-all duration-300 ${
+                    currentUserStoryGroup.stories.some((s) => !s.hasViewed)
+                      ? 'p-[2.5px] bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 group-hover:from-orange-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:shadow-lg group-hover:shadow-pink-500/50 group-hover:scale-105' 
+                      : 'p-[2px] bg-gradient-to-br from-slate-600/80 to-slate-700/80 group-hover:from-slate-500 group-hover:to-slate-600 group-hover:shadow-lg group-hover:shadow-slate-500/20'
+                  }`}>
+                    <div className="relative size-full rounded-full bg-black overflow-hidden ring-2 ring-black/50 group-hover:ring-primary-500/30 transition-all duration-300">
+                      <Image
+                        src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
+                        alt={currentUser.displayName}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        unoptimized
+                        sizes="64px"
+                      />
+                    </div>
+                  </div>
+                  <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-300 group-hover:text-white transition-colors duration-200">
+                    Tu historia
+                  </span>
+                </motion.button>
+              ) : (
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -150,30 +196,37 @@ export function StoriesBar(): ReactElement {
               whileTap={{ scale: 0.95 }}
               className="flex-shrink-0 flex flex-col items-center gap-2 group"
             >
-              <div className="relative size-[78px] overflow-hidden rounded-full border-2 border-white/20 bg-gradient-to-br from-slate-900 to-black transition-all duration-300 group-hover:border-primary-400/50 group-hover:shadow-lg group-hover:shadow-primary-500/30">
+                  <div className="relative size-[64px] overflow-hidden rounded-full border-2 border-white/30 bg-gradient-to-br from-slate-900/90 to-black/90 transition-all duration-300 group-hover:border-primary-400/60 group-hover:shadow-lg group-hover:shadow-primary-500/40 group-hover:scale-105 backdrop-blur-sm">
                 <Image
                   src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
                   alt={currentUser.displayName}
                   fill
-                  className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                  className="object-cover opacity-85 group-hover:opacity-100 transition-opacity duration-300"
                   unoptimized
+                  sizes="64px"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-                  <div className="size-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg shadow-primary-500/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg className="size-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/15 transition-colors duration-300">
+                      <div className="size-7 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg shadow-primary-500/50 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110">
+                        <svg className="size-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
                     </svg>
                   </div>
                 </div>
               </div>
-              <span className="block w-[78px] truncate text-center text-xs font-medium text-slate-300 group-hover:text-white transition-colors">
+                  <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-300 group-hover:text-white transition-colors duration-200">
                 Tu historia
               </span>
             </motion.button>
+              )}
+            </>
           )}
 
           {/* Stories de usuarios seguidos - Estilo Instagram mejorado */}
-          {stories.map((group, index) => {
+          {stories
+            .filter((group) => group.author.id !== currentUser?.id) // Excluir el usuario actual (ya está arriba)
+            .map((group, index) => {
+            // Ajustar el índice para que coincida con el índice real en el array completo
+            const realIndex = stories.findIndex((g) => g.author.id === group.author.id);
             const hasUnviewed = group.stories.some((story) => !story.hasViewed);
             
             return (
@@ -184,38 +237,39 @@ export function StoriesBar(): ReactElement {
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 type="button"
                 onClick={() => {
-                  handleStoryClick(index);
+                  handleStoryClick(realIndex);
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="flex-shrink-0 flex flex-col items-center gap-2 group"
               >
                 {/* Borde degradado premium para historias no vistas, borde elegante para vistas */}
-                <div className={`relative size-[78px] rounded-full transition-all duration-300 ${
+                <div className={`relative size-[64px] rounded-full transition-all duration-300 ${
                   hasUnviewed 
-                    ? 'p-[2.5px] bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 group-hover:from-orange-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:shadow-lg group-hover:shadow-pink-500/40' 
-                    : 'p-[2px] bg-gradient-to-br from-slate-600 to-slate-700 group-hover:from-slate-500 group-hover:to-slate-600'
+                    ? 'p-[2.5px] bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 group-hover:from-orange-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:shadow-lg group-hover:shadow-pink-500/50 group-hover:scale-105' 
+                    : 'p-[2px] bg-gradient-to-br from-slate-600/80 to-slate-700/80 group-hover:from-slate-500 group-hover:to-slate-600 group-hover:shadow-lg group-hover:shadow-slate-500/20'
                 }`}>
-                  <div className="relative size-full rounded-full bg-black overflow-hidden ring-2 ring-black group-hover:ring-primary-500/20 transition-all">
+                  <div className="relative size-full rounded-full bg-black overflow-hidden ring-2 ring-black/50 group-hover:ring-primary-500/30 transition-all duration-300">
                     <Image
                       src={getAvatarUrl(group.author.avatarUrl, group.author.handle)}
                       alt={group.author.displayName}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
                       unoptimized
+                      sizes="64px"
                     />
                     {hasUnviewed && (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="absolute inset-0 rounded-full bg-gradient-to-t from-black/20 to-transparent"
+                        className="absolute inset-0 rounded-full bg-gradient-to-t from-black/30 to-transparent"
                       />
                     )}
                   </div>
                 </div>
-                <span className="block w-[78px] truncate text-center text-xs font-medium text-slate-300 group-hover:text-white transition-colors">
-                  {group.author.handle.length > 12 
-                    ? `${group.author.handle.slice(0, 12)}...` 
+                <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-300 group-hover:text-white transition-colors duration-200">
+                  {group.author.handle.length > 10 
+                    ? `${group.author.handle.slice(0, 10)}...` 
                     : group.author.handle}
                 </span>
               </motion.button>
@@ -237,7 +291,7 @@ export function StoriesBar(): ReactElement {
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full glass-dark border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all shadow-elegant-lg backdrop-blur-xl"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-10 rounded-full bg-black/50 backdrop-blur-xl border border-white/20 flex items-center justify-center hover:bg-black/70 hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/30"
               aria-label="Scroll derecha"
             >
               <svg className="size-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

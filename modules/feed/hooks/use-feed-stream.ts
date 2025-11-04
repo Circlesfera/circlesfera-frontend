@@ -10,23 +10,24 @@ const FEED_QUERY_KEY = ['feed', 'home'] as const;
 
 interface UseFeedStreamOptions {
   readonly initialCursor?: string | null;
-  readonly sortBy?: 'recent' | 'relevance';
 }
 
 /**
  * Hook que obtiene el feed principal del usuario con paginación infinita.
+ * Solo ejecuta la query cuando la sesión está hidratada y hay un token válido.
  */
-export const useFeedStream = ({ initialCursor, sortBy = 'recent' }: UseFeedStreamOptions = {}) => {
+export const useFeedStream = ({ initialCursor }: UseFeedStreamOptions = {}) => {
   const isHydrated = useSessionStore((state) => state.isHydrated);
   const accessToken = useSessionStore((state) => state.accessToken);
 
   return useInfiniteQuery<FeedCursorResponse>({
-    queryKey: [...FEED_QUERY_KEY, { cursor: initialCursor ?? null, sortBy }],
-    queryFn: ({ pageParam }) => fetchHomeFeed({ cursor: (pageParam as string | null) ?? null, sortBy }),
+    queryKey: [...FEED_QUERY_KEY, { cursor: initialCursor ?? null }],
+    queryFn: ({ pageParam }) => fetchHomeFeed({ cursor: (pageParam as string | null) ?? null }),
     initialPageParam: initialCursor ?? null,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
     staleTime: 15_000,
-    enabled: isHydrated && Boolean(accessToken)
+    // Solo ejecutar cuando la sesión esté hidratada y haya un token
+    enabled: isHydrated && !!accessToken
   });
 };
 

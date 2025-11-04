@@ -1,21 +1,22 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useState, type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { login } from '@/services/api/auth';
 import { useSessionStore } from '@/store/session';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 
 import { loginFormSchema, type LoginFormValues } from '../validation';
 
+const inputClass =
+  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 backdrop-blur-sm transition-all duration-300 focus:border-primary-500/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/30';
+
+const errorClass = 'text-xs text-red-400';
+
 export function LoginForm(): ReactElement {
-  const router = useRouter();
   const setSession = useSessionStore((state) => state.setSession);
+  const markHydrated = useSessionStore((state) => state.markHydrated);
   const [formError, setFormError] = useState<string | null>(null);
 
   const {
@@ -39,78 +40,63 @@ export function LoginForm(): ReactElement {
         accessToken: response.accessToken,
         expiresIn: response.expiresIn
       });
-      router.replace('/feed');
+      // Marcar como hidratado inmediatamente después del login exitoso
+      // para evitar que SessionHydrator intente refrescar la sesión
+      markHydrated(response.user);
+      
+      // Configurar refresh automático del token
+      const { setupTokenRefresh } = await import('@/lib/token-refresh');
+      setupTokenRefresh();
+      
+      // Usar window.location para forzar una recarga completa y asegurar que las cookies estén disponibles
+      // Esto evita problemas de timing con el middleware
+      window.location.href = '/feed';
     } catch (error) {
       setFormError('Credenciales inválidas. Verifica tus datos e inténtalo de nuevo.');
-      // No loguear errores de login fallidos en producción por seguridad
-      if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const logger = await import('@/lib/logger');
-        logger.logger.error('Error en login', { error });
-      }
+      console.error(error);
     }
   });
 
   return (
-    <Card variant="glass" padding="lg" className="w-full max-w-md">
-      <form onSubmit={onSubmit} className="space-y-5">
-        <CardHeader className="px-0 pt-0">
-          <CardTitle className="text-2xl">Bienvenido de nuevo</CardTitle>
-          <CardDescription>
-            Accede a tu cuenta para continuar tu experiencia en CircleSfera
-          </CardDescription>
-        </CardHeader>
+    <form onSubmit={onSubmit} className="glass-card flex w-full max-w-md flex-col gap-6 p-8 shadow-elegant-lg">
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-white">Correo o usuario</label>
+        <input
+          type="text"
+          autoComplete="username"
+          {...register('identifier')}
+          className={inputClass}
+          placeholder="hola@circlesfera.com"
+        />
+        {errors.identifier ? <p className={errorClass}>{errors.identifier.message}</p> : null}
+      </div>
 
-        <CardContent className="space-y-5 px-0">
-          <Input
-            type="text"
-            autoComplete="username"
-            label="Correo o usuario"
-            placeholder="hola@circlesfera.com"
-            variant={errors.identifier ? 'error' : 'default'}
-            error={errors.identifier?.message}
-            {...register('identifier')}
-          />
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-white">Contraseña</label>
+        <input
+          type="password"
+          autoComplete="current-password"
+          {...register('password')}
+          className={inputClass}
+          placeholder="••••••••"
+        />
+        {errors.password ? <p className={errorClass}>{errors.password.message}</p> : null}
+      </div>
 
-          <Input
-            type="password"
-            autoComplete="current-password"
-            label="Contraseña"
-            placeholder="••••••••"
-            variant={errors.password ? 'error' : 'default'}
-            error={errors.password?.message}
-            {...register('password')}
-          />
+      {formError ? (
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 backdrop-blur-sm">
+          <p className={errorClass}>{formError}</p>
+        </div>
+      ) : null}
 
-          {formError && (
-            <div className="rounded-xl bg-danger-500/10 border border-danger-500/20 p-3">
-              <p className="text-sm text-danger-400 flex items-center gap-2">
-                <svg className="h-4 w-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {formError}
-              </p>
-            </div>
-          )}
-        </CardContent>
-
-        <CardFooter className="px-0 pb-0">
-          <Button
-            type="submit"
-            intent="primary"
-            size="lg"
-            fullWidth
-            loading={isSubmitting}
-          >
-            Iniciar sesión
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="mt-2 rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all duration-300 hover:from-primary-500 hover:via-accent-500 hover:to-primary-600 hover:shadow-xl hover:shadow-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg"
+      >
+        {isSubmitting ? 'Accediendo…' : 'Iniciar sesión'}
+      </button>
+    </form>
   );
 }
 

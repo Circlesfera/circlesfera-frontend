@@ -21,11 +21,20 @@ export function SettingsShell(): ReactElement | null {
   const { user, isHydrated } = useSession();
   const searchParams = useSearchParams();
   const tabFromUrl = searchParams.get('tab') as SettingsTab | null;
-  const [activeTab, setActiveTab] = useState<SettingsTab>(tabFromUrl && ['profile', 'account', 'notifications', 'privacy', 'app', 'password', 'danger'].includes(tabFromUrl) ? tabFromUrl : 'profile');
+  // Si hay tab en URL, usarlo; si no, empezar en 'account' (vista general de configuración)
+  const defaultTab: SettingsTab = 'account';
+  const [activeTab, setActiveTab] = useState<SettingsTab>(
+    tabFromUrl && ['profile', 'account', 'notifications', 'privacy', 'app', 'password', 'danger'].includes(tabFromUrl) 
+      ? tabFromUrl 
+      : defaultTab
+  );
 
   useEffect(() => {
     if (tabFromUrl && ['profile', 'account', 'notifications', 'privacy', 'app', 'password', 'danger'].includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
+    } else if (!tabFromUrl) {
+      // Si no hay tab en URL, volver al default
+      setActiveTab(defaultTab);
     }
   }, [tabFromUrl]);
 
@@ -202,7 +211,14 @@ export function SettingsShell(): ReactElement | null {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ProfileEditForm profile={user} />
+                  <ProfileEditForm 
+                    profile={user} 
+                    onSuccess={() => {
+                      // El componente manejará la redirección automáticamente
+                      // Si cambió el handle, redirigirá al nuevo perfil
+                      // Si no, redirigirá al perfil actual
+                    }}
+                  />
                 </motion.div>
               )}
               {activeTab === 'account' && (

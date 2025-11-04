@@ -31,6 +31,8 @@ interface SuggestedUser {
  */
 export function SuggestedUsers(): ReactElement {
   const currentUser = useSessionStore((state) => state.user);
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
   const queryClient = useQueryClient();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
 
@@ -53,7 +55,7 @@ export function SuggestedUsers(): ReactElement {
             handle: user.handle,
             displayName: user.displayName,
             avatarUrl: user.avatarUrl,
-            isVerified: user.isVerified,
+            isVerified: user.isVerified ?? false,
             bio: user.bio,
             following: false
           }));
@@ -63,7 +65,7 @@ export function SuggestedUsers(): ReactElement {
         return [];
       }
     },
-    enabled: Boolean(currentUser),
+    enabled: Boolean(currentUser) && isHydrated && !!accessToken,
     staleTime: 1000 * 60 * 5, // 5 minutos
     refetchOnWindowFocus: false,
     retry: 1

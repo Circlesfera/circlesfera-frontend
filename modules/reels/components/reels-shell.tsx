@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef, type ReactElement } from 'react';
+import React, { useState, useEffect, useRef, useCallback, type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { getReelsFeed } from '../../../services/api/feed';
 import type { FeedItem } from '../../../services/api/types/feed';
@@ -9,9 +10,11 @@ import { ReelPlayer } from './reel-player';
 
 export function ReelsShell(): ReactElement {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
     queryKey: ['reels'],
     queryFn: ({ pageParam }: { pageParam: string | null }) =>
       getReelsFeed({
@@ -25,134 +28,244 @@ export function ReelsShell(): ReactElement {
 
   const reels = data?.pages.flatMap((page) => page.data) ?? [];
 
-  // Cargar más cuando se está cerca del final
+  // Pre-cargar el siguiente reel cuando estamos cerca del final
   useEffect(() => {
-    if (currentIndex >= reels.length - 2 && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+    if (currentIndex >= reels.length - 3 && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
     }
   }, [currentIndex, reels.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Manejar scroll vertical
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) {
+  // Navegación con debounce
+  const navigateToReel = useCallback((index: number, direction: 'next' | 'prev'): void => {
+    if (isNavigating || index < 0 || index >= reels.length) {
       return;
     }
 
-    let isScrolling = false;
+    setIsNavigating(true);
+    setCurrentIndex(index);
+
+    // Limpiar timeout anterior
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Permitir navegación después de la animación
+    scrollTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+    }, 500);
+  }, [isNavigating, reels.length]);
+
+  const handleNext = useCallback((): void => {
+    if (currentIndex < reels.length - 1) {
+      navigateToReel(currentIndex + 1, 'next');
+    }
+  }, [currentIndex, reels.length, navigateToReel]);
+
+  const handlePrevious = useCallback((): void => {
+    if (currentIndex > 0) {
+      navigateToReel(currentIndex - 1, 'prev');
+    }
+  }, [currentIndex, navigateToReel]);
+
+  // Manejar scroll vertical con mejor UX
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || reels.length === 0) {
+      return;
+    }
+
     let touchStartY = 0;
-    let touchEndY = 0;
+    let touchStartTime = 0;
+    let isScrolling = false;
 
     const handleWheel = (e: WheelEvent): void => {
-      if (isScrolling) {
+      if (isNavigating || isScrolling) {
+        e.preventDefault();
         return;
       }
 
       e.preventDefault();
+        isScrolling = true;
 
-      if (e.deltaY > 0 && currentIndex < reels.length - 1) {
-        // Scroll hacia abajo - siguiente reel
-        isScrolling = true;
-        setCurrentIndex((prev) => prev + 1);
-        setTimeout(() => {
-          isScrolling = false;
-        }, 500);
-      } else if (e.deltaY < 0 && currentIndex > 0) {
-        // Scroll hacia arriba - reel anterior
-        isScrolling = true;
-        setCurrentIndex((prev) => prev - 1);
-        setTimeout(() => {
-          isScrolling = false;
-        }, 500);
+      if (e.deltaY > 30 && currentIndex < reels.length - 1) {
+        handleNext();
+      } else if (e.deltaY < -30 && currentIndex > 0) {
+        handlePrevious();
       }
+
+        setTimeout(() => {
+          isScrolling = false;
+      }, 800);
     };
 
     const handleTouchStart = (e: TouchEvent): void => {
       const touch = e.touches[0];
       if (touch) {
         touchStartY = touch.clientY;
+        touchStartTime = Date.now();
       }
     };
 
     const handleTouchEnd = (e: TouchEvent): void => {
       const touch = e.changedTouches[0];
-      if (touch) {
-        touchEndY = touch.clientY;
-      }
-      const diff = touchStartY - touchEndY;
+      if (!touch) return;
 
-      if (Math.abs(diff) > 50) {
-        // Swipe significativo
+      const touchEndY = touch.clientY;
+      const touchEndTime = Date.now();
+      const diff = touchStartY - touchEndY;
+      const timeDiff = touchEndTime - touchStartTime;
+
+      // Swipe más rápido y significativo (mínimo 100px en menos de 300ms)
+      if (Math.abs(diff) > 100 && timeDiff < 300) {
         if (diff > 0 && currentIndex < reels.length - 1) {
-          // Swipe hacia arriba - siguiente reel
-          setCurrentIndex((prev) => prev + 1);
+          handleNext();
         } else if (diff < 0 && currentIndex > 0) {
-          // Swipe hacia abajo - reel anterior
-          setCurrentIndex((prev) => prev - 1);
+          handlePrevious();
         }
       }
     };
 
+    // Soporte para teclado (flechas arriba/abajo)
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === 'ArrowDown' && currentIndex < reels.length - 1) {
+        e.preventDefault();
+        handleNext();
+      } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        handlePrevious();
+      }
+    };
+
     container.addEventListener('wheel', handleWheel, { passive: false });
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchend', handleTouchEnd);
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       container.removeEventListener('wheel', handleWheel);
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
-  }, [currentIndex, reels.length]);
+  }, [currentIndex, reels.length, isNavigating, handleNext, handlePrevious]);
 
+  // Estado de carga
+  if (status === 'pending') {
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-950">
+        <div className="text-center">
+          <div className="relative mx-auto mb-6 size-16">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
+            <div className="relative flex size-full items-center justify-center">
+              <div className="size-12 animate-spin rounded-full border-4 border-primary-500/30 border-t-primary-500" />
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold text-white">Cargando Reels</h3>
+          <p className="mt-2 text-sm text-slate-400">Preparando contenido para ti...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Estado vacío
   if (reels.length === 0) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black text-white">
-        <div className="text-center">
-          <p className="text-lg">No hay reels disponibles</p>
-          <p className="mt-2 text-sm text-slate-400">Los reels son videos cortos de hasta 60 segundos</p>
+      <div className="flex h-screen items-center justify-center bg-slate-950">
+        <div className="text-center max-w-md px-6">
+          <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-gradient-to-br from-primary-500/20 to-accent-500/20">
+            <svg className="size-10 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-2">No hay reels disponibles</h3>
+          <p className="text-slate-400 mb-6">
+            Los reels son videos cortos verticales de hasta 60 segundos. ¡Sé el primero en crear uno!
+          </p>
         </div>
       </div>
     );
   }
 
   const currentReel = reels[currentIndex];
+  const prevReel = currentIndex > 0 ? reels[currentIndex - 1] : null;
+  const nextReel = currentIndex < reels.length - 1 ? reels[currentIndex + 1] : null;
 
   return (
-    <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-black">
+    <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-slate-950">
+      <AnimatePresence mode="wait" initial={false}>
       {currentReel && (
+          <motion.div
+            key={currentReel.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="absolute inset-0"
+          >
         <ReelPlayer
           reel={currentReel}
           isActive={true}
-          onNext={() => {
-            if (currentIndex < reels.length - 1) {
-              setCurrentIndex(currentIndex + 1);
-            }
-          }}
-          onPrevious={() => {
-            if (currentIndex > 0) {
-              setCurrentIndex(currentIndex - 1);
-            }
-          }}
-        />
+              onNext={handleNext}
+              onPrevious={handlePrevious}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Pre-cargar reels adyacentes (ocultos) para mejor performance */}
+      {prevReel && (
+        <div className="absolute inset-0 pointer-events-none opacity-0">
+          <ReelPlayer reel={prevReel} isActive={false} onNext={() => {}} onPrevious={() => {}} />
+        </div>
+      )}
+      {nextReel && (
+        <div className="absolute inset-0 pointer-events-none opacity-0">
+          <ReelPlayer reel={nextReel} isActive={false} onNext={() => {}} onPrevious={() => {}} />
+        </div>
       )}
 
-      {/* Indicador de posición */}
-      <div className="absolute right-4 top-1/2 z-20 -translate-y-1/2">
-        <div className="flex flex-col gap-2">
-          {reels.slice(Math.max(0, currentIndex - 2), currentIndex + 3).map((_, i) => {
+      {/* Indicador de posición mejorado */}
+      <div className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
+        <div className="flex flex-col gap-2.5 rounded-2xl bg-black/60 backdrop-blur-md p-2.5 border border-white/10">
+          {reels.slice(Math.max(0, currentIndex - 2), Math.min(reels.length, currentIndex + 3)).map((_, i) => {
             const actualIndex = Math.max(0, currentIndex - 2) + i;
+            const isActive = actualIndex === currentIndex;
             return (
-              <div
-                key={reels[actualIndex]?.id ?? `placeholder-${actualIndex}`}
-                className={`h-2 w-2 rounded-full transition-all ${
-                  actualIndex === currentIndex ? 'h-8 bg-white' : 'bg-white/40'
+              <motion.div
+                key={reels[actualIndex]?.id ?? `indicator-${actualIndex}`}
+                initial={false}
+                animate={{
+                  width: isActive ? 4 : 3,
+                  height: isActive ? 32 : 3,
+                  opacity: isActive ? 1 : 0.4
+                }}
+                transition={{ duration: 0.2 }}
+                className={`rounded-full transition-colors ${
+                  isActive ? 'bg-white' : 'bg-white/50'
                 }`}
               />
             );
           })}
         </div>
       </div>
+
+      {/* Indicador de carga de más contenido */}
+      {isFetchingNextPage && (
+        <div className="absolute bottom-20 left-1/2 z-30 -translate-x-1/2">
+          <div className="flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md px-4 py-2 border border-white/10">
+            <div className="size-2 animate-pulse rounded-full bg-primary-400" />
+            <span className="text-xs font-medium text-white">Cargando más...</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
