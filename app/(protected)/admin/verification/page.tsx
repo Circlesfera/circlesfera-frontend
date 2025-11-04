@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function AdminVerificationPage(): ReactElement {
   return (
-    <main className="flex min-h-screen flex-col items-center gap-8 bg-slate-950 px-6 py-16 text-white">
+    <main className="flex min-h-screen flex-col items-center gap-8 px-6 py-16 text-white">
       <div className="text-center">
         <h1 className="text-3xl font-semibold">Administración de Verificaciones</h1>
         <p className="mt-2 text-sm text-white/60">Revisa y aprueba solicitudes de verificación de cuenta</p>

@@ -9,9 +9,10 @@ import { SavedPostsShell } from '@/modules/saved/components/saved-posts-shell';
  */
 export default async function SavedPage(): Promise<ReactElement> {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('circlesfera_session');
+  // El backend establece la cookie 'circlesfera_refresh' después del login
+  const refreshCookie = cookieStore.get('circlesfera_refresh');
 
-  if (!sessionCookie) {
+  if (!refreshCookie) {
     const headersList = await headers();
     const protocol = headersList.get('x-forwarded-proto') ?? 'http';
     const host = headersList.get('x-forwarded-host') ?? headersList.get('host');
