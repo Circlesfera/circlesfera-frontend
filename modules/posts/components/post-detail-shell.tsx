@@ -95,32 +95,59 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
-        className="w-full max-w-4xl overflow-hidden rounded-2xl glass-card border border-white/5"
+        className="group relative overflow-hidden glass-card border border-white/[0.06] mb-6 last:mb-0 hover:border-white/12 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(139,92,246,0.12)]"
       >
       {/* Header con autor */}
-      <header className="flex items-center justify-between gap-3 border-b border-white/5 px-6 py-5">
-        <div className="flex items-center gap-3">
-          <Link href={`/${post.author.handle}`} className="relative size-12 shrink-0 overflow-hidden rounded-full ring-2 ring-white/10 hover:ring-primary-400/30 transition-all duration-300">
-            <Image
-              src={getAvatarUrl(post.author.avatarUrl, post.author.handle)}
-              alt={post.author.displayName}
-              fill
-              className="object-cover"
+      <header className="flex items-center justify-between gap-2 md:gap-3 border-b border-white/[0.06] px-3 md:px-4 py-2.5 md:py-3">
+        <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+          <Link href={`/${post.author.handle}`} className="relative shrink-0 group/avatar">
+            <motion.div 
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/40 via-accent-500/30 to-primary-500/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 blur-lg"
+              whileHover={{ scale: 1.05 }}
             />
+            <motion.div 
+              className="relative size-9 md:size-10 rounded-full ring-1 ring-white/[0.05] group-hover/avatar:ring-primary-500/30 transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            >
+              <Image
+                src={getAvatarUrl(post.author.avatarUrl, post.author.handle)}
+                alt={post.author.displayName}
+                fill
+                className="object-cover transition-transform duration-300 group-hover/avatar:scale-110"
+                sizes="(max-width: 768px) 36px, 40px"
+                unoptimized={isLocalImage(post.author.avatarUrl ?? '')}
+                key={`${post.author.id}-${post.author.avatarUrl ?? 'no-avatar'}`}
+              />
+            </motion.div>
           </Link>
-          <div className="flex-1">
-            <div className="flex items-center gap-1.5">
-              <Link
-                href={`/${post.author.handle}`}
-                className="block font-semibold text-white hover:underline"
+          <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+              <Link 
+                href={`/${post.author.handle}`} 
+                className="font-semibold text-sm md:text-base text-white hover:text-primary-300 transition-colors duration-200 truncate"
+                title={post.author.displayName || post.author.handle}
               >
-                {post.author.displayName}
+                {post.author.displayName || post.author.handle}
               </Link>
               {post.author.isVerified && <VerifiedBadge size="sm" />}
             </div>
-            <p className="text-xs text-slate-400">
-              @{post.author.handle} • {formatRelativeTime(post.createdAt)}
-            </p>
+            <div className="flex items-center gap-1 md:gap-1.5 flex-wrap">
+              <Link
+                href={`/${post.author.handle}`}
+                className="text-xs text-white/70 hover:text-white/90 transition-colors duration-200 truncate font-medium"
+                title={`@${post.author.handle}`}
+              >
+                @{post.author.handle}
+              </Link>
+              <span className="text-[10px] md:text-xs text-white/50">•</span>
+              <Link
+                href={`/posts/${post.id}`}
+                className="text-xs text-white/60 hover:text-white/80 transition-colors duration-200"
+              >
+                {formatRelativeTime(post.createdAt)}
+              </Link>
+            </div>
           </div>
         </div>
         {currentUser?.id === post.author.id && (
@@ -195,33 +222,37 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
         )}
       </header>
 
-      {/* Caption */}
-      {post.caption ? (
-        <div className="px-6 py-4 border-b border-white/5">
-          <div className="whitespace-pre-wrap text-base text-slate-100 leading-relaxed">{renderCaptionWithLinks(post.caption)}</div>
-        </div>
-      ) : null}
+      {/* Media mejorado - más compacto */}
+      {post.media.map((media, mediaIndex) => {
+        if (!mediaRefs.current.has(mediaIndex)) {
+          mediaRefs.current.set(mediaIndex, React.createRef<HTMLDivElement>());
+        }
+        const mediaRef = mediaRefs.current.get(mediaIndex)!;
 
-      {/* Media */}
-      <div className="flex flex-col gap-4 px-6 py-6">
-
-        {post.media.map((media, mediaIndex) => {
-          if (!mediaRefs.current.has(mediaIndex)) {
-            mediaRefs.current.set(mediaIndex, React.createRef<HTMLDivElement>());
-          }
-          const mediaRef = mediaRefs.current.get(mediaIndex)!;
-
-          return (
-            <Fragment key={media.id}>
-              {media.kind === 'image' ? (
-                <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-slate-900/50 border border-white/5 group">
+        return (
+          <Fragment key={media.id}>
+            {media.kind === 'image' ? (
+              <div className="relative w-full overflow-hidden bg-gradient-to-br from-slate-900/50 to-black flex justify-center">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="relative flex items-center justify-center w-full bg-black/20 overflow-hidden group/media"
+                  style={{
+                    maxWidth: 'min(100%, 380px)',
+                    ...(media.width && media.height ? { aspectRatio: `${media.width} / ${media.height}` } : {})
+                  }}
+                >
                   <div ref={mediaRef} className="relative size-full">
                     <Image
                       src={media.url}
-                      alt={post.caption || 'Imagen'}
-                      fill
-                      className="object-contain"
+                      alt={post.caption || `Imagen de @${post.author.handle}`}
+                      width={media.width ?? 1080}
+                      height={media.height ?? 1350}
+                      className="w-full h-full object-contain transition-transform duration-300"
                       unoptimized={isLocalImage(media.url)}
+                      priority={mediaIndex === 0}
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 380px, 380px"
                     />
                     {media.tags && media.tags.length > 0 && (
                       <ImageTags
@@ -247,42 +278,108 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                       </button>
                     )}
                   </div>
-                </div>
-              ) : (
-                <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-900/50 border border-white/5">
+                </motion.div>
+              </div>
+            ) : (
+              <div className="relative w-full bg-gradient-to-br from-slate-900/50 to-black flex justify-center">
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative flex items-center justify-center w-full bg-black/20 overflow-hidden"
+                  style={{
+                    maxWidth: 'min(100%, 380px)',
+                    ...(media.width && media.height ? { aspectRatio: `${media.width} / ${media.height}` } : {})
+                  }}
+                >
                   <video
                     src={media.url}
                     poster={media.thumbnailUrl}
                     controls
                     preload="metadata"
-                    className="size-full object-contain"
+                    className="w-full h-full object-contain"
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
                   />
                   {media.durationMs ? (
-                    <div className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
+                    <div className="absolute bottom-3 right-3 rounded-lg bg-black/90 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white shadow-lg border border-white/20">
                       {formatDuration(media.durationMs)}
                     </div>
                   ) : null}
-                </div>
-              )}
-            </Fragment>
-          );
-        })}
+                </motion.div>
+              </div>
+            )}
+          </Fragment>
+        );
+      })}
+      
+      {/* Acciones mejoradas - diseño refinado con responsive */}
+      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-white/[0.06]">
+        <FeedItemActions post={post} />
       </div>
 
-      {/* Acciones (like, comment, save) */}
-      <FeedItemActions post={post} />
-
-      {/* Estadísticas */}
-      <div className="border-t border-white/5 px-6 py-4">
-        <div className="flex items-center gap-6 text-sm text-slate-400">
-          <span>{formatNumber(post.stats.likes)} me gusta</span>
-          <span>{formatNumber(post.stats.comments)} comentarios</span>
-          {post.stats.views > 0 ? <span>{formatNumber(post.stats.views)} visualizaciones</span> : null}
+      {/* Estadísticas mejoradas - diseño refinado con responsive */}
+      {(post.stats.likes > 0 || post.stats.comments > 0) && (
+        <div className="px-3 md:px-4 py-2.5 md:py-2.5 border-b border-white/[0.06]">
+          <div className="flex items-center gap-3 md:gap-5">
+            {post.stats.likes > 0 && (
+              <Link
+                href={`/posts/${post.id}#likes`}
+                className="text-xs md:text-sm font-bold text-white hover:text-primary-300 transition-colors duration-200"
+              >
+                {post.stats.likes.toLocaleString('es')} me gusta{post.stats.likes !== 1 ? 's' : ''}
+              </Link>
+            )}
+            {post.stats.comments > 0 && (
+              <Link
+                href={`/posts/${post.id}#comments`}
+                className="text-xs md:text-sm font-bold text-white hover:text-primary-300 transition-colors duration-200"
+              >
+                {post.stats.comments.toLocaleString('es')} comentario{post.stats.comments !== 1 ? 's' : ''}
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Caption mejorada - diseño refinado con responsive */}
+      {post.caption && (
+        <div className="px-3 md:px-4 py-2.5 md:py-3">
+          <div className="space-y-1 md:space-y-1.5">
+            <Link
+              href={`/${post.author.handle}`}
+              className="font-semibold text-sm md:text-base text-white hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
+            >
+              {post.author.handle}
+            </Link>
+            <div className="text-sm md:text-base text-white/90 leading-relaxed whitespace-pre-wrap break-words">
+              {renderCaptionWithLinks(post.caption)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ver comentarios mejorado - diseño refinado con responsive */}
+      {post.stats.comments > 0 && (
+        <div className="px-3 md:px-4 pb-2.5 md:pb-3 border-b border-white/[0.06]">
+          <motion.button
+            type="button"
+            onClick={() => {
+              // Scroll a comentarios si existe
+              const commentsSection = document.getElementById('comments');
+              if (commentsSection) {
+                commentsSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="text-xs md:text-sm text-white/60 hover:text-white/80 transition-colors duration-200"
+          >
+            Ver los {post.stats.comments} comentario{post.stats.comments !== 1 ? 's' : ''}
+          </motion.button>
+        </div>
+      )}
 
       {/* Comentarios */}
-      <div className="border-t border-white/5">
+      <div id="comments" className="border-t border-white/[0.06]">
         <PostComments postId={postId} />
       </div>
       </motion.article>

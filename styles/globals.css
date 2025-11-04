@@ -15,295 +15,55 @@ body {
 
 body {
   font-family: theme('fontFamily.sans');
-  color: #ffffff;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  color: theme('colors.slate.50');
+  background: 
+    radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.08) 1px, transparent 0),
+    radial-gradient(circle at 100% 100%, rgba(249, 115, 22, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    linear-gradient(to bottom, #000000 0%, #0a0a0f 100%);
+  background-size: 80px 80px, 100% 100%, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+  background-position: 0 0, center, center, center;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s ease;
 }
 
 * {
   @apply antialiased;
 }
 
-/* Scrollbar personalizado */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.text-gradient-primary {
+  background: linear-gradient(to right, theme('colors.primary.400'), theme('colors.primary.600'), theme('colors.accent'));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.3);
-  border-radius: 10px;
+/* Glassmorphism utilities */
+.glass-card {
+  @apply rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/50 via-slate-900/30 to-slate-900/50 backdrop-blur-sm;
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, theme('colors.slate.700'), theme('colors.slate.600'));
-  border-radius: 10px;
-  border: 2px solid rgba(15, 23, 42, 0.3);
+.glass-sidebar {
+  @apply bg-black/40 backdrop-blur-xl border-r border-white/5;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, theme('colors.primary.600'), theme('colors.accent.500'));
+.glass-dark {
+  @apply bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-900/80 backdrop-blur-sm;
 }
 
-/* Smooth scrolling para anclas */
-html {
-  scroll-behavior: smooth;
+.shadow-elegant {
+  @apply shadow-[0_20px_50px_-20px_rgba(0,0,0,0.3)];
 }
 
-/* Mejorar selección de texto */
-::selection {
-  background: linear-gradient(to right, theme('colors.primary.600'), theme('colors.accent.500'));
-  color: theme('colors.white');
+.shadow-elegant-lg {
+  @apply shadow-[0_30px_80px_-40px_rgba(0,0,0,0.4)];
 }
 
-::-moz-selection {
-  background: linear-gradient(to right, theme('colors.primary.600'), theme('colors.accent.500'));
-  color: theme('colors.white');
-}
-
-/* Focus visible mejorado */
-*:focus-visible {
-  outline: 2px solid theme('colors.primary.500');
-  outline-offset: 2px;
-  border-radius: 8px;
-  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
-}
-
-/* Utilidades personalizadas */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 bg-clip-text text-transparent;
-  }
-
-  .gradient-text-primary-accent {
-    @apply bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 bg-clip-text text-transparent;
-  }
-
-  .glass-effect {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/20;
-  }
-
-  .glass-dark {
-    @apply bg-slate-900/80 backdrop-blur-xl border border-slate-800/50 shadow-xl shadow-black/20;
-  }
-
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-soft-lg hover:scale-[1.01] hover:border-slate-700/50 hover:bg-slate-900/30;
-  }
-
-  .button-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 hover:from-primary-500 hover:to-primary-400 active:scale-[0.98] shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40;
-  }
-
-  .button-secondary {
-    @apply bg-slate-800/80 backdrop-blur-sm text-slate-200 font-medium px-6 py-3 rounded-xl transition-all duration-300 hover:bg-slate-700/80 active:scale-[0.98] border border-slate-700/50 hover:border-slate-600 shadow-md hover:shadow-lg;
-  }
-
-  .input-base {
-    @apply w-full px-4 py-3 glass-card border-slate-800/50 rounded-xl text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 focus:bg-slate-900/50 focus:shadow-glow-sm transition-all duration-300;
-  }
-
-  .input-error {
-    @apply border-danger-500/50 focus:ring-danger-500/50 focus:border-danger-500;
-  }
-
-  .input-success {
-    @apply border-success-500/50 focus:ring-success-500/50 focus:border-success-500;
-  }
-
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      theme('colors.slate.800') 0%,
-      theme('colors.slate.700') 50%,
-      theme('colors.slate.800') 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s linear infinite;
-  }
-
-  /* Card Components */
-  .card-base {
-    @apply rounded-2xl border border-slate-800/50 bg-slate-900/40 backdrop-blur-xl shadow-elegant transition-all duration-300;
-  }
-
-  .card-glass {
-    @apply rounded-2xl glass-card transition-all duration-300;
-  }
-
-  .card-hover-effect {
-    @apply hover:scale-[1.01] hover:border-slate-700/70 hover:shadow-card-hover hover:bg-slate-900/50;
-  }
-
-  .card-interactive {
-    @apply card-base card-hover-effect cursor-pointer;
-  }
-
-  /* Badge Components */
-  .badge-base {
-    @apply inline-flex items-center justify-center rounded-full font-medium text-xs px-2.5 py-1 transition-all duration-200;
-  }
-
-  .badge-primary {
-    @apply badge-base bg-primary-500/20 text-primary-300 border border-primary-500/30;
-  }
-
-  .badge-success {
-    @apply badge-base bg-success-500/20 text-success-300 border border-success-500/30;
-  }
-
-  .badge-warning {
-    @apply badge-base bg-warning-500/20 text-warning-300 border border-warning-500/30;
-  }
-
-  .badge-danger {
-    @apply badge-base bg-danger-500/20 text-danger-300 border border-danger-500/30;
-  }
-
-  .badge-neutral {
-    @apply badge-base bg-slate-800/50 text-slate-300 border border-slate-700/50;
-  }
-
-  /* Elevation System */
-  .elevation-1 {
-    @apply shadow-soft-sm;
-  }
-
-  .elevation-2 {
-    @apply shadow-soft-md;
-  }
-
-  .elevation-3 {
-    @apply shadow-soft-lg;
-  }
-
-  .elevation-4 {
-    @apply shadow-soft-xl;
-  }
-
-  /* Glass Effects - Sistema completo estilo VisionOS */
-  .glass-light {
-    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-elegant;
-  }
-
-  .glass-dark {
-    @apply bg-black/20 backdrop-blur-2xl border border-white/5 shadow-elegant-lg;
-  }
-
-  .glass-elevated {
-    @apply bg-white/8 backdrop-blur-2xl border border-white/15 shadow-elegant-xl;
-  }
-
-  .glass-primary {
-    @apply bg-primary-500/10 backdrop-blur-2xl border border-primary-500/20 shadow-glow-md;
-  }
-
-  .glass-accent {
-    @apply bg-accent-500/10 backdrop-blur-2xl border border-accent-500/20 shadow-glow-accent-md;
-  }
-
-  /* Glass effects específicos por contexto */
-  .glass-sidebar {
-    @apply bg-black/30 backdrop-blur-2xl border-r border-white/5;
-  }
-
-  .glass-card {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-slate-800/50 shadow-elegant;
-  }
-
-  .glass-modal {
-    @apply bg-black/40 backdrop-blur-3xl border border-white/10 shadow-elegant-xl;
-  }
-
-  .glass-bottom-nav {
-    @apply bg-black/40 backdrop-blur-2xl border-t border-white/10 shadow-elegant-lg;
-  }
-
-  /* Text Utilities */
-  .text-gradient-primary {
-    @apply bg-gradient-to-r from-primary-400 via-primary-500 to-accent-500 bg-clip-text text-transparent;
-  }
-
-  .text-gradient-success {
-    @apply bg-gradient-to-r from-success-400 via-success-500 to-success-600 bg-clip-text text-transparent;
-  }
-
-  .text-gradient-accent {
-    @apply bg-gradient-to-r from-accent-400 via-accent-500 to-accent-600 bg-clip-text text-transparent;
-  }
-
-  /* Focus States */
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black;
-  }
-
-  .focus-ring-danger {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black;
-  }
-
-  /* Interactive States */
-  .interactive-base {
-    @apply transition-all duration-300 cursor-pointer;
-  }
-
-  .interactive-hover {
-    @apply interactive-base hover:scale-105 active:scale-95;
-  }
-
-  .interactive-press {
-    @apply interactive-base active:scale-95;
-  }
-
-  /* Loading States */
-  .skeleton {
-    @apply bg-slate-800/50 rounded-lg animate-pulse;
-  }
-
-  .skeleton-text {
-    @apply skeleton h-4 w-full;
-  }
-
-  .skeleton-avatar {
-    @apply skeleton rounded-full;
-  }
-
-  /* Separators */
-  .divider {
-    @apply border-t border-slate-800/50;
-  }
-
-  .divider-vertical {
-    @apply border-l border-slate-800/50;
-  }
-
-  /* Overlay */
-  .overlay {
-    @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-40;
-  }
-
-  .overlay-light {
-    @apply fixed inset-0 bg-black/40 backdrop-blur-xs z-40;
-  }
-
-  /* Custom Scrollbar para Stories */
-  .custom-scrollbar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-  }
+.glass-bottom-nav {
+  @apply bg-black/40 backdrop-blur-xl border-t border-white/5;
 }
 

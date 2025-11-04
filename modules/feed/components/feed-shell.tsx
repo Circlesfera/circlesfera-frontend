@@ -1,139 +1,232 @@
 'use client';
 
-import { lazy, Suspense, useState, type ReactElement } from 'react';
+import { useEffect, useRef, type ReactElement } from 'react';
 import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
 
 import { useFeedStream } from '../hooks/use-feed-stream';
-import { FeedItemComponent } from './feed-item';
+import { FeedItemComponent as FeedItem } from './feed-item';
+import { CreatePostForm } from './create-post-form';
 import { StoriesBar } from '@/modules/stories/components/stories-bar';
-import { SuggestedUsers } from '@/modules/users/components/suggested-users';
-import { staggerContainer, staggerItem } from '@/lib/motion-config';
-
-const CreatePostForm = lazy(() =>
-  import('./create-post-form').then((module) => ({
-    default: module.CreatePostForm
-  }))
-);
-
-type SortOption = 'recent' | 'relevance';
+import { fadeUpVariants } from '@/lib/motion-config';
 
 /**
- * Renderiza el listado principal del feed con soporte para carga incremental.
+ * Renderiza el feed principal con soporte para carga incremental, diseño moderno
+ * y mejor experiencia de usuario.
  */
 export const FeedShell = (): ReactElement => {
-  const [sortBy, setSortBy] = useState<SortOption>('recent');
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useFeedStream({ sortBy });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error, refetch } = useFeedStream();
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(loadMoreRef, { once: false, margin: '200px' });
 
+  // Cargar más posts automáticamente cuando el elemento de carga es visible
+  useEffect(() => {
+    if (isInView && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const items = data?.pages.flatMap((page) => page.data) ?? [];
+
+  // Estado de carga inicial
   if (status === 'pending') {
-    return <div className="flex items-center justify-center py-16 text-sm text-slate-400">Preparando tu experiencia...</div>;
-  }
-
-  if (status === 'error') {
     return (
-      <div className="flex items-center justify-center py-16 text-sm text-red-400">
-        Ocurrió un error al cargar el feed. Intenta nuevamente más tarde.
-        <pre className="mt-2 text-xs text-red-500 opacity-80">
-          {(error as Error).message}
-        </pre>
+      <div className="flex min-h-screen flex-col items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-col items-center gap-6 rounded-2xl glass-card p-12"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
+            <div className="relative size-16 animate-spin rounded-full border-4 border-primary-500/30 border-t-primary-500" />
+          </div>
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-white mb-2">Preparando tu feed</h3>
+            <p className="text-sm text-white/60">Cargando las últimas publicaciones...</p>
+          </div>
+        </motion.div>
       </div>
     );
   }
 
-  const items = data?.pages.flatMap((page) => page.data) ?? [];
-
-  return (
-    <div className="flex gap-6 lg:gap-8">
-      {/* Columna principal - Feed */}
-      <section className="flex-1 flex flex-col min-w-0">
-      {/* Stories Bar - Estilo Instagram */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-        className="mb-8"
-      >
-        <StoriesBar />
-      </motion.div>
-
-      {/* Create Post Form */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1, ease: [0.4, 0, 0.2, 1] }}
-        className="mb-8"
-      >
-        <Suspense
-          fallback={
-            <div className="animate-pulse px-4">
-              <div className="h-24 rounded-lg bg-slate-900/50" />
+  // Estado de error
+  if (status === 'error') {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full rounded-2xl glass-card border border-red-500/20 bg-red-500/5 p-8"
+        >
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-red-500/20 blur-xl" />
+              <div className="relative size-12 rounded-full border-2 border-red-500/50 bg-red-500/10 flex items-center justify-center">
+                <svg className="size-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
             </div>
-          }
-        >
-          <CreatePostForm />
-        </Suspense>
-      </motion.div>
-
-      {/* Posts */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="space-y-8"
-      >
-        {items.map((item) => (
-          <motion.div
-            key={item.id}
-            variants={staggerItem}
-          >
-            <FeedItemComponent item={item} />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Load More */}
-      {hasNextPage ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="flex justify-center py-10"
-        >
-          <button
-            type="button"
-            onClick={() => {
-              void fetchNextPage();
-            }}
-            disabled={isFetchingNextPage}
-            className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white hover:from-primary-500 hover:via-accent-500 hover:to-primary-600 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 shadow-lg shadow-primary-500/40 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95"
-          >
-            {isFetchingNextPage ? (
-              <span className="flex items-center gap-2">
-                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Cargando...
-              </span>
-            ) : (
-              'Cargar más'
-            )}
-          </button>
-        </motion.div>
-      ) : items.length > 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="flex justify-center py-12 text-center"
-        >
-          <div className="rounded-xl glass-card px-6 py-4">
-            <p className="text-sm font-medium text-slate-400">Has visto todo lo nuevo por ahora ✨</p>
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">Error al cargar el feed</h3>
+              <p className="text-sm text-white/60 mb-4">
+                Ocurrió un error al cargar las publicaciones. Intenta nuevamente más tarde.
+              </p>
+              {error instanceof Error && (
+                <p className="text-xs text-red-400/80 font-mono bg-black/30 rounded-lg p-2 mb-4">
+                  {error.message}
+                </p>
+              )}
+            </div>
+            <motion.button
+              type="button"
+              onClick={() => {
+                void refetch();
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/40"
+            >
+              Reintentar
+            </motion.button>
           </div>
         </motion.div>
-      ) : null}
-      </section>
+      </div>
+    );
+  }
 
-      {/* Sidebar derecho - Usuarios sugeridos (solo desktop) */}
-      <aside className="hidden lg:block w-80 shrink-0">
-        <SuggestedUsers />
-      </aside>
+  // Estado vacío
+  if (items.length === 0 && !isFetchingNextPage) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex flex-col items-center gap-6 rounded-2xl glass-card p-12 max-w-md"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
+            <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-900/50 to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+              <svg className="size-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-xl font-bold text-white mb-2">Tu feed está vacío</h3>
+            <p className="text-sm text-white/60 mb-6">
+              Comienza a seguir a otros usuarios para ver sus publicaciones aquí
+            </p>
+            <CreatePostForm />
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col">
+      {/* Contenedor principal con ancho mejorado */}
+      <div className="w-full max-w-sm mx-auto px-4 md:px-6 py-4 md:py-6">
+        {/* Stories Bar */}
+        <motion.div
+          variants={fadeUpVariants}
+          initial="hidden"
+          animate="visible"
+          className="mb-6"
+        >
+          <StoriesBar />
+        </motion.div>
+
+        {/* Formulario de crear post */}
+        <motion.div
+          variants={fadeUpVariants}
+          initial="hidden"
+          animate="visible"
+          className="mb-8"
+        >
+          <CreatePostForm
+            onSuccess={() => {
+              void refetch();
+            }}
+          />
+        </motion.div>
+
+        {/* Lista de posts */}
+        <section className="flex w-full flex-col">
+          {items.map((item, index) => (
+            <motion.div
+              key={item.id}
+              variants={fadeUpVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: Math.min(index * 0.03, 0.3) }}
+              className="mb-8 last:mb-0"
+            >
+              <FeedItem item={item} />
+            </motion.div>
+          ))}
+
+          {/* Indicador de carga automática */}
+          {hasNextPage && (
+            <div ref={loadMoreRef} className="flex items-center justify-center py-10">
+              {isFetchingNextPage ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-col items-center gap-3"
+                >
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-full bg-primary-500/20 blur-xl" />
+                    <div className="relative size-8 animate-spin rounded-full border-2 border-primary-500/30 border-t-primary-500" />
+                  </div>
+                  <p className="text-sm text-white/60">Cargando más publicaciones...</p>
+                </motion.div>
+              ) : (
+                <motion.button
+                  type="button"
+                  onClick={() => {
+                    void fetchNextPage();
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="rounded-xl border border-white/10 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20"
+                >
+                  Cargar más
+                </motion.button>
+              )}
+            </div>
+          )}
+
+          {/* Mensaje de fin del feed */}
+          {!hasNextPage && items.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center justify-center py-12 px-6"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/10 via-accent-500/10 to-primary-500/10 blur-2xl" />
+                <div className="relative rounded-2xl glass-card p-8 text-center max-w-md">
+                  <div className="mb-4 flex justify-center">
+                    <div className="size-16 rounded-full border-2 border-primary-500/30 bg-gradient-to-br from-slate-900/50 to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+                      <svg className="size-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">¡Has visto todo!</h3>
+                  <p className="text-sm text-white/60">
+                    Has llegado al final de tu feed. Revisa más tarde para ver nuevas publicaciones.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </section>
+      </div>
     </div>
   );
 };

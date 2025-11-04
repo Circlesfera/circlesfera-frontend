@@ -23,17 +23,19 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-black px-4 py-6 md:px-6 md:py-8">
-      <Suspense fallback={
-        <div className="flex min-h-[400px] items-center justify-center w-full">
-          <div className="text-center">
-            <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
-            <p className="text-sm text-slate-400">Cargando publicación...</p>
+    <main className="flex min-h-screen flex-col">
+      <div className="w-full max-w-sm mx-auto px-4 md:px-6 py-4 md:py-6">
+        <Suspense fallback={
+          <div className="flex min-h-[400px] items-center justify-center w-full">
+            <div className="text-center">
+              <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
+              <p className="text-sm text-slate-400">Cargando publicación...</p>
+            </div>
           </div>
-        </div>
-      }>
-        <PostDetailShell postId={id} />
-      </Suspense>
+        }>
+          <PostDetailShell postId={id} />
+        </Suspense>
+      </div>
     </main>
   );
 }
