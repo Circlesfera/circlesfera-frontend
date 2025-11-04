@@ -9,15 +9,21 @@ import { AnalyticsOverview } from './analytics-overview';
 import { AnalyticsPosts } from './analytics-posts';
 import { AnalyticsEngagement } from './analytics-engagement';
 import { fadeUpVariants } from '@/lib/motion-config';
+import { useSessionStore } from '@/store/session';
 
 export function AnalyticsShell(): ReactElement {
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
+
   const { data, isLoading, error } = useQuery<ProfileAnalytics>({
     queryKey: ['analytics', 'profile'],
     queryFn: async () => {
       const response = await getProfileAnalytics(10);
       return response.analytics;
     },
-    staleTime: 1000 * 60 * 5 // 5 minutos
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    // Solo ejecutar cuando la sesión esté hidratada y haya un token
+    enabled: isHydrated && !!accessToken
   });
 
   if (isLoading) {

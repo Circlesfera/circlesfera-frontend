@@ -18,6 +18,8 @@ interface ChatViewProps {
 export function ChatView({ conversation }: ChatViewProps): ReactElement {
   const [messageText, setMessageText] = useState('');
   const [isGroupSettingsOpen, setIsGroupSettingsOpen] = useState(false);
+  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const currentUser = useSessionStore((state) => state.user);
   const queryClient = useQueryClient();
@@ -105,17 +107,99 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       }
     };
 
+    // Escuchar indicadores de escritura
+    const handleTyping = (data: { userId: string; userName: string }) => {
+      if (data.userId !== currentUser?.id) {
+        setTypingUsers((prev) => new Set(prev).add(data.userId));
+        // Limpiar después de 3 segundos sin escribir
+        setTimeout(() => {
+          setTypingUsers((prev) => {
+            const next = new Set(prev);
+            next.delete(data.userId);
+            return next;
+          });
+        }, 3000);
+      }
+    };
+
+    // Escuchar cuando se detiene de escribir
+    const handleStopTyping = (data: { userId: string }) => {
+      setTypingUsers((prev) => {
+        const next = new Set(prev);
+        next.delete(data.userId);
+        return next;
+      });
+    };
+
+    // Escuchar actualizaciones de lectura
+    const handleMessageRead = (data: { messageId: string; userId: string }) => {
+      queryClient.setQueryData(['messages', conversation.id], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: { messages: Message[] }) => ({
+            ...page,
+            messages: page.messages.map((msg: Message) =>
+              msg.id === data.messageId ? { ...msg, isRead: true } : msg
+            )
+          }))
+        };
+      });
+    };
+
     socket.on('new-message', handleNewMessage);
+    socket.on('typing', handleTyping);
+    socket.on('stop-typing', handleStopTyping);
+    socket.on('message-read', handleMessageRead);
 
     return () => {
       socket.off('new-message', handleNewMessage);
+      socket.off('typing', handleTyping);
+      socket.off('stop-typing', handleStopTyping);
+      socket.off('message-read', handleMessageRead);
     };
-  }, [conversation.id, queryClient, conversation.type, conversation.otherUser, conversation.participants]);
+  }, [conversation.id, queryClient, conversation.type, conversation.otherUser, conversation.participants, currentUser?.id]);
 
-  // Auto-scroll al final cuando hay nuevos mensajes
+  // Auto-scroll al final cuando hay nuevos mensajes o usuarios escribiendo
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [data]);
+  }, [data, typingUsers]);
+
+  // Enviar indicador de escritura
+  useEffect(() => {
+    const socket = getSocketClient();
+    if (!socket || messageText.trim().length === 0) {
+      return;
+    }
+
+    // Emitir evento de escritura
+    socket.emit('typing', { conversationId: conversation.id });
+
+    // Limpiar timeout anterior
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Emitir evento de dejar de escribir después de 1 segundo sin cambios
+    const timeout = setTimeout(() => {
+      socket.emit('stop-typing', { conversationId: conversation.id });
+    }, 1000);
+
+    setTypingTimeout(timeout);
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [messageText, conversation.id]);
+
+  // Limpiar timeout al desmontar
+  useEffect(() => {
+    return () => {
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+    };
+  }, [typingTimeout]);
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
@@ -123,11 +207,52 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
     if (trimmed.length === 0 || sendMessageMutation.isPending) {
       return;
     }
+    
+    // Emitir dejar de escribir
+    const socket = getSocketClient();
+    if (socket) {
+      socket.emit('stop-typing', { conversationId: conversation.id });
+    }
+    
     sendMessageMutation.mutate(trimmed);
   };
 
   const allMessages: Message[] = data?.pages.flatMap((page) => page.messages) ?? [];
   const isLoadingMessages = isLoading;
+  
+  // Marcar mensajes como leídos al verlos
+  useEffect(() => {
+    const socket = getSocketClient();
+    if (!socket || !currentUser || allMessages.length === 0) return;
+    
+    const unreadMessages = allMessages.filter(
+      (msg) => !msg.isRead && msg.sender.id !== currentUser.id
+    );
+    
+    if (unreadMessages.length > 0) {
+      // Marcar todos los mensajes no leídos como leídos
+      unreadMessages.forEach((msg) => {
+        socket.emit('mark-read', { messageId: msg.id, conversationId: conversation.id });
+      });
+      
+      // Actualizar estado local
+      queryClient.setQueryData(['messages', conversation.id], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: { messages: Message[] }) => ({
+            ...page,
+            messages: page.messages.map((msg: Message) =>
+              unreadMessages.some((um) => um.id === msg.id) ? { ...msg, isRead: true } : msg
+            )
+          }))
+        };
+      });
+      
+      // Invalidar conversaciones para actualizar contador
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    }
+  }, [allMessages, currentUser, conversation.id, queryClient]);
 
   const isGroup = conversation.type === 'group';
   const displayName = isGroup ? conversation.groupName || 'Grupo sin nombre' : conversation.otherUser?.displayName || 'Usuario';
@@ -137,7 +262,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
   const avatarUrl = isGroup ? undefined : conversation.otherUser?.avatarUrl;
 
   return (
-    <div className="flex flex-col h-full bg-slate-950">
+    <div className="flex flex-col h-full">
       {/* Header del chat */}
       <div className="p-4 border-b border-white/5 glass-card flex items-center gap-3">
         {isGroup ? (
@@ -218,7 +343,8 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
             </div>
           </div>
         ) : (
-          allMessages.map((message) => {
+          <>
+            {allMessages.map((message) => {
             const isOwn = message.sender.id === currentUser?.id;
 
             return (
@@ -246,9 +372,28 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                   >
                     <p className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
                   </div>
-                  <p className={`text-xs mt-1.5 px-1 ${isOwn ? 'text-right text-slate-500' : 'text-slate-500'}`}>
+                    <div className={`flex items-center gap-1.5 mt-1.5 px-1 ${isOwn ? 'justify-end' : ''}`}>
+                      <p className={`text-xs ${isOwn ? 'text-slate-500' : 'text-slate-500'}`}>
                     {formatRelativeTime(message.createdAt)}
                   </p>
+                      {isOwn && (
+                        <span className="text-xs">
+                          {message.isRead ? (
+                            <span className="text-primary-400" title="Leído">
+                              <svg className="size-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                          ) : (
+                            <span className="text-slate-500" title="Enviado">
+                              <svg className="size-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </div>
                 </div>
                 {isOwn && (
                   <div className="relative size-9 flex-shrink-0 order-1">
@@ -262,7 +407,30 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                 )}
               </div>
             );
-          })
+            })}
+          
+            {/* Indicador de escritura */}
+            {typingUsers.size > 0 && (
+              <div className="flex gap-3 items-end animate-fade-in">
+                <div className="relative size-9 flex-shrink-0">
+                  <div className="size-9 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center">
+                    <svg className="size-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="max-w-[70%]">
+                  <div className="rounded-2xl px-4 py-2.5 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50">
+                    <div className="flex gap-1 items-center">
+                      <span className="size-2 bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
+                      <span className="size-2 bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
+                      <span className="size-2 bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
         <div ref={messagesEndRef} />
       </div>

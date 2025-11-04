@@ -1,31 +1,19 @@
 'use client';
 
 import { type ReactElement } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
-import { fetchMentionsFeed } from '@/services/api/feed';
 import { FeedItemComponent } from '@/modules/feed/components/feed-item';
-import { useSessionStore } from '@/store/session';
+import { useMentions } from '../hooks/use-mentions';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 
 /**
  * Renderiza el feed de menciones (posts donde el usuario fue mencionado).
  */
 export function MentionsFeedShell(): ReactElement {
-  const isHydrated = useSessionStore((state) => state.isHydrated);
-  const accessToken = useSessionStore((state) => state.accessToken);
+  const { items, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useMentions();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useInfiniteQuery({
-    queryKey: ['feed', 'mentions'],
-    queryFn: ({ pageParam }) => fetchMentionsFeed({ cursor: (pageParam as string | null) ?? null }),
-    initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
-    staleTime: 15_000,
-    enabled: isHydrated && Boolean(accessToken)
-  });
-
-  if (status === 'pending') {
+  if (isLoading || status === 'pending') {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
@@ -61,8 +49,6 @@ export function MentionsFeedShell(): ReactElement {
       </motion.div>
     );
   }
-
-  const items = data?.pages.flatMap((page) => page.data) ?? [];
 
   if (items.length === 0) {
     return (

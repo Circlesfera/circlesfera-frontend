@@ -14,7 +14,8 @@ export function ProfileSettings(): ReactElement | null {
     if (isHydrated && !user) {
       router.replace('/login');
     }
-  }, [isHydrated, router, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHydrated, user]);
 
   if (!isHydrated) {
     return (

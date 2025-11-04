@@ -9,18 +9,24 @@ import { motion } from 'framer-motion';
 
 import { getUserPosts, type UserPostsResponse } from '@/services/api/users';
 import { staggerContainer, staggerItem } from '@/lib/motion-config';
+import { useSessionStore } from '@/store/session';
 
 interface ProfilePostsGridProps {
   readonly handle: string;
 }
 
 export function ProfilePostsGrid({ handle }: ProfilePostsGridProps): ReactElement {
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery<UserPostsResponse>({
     queryKey: ['userPosts', handle],
     queryFn: ({ pageParam }) => getUserPosts({ handle, cursor: pageParam as string | null | undefined, limit: 20 }),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: 60000
+    staleTime: 60000,
+    // Solo ejecutar cuando la sesión esté hidratada y haya un token
+    enabled: isHydrated && !!accessToken
   });
 
   if (status === 'pending') {

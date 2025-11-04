@@ -9,17 +9,24 @@ import { motion } from 'framer-motion';
 import { fetchExploreFeed } from '@/services/api/feed';
 import { formatNumber } from '@/lib/utils';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { useSessionStore } from '@/store/session';
+import { isLocalImage } from '@/lib/image-utils';
 
 /**
  * Renderiza el grid de explorar con posts populares.
  */
 export const ExploreGridShell = (): ReactElement => {
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteQuery({
     queryKey: ['feed', 'explore'],
     queryFn: ({ pageParam }) => fetchExploreFeed({ cursor: pageParam }),
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: 1000 * 60 * 5 // 5 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    // Solo ejecutar cuando la sesión esté hidratada y haya un token
+    enabled: isHydrated && !!accessToken
   });
 
   if (isLoading) {
@@ -122,17 +129,21 @@ export const ExploreGridShell = (): ReactElement => {
               {firstMedia.kind === 'image' ? (
                 <Image
                   src={firstMedia.url}
-                  alt={post.caption}
+                  alt={post.caption || 'Imagen'}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  unoptimized={isLocalImage(firstMedia.url)}
+                  sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                 />
               ) : (
                 <Fragment>
                   <Image
-                    src={firstMedia.thumbnailUrl}
-                    alt={post.caption}
+                    src={firstMedia.thumbnailUrl || firstMedia.url}
+                    alt={post.caption || 'Video'}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    unoptimized={isLocalImage(firstMedia.thumbnailUrl || firstMedia.url)}
+                    sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                     <svg className="size-8 text-white/90" fill="currentColor" viewBox="0 0 24 24">
@@ -155,7 +166,7 @@ export const ExploreGridShell = (): ReactElement => {
                       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
                   </div>
-                  <span className="text-base font-bold">{formatNumber(post.stats.likes)}</span>
+                  <span className="text-base font-bold">{formatNumber(Math.max(0, post.stats.likes))}</span>
                 </div>
                 <div className="flex items-center gap-2 text-white">
                   <div className="rounded-full bg-blue-500/20 p-2 backdrop-blur-sm">

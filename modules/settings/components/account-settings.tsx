@@ -2,12 +2,15 @@
 
 import { type ReactElement, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/hooks/use-session';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 import { updateProfile } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { getMyVerificationRequest } from '@/services/api/verification';
+import { VerificationRequestDialog } from '@/modules/verification/components/verification-request-dialog';
 
 export function AccountSettings(): ReactElement {
   const { user } = useSession();
@@ -16,6 +19,17 @@ export function AccountSettings(): ReactElement {
   const [isEditingHandle, setIsEditingHandle] = useState(false);
   const [newHandle, setNewHandle] = useState(user?.handle ?? '');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
+
+  // Obtener estado de solicitud de verificación
+  const { data: verificationData } = useQuery({
+    queryKey: ['verification', 'request'],
+    queryFn: getMyVerificationRequest,
+    enabled: !!user && !user.isVerified,
+    staleTime: 1000 * 60 * 5
+  });
+
+  const verificationRequest = verificationData?.request;
 
   const handleSaveHandle = async (): Promise<void> => {
     if (!user || !newHandle.trim()) return;
@@ -231,29 +245,85 @@ export function AccountSettings(): ReactElement {
                     />
                   </svg>
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="font-semibold text-white">Verificación</h3>
                   <p className="mt-1 text-sm text-slate-400">
                     {user?.isVerified
                       ? 'Tu cuenta está verificada'
+                      : verificationRequest?.status === 'pending'
+                        ? 'Solicitud en revisión'
+                        : verificationRequest?.status === 'approved'
+                          ? 'Solicitud aprobada'
+                          : verificationRequest?.status === 'rejected'
+                            ? 'Solicitud rechazada'
                       : 'Solicita la verificación de tu cuenta'}
                   </p>
+                  {verificationRequest?.status === 'pending' && (
+                    <p className="mt-2 text-xs text-slate-500">
+                      Enviada el {new Date(verificationRequest.createdAt).toLocaleDateString('es-ES', { dateStyle: 'long' })}
+                    </p>
+                  )}
+                  {verificationRequest?.status === 'rejected' && verificationRequest.reviewNotes && (
+                    <p className="mt-2 text-xs text-red-400">
+                      {verificationRequest.reviewNotes}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
-            <div className="ml-4">
+            <div className="ml-4 flex flex-col items-end gap-2">
               {user?.isVerified ? (
                 <span className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold border border-green-500/30">
                   Verificado
+                </span>
+              ) : verificationRequest?.status === 'pending' ? (
+                <span className="px-3 py-1.5 rounded-lg bg-yellow-500/20 text-yellow-400 text-xs font-semibold border border-yellow-500/30">
+                  Pendiente
+                </span>
+              ) : verificationRequest?.status === 'approved' ? (
+                <span className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold border border-green-500/30">
+                  Aprobada
+                </span>
+              ) : verificationRequest?.status === 'rejected' ? (
+                <span className="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 text-xs font-semibold border border-red-500/30">
+                  Rechazada
                 </span>
               ) : (
                 <span className="px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-400 text-xs font-semibold border border-slate-600/30">
                   No verificado
                 </span>
               )}
+              {!user?.isVerified && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowVerificationDialog(true);
+                  }}
+                  className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={verificationRequest?.status === 'pending'}
+                >
+                  {verificationRequest?.status === 'pending'
+                    ? 'En revisión'
+                    : verificationRequest?.status === 'rejected'
+                      ? 'Nueva solicitud'
+                      : 'Solicitar verificación'}
+                </button>
+              )}
             </div>
           </div>
         </motion.div>
+
+        {/* Diálogo de solicitud de verificación */}
+        {showVerificationDialog && (
+          <VerificationRequestDialog
+            onClose={() => {
+              setShowVerificationDialog(false);
+            }}
+            onSuccess={() => {
+              setShowVerificationDialog(false);
+            }}
+          />
+        )}
 
         {/* Miembro desde */}
         <motion.div

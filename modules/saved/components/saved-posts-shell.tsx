@@ -8,19 +8,24 @@ import { fetchSavedPosts, type SavedPostsResponse } from '@/services/api/saves';
 import { FeedItemComponent } from '@/modules/feed/components/feed-item';
 import { CollectionsSidebar } from './collections-sidebar';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { useSessionStore } from '@/store/session';
 
 /**
  * Renderiza el listado de posts guardados con soporte para carga incremental y colecciones.
  */
 export function SavedPostsShell(): ReactElement {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const accessToken = useSessionStore((state) => state.accessToken);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useInfiniteQuery<SavedPostsResponse>({
     queryKey: ['saved', selectedCollectionId],
     queryFn: ({ pageParam }) => fetchSavedPosts(pageParam as string | null | undefined, 20, selectedCollectionId ?? undefined),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: 60000
+    staleTime: 60000,
+    // Solo ejecutar cuando la sesión esté hidratada y haya un token
+    enabled: isHydrated && !!accessToken
   });
 
   if (status === 'pending') {

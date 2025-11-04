@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, type ReactElement } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import type { StoryGroup, StoryItem } from '@/services/api/stories';
 import { viewStory, getStoryViewers, type StoryUser } from '@/services/api/stories';
@@ -118,8 +119,8 @@ export function StoriesViewer({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-      {/* Progress bar superior */}
-      <div className="absolute top-0 left-0 right-0 z-10 flex gap-1 p-4">
+      {/* Progress bar superior - diseño refinado */}
+      <div className="absolute top-0 left-0 right-0 z-10 flex gap-1.5 p-4 md:p-5">
         {currentGroup.stories.map((story, index) => {
           const isActive = index === currentStoryIndex;
           const isViewed = story.hasViewed || index < currentStoryIndex;
@@ -127,16 +128,17 @@ export function StoriesViewer({
           return (
             <div
               key={story.id}
-              className={`h-1 flex-1 rounded-full transition-all ${
-                isViewed ? 'bg-white/70' : isActive ? 'bg-white/50' : 'bg-white/20'
+              className={`h-1 flex-1 rounded-full transition-all duration-300 overflow-hidden ${
+                isViewed ? 'bg-white/80' : isActive ? 'bg-white/40' : 'bg-white/20'
               }`}
             >
               {isActive && !isPaused && (
                 <div
-                  className="h-full rounded-full bg-white ease-linear"
+                  className="h-full rounded-full bg-gradient-to-r from-white to-white/90 shadow-[0_0_8px_rgba(255,255,255,0.5)]"
                   style={{
                     width: '100%',
-                    transitionDuration: `${storyDuration}ms`
+                    transitionDuration: `${storyDuration}ms`,
+                    transitionTimingFunction: 'linear'
                   }}
                 />
               )}
@@ -145,9 +147,9 @@ export function StoriesViewer({
         })}
       </div>
 
-      {/* Header con información del autor */}
-      <div className="absolute top-16 left-0 right-0 z-10 flex items-center gap-3 px-6 py-3 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
-        <div className="relative size-12 overflow-hidden rounded-full border-2 border-white/30 ring-2 ring-slate-900/50 shadow-lg">
+      {/* Header con información del autor - diseño refinado */}
+      <div className="absolute top-16 left-0 right-0 z-10 flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2.5 md:py-3 bg-gradient-to-b from-black/60 via-black/40 to-transparent backdrop-blur-md">
+        <div className="relative size-11 md:size-13 overflow-hidden rounded-full border-2 border-white/40 ring-1 ring-black/20 shadow-lg transition-all duration-300 hover:scale-105">
           <Image
             src={
               currentGroup.author.avatarUrl ??
@@ -156,22 +158,23 @@ export function StoriesViewer({
             alt={currentGroup.author.displayName}
             fill
             className="object-cover"
+            unoptimized
           />
         </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-white text-base">{currentGroup.author.displayName}</span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-white text-base md:text-lg truncate">{currentGroup.author.displayName}</span>
             {currentGroup.author.isVerified && (
-              <div className="size-5 rounded-full bg-primary-500 flex items-center justify-center">
-                <svg className="size-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="size-5 md:size-6 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/30 flex-shrink-0">
+                <svg className="size-3 md:size-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
             )}
           </div>
-          <span className="text-xs text-white/80 font-medium">@{currentGroup.author.handle}</span>
+          <span className="text-xs md:text-sm text-white/90 font-medium truncate">@{currentGroup.author.handle}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5 flex-shrink-0">
           {/* Botón para ver viewers (solo si es el autor) */}
           {isAuthor && currentStory && currentStory.viewCount > 0 && (
             <button
@@ -180,7 +183,7 @@ export function StoriesViewer({
                 e.stopPropagation();
                 setShowViewers(true);
               }}
-              className="rounded-xl px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white transition-all duration-200 hover:bg-white/20 hover:scale-105 active:scale-95"
+              className="rounded-xl px-3.5 py-2 bg-white/15 backdrop-blur-md border border-white/25 text-white transition-all duration-300 hover:bg-white/25 hover:scale-105 active:scale-95 shadow-lg shadow-black/20"
               title={`Ver ${currentStory.viewCount} ${currentStory.viewCount === 1 ? 'visualización' : 'visualizaciones'}`}
             >
               <div className="flex items-center gap-2">
@@ -205,7 +208,7 @@ export function StoriesViewer({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2.5 text-white transition-all duration-200 hover:bg-white/20 hover:scale-110 active:scale-95"
+            className="rounded-full p-2.5 md:p-3 text-white transition-all duration-300 hover:bg-white/20 hover:scale-110 active:scale-95 backdrop-blur-sm"
           >
             <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -214,7 +217,7 @@ export function StoriesViewer({
         </div>
       </div>
 
-      {/* Contenido de la story */}
+      {/* Contenido de la story con aspect ratio 9:16 vertical - tamaño reducido */}
       <div
         className="absolute inset-0 flex items-center justify-center"
         onMouseDown={() => {
@@ -230,28 +233,43 @@ export function StoriesViewer({
           setIsPaused(false);
         }}
       >
-        {currentStory.media.kind === 'image' ? (
-          <Image
-            src={currentStory.media.url}
-            alt="Story"
-            fill
-            className="object-contain"
-            unoptimized
-          />
-        ) : (
-          <video
-            src={currentStory.media.url}
-            autoPlay
-            muted
-            loop={false}
-            playsInline
-            className="h-full w-full object-contain"
-            onEnded={handleNext}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${currentGroupIndex}-${currentStoryIndex}`}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="relative w-full max-w-[260px] md:max-w-[320px] aspect-[9/16] max-h-[70vh] md:max-h-[75vh] bg-black overflow-hidden rounded-2xl"
+          >
+            {currentStory.media.kind === 'image' ? (
+              <div className="relative w-full h-full">
+                <Image
+                  src={currentStory.media.url}
+                  alt="Story"
+                  fill
+                  className="object-cover"
+                  unoptimized
+                  sizes="(max-width: 640px) 260px, (max-width: 768px) 320px, 320px"
+                  priority
+                />
+              </div>
+            ) : (
+              <video
+                src={currentStory.media.url}
+                autoPlay
+                muted
+                loop={false}
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+                onEnded={handleNext}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Sticker del post compartido */}
+      {/* Sticker del post compartido - diseño refinado */}
       {currentStory?.sharedPost && (
         <Link
           href={`/posts/${currentStory.sharedPost.id}`}
@@ -261,21 +279,22 @@ export function StoriesViewer({
             onClose();
           }}
         >
-          <div className="flex items-center gap-3 rounded-full border border-white/30 bg-black/60 px-4 py-2 backdrop-blur-sm transition hover:bg-black/80">
-            <div className="relative size-8 overflow-hidden rounded-full">
+          <div className="flex items-center gap-3 rounded-full border border-white/40 bg-black/70 px-4 py-2.5 backdrop-blur-md transition-all duration-300 hover:bg-black/90 hover:scale-105 hover:border-white/50 shadow-lg shadow-black/40">
+            <div className="relative size-9 overflow-hidden rounded-full ring-2 ring-white/20">
               <Image
                 src={currentStory.sharedPost.author.avatarUrl || '/default-avatar.png'}
                 alt={currentStory.sharedPost.author.displayName}
                 fill
                 className="object-cover"
+                unoptimized
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-white">{currentStory.sharedPost.author.displayName}</span>
-              <span className="text-[10px] text-white/70">@{currentStory.sharedPost.author.handle}</span>
+              <span className="text-xs font-bold text-white">{currentStory.sharedPost.author.displayName}</span>
+              <span className="text-[10px] text-white/80 font-medium">@{currentStory.sharedPost.author.handle}</span>
             </div>
-            <svg className="size-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg className="size-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </div>
         </Link>
@@ -284,46 +303,59 @@ export function StoriesViewer({
       {/* Componente de reacciones */}
       {!isAuthor && <StoryReactions story={currentStory} />}
 
-      {/* Navegación */}
-      <button
+      {/* Navegación - diseño refinado con animaciones */}
+      <motion.button
         type="button"
         onClick={handlePrevious}
-        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 p-3 text-white transition-all duration-200 hover:bg-black/60 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+        whileHover={{ scale: 1.1, x: -2 }}
+        whileTap={{ scale: 0.95 }}
+        className="absolute left-4 md:left-6 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 backdrop-blur-xl border border-white/20 p-3.5 md:p-4 text-white transition-all duration-300 hover:bg-black/70 hover:border-white/30 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-black/50 shadow-lg shadow-black/30"
         disabled={currentGroupIndex === 0 && currentStoryIndex === 0}
       >
-        <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="size-6 md:size-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
         </svg>
-      </button>
+      </motion.button>
 
-      <button
+      <motion.button
         type="button"
         onClick={handleNext}
-        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 p-3 text-white transition-all duration-200 hover:bg-black/60 hover:scale-110 active:scale-95"
+        whileHover={{ scale: 1.1, x: 2 }}
+        whileTap={{ scale: 0.95 }}
+        className="absolute right-4 md:right-6 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 backdrop-blur-xl border border-white/20 p-3.5 md:p-4 text-white transition-all duration-300 hover:bg-black/70 hover:border-white/30 shadow-lg shadow-black/30"
       >
-        <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="size-6 md:size-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
         </svg>
-      </button>
+      </motion.button>
 
-      {/* Modal de viewers */}
-      {showViewers && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => {
-            setShowViewers(false);
-          }}
-        >
-          <div
-            className="relative max-h-[80vh] w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-xl"
-            onClick={(e) => {
-              e.stopPropagation();
+      {/* Modal de viewers - diseño refinado */}
+      <AnimatePresence>
+        {showViewers && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md"
+            onClick={() => {
+              setShowViewers(false);
             }}
           >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="relative max-h-[80vh] w-full max-w-md overflow-hidden rounded-2xl border border-white/[0.12] bg-slate-900/95 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
             {/* Header del modal */}
-            <div className="border-b border-white/10 px-6 py-4">
+            <div className="border-b border-white/[0.08] px-6 py-4 bg-gradient-to-b from-slate-900/50 to-transparent">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="text-xl font-bold text-white">
                   Visualizaciones ({currentStory?.viewCount ?? 0})
                 </h2>
                 <button
@@ -331,23 +363,23 @@ export function StoriesViewer({
                   onClick={() => {
                     setShowViewers(false);
                   }}
-                  className="rounded-full p-1 text-white/70 transition hover:bg-white/10 hover:text-white"
+                  className="rounded-full p-2 text-white/70 transition-all duration-200 hover:bg-white/10 hover:text-white hover:scale-110 active:scale-95"
                 >
                   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
             </div>
 
             {/* Lista de viewers */}
-            <div className="max-h-[60vh] overflow-y-auto">
+            <div className="max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
               {viewers.length === 0 ? (
-                <div className="px-6 py-12 text-center text-sm text-slate-400">
-                  Aún no hay visualizaciones
+                <div className="px-6 py-12 text-center">
+                  <p className="text-sm text-slate-400 font-medium">Aún no hay visualizaciones</p>
                 </div>
               ) : (
-                <div className="divide-y divide-white/5">
+                <div className="divide-y divide-white/[0.06]">
                   {viewers.map((viewer) => (
                     <Link
                       key={viewer.id}
@@ -356,9 +388,9 @@ export function StoriesViewer({
                         setShowViewers(false);
                         onClose();
                       }}
-                      className="flex items-center gap-3 px-6 py-4 transition hover:bg-white/5"
+                      className="flex items-center gap-3.5 px-6 py-4 transition-all duration-200 hover:bg-white/[0.08] active:bg-white/[0.05]"
                     >
-                      <div className="relative size-12 overflow-hidden rounded-full">
+                      <div className="relative size-12 overflow-hidden rounded-full ring-2 ring-white/[0.08]">
                         <Image
                           src={viewer.avatarUrl || `https://api.dicebear.com/7.x/thumbs/svg?seed=${viewer.handle}`}
                           alt={viewer.displayName}
@@ -367,21 +399,22 @@ export function StoriesViewer({
                           unoptimized
                         />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-white">{viewer.displayName}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold text-white text-sm truncate">{viewer.displayName}</span>
                           {viewer.isVerified && <VerifiedBadge size="sm" />}
                         </div>
-                        <span className="text-sm text-slate-400">@{viewer.handle}</span>
+                        <span className="text-sm text-slate-400 truncate block">@{viewer.handle}</span>
                       </div>
                     </Link>
                   ))}
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
