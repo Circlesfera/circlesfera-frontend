@@ -34,14 +34,14 @@ export interface CreateCommentResponse {
 }
 
 export const fetchComments = async (postId: string, cursor?: string | null, limit = 20): Promise<CommentCursorResponse> => {
-  const { data } = await apiClient.get<CommentCursorResponse>(`/posts/${postId}/comments`, {
+  const { data } = await apiClient.get<CommentCursorResponse>(`/comments/posts/${postId}/comments`, {
     params: { cursor: cursor ?? undefined, limit }
   });
   return data;
 };
 
 export const createComment = async (postId: string, payload: CreateCommentPayload): Promise<CreateCommentResponse> => {
-  const { data } = await apiClient.post<CreateCommentResponse>(`/posts/${postId}/comments`, payload);
+  const { data } = await apiClient.post<CreateCommentResponse>(`/comments/posts/${postId}/comments`, payload);
   return data;
 };
 

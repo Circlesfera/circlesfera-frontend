@@ -6,12 +6,12 @@ export interface FollowResponse {
 }
 
 export const followUser = async (handle: string): Promise<FollowResponse> => {
-  const { data } = await apiClient.post<FollowResponse>(`/users/${handle}/follow`);
+  const { data } = await apiClient.post<FollowResponse>(`/follows/${handle}/follow`);
   return data;
 };
 
 export const unfollowUser = async (handle: string): Promise<FollowResponse> => {
-  const { data } = await apiClient.delete<FollowResponse>(`/users/${handle}/follow`);
+  const { data } = await apiClient.delete<FollowResponse>(`/follows/${handle}/follow`);
   return data;
 };
 
