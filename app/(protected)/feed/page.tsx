@@ -10,9 +10,10 @@ import { FeedShell } from '@/modules/feed/components/feed-shell';
  */
 export default async function FeedPage(): Promise<ReactElement> {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('circlesfera_session');
+  // El backend establece la cookie 'circlesfera_refresh' después del login
+  const refreshCookie = cookieStore.get('circlesfera_refresh');
 
-  if (!sessionCookie) {
+  if (!refreshCookie) {
     const headersList = await headers();
     const protocol = headersList.get('x-forwarded-proto') ?? 'http';
     const host = headersList.get('x-forwarded-host') ?? headersList.get('host');
@@ -23,9 +24,20 @@ export default async function FeedPage(): Promise<ReactElement> {
   }
 
   return (
-    <Suspense fallback={<div className="flex items-center justify-center py-16 text-sm text-slate-400">Cargando feed...</div>}>
-      <FeedShell />
-    </Suspense>
+    <main className="relative flex min-h-screen flex-col">
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen flex-col items-center justify-center p-6">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
+              <div className="relative size-16 animate-spin rounded-full border-4 border-primary-500/30 border-t-primary-500" />
+            </div>
+          </div>
+        }
+      >
+        <FeedShell />
+      </Suspense>
+    </main>
   );
 }
 

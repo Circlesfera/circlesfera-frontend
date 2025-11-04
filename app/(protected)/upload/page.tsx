@@ -9,12 +9,12 @@ const UploadShell = lazy(() =>
 );
 
 export const metadata = {
-  title: 'Crear publicación — CircleSfera'
+  title: 'Crear contenido — CircleSfera'
 };
 
 export default function UploadPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-black px-6 py-8 text-white">
+    <main className="flex min-h-screen flex-col items-center px-6 py-8 text-white">
       <Suspense fallback={<UploadShellSkeleton />}>
         <UploadShell />
       </Suspense>

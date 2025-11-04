@@ -16,7 +16,7 @@ export default async function HashtagPage({ params }: { params: Promise<{ tag: s
   const normalizedTag = tag.replace(/^#/, '').toLowerCase().trim();
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-10 bg-slate-950 px-6 py-16 text-white">
+    <main className="flex min-h-screen flex-col items-center gap-10 px-6 py-16 text-white">
       <Suspense fallback={<div className="py-16 text-center text-sm text-slate-400">Cargando...</div>}>
         <HashtagHeader tag={normalizedTag} />
       </Suspense>
