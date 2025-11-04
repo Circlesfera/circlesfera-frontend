@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const PROTECTED_ROUTES = ['/feed', '/explore', '/upload', '/notifications', '/settings', '/posts'];
+const PROTECTED_ROUTES = ['/feed', '/explore', '/upload', '/notifications', '/settings'];
 const AUTH_ROUTES = ['/login', '/register'];
 
 /**
@@ -9,13 +9,14 @@ const AUTH_ROUTES = ['/login', '/register'];
  * posee sesión y evita que usuarios autenticados visiten la pantalla de login.
  */
 export function middleware(request: NextRequest): NextResponse {
-  const sessionCookie = request.cookies.get('circlesfera_session');
+  // El backend establece la cookie 'circlesfera_refresh' después del login
+  const refreshCookie = request.cookies.get('circlesfera_refresh');
 
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
-  if (!sessionCookie && isProtectedRoute) {
+  if (!refreshCookie && isProtectedRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/';
     redirectUrl.search = '';
@@ -23,7 +24,7 @@ export function middleware(request: NextRequest): NextResponse {
   }
 
   const isAuthRoute = AUTH_ROUTES.some((route) => request.nextUrl.pathname.startsWith(route));
-  if (sessionCookie && isAuthRoute) {
+  if (refreshCookie && isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/feed';
     return NextResponse.redirect(redirectUrl);

@@ -1,9 +1,7 @@
 'use client';
 
 import type { ReactElement, ReactNode } from 'react';
-import { useEffect, useState } from 'react';
-
-import { initSentry } from '@/lib/sentry.config';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   HydrationBoundary,
@@ -17,37 +15,38 @@ import { Toaster } from 'sonner';
 import { createQueryClient } from '@/lib/query-client';
 import { refreshSession, fetchCurrentUser } from '@/services/api/auth';
 import { useSessionStore } from '@/store/session';
+import { setupTokenRefresh } from '@/lib/token-refresh';
 
 const SessionHydrator = (): null => {
-  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const user = useSessionStore((state) => state.user);
   const accessToken = useSessionStore((state) => state.accessToken);
   const expiresAt = useSessionStore((state) => state.expiresAt);
+  const isHydrated = useSessionStore((state) => state.isHydrated);
+  const setSession = useSessionStore((state) => state.setSession);
+  const clearSession = useSessionStore((state) => state.clearSession);
+  const markHydrated = useSessionStore((state) => state.markHydrated);
+  const isHydratingRef = useRef(false);
 
   useEffect(() => {
-    if (isHydrated) {
+    // Evitar ejecución múltiple simultánea
+    if (isHydrated || isHydratingRef.current) {
       return;
     }
 
     const hydrate = async (): Promise<void> => {
-      // Obtener las funciones del store dentro del efecto para evitar dependencias
-      const { setSession, clearSession, markHydrated } = useSessionStore.getState();
+      // Si ya hay una sesión válida, marcar como hidratado sin hacer peticiones
+      if (accessToken && expiresAt && expiresAt > Date.now()) {
+        markHydrated(user ?? null);
+        return;
+      }
+
+      // Si no hay token o está expirado, intentar refrescar solo una vez
+      isHydratingRef.current = true;
 
       try {
-        if (accessToken && expiresAt && expiresAt > Date.now()) {
-          // Si tenemos token válido, intentamos verificar que el usuario aún existe
-          try {
-            const profile = await fetchCurrentUser(accessToken);
-            if (profile.user) {
-              markHydrated(profile.user);
-              return;
-            }
-          } catch (err) {
-            // Si falla, intentamos refrescar
-          }
-        }
-
+        // Intentar refrescar la sesión (usa cookies httpOnly para el refresh token)
         const tokens = await refreshSession();
-        const profile = await fetchCurrentUser(tokens.accessToken);
+        const profile = await fetchCurrentUser();
 
         setSession({
           user: profile.user,
@@ -55,18 +54,21 @@ const SessionHydrator = (): null => {
           expiresIn: tokens.expiresIn
         });
         markHydrated(profile.user);
+        
+        // Configurar refresh automático
+        setupTokenRefresh();
       } catch (error) {
-        // Silenciosamente limpiamos la sesión si no se puede refrescar
-        // Esto es normal cuando la sesión expiró o el usuario no existe
-        clearSession();
+        // Si falla el refresh, simplemente marcar como hidratado sin sesión
+        // No limpiar la sesión explícitamente para evitar loops - el interceptor se encargará
         markHydrated(null);
+      } finally {
+        isHydratingRef.current = false;
       }
     };
 
     void hydrate();
-    // Solo dependemos de los valores que realmente importan para la hidratación
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isHydrated, accessToken, expiresAt]);
+  }, [isHydrated]);
 
   return null;
 };
@@ -82,11 +84,6 @@ interface ProvidersProps {
  */
 export const Providers = ({ children, dehydratedState }: ProvidersProps): ReactElement => {
   const [queryClient] = useState<QueryClient>(() => createQueryClient());
-
-  // Inicializar Sentry una vez
-  useEffect(() => {
-    initSentry();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

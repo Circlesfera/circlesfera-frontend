@@ -5,7 +5,6 @@ import type { ReactElement, ReactNode } from 'react';
 import '@/styles/globals.css';
 
 import { Providers } from './providers';
-import { ErrorBoundary } from '@/components/error-boundary';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -15,8 +14,18 @@ export const metadata: Metadata = {
     'Comparte historias visuales, descubre comunidades y conversa en tiempo real desde cualquier dispositivo.',
   applicationName: 'CircleSfera',
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png'
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
+    ],
+    shortcut: '/favicon.ico'
   },
   openGraph: {
     title: 'CircleSfera',
@@ -45,10 +54,8 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps): ReactElement {
   return (
     <html lang="es" className={inter.variable} suppressHydrationWarning>
-      <body className="bg-black text-white">
-        <ErrorBoundary>
-          <Providers>{children}</Providers>
-        </ErrorBoundary>
+      <body className="text-slate-50">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
