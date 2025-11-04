@@ -10,7 +10,7 @@ export interface SessionUser {
   readonly displayName: string;
   readonly bio: string | null;
   readonly avatarUrl: string | null;
-  readonly isVerified: boolean;
+  readonly isVerified?: boolean;
   readonly isAdmin?: boolean;
   readonly createdAt: string;
   readonly updatedAt: string;
@@ -43,9 +43,20 @@ export const useSessionStore = create<SessionState>()(
         accessToken,
         expiresAt: Date.now() + expiresIn * 1000
       });
+      
+      // Configurar refresh automático del token
+      // Importar dinámicamente para evitar circular dependencies
+      import('@/lib/token-refresh').then(({ setupTokenRefresh }) => {
+        setupTokenRefresh();
+      });
     },
     clearSession: () => {
       set({ user: null, accessToken: null, expiresAt: null });
+      
+      // Limpiar timer de refresh
+      import('@/lib/token-refresh').then(({ clearTokenRefresh }) => {
+        clearTokenRefresh();
+      });
     },
     updateUser: (user) => {
       set((state) => ({
