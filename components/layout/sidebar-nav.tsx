@@ -296,9 +296,16 @@ export function SidebarNav(): ReactElement {
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 shadow-lg shadow-primary-500/30 transition-all duration-300"
+              className="relative flex size-9 items-center justify-center transition-all duration-300"
             >
-              <span className="text-lg font-bold text-white">C</span>
+              <Image
+                src="/circlesfera-logo.png"
+                alt="CircleSfera"
+                width={36}
+                height={36}
+                className="object-contain"
+                priority
+              />
             </motion.div>
             <span className="text-gradient-primary text-xl font-bold tracking-tight">
               CircleSfera

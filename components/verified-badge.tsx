@@ -9,14 +9,14 @@ interface VerifiedBadgeProps {
 
 export function VerifiedBadge({ className = '', size = 'md' }: VerifiedBadgeProps): ReactElement {
   const sizeClasses = {
-    sm: 'size-3',
-    md: 'size-4',
-    lg: 'size-5'
+    sm: 'size-4',
+    md: 'size-5',
+    lg: 'size-6'
   };
 
   return (
     <svg
-      className={`${sizeClasses[size]} ${className}`}
+      className={`${sizeClasses[size]} text-primary-400 ${className}`}
       fill="currentColor"
       viewBox="0 0 20 20"
       aria-label="Verificado"
