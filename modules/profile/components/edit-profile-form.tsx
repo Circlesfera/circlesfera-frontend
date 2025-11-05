@@ -171,8 +171,8 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
       <form onSubmit={handleSubmit} className="space-y-6">
         <CardContent className="space-y-6 px-0">
           {/* Avatar Section */}
-          <div className="space-y-4 rounded-2xl border border-slate-800/50 bg-slate-900/30 p-6">
-            <h3 className="text-sm font-semibold text-slate-200">Avatar</h3>
+          <div className="space-y-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/30 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Avatar</h3>
             <div className="flex items-start gap-6">
               <div className="relative size-28 shrink-0 overflow-hidden rounded-full border-4 border-slate-700 ring-2 ring-primary-500/20">
                 <Image
@@ -183,8 +183,8 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
                   unoptimized
                 />
                 {uploadingAvatar && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                    <div className="size-8 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 dark:bg-black/60 backdrop-blur-sm">
+                    <div className="size-8 animate-spin rounded-full border-2 border-white dark:border-white border-t-transparent" />
                   </div>
                 )}
               </div>
@@ -236,8 +236,8 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
           </div>
 
           {/* Personal Information */}
-          <div className="space-y-4 rounded-2xl border border-slate-800/50 bg-slate-900/30 p-6">
-            <h3 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
+          <div className="space-y-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/30 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
               <svg className="size-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -259,11 +259,11 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
               />
 
               <div>
-                <label className="block text-sm font-medium text-slate-200 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                   Nombre de usuario
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium pointer-events-none z-10 select-none leading-none text-base">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-400 font-medium pointer-events-none z-10 select-none leading-none text-base">
                     @
                   </span>
                   <input
@@ -275,7 +275,7 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
                       const value = e.target.value.replace(/[^a-z0-9_]/gi, '').toLowerCase();
                       setHandle(value);
                     }}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900/60 pr-4 py-3 pl-[2.75rem] text-sm text-white placeholder:text-slate-500/70 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40 transition-all duration-300"
+                    className="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900/60 pr-4 py-3 pl-[2.75rem] text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500/70 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40 transition-all duration-300"
                     maxLength={30}
                     required
                   />
@@ -292,7 +292,7 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
                     El nombre de usuario debe tener al menos 3 caracteres
                   </p>
                 ) : handle.length >= 3 ? (
-                  <p className="mt-1.5 text-sm text-slate-400">Solo letras, números y guiones bajos. Entre 3 y 30 caracteres.</p>
+                  <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-400">Solo letras, números y guiones bajos. Entre 3 y 30 caracteres.</p>
                 ) : null}
               </div>
 

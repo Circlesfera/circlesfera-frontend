@@ -91,7 +91,7 @@ export function AccountSettings(): ReactElement {
         <h2 className="text-gradient-primary text-2xl font-bold md:text-3xl">
           Cuenta
         </h2>
-        <p className="mt-2 text-sm text-slate-400">Gestiona tu información de cuenta</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Gestiona tu información de cuenta</p>
       </motion.div>
 
       <motion.div
@@ -120,8 +120,8 @@ export function AccountSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Correo electrónico</h3>
-                  <p className="mt-1 text-sm text-slate-400">{user?.email}</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Correo electrónico</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{user?.email}</p>
                 </div>
               </div>
             </div>
@@ -153,11 +153,11 @@ export function AccountSettings(): ReactElement {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white mb-2">Usuario</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Usuario</h3>
                   {isEditingHandle ? (
                     <div className="space-y-3">
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium pointer-events-none z-10 select-none leading-none text-base">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-400 font-medium pointer-events-none z-10 select-none leading-none text-base">
                           @
                         </span>
                         <input
@@ -169,7 +169,7 @@ export function AccountSettings(): ReactElement {
                           }}
                           placeholder="usuario"
                           maxLength={30}
-                          className="w-full rounded-xl border border-white/10 bg-slate-900/60 pr-4 py-3 pl-[2.75rem] text-sm text-white placeholder:text-slate-500/70 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40 transition-all duration-300"
+                          className="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900/60 pr-4 py-3 pl-[2.75rem] text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500/70 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40 transition-all duration-300"
                           autoFocus
                         />
                       </div>
@@ -189,7 +189,7 @@ export function AccountSettings(): ReactElement {
                             setNewHandle(user?.handle ?? '');
                           }}
                           disabled={isUpdating}
-                          className="rounded-xl glass-dark px-4 py-2 text-sm font-semibold text-slate-300 transition-all duration-200 hover:bg-white/10 hover:text-white disabled:opacity-50"
+                          className="rounded-xl glass-dark px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
                         >
                           Cancelar
                         </button>
@@ -200,7 +200,7 @@ export function AccountSettings(): ReactElement {
                     </div>
                   ) : (
                     <>
-                      <p className="mt-1 text-sm text-slate-400">@{user?.handle}</p>
+                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">@{user?.handle}</p>
                       <button
                         type="button"
                         onClick={() => {
@@ -246,8 +246,8 @@ export function AccountSettings(): ReactElement {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white">Verificación</h3>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Verificación</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                     {user?.isVerified
                       ? 'Tu cuenta está verificada'
                       : verificationRequest?.status === 'pending'
@@ -289,7 +289,7 @@ export function AccountSettings(): ReactElement {
                   Rechazada
                 </span>
               ) : (
-                <span className="px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-400 text-xs font-semibold border border-slate-600/30">
+                <span className="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 text-xs font-semibold border border-slate-300 dark:border-slate-600/30">
                   No verificado
                 </span>
               )}
@@ -345,8 +345,8 @@ export function AccountSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Miembro desde</h3>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Miembro desde</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', {
                       year: 'numeric',
                       month: 'long',

@@ -55,14 +55,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-slate-200 mb-2 transition-colors duration-200"
+            className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2 transition-colors duration-200"
           >
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none transition-colors duration-200 z-10">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 pointer-events-none transition-colors duration-200 z-10">
               {leftIcon}
             </div>
           )}
@@ -82,7 +82,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none transition-colors duration-200 z-10">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 pointer-events-none transition-colors duration-200 z-10">
               {rightIcon}
             </div>
           )}
@@ -112,7 +112,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p className="mt-1.5 text-sm text-slate-400 transition-colors duration-200">{helperText}</p>
+          <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 transition-colors duration-200">{helperText}</p>
         )}
       </div>
     );

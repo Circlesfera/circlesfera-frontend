@@ -66,7 +66,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
           <div className="flex items-center justify-center py-16">
             <div className="text-center">
               <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
-              <p className="text-sm text-slate-400">Cargando publicación...</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Cargando publicación...</p>
             </div>
           </div>
         </div>
@@ -107,10 +107,10 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
-        className="group relative overflow-hidden glass-card border border-white/[0.06] mb-6 last:mb-0 hover:border-white/12 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(139,92,246,0.12)]"
+        className="group relative overflow-hidden glass-card border border-slate-200/50 dark:border-white/[0.06] mb-6 last:mb-0 hover:border-slate-300/50 dark:hover:border-white/12 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(139,92,246,0.12)]"
       >
       {/* Header con autor */}
-      <header className="flex items-center justify-between gap-2 md:gap-3 border-b border-white/[0.06] px-3 md:px-4 py-2.5 md:py-3">
+      <header className="flex items-center justify-between gap-2 md:gap-3 border-b border-slate-200/50 dark:border-white/[0.06] px-3 md:px-4 py-2.5 md:py-3">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
           <Link href={`/${post.author.handle}`} className="relative shrink-0 group/avatar">
             <motion.div 
@@ -118,7 +118,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
               whileHover={{ scale: 1.05 }}
             />
             <motion.div 
-              className="relative size-9 md:size-10 rounded-full ring-1 ring-white/[0.05] group-hover/avatar:ring-primary-500/30 transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm"
+              className="relative size-9 md:size-10 rounded-full ring-1 ring-slate-300/50 dark:ring-white/[0.05] group-hover/avatar:ring-primary-500/30 transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-200 dark:from-slate-800/90 to-slate-100 dark:to-slate-900/90 backdrop-blur-sm"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 17 }}
             >
@@ -137,7 +137,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
             <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
               <Link 
                 href={`/${post.author.handle}`} 
-                className="font-semibold text-sm md:text-base text-white hover:text-primary-300 transition-colors duration-200 truncate"
+                className="font-semibold text-sm md:text-base text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200 truncate"
                 title={post.author.displayName || post.author.handle}
               >
                 {post.author.displayName || post.author.handle}
@@ -147,15 +147,15 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
             <div className="flex items-center gap-1 md:gap-1.5 flex-wrap">
               <Link
                 href={`/${post.author.handle}`}
-                className="text-xs text-white/70 hover:text-white/90 transition-colors duration-200 truncate font-medium"
+                className="text-xs text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white/90 transition-colors duration-200 truncate font-medium"
                 title={`@${post.author.handle}`}
               >
                 @{post.author.handle}
               </Link>
-              <span className="text-[10px] md:text-xs text-white/50">•</span>
+              <span className="text-[10px] md:text-xs text-slate-500 dark:text-white/50">•</span>
               <Link
                 href={`/posts/${post.id}`}
-                className="text-xs text-white/60 hover:text-white/80 transition-colors duration-200"
+                className="text-xs text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80 transition-colors duration-200"
               >
                 {formatRelativeTime(post.createdAt)}
               </Link>
@@ -171,7 +171,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="rounded-full p-2 text-slate-400 transition hover:bg-white/5 hover:text-white"
+              className="rounded-full p-2 text-slate-600 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
               title="Opciones del post"
             >
               <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                       setShowOptionsMenu(false);
                     }}
                     whileHover={{ x: 4 }}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition hover:bg-white/5 first:rounded-t-xl"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition hover:bg-slate-100 dark:hover:bg-white/5 first:rounded-t-xl"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -256,7 +256,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                   className="relative w-full h-full overflow-hidden group/media"
                 >
-                  <div ref={mediaRef} className="relative size-full flex items-center justify-center bg-black/20">
+                  <div ref={mediaRef} className="relative size-full flex items-center justify-center bg-black/20 dark:bg-black/20">
                     <Image
                       src={media.url}
                       alt={post.caption || `Imagen de @${post.author.handle}`}
@@ -281,7 +281,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                           setSelectedMediaIndex(mediaIndex);
                           setShowAddTagDialog(true);
                         }}
-                        className="absolute bottom-4 right-4 rounded-full bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 backdrop-blur-sm p-2.5 text-white opacity-0 transition-all duration-300 group-hover:opacity-100 hover:scale-110 shadow-lg shadow-primary-500/40"
+                        className="absolute bottom-4 right-4 rounded-full bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 backdrop-blur-sm p-2.5 text-white dark:text-white opacity-0 transition-all duration-300 group-hover:opacity-100 hover:scale-110 shadow-lg shadow-primary-500/40"
                         title="Agregar etiqueta"
                       >
                         <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -315,7 +315,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                     }}
                   />
                   {media.durationMs ? (
-                    <div className="absolute bottom-3 right-3 rounded-lg bg-black/90 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white shadow-lg border border-white/20">
+                    <div className="absolute bottom-3 right-3 rounded-lg bg-black/90 dark:bg-black/90 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white dark:text-white shadow-lg border border-white/20 dark:border-white/20">
                       {formatDuration(media.durationMs)}
                     </div>
                   ) : null}
@@ -327,7 +327,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
       })}
       
       {/* Acciones mejoradas - diseño refinado con responsive */}
-      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-white/[0.06]">
+      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-slate-200/50 dark:border-white/[0.06]">
         <FeedItemActions post={post} />
       </div>
 
@@ -338,7 +338,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
             {post.stats.likes > 0 && (
               <Link
                 href={`/posts/${post.id}#likes`}
-                className="text-xs md:text-sm font-bold text-white hover:text-primary-300 transition-colors duration-200"
+                className="text-xs md:text-sm font-bold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
               >
                 {post.stats.likes.toLocaleString('es')} me gusta{post.stats.likes !== 1 ? 's' : ''}
               </Link>
@@ -346,7 +346,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
             {post.stats.comments > 0 && (
               <Link
                 href={`/posts/${post.id}#comments`}
-                className="text-xs md:text-sm font-bold text-white hover:text-primary-300 transition-colors duration-200"
+                className="text-xs md:text-sm font-bold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
               >
                 {post.stats.comments.toLocaleString('es')} comentario{post.stats.comments !== 1 ? 's' : ''}
               </Link>
@@ -361,11 +361,11 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
           <div className="space-y-1 md:space-y-1.5">
             <Link
               href={`/${post.author.handle}`}
-              className="font-semibold text-sm md:text-base text-white hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
+              className="font-semibold text-sm md:text-base text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
             >
               {post.author.handle}
             </Link>
-            <div className="text-sm md:text-base text-white/90 leading-relaxed whitespace-pre-wrap break-words">
+            <div className="text-sm md:text-base text-slate-900 dark:text-white/90 leading-relaxed whitespace-pre-wrap break-words">
               {renderCaptionWithLinks(post.caption)}
             </div>
           </div>
@@ -384,7 +384,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                 commentsSection.scrollIntoView({ behavior: 'smooth' });
               }
             }}
-            className="text-xs md:text-sm text-white/60 hover:text-white/80 transition-colors duration-200"
+            className="text-xs md:text-sm text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80 transition-colors duration-200"
           >
             Ver los {post.stats.comments} comentario{post.stats.comments !== 1 ? 's' : ''}
           </motion.button>
@@ -392,7 +392,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
       )}
 
       {/* Comentarios */}
-      <div id="comments" className="border-t border-white/[0.06]">
+      <div id="comments" className="border-t border-slate-200/50 dark:border-white/[0.06]">
         <PostComments postId={postId} />
       </div>
       </motion.article>
@@ -486,7 +486,7 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/70 dark:bg-black/70 backdrop-blur-sm"
           onClick={onClose}
         />
         <motion.div
@@ -518,7 +518,7 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
                 disabled={updateMutation.isPending}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="rounded-xl glass-dark px-6 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white disabled:opacity-50"
+                className="rounded-xl glass-dark px-6 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
               >
                 Cancelar
               </motion.button>
@@ -707,7 +707,7 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/70 dark:bg-black/70 backdrop-blur-sm"
           onClick={onClose}
         />
         <motion.div
@@ -724,8 +724,8 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Eliminar publicación</h2>
-              <p className="mt-1 text-sm text-slate-400">Esta acción no se puede deshacer</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Eliminar publicación</h2>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Esta acción no se puede deshacer</p>
             </div>
           </div>
           <div className="flex justify-end gap-3">

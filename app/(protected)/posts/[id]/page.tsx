@@ -29,7 +29,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
           <div className="flex min-h-[400px] items-center justify-center w-full">
             <div className="text-center">
               <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
-              <p className="text-sm text-slate-400">Cargando publicación...</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Cargando publicación...</p>
             </div>
           </div>
         }>

@@ -119,19 +119,19 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 dark:bg-black/80 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl"
+        className="relative w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xl"
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">Compartir en tu story</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Compartir en tu story</h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-1 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+            className="rounded-full p-1 text-slate-600 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
           >
             <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -139,7 +139,7 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
           </button>
         </div>
 
-        <div className="mb-4 rounded-xl border border-slate-700 bg-slate-800/50 p-4">
+        <div className="mb-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="relative size-10 overflow-hidden rounded-full">
               <Image
@@ -150,12 +150,12 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
               />
             </div>
             <div>
-              <p className="font-semibold text-white">{post.author.displayName}</p>
-              <p className="text-sm text-slate-400">@{post.author.handle}</p>
+              <p className="font-semibold text-slate-900 dark:text-white">{post.author.displayName}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">@{post.author.handle}</p>
             </div>
           </div>
           {post.caption && (
-            <p className="text-sm text-slate-300 line-clamp-2">{post.caption}</p>
+            <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2">{post.caption}</p>
           )}
           {post.media[0] && (
             <div className="mt-3 relative aspect-square w-full overflow-hidden rounded-lg">
@@ -169,7 +169,7 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
           )}
         </div>
 
-        <p className="mb-4 text-sm text-slate-400">
+        <p className="mb-4 text-sm text-slate-600 dark:text-slate-400">
           Se creará una story con una imagen del post. El autor recibirá una notificación.
         </p>
 
@@ -177,7 +177,7 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white transition hover:bg-slate-700"
+            className="flex-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-4 py-2 text-slate-900 dark:text-white transition hover:bg-slate-200 dark:hover:bg-slate-700"
           >
             Cancelar
           </button>

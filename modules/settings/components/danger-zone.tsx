@@ -48,7 +48,7 @@ export function DangerZone(): ReactElement {
         <h2 className="text-2xl font-bold md:text-3xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">
           Zona de peligro
         </h2>
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
           Acciones irreversibles. Ten cuidado antes de proceder.
         </p>
       </motion.div>
@@ -68,16 +68,16 @@ export function DangerZone(): ReactElement {
             </div>
             <div>
               <h3 className="font-bold text-red-400 text-lg">Eliminar cuenta</h3>
-              <p className="mt-1 text-sm text-slate-300">
+              <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">
                 Esta acción es permanente y no se puede deshacer
               </p>
             </div>
           </div>
           <div className="space-y-2 mt-4">
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-slate-700 dark:text-slate-300">
               Al eliminar tu cuenta, se borrarán permanentemente:
             </p>
-            <ul className="list-disc list-inside text-sm text-slate-400 space-y-1.5 ml-4">
+            <ul className="list-disc list-inside text-sm text-slate-600 dark:text-slate-400 space-y-1.5 ml-4">
               <li>Todos tus datos y configuraciones</li>
               <li>Todas tus publicaciones y contenido</li>
               <li>Todos tus seguidores y seguidos</li>
@@ -89,7 +89,7 @@ export function DangerZone(): ReactElement {
 
         <div className="space-y-4 border-t border-red-500/20 pt-6">
           <div>
-            <label htmlFor="confirmation" className="block text-sm font-semibold text-slate-300 mb-2">
+            <label htmlFor="confirmation" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
               Escribe <span className="font-bold text-red-400">ELIMINAR</span> para confirmar:
             </label>
             <input
@@ -100,7 +100,7 @@ export function DangerZone(): ReactElement {
                 setConfirmation(e.target.value);
               }}
               placeholder="ELIMINAR"
-              className="w-full rounded-xl glass-card border-red-500/50 px-4 py-3 text-sm text-white placeholder:text-red-400/50 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/30 transition-all duration-200"
+              className="w-full rounded-xl glass-card border-red-500/50 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-red-400/50 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/30 transition-all duration-200"
             />
           </div>
 

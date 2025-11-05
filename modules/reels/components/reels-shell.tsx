@@ -155,17 +155,24 @@ export function ReelsShell(): ReactElement {
   // Estado de carga
   if (status === 'pending') {
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-950">
-        <div className="text-center">
+      <div className="relative flex h-screen items-center justify-center bg-black dark:bg-black">
+        {/* Background effects consistentes con el diseño del proyecto */}
+        <div className="pointer-events-none fixed inset-0 bg-hero-grid bg-[length:80px_80px] opacity-[0.15]" aria-hidden />
+        <div className="pointer-events-none fixed inset-0 bg-gradient-to-br from-primary-500/3 via-transparent to-accent-500/3" aria-hidden />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
           <div className="relative mx-auto mb-6 size-16">
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
             <div className="relative flex size-full items-center justify-center">
               <div className="size-12 animate-spin rounded-full border-4 border-primary-500/30 border-t-primary-500" />
             </div>
           </div>
-          <h3 className="text-xl font-semibold text-white">Cargando Reels</h3>
-          <p className="mt-2 text-sm text-slate-400">Preparando contenido para ti...</p>
-        </div>
+          <h3 className="text-xl font-semibold text-white dark:text-white">Cargando Reels</h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Preparando contenido para ti...</p>
+        </motion.div>
       </div>
     );
   }
@@ -173,23 +180,44 @@ export function ReelsShell(): ReactElement {
   // Estado vacío
   if (reels.length === 0) {
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-950">
-        <div className="text-center max-w-md px-6">
-          <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-gradient-to-br from-primary-500/20 to-accent-500/20">
-            <svg className="size-10 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-2xl font-bold text-white mb-2">No hay reels disponibles</h3>
-          <p className="text-slate-400 mb-6">
-            Los reels son videos cortos verticales de hasta 60 segundos. ¡Sé el primero en crear uno!
-          </p>
-        </div>
+      <div className="relative flex h-screen items-center justify-center bg-black dark:bg-black">
+        {/* Background effects consistentes con el diseño del proyecto */}
+        <div className="pointer-events-none fixed inset-0 bg-hero-grid bg-[length:80px_80px] opacity-[0.15]" aria-hidden />
+        <div className="pointer-events-none fixed inset-0 bg-gradient-to-br from-primary-500/3 via-transparent to-accent-500/3" aria-hidden />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center max-w-md px-6"
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="relative mx-auto mb-6"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
+            <div className="relative flex size-24 items-center justify-center rounded-2xl glass-card border border-primary-500/30 shadow-elegant-lg">
+              <svg className="size-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h3 className="text-2xl font-bold text-white dark:text-white mb-2">No hay reels disponibles</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">
+              Los reels son videos cortos verticales de hasta 60 segundos. ¡Sé el primero en crear uno!
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
     );
   }
@@ -199,7 +227,10 @@ export function ReelsShell(): ReactElement {
   const nextReel = currentIndex < reels.length - 1 ? reels[currentIndex + 1] : null;
 
   return (
-    <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-slate-950">
+    <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-black dark:bg-black">
+      {/* Background effects consistentes con el diseño del proyecto */}
+      <div className="pointer-events-none fixed inset-0 bg-hero-grid bg-[length:80px_80px] opacity-[0.15]" aria-hidden />
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-br from-primary-500/3 via-transparent to-accent-500/3" aria-hidden />
       <AnimatePresence mode="wait" initial={false}>
       {currentReel && (
           <motion.div
@@ -234,7 +265,7 @@ export function ReelsShell(): ReactElement {
 
       {/* Indicador de posición mejorado */}
       <div className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
-        <div className="flex flex-col gap-2.5 rounded-2xl bg-black/60 backdrop-blur-md p-2.5 border border-white/10">
+        <div className="flex flex-col gap-2.5 rounded-2xl bg-black/60 dark:bg-black/60 backdrop-blur-md p-2.5 border border-white/10 dark:border-white/10">
           {reels.slice(Math.max(0, currentIndex - 2), Math.min(reels.length, currentIndex + 3)).map((_, i) => {
             const actualIndex = Math.max(0, currentIndex - 2) + i;
             const isActive = actualIndex === currentIndex;
@@ -260,9 +291,9 @@ export function ReelsShell(): ReactElement {
       {/* Indicador de carga de más contenido */}
       {isFetchingNextPage && (
         <div className="absolute bottom-20 left-1/2 z-30 -translate-x-1/2">
-          <div className="flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md px-4 py-2 border border-white/10">
+          <div className="flex items-center gap-2 rounded-full bg-black/60 dark:bg-black/60 backdrop-blur-md px-4 py-2 border border-white/10 dark:border-white/10">
             <div className="size-2 animate-pulse rounded-full bg-primary-400" />
-            <span className="text-xs font-medium text-white">Cargando más...</span>
+            <span className="text-xs font-medium text-white dark:text-white">Cargando más...</span>
           </div>
         </div>
       )}

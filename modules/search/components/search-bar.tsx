@@ -114,7 +114,7 @@ export function SearchBar(): ReactElement {
             }
           }}
           placeholder="Buscar usuarios, hashtags..."
-          className="w-full rounded-xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm px-4 py-2.5 pl-11 text-sm text-white placeholder:text-slate-500 focus:border-primary-500/50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:bg-slate-800/70 transition-all duration-200"
+          className="w-full rounded-xl border border-slate-300 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/50 backdrop-blur-sm px-4 py-2.5 pl-11 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-primary-500/50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:bg-slate-100 dark:focus:bg-slate-800/70 transition-all duration-200"
         />
         <svg
           className="absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-slate-500"
@@ -132,20 +132,20 @@ export function SearchBar(): ReactElement {
       </div>
 
       {isOpen ? (
-        <div className="absolute top-full z-50 mt-2 w-full rounded-2xl border border-slate-800/50 bg-slate-900/95 backdrop-blur-xl shadow-soft-xl animate-scale-in">
+        <div className="absolute top-full z-50 mt-2 w-full rounded-2xl border border-slate-200 dark:border-slate-800/50 bg-white dark:bg-slate-900/95 backdrop-blur-xl shadow-soft-xl animate-scale-in">
           {showTrending && !hasQuery ? (
             // Mostrar trending hashtags cuando no hay query
             <div className="max-h-96 overflow-y-auto">
-              <div className="border-b border-white/10 px-4 py-3">
-                <h3 className="text-sm font-semibold text-white">Trending</h3>
+              <div className="border-b border-slate-200 dark:border-white/10 px-4 py-3">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Trending</h3>
               </div>
               {trendingHashtags.length === 0 ? (
-                <div className="p-6 text-center text-sm text-slate-400">No hay hashtags trending</div>
+                <div className="p-6 text-center text-sm text-slate-600 dark:text-slate-400">No hay hashtags trending</div>
               ) : (
                 trendingHashtags.map((hashtag: Hashtag) => (
                   <div
                     key={hashtag.id}
-                    className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5 last:border-b-0"
+                    className="flex items-center gap-3 border-b border-slate-200 dark:border-white/5 px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-white/5 last:border-b-0"
                   >
                     <Link
                       href={`/hashtags/${hashtag.tag}`}
@@ -158,8 +158,8 @@ export function SearchBar(): ReactElement {
                         </svg>
                       </div>
                       <div className="flex-1 overflow-hidden">
-                        <div className="truncate font-medium text-white">#{hashtag.tag}</div>
-                        <div className="truncate text-sm text-slate-400">
+                        <div className="truncate font-medium text-slate-900 dark:text-white">#{hashtag.tag}</div>
+                        <div className="truncate text-sm text-slate-600 dark:text-slate-400">
                           {hashtag.postCount.toLocaleString('es')} publicaciones
                         </div>
                       </div>
@@ -173,22 +173,22 @@ export function SearchBar(): ReactElement {
             // Mostrar resultados de búsqueda
             <div className="max-h-96 overflow-y-auto">
               {isLoadingUsers || isLoadingHashtags || isLoadingPosts ? (
-                <div className="p-6 text-center text-sm text-slate-400">Buscando...</div>
+                <div className="p-6 text-center text-sm text-slate-600 dark:text-slate-400">Buscando...</div>
               ) : users.length === 0 && hashtags.length === 0 && posts.length === 0 ? (
-                <div className="p-6 text-center text-sm text-slate-400">No se encontraron resultados</div>
+                <div className="p-6 text-center text-sm text-slate-600 dark:text-slate-400">No se encontraron resultados</div>
               ) : (
                 <>
                   {users.length > 0 && (
                     <>
-                      <div className="border-b border-white/10 px-4 py-3">
-                        <h3 className="text-sm font-semibold text-white">Usuarios</h3>
+                      <div className="border-b border-slate-200 dark:border-white/10 px-4 py-3">
+                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Usuarios</h3>
                       </div>
                       {users.map((user: PublicProfile) => (
                         <Link
                           key={user.id}
                           href={`/${user.handle}`}
                           onClick={handleItemClick}
-                          className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5"
+                          className="flex items-center gap-3 border-b border-slate-200 dark:border-white/5 px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-white/5"
                         >
                           <Image
                             src={user.avatarUrl ?? `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.handle}`}
@@ -198,8 +198,8 @@ export function SearchBar(): ReactElement {
                             className="size-10 rounded-full object-cover"
                           />
                           <div className="flex-1 overflow-hidden">
-                            <div className="truncate font-medium text-white">{user.displayName}</div>
-                            <div className="truncate text-sm text-slate-400">@{user.handle}</div>
+                            <div className="truncate font-medium text-slate-900 dark:text-white">{user.displayName}</div>
+                            <div className="truncate text-sm text-slate-600 dark:text-slate-400">@{user.handle}</div>
                           </div>
                         </Link>
                       ))}
@@ -208,13 +208,13 @@ export function SearchBar(): ReactElement {
 
                   {hashtags.length > 0 && (
                     <>
-                      <div className="border-b border-white/10 px-4 py-3">
-                        <h3 className="text-sm font-semibold text-white">Hashtags</h3>
+                      <div className="border-b border-slate-200 dark:border-white/10 px-4 py-3">
+                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Hashtags</h3>
                       </div>
                       {hashtags.map((hashtag: Hashtag) => (
                         <div
                           key={hashtag.id}
-                          className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5"
+                          className="flex items-center gap-3 border-b border-slate-200 dark:border-white/5 px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-white/5"
                         >
                           <Link
                             href={`/hashtags/${hashtag.tag}`}
@@ -241,8 +241,8 @@ export function SearchBar(): ReactElement {
 
                   {posts.length > 0 && (
                     <>
-                      <div className="border-b border-white/10 px-4 py-3">
-                        <h3 className="text-sm font-semibold text-white">Publicaciones</h3>
+                      <div className="border-b border-slate-200 dark:border-white/10 px-4 py-3">
+                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Publicaciones</h3>
                       </div>
                       {posts.map((post: FeedItem) => {
                         const firstMedia = post.media[0];
@@ -251,7 +251,7 @@ export function SearchBar(): ReactElement {
                             key={post.id}
                             href={`/posts/${post.id}`}
                             onClick={handleItemClick}
-                            className="flex items-center gap-3 border-b border-white/5 px-4 py-3 transition hover:bg-white/5 last:border-b-0"
+                            className="flex items-center gap-3 border-b border-slate-200 dark:border-white/5 px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-white/5 last:border-b-0"
                           >
                             {firstMedia ? (
                               firstMedia.kind === 'image' ? (
@@ -278,16 +278,16 @@ export function SearchBar(): ReactElement {
                                     fill
                                     className="object-cover"
                                   />
-                                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                                    <svg className="size-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 dark:bg-black/30">
+                                    <svg className="size-4 text-white dark:text-white" fill="currentColor" viewBox="0 0 24 24">
                                       <path d="M8 5v14l11-7z" />
                                     </svg>
                                   </div>
                                 </div>
                               )
                             ) : (
-                              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded bg-slate-700">
-                                <svg className="size-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded bg-slate-200 dark:bg-slate-700">
+                                <svg className="size-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -298,10 +298,10 @@ export function SearchBar(): ReactElement {
                               </div>
                             )}
                             <div className="flex-1 overflow-hidden">
-                              <div className="truncate text-sm font-medium text-white">
+                              <div className="truncate text-sm font-medium text-slate-900 dark:text-white">
                                 {post.caption || 'Publicación sin descripción'}
                               </div>
-                              <div className="truncate text-xs text-slate-400">
+                              <div className="truncate text-xs text-slate-600 dark:text-slate-400">
                                 por @{post.author.handle} • {post.stats.likes.toLocaleString('es')} me gusta
                               </div>
                             </div>

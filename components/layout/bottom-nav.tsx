@@ -107,7 +107,7 @@ export function BottomNav(): ReactElement {
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-w-[60px] transition-all duration-300 ease-out ${
                   active
                     ? 'text-primary-400'
-                    : 'text-slate-400'
+                    : 'text-slate-600 dark:text-slate-400'
                 }`}
               >
                 <div className="relative">
@@ -129,7 +129,7 @@ export function BottomNav(): ReactElement {
                   )}
                 </div>
                 <span className={`text-[10px] font-medium transition-colors duration-300 ${
-                  active ? 'text-primary-400' : 'text-slate-500'
+                  active ? 'text-primary-400' : 'text-slate-600 dark:text-slate-500'
                 }`}>
                   {item.label}
                 </span>
@@ -156,10 +156,10 @@ export function BottomNav(): ReactElement {
               className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-w-[60px] transition-all duration-300 ${
                 pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)
                   ? 'text-primary-400'
-                  : 'text-slate-400'
+                  : 'text-slate-600 dark:text-slate-400'
               }`}
             >
-              <div className="relative size-6 overflow-hidden rounded-full ring-2 ring-slate-700 transition-all duration-300">
+              <div className="relative size-6 overflow-hidden rounded-full ring-2 ring-slate-300 dark:ring-slate-700 transition-all duration-300">
                 <Image
                   src={getAvatarUrl(user.avatarUrl, user.handle)}
                   alt={user.displayName}
@@ -174,7 +174,7 @@ export function BottomNav(): ReactElement {
               <span className={`text-[10px] font-medium transition-colors duration-300 ${
                 pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)
                   ? 'text-primary-400'
-                  : 'text-slate-500'
+                  : 'text-slate-600 dark:text-slate-500'
               }`}>
                 Perfil
               </span>

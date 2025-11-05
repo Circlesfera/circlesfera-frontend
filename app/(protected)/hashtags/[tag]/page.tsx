@@ -16,11 +16,11 @@ export default async function HashtagPage({ params }: { params: Promise<{ tag: s
   const normalizedTag = tag.replace(/^#/, '').toLowerCase().trim();
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-10 px-6 py-16 text-white">
-      <Suspense fallback={<div className="py-16 text-center text-sm text-slate-400">Cargando...</div>}>
+    <main className="flex min-h-screen flex-col items-center gap-10 px-6 py-16 text-slate-900 dark:text-white">
+      <Suspense fallback={<div className="py-16 text-center text-sm text-slate-600 dark:text-slate-400">Cargando...</div>}>
         <HashtagHeader tag={normalizedTag} />
       </Suspense>
-      <Suspense fallback={<div className="py-16 text-center text-sm text-slate-400">Cargando publicaciones...</div>}>
+      <Suspense fallback={<div className="py-16 text-center text-sm text-slate-600 dark:text-slate-400">Cargando publicaciones...</div>}>
         <HashtagPostsShell tag={normalizedTag} />
       </Suspense>
     </main>

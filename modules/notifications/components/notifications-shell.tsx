@@ -85,7 +85,7 @@ export function NotificationsShell(): ReactElement {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
-          <p className="text-sm text-slate-400">Cargando notificaciones...</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Cargando notificaciones...</p>
         </div>
       </div>
     );
@@ -107,7 +107,7 @@ export function NotificationsShell(): ReactElement {
             className="relative mx-auto mb-6"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-primary-400/20 to-accent-500/20 blur-2xl" />
-            <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-900/50 to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+            <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-100 dark:from-slate-900/50 to-white dark:to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
               <svg className="size-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -123,8 +123,8 @@ export function NotificationsShell(): ReactElement {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <h2 className="text-xl font-bold text-white mb-2">No hay notificaciones</h2>
-            <p className="text-sm text-slate-400">Te avisaremos cuando tengas nuevas notificaciones</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No hay notificaciones</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Te avisaremos cuando tengas nuevas notificaciones</p>
           </motion.div>
         </div>
       </motion.div>
@@ -138,11 +138,11 @@ export function NotificationsShell(): ReactElement {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="mb-6 rounded-2xl glass-card p-4 border border-white/5"
+          className="mb-6 rounded-2xl glass-card p-4 border border-slate-200/50 dark:border-white/5"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-white">
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">
                 {unreadCount} {unreadCount === 1 ? 'notificación no leída' : 'notificaciones no leídas'}
               </p>
             </div>
@@ -198,15 +198,15 @@ export function NotificationsShell(): ReactElement {
                 alt={notification.actor.displayName}
                 width={48}
                 height={48}
-                  className="relative size-12 shrink-0 rounded-full object-cover ring-2 ring-slate-800/50 group-hover:ring-primary-500/30 transition-all duration-300"
+                  className="relative size-12 shrink-0 rounded-full object-cover ring-2 ring-slate-300 dark:ring-slate-800/50 group-hover:ring-primary-500/30 transition-all duration-300"
               />
               </div>
             ) : (
-              <div className="size-12 shrink-0 rounded-full bg-slate-800 ring-2 ring-slate-800/50" />
+              <div className="size-12 shrink-0 rounded-full bg-slate-200 dark:bg-slate-800 ring-2 ring-slate-300 dark:ring-slate-800/50" />
             )}
 
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white group-hover:text-primary-300 transition-colors duration-200">
+              <p className="text-sm font-medium text-slate-900 dark:text-white group-hover:text-primary-300 transition-colors duration-200">
                 {getNotificationMessage(notification)}
               </p>
               <p className="mt-1 text-xs text-slate-500">{formatRelativeTime(notification.createdAt)}</p>

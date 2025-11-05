@@ -161,7 +161,7 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
             animate="visible"
             exit="exit"
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 z-[9999] bg-black/80 dark:bg-black/80 backdrop-blur-sm"
             onClick={handleClose}
             aria-hidden="true"
           />
@@ -197,8 +197,8 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
               }}
               className={`
                 relative w-full pointer-events-auto
-                rounded-3xl border border-white/10
-                bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95
+                rounded-3xl border border-slate-200/50 dark:border-white/10
+                bg-gradient-to-br from-white dark:from-slate-900/95 via-slate-50 dark:via-slate-800/95 to-white dark:to-slate-900/95
                 backdrop-blur-2xl shadow-2xl shadow-black/50
                 overflow-hidden
                 flex flex-col
@@ -221,14 +221,14 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
                     className="flex flex-col"
                   >
                     {/* Header minimalista */}
-                    <div className="flex items-center justify-between px-5 py-3 border-b border-white/5 shrink-0">
-                      <h2 className="text-base font-semibold text-white">Crear Story</h2>
+                    <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200/50 dark:border-white/5 shrink-0">
+                      <h2 className="text-base font-semibold text-slate-900 dark:text-white">Crear Story</h2>
                       <motion.button
                         type="button"
                         onClick={handleClose}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="rounded-full p-1.5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                        className="rounded-full p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
                         aria-label="Cerrar"
                       >
                         <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -168,28 +168,28 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-left"
                 >
                   <Share2Icon />
-                  <span className="text-sm font-medium text-white">Compartir perfil</span>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">Compartir perfil</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-left"
                 >
                   {copied ? (
                     <span className="text-primary-400"><CheckIcon /></span>
                   ) : (
-                    <span className="text-white/70"><CopyIcon /></span>
+                    <span className="text-slate-600 dark:text-white/70"><CopyIcon /></span>
                   )}
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">
                     {copied ? 'Copiado' : 'Copiar enlace'}
                   </span>
                 </button>
 
-                <div className="my-1 h-px bg-white/10" />
+                <div className="my-1 h-px bg-slate-200/50 dark:bg-white/10" />
 
                 <button
                   type="button"

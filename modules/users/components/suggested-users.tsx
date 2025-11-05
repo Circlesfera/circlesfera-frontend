@@ -129,7 +129,7 @@ export function SuggestedUsers(): ReactElement {
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
-        className="sticky top-6 self-start rounded-2xl glass-card pl-5 pt-5 pb-5 max-h-[calc(100vh-3rem)] overflow-y-auto border border-white/5"
+        className="sticky top-6 self-start rounded-2xl glass-card pl-5 pt-5 pb-5 max-h-[calc(100vh-3rem)] overflow-y-auto border border-slate-200/50 dark:border-white/5"
       >
         <div className="mb-6">
           <div className="h-6 w-32 bg-slate-800/50 rounded-lg animate-pulse mb-2" />
@@ -157,7 +157,7 @@ export function SuggestedUsers(): ReactElement {
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="sticky top-6 self-start rounded-2xl glass-card pl-5 pt-6 pb-6 max-h-[calc(100vh-3rem)] overflow-y-auto border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_48px_rgba(139,92,246,0.15)] transition-all duration-300"
+      className="sticky top-6 self-start rounded-2xl glass-card pl-5 pt-6 pb-6 max-h-[calc(100vh-3rem)] overflow-y-auto border border-slate-200/50 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_48px_rgba(139,92,246,0.15)] transition-all duration-300"
     >
       {/* Header mejorado */}
       <div className="mb-6 pr-5">
@@ -167,9 +167,9 @@ export function SuggestedUsers(): ReactElement {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
-          <h2 className="text-lg font-bold text-white">Usuarios sugeridos</h2>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Usuarios sugeridos</h2>
         </div>
-        <p className="text-xs text-slate-400/70 ml-10">Descubre nuevas cuentas para seguir</p>
+        <p className="text-xs text-slate-600 dark:text-slate-400/70 ml-10">Descubre nuevas cuentas para seguir</p>
       </div>
 
       {suggestedUsers.length === 0 ? (
@@ -186,7 +186,7 @@ export function SuggestedUsers(): ReactElement {
               </svg>
             </motion.div>
           </div>
-          <p className="text-sm text-slate-400/70 mb-5 font-medium">No hay usuarios sugeridos en este momento</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400/70 mb-5 font-medium">No hay usuarios sugeridos en este momento</p>
           <Link
             href="/explore"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-primary-400 bg-primary-500/10 hover:bg-primary-500/20 hover:text-primary-300 transition-all duration-200 hover:gap-3 border border-primary-500/20"
@@ -211,10 +211,10 @@ export function SuggestedUsers(): ReactElement {
               transition={{ duration: 0.35, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
               className="group relative"
             >
-              <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-all duration-300 ease-out border border-transparent hover:border-white/5 hover:shadow-md">
+              <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 ease-out border border-transparent hover:border-slate-300 dark:hover:border-white/5 hover:shadow-md">
                 <Link
                   href={`/${user.handle}`}
-                  className="relative size-14 shrink-0 rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-primary-400/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2"
+                  className="relative size-14 shrink-0 rounded-full overflow-hidden ring-2 ring-slate-300/50 dark:ring-white/10 group-hover:ring-primary-400/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2"
                 >
                   <Image
                     src={getAvatarUrl(user.avatarUrl, user.handle)}
@@ -231,16 +231,16 @@ export function SuggestedUsers(): ReactElement {
                     className="block group/link"
                   >
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-sm font-semibold text-white group-hover/link:text-primary-400 transition-colors truncate">
+                      <span className="text-sm font-semibold text-slate-900 dark:text-white group-hover/link:text-primary-400 transition-colors truncate">
                         {user.displayName}
                       </span>
                       {user.isVerified && <VerifiedBadge size="sm" />}
                     </div>
-                    <span className="text-xs text-slate-400/80 block truncate mb-1">
+                    <span className="text-xs text-slate-600 dark:text-slate-400/80 block truncate mb-1">
                       @{user.handle}
                     </span>
                     {user.bio && (
-                      <p className="text-xs text-slate-400/60 line-clamp-2 mt-1">
+                      <p className="text-xs text-slate-600 dark:text-slate-400/60 line-clamp-2 mt-1">
                         {user.bio}
                       </p>
                     )}
@@ -258,7 +258,7 @@ export function SuggestedUsers(): ReactElement {
                   disabled={isFollowingMutation}
                   className={`shrink-0 px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-300 ease-out ${
                     isFollowing
-                      ? 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20 hover:shadow-lg hover:shadow-white/5'
+                      ? 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white/20 hover:shadow-lg hover:shadow-white/5'
                       : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/50 hover:from-primary-500 hover:to-accent-400 hover:-translate-y-0.5'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
@@ -283,7 +283,7 @@ export function SuggestedUsers(): ReactElement {
       )}
 
       {suggestedUsers.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-white/5 pr-5">
+        <div className="mt-6 pt-6 border-t border-slate-200/50 dark:border-white/5 pr-5">
           <Link
             href="/explore"
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-semibold text-primary-400 bg-primary-500/5 hover:bg-primary-500/10 hover:text-primary-300 transition-all duration-200 group border border-primary-500/10 hover:border-primary-500/20"

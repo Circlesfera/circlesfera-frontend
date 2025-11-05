@@ -16,6 +16,7 @@ import { createQueryClient } from '@/lib/query-client';
 import { refreshSession, fetchCurrentUser } from '@/services/api/auth';
 import { useSessionStore } from '@/store/session';
 import { setupTokenRefresh } from '@/lib/token-refresh';
+import { ThemeProvider } from '@/lib/theme-provider';
 
 const SessionHydrator = (): null => {
   const user = useSessionStore((state) => state.user);
@@ -87,7 +88,11 @@ export const Providers = ({ children, dehydratedState }: ProvidersProps): ReactE
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydratedState}>{children}</HydrationBoundary>
+      <HydrationBoundary state={dehydratedState}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </HydrationBoundary>
       <SessionHydrator />
       <Toaster position="top-right" richColors closeButton />
       {process.env.NODE_ENV !== 'production' ? <ReactQueryDevtools buttonPosition="bottom-right" /> : null}

@@ -136,7 +136,7 @@ function MediaPreview({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="relative w-full rounded-lg overflow-hidden bg-black/20 isolate"
+        className="relative w-full rounded-lg overflow-hidden bg-black/20 dark:bg-black/20 isolate"
         style={{
           aspectRatio: aspectRatio,
           maxHeight: '280px',
@@ -234,7 +234,7 @@ function MediaPreview({
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-white/40">Tipo de archivo no reconocido</span>
+                <span className="text-slate-600 dark:text-white/40">Tipo de archivo no reconocido</span>
               </div>
             )}
             
@@ -242,7 +242,7 @@ function MediaPreview({
             <button
               type="button"
               onClick={() => onRemove(currentPreviewIndex)}
-              className="absolute top-1.5 right-1.5 rounded-full bg-black/80 backdrop-blur-sm p-1 text-white hover:bg-red-500/90 transition-all z-10 shadow-lg"
+              className="absolute top-1.5 right-1.5 rounded-full bg-black/80 dark:bg-black/80 backdrop-blur-sm p-1 text-white dark:text-white hover:bg-red-500/90 transition-all z-10 shadow-lg"
               style={{ 
                 transform: 'translateZ(0)',
                 backfaceVisibility: 'hidden'
@@ -300,7 +300,7 @@ function MediaPreview({
               backfaceVisibility: 'hidden'
             }}
           >
-            <div className="flex flex-col items-center gap-3 text-white/40">
+            <div className="flex flex-col items-center gap-3 text-slate-600 dark:text-white/40">
               <span className="size-8 animate-spin rounded-full border-2 border-white/20 border-t-white/60" />
               <span className="text-sm">Cargando preview...</span>
             </div>
@@ -718,7 +718,11 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
       }
     }
 
-    createPostMutation.mutate({ caption, media: files });
+    // El backend requiere caption.min(1), pero permite posts solo con media
+    // Si caption está vacío pero hay media, enviar un espacio para cumplir validación
+    const captionToSend = caption.trim() || (files.length > 0 ? ' ' : '');
+    
+    createPostMutation.mutate({ caption: captionToSend, media: files });
   };
 
   // Obtener avatar sincronizado del usuario actual
@@ -755,7 +759,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
   const containerClassName = useMemo(() => {
     // Si hay preview o alguna vez lo hubo, usar fondo sólido permanentemente
     if (hasPreviewState || hasEverHadPreviewRef.current) {
-      return "rounded-3xl p-4 md:p-5 mb-6 border border-white/5 shadow-elegant-lg bg-slate-900/95";
+      return "rounded-3xl p-4 md:p-5 mb-6 border border-slate-200/50 dark:border-white/5 shadow-elegant-lg bg-white dark:bg-slate-900/95";
     }
     return "rounded-3xl glass-card p-4 md:p-5 mb-6 border border-white/5 shadow-elegant-lg";
   }, [hasPreviewState]); // Solo depende del estado, no del ref directamente
@@ -794,7 +798,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
             className={`flex-1 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 ${
               contentType === 'post'
                 ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30'
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-white/60 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
             }`}
           >
             Post
@@ -805,7 +809,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
             className={`flex-1 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 ${
               contentType === 'reel'
                 ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30'
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-white/60 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
             }`}
           >
             Reel
@@ -854,13 +858,13 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                 placeholder={contentType === 'reel' ? 'Escribe una descripción para tu reel...' : '¿Qué estás pensando?'}
                 maxLength={2200}
                 rows={isExpanded ? 2 : 1}
-                className="w-full resize-none rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/30 transition-all duration-200 focus:border-primary-500/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="w-full resize-none rounded-xl border border-slate-300 dark:border-white/5 bg-slate-50 dark:bg-white/5 px-3 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/30 transition-all duration-200 focus:border-primary-500/50 focus:bg-slate-100 dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
               />
 
               {/* Contador de caracteres */}
               {isExpanded && (
                 <div className="flex justify-end">
-                  <span className={`text-xs ${caption.length > 2100 ? 'text-red-400' : 'text-white/40'}`}>
+                  <span className={`text-xs ${caption.length > 2100 ? 'text-red-400' : 'text-slate-500 dark:text-white/40'}`}>
                     {caption.length}/2200
                   </span>
                 </div>
@@ -910,8 +914,8 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                               />
                             )}
                             {isVideo && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                                <svg className="size-2.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/30 dark:bg-black/30">
+                                <svg className="size-2.5 text-white dark:text-white" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M8 5v14l11-7z" />
                                 </svg>
                               </div>
@@ -944,7 +948,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                       }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur-sm transition-all duration-200 hover:bg-white/10 hover:border-primary-500/30 hover:text-white"
+                      className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-2.5 py-1.5 text-xs font-medium text-slate-900 dark:text-white/90 backdrop-blur-sm transition-all duration-200 hover:bg-slate-200 dark:hover:bg-white/10 hover:border-primary-500/30 hover:text-slate-900 dark:hover:text-white"
                     >
                       <svg className="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path

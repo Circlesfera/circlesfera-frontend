@@ -197,15 +197,161 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
   });
 
   const saveMutation = useMutation({
-    mutationFn: (postId: string) => (post.isSavedByViewer ? unsavePost(postId) : savePost(postId)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['post', post.id] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-      queryClient.invalidateQueries({ queryKey: ['saved'] });
-      toast.success(post.isSavedByViewer ? 'Post desguardado' : 'Post guardado');
+    mutationFn: (postId: string) => {
+      // Obtener el estado actual del post desde el cache para determinar qué acción tomar
+      const feedData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      let currentPost: FeedItem | undefined;
+      
+      if (feedData) {
+        for (const page of feedData.pages) {
+          currentPost = page.data.find((item) => item.id === postId);
+          if (currentPost) break;
+        }
+      }
+      
+      // Usar el estado actual del post, o el prop como fallback
+      const isCurrentlySaved = currentPost?.isSavedByViewer ?? post.isSavedByViewer;
+      
+      // Ejecutar la acción correspondiente
+      if (isCurrentlySaved) {
+        return unsavePost(postId);
+      } else {
+        return savePost(postId);
+      }
     },
-    onError: () => {
+    onMutate: async (postId: string) => {
+      // Cancelar cualquier query en progreso para evitar sobrescribir nuestro update optimista
+      await queryClient.cancelQueries({ queryKey: ['feed', 'home'] });
+      await queryClient.cancelQueries({ queryKey: ['post', postId] });
+
+      // Snapshot del valor anterior
+      const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      const previousPost = queryClient.getQueryData<{ post: FeedItem }>(['post', postId]);
+
+      // Obtener el estado actual del post antes de actualizar
+      let currentPostState: FeedItem | undefined;
+      if (previousFeed) {
+        for (const page of previousFeed.pages) {
+          currentPostState = page.data.find((item) => item.id === postId);
+          if (currentPostState) break;
+        }
+      }
+      
+      // Si no está en el feed, usar el post individual
+      if (!currentPostState && previousPost) {
+        currentPostState = previousPost.post;
+      }
+      
+      // Si no está en ninguno, usar el prop
+      const isCurrentlySaved = currentPostState?.isSavedByViewer ?? post.isSavedByViewer;
+
+      // Actualización optimista del feed
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { queryKey: ['feed', 'home'] },
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  return {
+                    ...item,
+                    isSavedByViewer: !isCurrentlySaved
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualización optimista del post individual
+      queryClient.setQueryData<{ post: FeedItem }>(
+        ['post', postId],
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            post: {
+              ...old.post,
+              isSavedByViewer: !isCurrentlySaved
+            }
+          };
+        }
+      );
+
+      // Retornar contexto con snapshot para rollback
+      return { previousFeed, previousPost };
+    },
+    onError: (err, postId, context) => {
+      // Revertir al valor anterior en caso de error
+      if (context?.previousFeed) {
+        queryClient.setQueryData(['feed', 'home'], context.previousFeed);
+      }
+      if (context?.previousPost) {
+        queryClient.setQueryData(['post', postId], context.previousPost);
+      }
       toast.error('No se pudo actualizar el guardado');
+    },
+    onSuccess: (data, postId) => {
+      // Confirmar el estado con la respuesta del servidor
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { queryKey: ['feed', 'home'] },
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  return {
+                    ...item,
+                    isSavedByViewer: data.saved ?? !item.isSavedByViewer
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar el post individual también
+      queryClient.setQueryData<{ post: FeedItem }>(
+        ['post', postId],
+        (old) => {
+          if (!old) return old;
+          
+          return {
+            ...old,
+            post: {
+              ...old.post,
+              isSavedByViewer: data.saved ?? !old.post.isSavedByViewer
+            }
+          };
+        }
+      );
+
+      // Invalidar queries relacionadas en background
+      queryClient.invalidateQueries({ queryKey: ['saved'] });
+      
+      const feedData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      let currentPost: FeedItem | undefined;
+      if (feedData) {
+        for (const page of feedData.pages) {
+          currentPost = page.data.find((item) => item.id === postId);
+          if (currentPost) break;
+        }
+      }
+      const isSaved = currentPost?.isSavedByViewer ?? post.isSavedByViewer;
+      toast.success(isSaved ? 'Post guardado' : 'Post desguardado');
     }
   });
 
@@ -244,7 +390,7 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
         className={`group relative rounded-xl p-2 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
           post.isLikedByViewer 
             ? 'text-red-500 hover:text-red-400 hover:bg-red-500/25' 
-            : 'text-slate-400 hover:text-red-500 hover:bg-red-500/15'
+            : 'text-slate-600 dark:text-slate-400 hover:text-red-500 hover:bg-red-500/15'
         }`}
         title={post.isLikedByViewer ? 'Quitar me gusta' : 'Me gusta'}
       >
@@ -287,7 +433,7 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
       >
       <Link
         href={`/posts/${post.id}#comments`}
-          className="group flex rounded-xl p-2 text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"
+          className="group flex rounded-xl p-2 text-slate-600 dark:text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"
           title="Comentar"
       >
           <svg 
@@ -312,7 +458,7 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
         onClick={handleShare}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="group rounded-xl p-2 text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"
+        className="group rounded-xl p-2 text-slate-600 dark:text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"
         title="Compartir"
       >
         <svg 
@@ -343,7 +489,7 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
         className={`group relative rounded-xl p-2 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
           post.isSavedByViewer 
             ? 'text-primary-400 hover:text-primary-300 hover:bg-primary-500/25' 
-            : 'text-slate-400 hover:text-primary-400 hover:bg-primary-500/15'
+            : 'text-slate-600 dark:text-slate-400 hover:text-primary-400 hover:bg-primary-500/15'
         }`}
         title={post.isSavedByViewer ? 'Desguardar' : 'Guardar'}
       >
