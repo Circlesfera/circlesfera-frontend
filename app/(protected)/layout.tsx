@@ -26,8 +26,8 @@ export default function ProtectedLayout({ children }: ProtectedLayoutProps): Rea
       
       {/* Contenido principal */}
       <main className="relative z-10 flex-1 md:ml-[260px] pb-20 md:pb-0">
-        <div className="mx-auto min-h-screen max-w-[1400px] px-4 py-6 md:px-6 md:py-8">
-          <div className="animate-fade-in">
+        <div className="w-full min-h-screen">
+          <div className="animate-fade-in h-full">
             {children}
           </div>
         </div>
