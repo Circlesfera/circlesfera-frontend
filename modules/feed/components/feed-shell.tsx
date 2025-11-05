@@ -163,10 +163,19 @@ export const FeedShell = (): ReactElement => {
               animate="visible"
               transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="mb-8"
+              style={{ 
+                transform: 'translateZ(0)',
+                isolation: 'isolate',
+                contain: 'layout style'
+              }}
             >
               <CreatePostForm
                 onSuccess={() => {
-                  void refetch();
+                  // Refetch solo si no estamos scrolleando para evitar flicker
+                  // El feed se actualizará automáticamente cuando se invaliden las queries
+                  setTimeout(() => {
+                    void refetch();
+                  }, 100);
                 }}
               />
             </motion.div>
