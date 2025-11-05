@@ -91,7 +91,7 @@ export function BottomNav(): ReactElement {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-bottom-nav">
-      <div className="flex items-center justify-around px-2 py-2">
+      <div className="flex items-center justify-around px-2 py-2.5">
         {navItems.map((item) => {
           const active = isActive(item.href);
           const showBadge = item.href === '/messages' && unreadCount > 0;
@@ -99,12 +99,12 @@ export function BottomNav(): ReactElement {
           return (
             <motion.div
               key={item.href}
-              whileTap={{ scale: 0.9 }}
-              transition={{ duration: 0.15 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
               <Link
                 href={item.href}
-                className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-w-[60px] transition-all duration-300 ${
+                className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-w-[60px] transition-all duration-300 ease-out ${
                   active
                     ? 'text-primary-400'
                     : 'text-slate-400'
@@ -113,14 +113,19 @@ export function BottomNav(): ReactElement {
                 <div className="relative">
                   <motion.div
                     animate={{ scale: active ? 1.1 : 1 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   >
                     {active ? item.activeIcon : item.icon}
                   </motion.div>
                   {showBadge && (
-                    <span className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 ring-2 ring-black">
+                    <motion.span 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 ring-2 ring-black"
+                    >
                       {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
+                    </motion.span>
                   )}
                 </div>
                 <span className={`text-[10px] font-medium transition-colors duration-300 ${
@@ -131,7 +136,7 @@ export function BottomNav(): ReactElement {
                 {active && (
                   <motion.div
                     layoutId="bottomNavIndicator"
-                    className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500"
+                    className="absolute bottom-0 left-1/2 h-1 w-1.5 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]"
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -143,8 +148,8 @@ export function BottomNav(): ReactElement {
         {/* Profile link */}
         {user && (
           <motion.div
-            whileTap={{ scale: 0.9 }}
-            transition={{ duration: 0.15 }}
+            whileTap={{ scale: 0.92 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           >
             <Link
               href={`/${user.handle}`}
@@ -176,7 +181,7 @@ export function BottomNav(): ReactElement {
               {(pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)) && (
                 <motion.div
                   layoutId="bottomNavProfileIndicator"
-                  className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500"
+                  className="absolute bottom-0 left-1/2 h-1 w-1.5 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]"
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}
