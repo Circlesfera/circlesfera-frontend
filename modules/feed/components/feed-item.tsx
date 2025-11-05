@@ -266,18 +266,37 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
     createCommentMutation.mutate(commentText.trim());
   }, [commentText, createCommentMutation]);
 
-  // Intersection Observer para lazy loading
+  // Intersection Observer para lazy loading - Optimizado con throttling
   useEffect(() => {
+    if (!containerRef.current) return;
+
+    let rafId: number | null = null;
+    let lastIntersection = false;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry && entry.isIntersecting) {
-          setIsInView(true);
-          // Desconectar después de que se vea por primera vez
-          if (containerRef.current) {
-            observer.unobserve(containerRef.current);
-          }
+        if (!entry) return;
+
+        // Throttle usando requestAnimationFrame para evitar re-renders excesivos
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
         }
+
+        rafId = requestAnimationFrame(() => {
+          const isIntersecting = entry.isIntersecting;
+          
+          // Solo actualizar si cambió el estado de intersección
+          if (isIntersecting !== lastIntersection && isIntersecting) {
+            setIsInView(true);
+            lastIntersection = true;
+            
+            // Desconectar después de que se vea por primera vez
+            if (containerRef.current) {
+              observer.unobserve(containerRef.current);
+            }
+          }
+        });
       },
       {
         rootMargin: '200px', // Cargar antes de que sea visible
@@ -285,11 +304,12 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
       }
     );
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+    observer.observe(containerRef.current);
 
     return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       if (containerRef.current) {
         observer.unobserve(containerRef.current);
       }
