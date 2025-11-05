@@ -271,6 +271,81 @@ export const loadingVariants: Variants = {
 };
 
 /**
+ * Variantes para micro-interacciones sutiles
+ */
+export const subtleHoverVariants: Variants = {
+  rest: {
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      ease: [0.4, 0, 0.2, 1]
+    }
+  },
+  hover: {
+    scale: 1.02,
+    y: -2,
+    transition: {
+      duration: 0.2,
+      ease: [0.4, 0, 0.2, 1]
+    }
+  }
+};
+
+/**
+ * Variantes para elementos con glow effect
+ */
+export const glowVariants: Variants = {
+  rest: {
+    boxShadow: '0 0 0px rgba(168, 85, 247, 0)',
+    transition: {
+      duration: 0.3,
+      ease: 'easeOut'
+    }
+  },
+  hover: {
+    boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)',
+    transition: {
+      duration: 0.3,
+      ease: 'easeOut'
+    }
+  }
+};
+
+/**
+ * Variantes para transiciones más suaves y naturales
+ */
+export const smoothTransition = {
+  type: 'tween' as const,
+  duration: 0.3,
+  ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
+};
+
+/**
+ * Spring configuraciones refinadas
+ */
+export const springConfigs = {
+  gentle: {
+    type: 'spring' as const,
+    stiffness: 200,
+    damping: 25,
+    mass: 1
+  },
+  standard: {
+    type: 'spring' as const,
+    stiffness: 300,
+    damping: 30,
+    mass: 0.8
+  },
+  snappy: {
+    type: 'spring' as const,
+    stiffness: 400,
+    damping: 25,
+    mass: 0.7
+  }
+};
+
+/**
  * Hook helper para crear variantes personalizadas con delay
  */
 export const createDelayedVariants = (
