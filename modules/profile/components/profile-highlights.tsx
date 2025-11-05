@@ -78,7 +78,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
     <>
       <div className="w-full max-w-5xl px-4 py-3">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-white">Highlights</h2>
+          <h2 className="text-base font-semibold text-slate-900 dark:text-white">Highlights</h2>
           {isOwnProfile && (
             <button
               type="button"
@@ -102,7 +102,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
                 }}
                 className="relative group"
               >
-                <div className="relative size-14 overflow-hidden rounded-full border-2 border-white/30 p-0.5">
+                <div className="relative size-14 overflow-hidden rounded-full border-2 border-slate-300/50 dark:border-white/30 p-0.5">
                   {highlight.coverImageUrl ? (
                     <Image
                       src={highlight.coverImageUrl}
@@ -112,7 +112,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
-                      <svg className="size-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="size-8 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -132,19 +132,19 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
                     }}
                     className="absolute -top-1 -right-1 z-10 rounded-full bg-red-600 p-1 opacity-0 transition group-hover:opacity-100"
                   >
-                    <svg className="size-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="size-3 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 )}
               </button>
-              <span className="max-w-[70px] truncate text-xs text-white/80 text-center">{highlight.name}</span>
+              <span className="max-w-[70px] truncate text-xs text-slate-900 dark:text-white/80 text-center">{highlight.name}</span>
             </div>
           ))}
 
           {highlights.length === 0 && (
-            <div className="flex flex-col items-center justify-center gap-1.5 py-6 text-center text-xs text-slate-400">
-              <svg className="size-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex flex-col items-center justify-center gap-1.5 py-6 text-center text-xs text-slate-600 dark:text-slate-400">
+              <svg className="size-10 text-slate-600 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

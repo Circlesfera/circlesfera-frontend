@@ -75,15 +75,15 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
 
   return (
     <>
-      <aside className="w-64 border-r border-slate-800 bg-slate-900/40 p-4">
+      <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white">Colecciones</h2>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Colecciones</h2>
           <button
             type="button"
             onClick={() => {
               setShowCreateDialog(true);
             }}
-            className="rounded-full p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+            className="rounded-full p-2 text-slate-600 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
             title="Crear colección"
           >
             <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
         {isLoading ? (
           <div className="space-y-2">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-16 animate-pulse rounded-lg bg-slate-800" />
+              <div key={i} className="h-16 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800" />
             ))}
           </div>
         ) : (
@@ -114,7 +114,7 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                   className={`w-full rounded-lg border p-3 text-left transition ${
                     isSelected
                       ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-slate-700 bg-slate-800/40 hover:border-slate-600 hover:bg-slate-800/60'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-800/60'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -123,8 +123,8 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                         <Image src={collection.coverImageUrl} alt={collection.name} fill className="object-cover" />
                       </div>
                     ) : (
-                      <div className="flex size-12 items-center justify-center rounded-lg bg-slate-700">
-                        <svg className="size-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex size-12 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
+                        <svg className="size-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -136,12 +136,12 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="truncate font-semibold text-white">{collection.name}</h3>
+                        <h3 className="truncate font-semibold text-slate-900 dark:text-white">{collection.name}</h3>
                         {isDefault && (
-                          <span className="flex-shrink-0 text-xs text-slate-400">(Por defecto)</span>
+                          <span className="flex-shrink-0 text-xs text-slate-600 dark:text-slate-400">(Por defecto)</span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-400">{collection.postCount} posts</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">{collection.postCount} posts</p>
                     </div>
                     {!isDefault && (
                       <button
@@ -150,7 +150,7 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                           e.stopPropagation();
                           handleDelete(collection.id, collection.name);
                         }}
-                        className="flex-shrink-0 rounded-full p-1.5 text-slate-500 transition hover:bg-red-900/20 hover:text-red-400"
+                        className="flex-shrink-0 rounded-full p-1.5 text-slate-600 dark:text-slate-500 transition hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400"
                         title="Eliminar colección"
                       >
                         <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,12 +168,12 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
 
       {/* Dialog para crear colección */}
       {showCreateDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-            <h2 className="mb-4 text-xl font-bold text-white">Crear nueva colección</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl">
+            <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-white">Crear nueva colección</h2>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-300">
+                <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Nombre
                 </label>
                 <input
@@ -182,12 +182,12 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                   type="text"
                   required
                   maxLength={50}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                   placeholder="Ej: Recetas, Inspiración..."
                 />
               </div>
               <div>
-                <label htmlFor="description" className="mb-1 block text-sm font-medium text-slate-300">
+                <label htmlFor="description" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Descripción (opcional)
                 </label>
                 <textarea
@@ -195,7 +195,7 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                   name="description"
                   rows={3}
                   maxLength={200}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                   placeholder="Describe tu colección..."
                 />
               </div>
@@ -206,7 +206,7 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
                     setShowCreateDialog(false);
                   }}
                   disabled={createMutation.isPending}
-                  className="rounded-xl border border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
+                  className="rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
                 >
                   Cancelar
                 </button>

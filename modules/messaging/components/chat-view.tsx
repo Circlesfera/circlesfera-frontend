@@ -264,13 +264,13 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
   return (
     <div className="flex flex-col h-full">
       {/* Header del chat */}
-      <div className="p-4 border-b border-white/5 glass-card flex items-center gap-3">
+      <div className="p-4 border-b border-slate-200/50 dark:border-white/5 glass-card flex items-center gap-3">
         {isGroup ? (
           <div className="size-12 rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-primary-500/30">
             {displayName.charAt(0).toUpperCase()}
           </div>
         ) : (
-          <div className="relative size-12 ring-2 ring-slate-800 rounded-full">
+          <div className="relative size-12 ring-2 ring-slate-300 dark:ring-slate-800 rounded-full">
             <Image
               src={avatarUrl || '/default-avatar.png'}
               alt={displayName}
@@ -281,14 +281,14 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
         )}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="font-semibold text-white">{displayName}</h2>
+            <h2 className="font-semibold text-slate-900 dark:text-white">{displayName}</h2>
             {isGroup && (
               <span className="text-xs px-2 py-0.5 rounded-md bg-primary-500/20 text-primary-400 font-medium">
                 Grupo
               </span>
             )}
           </div>
-          <p className="text-sm text-slate-400">{displaySubtitle}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">{displaySubtitle}</p>
         </div>
         {isGroup && (
           <button
@@ -296,7 +296,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
             onClick={() => {
               setIsGroupSettingsOpen(true);
             }}
-            className="p-2 rounded-lg hover:bg-slate-800 transition text-slate-400 hover:text-white"
+            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             title="Configuración del grupo"
           >
             <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,7 +308,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       </div>
 
       {/* Mensajes */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900/30">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-white via-slate-50 to-slate-100/50 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/30">
         {hasNextPage && (
           <div className="text-center">
             <button
@@ -316,7 +316,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
               onClick={() => {
                 fetchNextPage();
               }}
-              className="text-sm px-4 py-2 rounded-full bg-slate-800/50 text-primary-400 hover:bg-slate-800/70 hover:text-primary-300 transition-all duration-200 border border-slate-700/50 hover:border-primary-500/30"
+              className="text-sm px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-800/70 hover:text-primary-300 transition-all duration-200 border border-slate-300/50 dark:border-slate-700/50 hover:border-primary-500/30"
             >
               Cargar mensajes anteriores
             </button>
@@ -327,19 +327,19 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
-              <p className="text-sm text-slate-400">Cargando mensajes...</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Cargando mensajes...</p>
             </div>
           </div>
         ) : allMessages.length === 0 ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <div className="size-16 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center mx-auto mb-4">
-                <svg className="size-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="size-16 rounded-full bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 flex items-center justify-center mx-auto mb-4">
+                <svg className="size-8 text-slate-600 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-slate-400">No hay mensajes aún</p>
-              <p className="text-xs text-slate-500 mt-1">Sé el primero en enviar un mensaje</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No hay mensajes aún</p>
+              <p className="text-xs text-slate-600 dark:text-slate-500 mt-1">Sé el primero en enviar un mensaje</p>
             </div>
           </div>
         ) : (
@@ -355,7 +355,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                       src={message.sender.avatarUrl || '/default-avatar.png'}
                       alt={message.sender.displayName}
                       fill
-                      className="rounded-full object-cover ring-2 ring-slate-800"
+                      className="rounded-full object-cover ring-2 ring-slate-300 dark:ring-slate-800"
                     />
                   </div>
                 )}
@@ -367,13 +367,13 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                     className={`rounded-2xl px-4 py-2.5 shadow-md ${
                       isOwn 
                         ? 'bg-gradient-to-br from-primary-600 to-primary-500 text-white rounded-br-md' 
-                        : 'bg-slate-800/80 backdrop-blur-sm text-slate-100 rounded-bl-md border border-slate-700/50'
+                        : 'bg-slate-100 dark:bg-slate-800/80 backdrop-blur-sm text-slate-900 dark:text-slate-100 rounded-bl-md border border-slate-300/50 dark:border-slate-700/50'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
                   </div>
                     <div className={`flex items-center gap-1.5 mt-1.5 px-1 ${isOwn ? 'justify-end' : ''}`}>
-                      <p className={`text-xs ${isOwn ? 'text-slate-500' : 'text-slate-500'}`}>
+                      <p className={`text-xs ${isOwn ? 'text-slate-600 dark:text-slate-500' : 'text-slate-600 dark:text-slate-500'}`}>
                     {formatRelativeTime(message.createdAt)}
                   </p>
                       {isOwn && (
@@ -385,7 +385,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                               </svg>
                             </span>
                           ) : (
-                            <span className="text-slate-500" title="Enviado">
+                            <span className="text-slate-600 dark:text-slate-500" title="Enviado">
                               <svg className="size-3.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -401,7 +401,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                       src={currentUser?.avatarUrl || '/default-avatar.png'}
                       alt={currentUser?.displayName || 'Tú'}
                       fill
-                      className="rounded-full object-cover ring-2 ring-slate-800"
+                      className="rounded-full object-cover ring-2 ring-slate-300 dark:ring-slate-800"
                     />
                   </div>
                 )}
@@ -420,11 +420,11 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
                   </div>
                 </div>
                 <div className="max-w-[70%]">
-                  <div className="rounded-2xl px-4 py-2.5 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50">
+                  <div className="rounded-2xl px-4 py-2.5 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-300/50 dark:border-slate-700/50">
                     <div className="flex gap-1 items-center">
-                      <span className="size-2 bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
-                      <span className="size-2 bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
-                      <span className="size-2 bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+                      <span className="size-2 bg-slate-600 dark:bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
+                      <span className="size-2 bg-slate-600 dark:bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
+                      <span className="size-2 bg-slate-600 dark:bg-slate-500 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -436,7 +436,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       </div>
 
       {/* Input de mensaje */}
-      <form onSubmit={handleSubmit} className="p-4 border-t border-slate-800/50 bg-slate-900/30 backdrop-blur-sm">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-slate-200/50 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/30 backdrop-blur-sm">
         <div className="flex gap-3">
           <input
             type="text"
@@ -445,7 +445,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
               setMessageText(e.target.value);
             }}
             placeholder="Escribe un mensaje..."
-            className="flex-1 px-5 py-3 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-200"
+            className="flex-1 px-5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300/50 dark:border-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-200"
             maxLength={5000}
           />
           <button

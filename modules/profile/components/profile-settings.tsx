@@ -19,7 +19,7 @@ export function ProfileSettings(): ReactElement | null {
 
   if (!isHydrated) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center text-sm text-white/60">
+      <div className="flex min-h-[200px] items-center justify-center text-sm text-slate-600 dark:text-white/60">
         Cargando tu perfil…
       </div>
     );

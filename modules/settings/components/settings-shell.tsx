@@ -40,7 +40,7 @@ export function SettingsShell(): ReactElement | null {
 
   if (!isHydrated) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center text-sm text-white/60">
+      <div className="flex min-h-[200px] items-center justify-center text-sm text-slate-600 dark:text-white/60">
         Cargando configuración…
       </div>
     );
@@ -176,7 +176,7 @@ export function SettingsShell(): ReactElement | null {
                   className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-all duration-300 ${
                     isActive
                       ? 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/40'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white glass-dark'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white glass-dark'
                   }`}
                 >
                   <motion.span

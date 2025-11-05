@@ -81,8 +81,8 @@ export function ProfileTabs({ handle }: ProfileTabsProps): ReactElement {
               }}
               className={`relative flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-colors duration-200 whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'text-white'
-                  : 'text-white/60 hover:text-white/80'
+                  ? 'text-slate-900 dark:text-white'
+                  : 'text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80'
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

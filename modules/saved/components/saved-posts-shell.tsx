@@ -33,7 +33,7 @@ export function SavedPostsShell(): ReactElement {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" />
-          <p className="text-sm text-slate-400">Cargando posts guardados...</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Cargando posts guardados...</p>
         </div>
       </div>
     );
@@ -83,7 +83,7 @@ export function SavedPostsShell(): ReactElement {
             className="relative mb-6 mx-auto"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-primary-400/20 to-accent-500/20 blur-2xl" />
-            <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-900/50 to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+            <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-100 dark:from-slate-900/50 to-white dark:to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
               <svg className="size-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -99,8 +99,8 @@ export function SavedPostsShell(): ReactElement {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <h2 className="text-xl font-bold text-white mb-2">No hay posts guardados</h2>
-            <p className="text-sm text-slate-400">Guarda posts que te gusten para verlos aquí más tarde</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No hay posts guardados</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Guarda posts que te gusten para verlos aquí más tarde</p>
           </motion.div>
         </div>
       </motion.div>
@@ -115,51 +115,53 @@ export function SavedPostsShell(): ReactElement {
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="flex flex-1 flex-col gap-8 p-6"
+        className="flex flex-1 flex-col items-center gap-8 p-6"
       >
-        {items.map((item) => (
-          <motion.div key={item.id} variants={staggerItem}>
-            <FeedItemComponent item={item} />
-          </motion.div>
-        ))}
+        <div className="w-full max-w-sm">
+          {items.map((item) => (
+            <motion.div key={item.id} variants={staggerItem} className="mb-8 last:mb-0">
+              <FeedItemComponent item={item} />
+            </motion.div>
+          ))}
 
-        {hasNextPage ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex justify-center pt-4"
-          >
-            <motion.button
-              type="button"
-              onClick={() => {
-                void fetchNextPage();
-              }}
-              disabled={isFetchingNextPage}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
+          {hasNextPage ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex justify-center pt-4"
             >
-              {isFetchingNextPage ? (
-                <span className="flex items-center gap-2">
-                  <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  Cargando...
-                </span>
-              ) : (
-                'Cargar más'
-              )}
-            </motion.button>
-          </motion.div>
-        ) : (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="mx-auto mt-4 text-center text-sm text-slate-500"
-          >
-            Has visto todos tus posts guardados.
-          </motion.p>
-        )}
+              <motion.button
+                type="button"
+                onClick={() => {
+                  void fetchNextPage();
+                }}
+                disabled={isFetchingNextPage}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
+              >
+                {isFetchingNextPage ? (
+                  <span className="flex items-center gap-2">
+                    <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Cargando...
+                  </span>
+                ) : (
+                  'Cargar más'
+                )}
+              </motion.button>
+            </motion.div>
+          ) : (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="mx-auto mt-4 text-center text-sm text-slate-500"
+            >
+              Has visto todos tus posts guardados.
+            </motion.p>
+          )}
+        </div>
       </motion.section>
     </div>
   );

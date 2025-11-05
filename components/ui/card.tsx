@@ -78,7 +78,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
     return (
       <Component
         ref={ref}
-        className={twMerge('text-xl font-semibold leading-none tracking-tight text-white', className)}
+        className={twMerge('text-xl font-semibold leading-none tracking-tight text-slate-900 dark:text-white', className)}
         {...props}
       />
     );
@@ -94,7 +94,7 @@ export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionP
     return (
       <p
         ref={ref}
-        className={twMerge('text-sm text-slate-400', className)}
+        className={twMerge('text-sm text-slate-600 dark:text-slate-400', className)}
         {...props}
       />
     );

@@ -71,24 +71,24 @@ function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
             />
           </motion.div>
         </Link>
-        <div className="flex-1 rounded-xl glass-card p-2.5 md:p-3.5 border border-white/[0.08] hover:border-white/15 transition-all duration-300 bg-slate-900/30 backdrop-blur-sm">
+        <div className="flex-1 rounded-xl glass-card p-2.5 md:p-3.5 border border-slate-200/50 dark:border-white/[0.08] hover:border-slate-300/50 dark:hover:border-white/15 transition-all duration-300 bg-slate-50/80 dark:bg-slate-900/30 backdrop-blur-sm">
           <div className="mb-1.5 md:mb-2 flex items-start justify-between gap-2">
             <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
               <Link
                 href={`/${comment.author?.handle ?? ''}`}
-                className="text-xs md:text-sm font-semibold text-white hover:text-primary-300 transition-colors duration-200"
+                className="text-xs md:text-sm font-semibold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
               >
                 {comment.author?.displayName ?? 'Usuario'}
               </Link>
               {comment.author?.isVerified && <VerifiedBadge size="sm" />}
               <Link
                 href={`/${comment.author?.handle ?? ''}`}
-                className="text-[10px] md:text-xs text-white/60 hover:text-white/80 transition-colors duration-200 font-medium"
+                className="text-[10px] md:text-xs text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80 transition-colors duration-200 font-medium"
               >
                 @{comment.author?.handle ?? ''}
               </Link>
-              <span className="text-[10px] md:text-xs text-white/45">•</span>
-              <span className="text-[10px] md:text-xs text-white/55">{formatRelativeTime(comment.createdAt)}</span>
+              <span className="text-[10px] md:text-xs text-slate-500 dark:text-white/45">•</span>
+              <span className="text-[10px] md:text-xs text-slate-600 dark:text-white/55">{formatRelativeTime(comment.createdAt)}</span>
             </div>
             <motion.button
               type="button"
@@ -97,7 +97,7 @@ function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="rounded-lg p-1.5 text-white/50 hover:text-white/70 hover:bg-white/[0.08] transition-all duration-200 opacity-0 group-hover:opacity-100"
+              className="rounded-lg p-1.5 text-slate-600 dark:text-white/50 hover:text-slate-900 dark:hover:text-white/70 hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-all duration-200 opacity-0 group-hover:opacity-100"
               title="Reportar comentario"
             >
               <svg className="size-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
               </svg>
             </motion.button>
           </div>
-          <p className="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-wrap break-words">{comment.content}</p>
+          <p className="text-xs md:text-sm text-slate-900 dark:text-white/90 leading-relaxed whitespace-pre-wrap break-words">{comment.content}</p>
         </div>
       </motion.div>
       {showReportDialog && (
@@ -348,7 +348,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
               <Link 
                 href={`/${item.author.handle}`} 
-                className="font-semibold text-sm md:text-base text-white hover:text-primary-300 transition-colors duration-200 truncate"
+                className="font-semibold text-sm md:text-base text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200 truncate"
                 title={item.author.displayName || item.author.handle}
               >
                 {item.author.displayName || item.author.handle}
@@ -358,15 +358,15 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             <div className="flex items-center gap-1 md:gap-1.5 flex-wrap">
               <Link
                 href={`/${item.author.handle}`}
-                className="text-xs text-white/70 hover:text-white/90 transition-colors duration-200 truncate font-medium"
+                className="text-xs text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white/90 transition-colors duration-200 truncate font-medium"
                 title={`@${item.author.handle}`}
               >
                 @{item.author.handle}
               </Link>
-              <span className="text-[10px] md:text-xs text-white/50">•</span>
+              <span className="text-[10px] md:text-xs text-slate-500 dark:text-white/50">•</span>
             <Link
               href={`/posts/${item.id}`}
-                className="text-xs text-white/60 hover:text-white/80 transition-colors duration-200"
+                className="text-xs text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80 transition-colors duration-200"
             >
               {formatRelativeTime(item.createdAt)}
             </Link>
@@ -385,7 +385,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="rounded-xl p-2.5 text-white/70 transition-all duration-300 hover:bg-white/[0.08] hover:text-white active:scale-95"
+            className="rounded-xl p-2.5 text-slate-600 dark:text-white/70 transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white active:scale-95"
             title={isAuthor ? 'Opciones del post' : 'Reportar'}
           >
             <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -414,7 +414,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                       setShowShareToStoryDialog(true);
                       setShowOptionsMenu(false);
                     }}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-slate-700/50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-slate-200 dark:active:bg-slate-700/50"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -437,7 +437,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                         setShowEditDialog(true);
                         setShowOptionsMenu(false);
                       }}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-slate-700/50"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-slate-200 dark:active:bg-slate-700/50"
                     >
                       <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -451,7 +451,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                       unarchiveMutation.mutate();
                     }}
                     disabled={unarchiveMutation.isPending}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -465,7 +465,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                       archiveMutation.mutate();
                     }}
                     disabled={archiveMutation.isPending}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -548,7 +548,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                     }}
                   />
                   {media.durationMs ? (
-                    <div className="absolute bottom-3 right-3 rounded-lg bg-black/90 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white shadow-lg border border-white/20">
+                    <div className="absolute bottom-3 right-3 rounded-lg bg-black/90 dark:bg-black/90 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white dark:text-white shadow-lg border border-white/20 dark:border-white/20">
                       {formatDuration(media.durationMs)}
                     </div>
                   ) : null}
@@ -560,7 +560,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
         ))}
       
       {/* Acciones mejoradas - diseño refinado con responsive */}
-      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-white/[0.06]">
+      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-slate-200/50 dark:border-white/[0.06]">
         <FeedItemActions post={item} />
       </div>
 
@@ -571,7 +571,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             {item.stats.likes > 0 && (
               <Link
                 href={`/posts/${item.id}#likes`}
-                className="text-xs md:text-sm font-bold text-white hover:text-primary-300 transition-colors duration-200"
+                className="text-xs md:text-sm font-bold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
               >
                 {item.stats.likes.toLocaleString('es')} me gusta{item.stats.likes !== 1 ? 's' : ''}
           </Link>
@@ -579,7 +579,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             {item.stats.comments > 0 && (
               <Link
                 href={`/posts/${item.id}#comments`}
-                className="text-xs md:text-sm font-bold text-white hover:text-primary-300 transition-colors duration-200"
+                className="text-xs md:text-sm font-bold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
               >
                 {item.stats.comments.toLocaleString('es')} comentario{item.stats.comments !== 1 ? 's' : ''}
               </Link>
@@ -594,11 +594,11 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
           <div className="space-y-1 md:space-y-1.5">
             <Link
               href={`/${item.author.handle}`}
-              className="font-semibold text-sm md:text-base text-white hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
+              className="font-semibold text-sm md:text-base text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
             >
               {item.author.handle}
           </Link>
-            <div className="text-sm md:text-base text-white/90 leading-relaxed whitespace-pre-wrap break-words">
+            <div className="text-sm md:text-base text-slate-900 dark:text-white/90 leading-relaxed whitespace-pre-wrap break-words">
               {renderCaptionWithLinks(item.caption)}
         </div>
           </div>
@@ -615,7 +615,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="text-xs md:text-sm font-semibold text-white/75 hover:text-primary-400 transition-colors duration-200"
+            className="text-xs md:text-sm font-semibold text-slate-700 dark:text-white/75 hover:text-primary-400 transition-colors duration-200"
           >
             {showComments ? 'Ocultar' : 'Ver'} todos los comentarios ({item.stats.comments.toLocaleString('es')})
           </motion.button>
@@ -659,7 +659,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               placeholder="Añade un comentario..."
               maxLength={2200}
                 rows={commentText.length > 80 ? 3 : 1}
-                className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.06] px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm text-white placeholder:text-white/40 transition-all duration-200 focus:border-primary-500/60 focus:bg-white/[0.10] focus:outline-none focus:ring-2 focus:ring-primary-500/30 backdrop-blur-sm"
+                className="w-full resize-none rounded-xl border border-slate-300 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.06] px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/40 transition-all duration-200 focus:border-primary-500/60 focus:bg-slate-100 dark:focus:bg-white/[0.10] focus:outline-none focus:ring-2 focus:ring-primary-500/30 backdrop-blur-sm"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -671,7 +671,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               />
               {commentText.length > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-white/40">
+                  <span className="text-xs text-slate-500 dark:text-white/40">
                     {commentText.length}/2200
                   </span>
                   <motion.button
@@ -703,7 +703,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="px-3 md:px-4 pb-3 md:pb-4 pt-2.5 md:pt-3 space-y-2.5 md:space-y-3 bg-gradient-to-b from-white/[0.03] to-transparent"
+          className="px-3 md:px-4 pb-3 md:pb-4 pt-2.5 md:pt-3 space-y-2.5 md:space-y-3 bg-gradient-to-b from-slate-50/50 dark:from-white/[0.03] to-transparent"
         >
           {/* Lista de comentarios */}
           {commentsQuery.isLoading ? (
@@ -716,7 +716,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-xl animate-pulse" />
                 <div className="relative size-8 animate-spin rounded-full border-2 border-primary-500/30 border-t-primary-500" />
               </div>
-              <p className="text-sm text-white/70 font-medium">Cargando comentarios...</p>
+              <p className="text-sm text-slate-700 dark:text-white/70 font-medium">Cargando comentarios...</p>
             </motion.div>
           ) : commentsQuery.data?.data.length === 0 ? (
             <motion.div 
@@ -724,7 +724,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               animate={{ opacity: 1 }}
               className="py-8 text-center"
             >
-              <p className="text-sm text-white/60">No hay comentarios aún</p>
+              <p className="text-sm text-slate-600 dark:text-white/60">No hay comentarios aún</p>
             </motion.div>
           ) : (
             <motion.div 
@@ -839,12 +839,12 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
   const defaultCollection = collections.find((c) => c.id === 'default');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-        <h2 className="mb-4 text-xl font-bold text-white">Guardar en colección</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl">
+        <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-white">Guardar en colección</h2>
 
         {isLoading ? (
-          <div className="py-8 text-center text-sm text-slate-400">Cargando colecciones...</div>
+          <div className="py-8 text-center text-sm text-slate-600 dark:text-slate-400">Cargando colecciones...</div>
         ) : (
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {/* Opción por defecto */}
@@ -856,12 +856,12 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
               className={`w-full rounded-lg border p-3 text-left transition ${
                 selectedCollectionId === null
                   ? 'border-primary-500 bg-primary-500/10'
-                  : 'border-slate-700 bg-slate-800/40 hover:border-slate-600'
+                  : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-slate-600'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="flex size-12 items-center justify-center rounded-lg bg-slate-700">
-                  <svg className="size-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex size-12 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
+                  <svg className="size-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -871,8 +871,8 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white">{defaultCollection?.name ?? 'Guardados'}</h3>
-                  <p className="text-xs text-slate-400">{defaultCollection?.postCount ?? 0} posts</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">{defaultCollection?.name ?? 'Guardados'}</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">{defaultCollection?.postCount ?? 0} posts</p>
                 </div>
               </div>
             </button>
@@ -890,7 +890,7 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                   className={`w-full rounded-lg border p-3 text-left transition ${
                     selectedCollectionId === collection.id
                       ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-slate-700 bg-slate-800/40 hover:border-slate-600'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-slate-600'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -899,8 +899,8 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                         <Image src={collection.coverImageUrl} alt={collection.name} fill className="object-cover" />
                       </div>
                     ) : (
-                      <div className="flex size-12 items-center justify-center rounded-lg bg-slate-700">
-                        <svg className="size-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex size-12 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
+                        <svg className="size-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -911,8 +911,8 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                       </div>
                     )}
                     <div className="flex-1">
-                      <h3 className="font-semibold text-white">{collection.name}</h3>
-                      <p className="text-xs text-slate-400">{collection.postCount} posts</p>
+                      <h3 className="font-semibold text-slate-900 dark:text-white">{collection.name}</h3>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">{collection.postCount} posts</p>
                     </div>
                   </div>
                 </button>
@@ -924,7 +924,7 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+            className="rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             Cancelar
           </button>
@@ -1066,61 +1066,108 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
   // Función helper para remover un post de todas las queries InfiniteData
   const removePostFromInfiniteQueries = (postIdToRemove: string): void => {
     // Remover del feed principal - usar InfiniteData<FeedCursorResponse>
+    // Usar predicate para cubrir todas las variaciones de la queryKey (con/sin cursor)
     queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-      { queryKey: ['feed', 'home'] },
+      { 
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'feed' && key[1] === 'home';
+        }
+      },
       (old) => {
         if (!old) return old;
+        const filteredPages = old.pages.map((page) => ({
+          ...page,
+          data: page.data.filter((item) => item.id !== postIdToRemove)
+        }));
+        
+        // Si todas las páginas quedan vacías, devolver el estado original
+        // para evitar problemas con la estructura de InfiniteData
+        if (filteredPages.every(page => page.data.length === 0)) {
+          return old;
+        }
+        
         return {
           ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: page.data.filter((item) => item.id !== postIdToRemove)
-          }))
+          pages: filteredPages
         };
       }
     );
 
-    // Remover del explore
+    // Remover del explore - usar predicate para todas las variaciones
     queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-      { queryKey: ['feed', 'explore'] },
+      { 
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
+        }
+      },
       (old) => {
         if (!old) return old;
+        const filteredPages = old.pages.map((page) => ({
+          ...page,
+          data: page.data.filter((item) => item.id !== postIdToRemove)
+        }));
+        
+        if (filteredPages.every(page => page.data.length === 0)) {
+          return old;
+        }
+        
         return {
           ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: page.data.filter((item) => item.id !== postIdToRemove)
-          }))
+          pages: filteredPages
         };
       }
     );
 
-    // Remover de reels
+    // Remover de reels - usar predicate para todas las variaciones
     queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-      { queryKey: ['reels'] },
+      { 
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'reels';
+        }
+      },
       (old) => {
         if (!old) return old;
+        const filteredPages = old.pages.map((page) => ({
+          ...page,
+          data: page.data.filter((item) => item.id !== postIdToRemove)
+        }));
+        
+        if (filteredPages.every(page => page.data.length === 0)) {
+          return old;
+        }
+        
         return {
           ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: page.data.filter((item) => item.id !== postIdToRemove)
-          }))
+          pages: filteredPages
         };
       }
     );
 
-    // Remover de userPosts
+    // Remover de userPosts - usar predicate para todas las variaciones
     queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-      { queryKey: ['userPosts', authorHandle] },
+      { 
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'userPosts' && key[1] === authorHandle;
+        }
+      },
       (old) => {
         if (!old) return old;
+        const filteredPages = old.pages.map((page) => ({
+          ...page,
+          data: page.data.filter((item) => item.id !== postIdToRemove)
+        }));
+        
+        if (filteredPages.every(page => page.data.length === 0)) {
+          return old;
+        }
+        
         return {
           ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: page.data.filter((item) => item.id !== postIdToRemove)
-          }))
+          pages: filteredPages
         };
       }
     );
@@ -1129,35 +1176,65 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
   const deleteMutation = useMutation({
     mutationFn: () => deletePost(postId),
     onMutate: async () => {
-      // Cancelar queries en progreso para evitar conflictos
-      await queryClient.cancelQueries({ queryKey: ['feed', 'home'] });
-      await queryClient.cancelQueries({ queryKey: ['feed', 'explore'] });
-      await queryClient.cancelQueries({ queryKey: ['reels'] });
+      // Cancelar queries en progreso para evitar conflictos - usar predicate para todas las variaciones
+      await queryClient.cancelQueries({ 
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && (
+            (key[0] === 'feed' && key[1] === 'home') ||
+            (key[0] === 'feed' && key[1] === 'explore') ||
+            key[0] === 'reels' ||
+            (key[0] === 'userPosts' && key[1] === authorHandle)
+          );
+        }
+      });
       
-      // Guardar snapshot del estado anterior para rollback en caso de error
-      const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
-      const previousExplore = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'explore']);
-      const previousReels = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
-      const previousUserPosts = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['userPosts', authorHandle]);
+      // Guardar snapshots de todas las variaciones de queries para rollback
+      const allQueries = queryClient.getQueryCache().getAll();
+      const feedQueries = allQueries.filter(q => {
+        const key = q.queryKey;
+        return Array.isArray(key) && key[0] === 'feed' && key[1] === 'home';
+      });
+      const exploreQueries = allQueries.filter(q => {
+        const key = q.queryKey;
+        return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
+      });
+      const reelsQueries = allQueries.filter(q => {
+        const key = q.queryKey;
+        return Array.isArray(key) && key[0] === 'reels';
+      });
+      const userPostsQueries = allQueries.filter(q => {
+        const key = q.queryKey;
+        return Array.isArray(key) && key[0] === 'userPosts' && key[1] === authorHandle;
+      });
+      
+      const previousQueries = {
+        feed: feedQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
+        explore: exploreQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
+        reels: reelsQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
+        userPosts: userPostsQueries.map(q => ({ key: q.queryKey, data: q.state.data }))
+      };
       
       // Remover optimísticamente del cache ANTES de la mutación
       removePostFromInfiniteQueries(postId);
       
-      return { previousFeed, previousExplore, previousReels, previousUserPosts };
+      return previousQueries;
     },
     onError: (_error, _variables, context) => {
-      // Rollback en caso de error
-      if (context?.previousFeed) {
-        queryClient.setQueryData(['feed', 'home'], context.previousFeed);
-      }
-      if (context?.previousExplore) {
-        queryClient.setQueryData(['feed', 'explore'], context.previousExplore);
-      }
-      if (context?.previousReels) {
-        queryClient.setQueryData(['reels'], context.previousReels);
-      }
-      if (context?.previousUserPosts) {
-        queryClient.setQueryData(['userPosts', authorHandle], context.previousUserPosts);
+      // Rollback en caso de error - restaurar todas las queries guardadas
+      if (context) {
+        context.feed.forEach(({ key, data }) => {
+          queryClient.setQueryData(key, data);
+        });
+        context.explore.forEach(({ key, data }) => {
+          queryClient.setQueryData(key, data);
+        });
+        context.reels.forEach(({ key, data }) => {
+          queryClient.setQueryData(key, data);
+        });
+        context.userPosts.forEach(({ key, data }) => {
+          queryClient.setQueryData(key, data);
+        });
       }
       
       const axiosError = _error as { response?: { data?: { message?: string } } };
@@ -1165,21 +1242,34 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
     },
     onSuccess: () => {
       // Invalidar queries en segundo plano (sin refetch inmediato) para asegurar sincronización
+      // Usar predicate para cubrir todas las variaciones de queryKey (con/sin cursor)
       queryClient.invalidateQueries({ 
-        queryKey: ['feed', 'home'],
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'feed' && key[1] === 'home';
+        },
         refetchType: 'none'
       });
       queryClient.invalidateQueries({ 
-        queryKey: ['feed', 'explore'],
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
+        },
         refetchType: 'none'
       });
       queryClient.invalidateQueries({ 
-        queryKey: ['reels'],
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'reels';
+        },
         refetchType: 'none'
       });
       queryClient.invalidateQueries({ queryKey: ['post', postId] });
       queryClient.invalidateQueries({ 
-        queryKey: ['userPosts', authorHandle],
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'userPosts' && key[1] === authorHandle;
+        },
         refetchType: 'none'
       });
       queryClient.invalidateQueries({ queryKey: ['analytics'] });

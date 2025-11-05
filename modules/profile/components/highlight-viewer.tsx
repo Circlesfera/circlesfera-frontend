@@ -79,16 +79,16 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-        <div className="text-white">Cargando highlight...</div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
+        <div className="text-white dark:text-white">Cargando highlight...</div>
       </div>
     );
   }
 
   if (!highlight || highlight.stories.length === 0) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-        <div className="text-center text-white">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
+        <div className="text-center text-white dark:text-white">
           <p className="mb-4">Este highlight no tiene stories</p>
           <button
             type="button"
@@ -107,8 +107,8 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
   // Validar que currentStory existe
   if (!currentStory) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-        <div className="text-center text-white">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
+        <div className="text-center text-white dark:text-white">
           <p className="mb-4">Story no encontrada</p>
           <button
             type="button"
@@ -126,7 +126,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
   const isOwnHighlight = currentUser?.id === highlight.userId;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
       {/* Progress bar superior */}
       <div className="absolute top-0 left-0 right-0 z-10 flex gap-1 p-4">
         {highlight.stories.map((story, index) => {
@@ -157,7 +157,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
       {/* Header con información */}
       <div className="absolute top-16 left-0 right-0 z-10 flex items-center gap-3 px-6 py-2">
         <div className="flex-1">
-          <h3 className="font-semibold text-white">{highlight.name}</h3>
+          <h3 className="font-semibold text-white dark:text-white">{highlight.name}</h3>
         </div>
         {isOwnHighlight && (
           <button
@@ -181,7 +181,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
         <button
           type="button"
           onClick={onClose}
-          className="rounded-full p-2 text-white transition hover:bg-white/20"
+          className="rounded-full p-2 text-white dark:text-white transition hover:bg-white/20 dark:hover:bg-white/20"
         >
           <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -224,7 +224,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
       <button
         type="button"
         onClick={handlePrevious}
-        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-3 text-white transition hover:bg-black/50"
+        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 dark:bg-black/30 p-3 text-white dark:text-white transition hover:bg-black/50 dark:hover:bg-black/50"
         disabled={currentStoryIndex === 0}
       >
         <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,7 +235,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
       <button
         type="button"
         onClick={handleNext}
-        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-3 text-white transition hover:bg-black/50"
+        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 dark:bg-black/30 p-3 text-white dark:text-white transition hover:bg-black/50 dark:hover:bg-black/50"
       >
         <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

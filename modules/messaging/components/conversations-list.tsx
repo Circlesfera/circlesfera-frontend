@@ -77,7 +77,7 @@ export function ConversationsList({ conversations, selectedId, onSelect }: Conve
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={`font-semibold truncate transition-colors ${
-                      isSelected ? 'text-white' : 'text-slate-200 group-hover:text-white'
+                      isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white'
                     }`}>
                       {displayName}
                     </span>
@@ -97,8 +97,8 @@ export function ConversationsList({ conversations, selectedId, onSelect }: Conve
                 </div>
                 <p className={`text-sm truncate transition-colors ${
                   conv.unreadCount > 0 
-                    ? 'text-white font-medium' 
-                    : 'text-slate-400 group-hover:text-slate-300'
+                    ? 'text-slate-900 dark:text-white font-medium' 
+                    : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-300'
                 }`}>
                   {lastMessagePreview}
                 </p>

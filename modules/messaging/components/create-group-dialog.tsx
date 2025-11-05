@@ -68,14 +68,14 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
   const selectedUsers = searchResults.filter((user) => selectedParticipants.includes(user.id));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-lg bg-slate-900 border border-slate-800 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl">
         <div className="p-6">
-          <h2 className="text-xl font-bold text-white mb-4">Crear grupo</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Crear grupo</h2>
 
           {/* Nombre del grupo */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-300 mb-2">Nombre del grupo</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Nombre del grupo</label>
             <input
               type="text"
               value={groupName}
@@ -83,14 +83,14 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
                 setGroupName(e.target.value);
               }}
               placeholder="Ej: Equipo de trabajo"
-              className="w-full px-4 py-2 rounded-lg bg-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
               maxLength={100}
             />
           </div>
 
           {/* Búsqueda de participantes */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-300 mb-2">Agregar participantes</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Agregar participantes</label>
             <input
               type="text"
               value={searchQuery}
@@ -98,17 +98,17 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
                 setSearchQuery(e.target.value);
               }}
               placeholder="Buscar usuarios..."
-              className="w-full px-4 py-2 rounded-lg bg-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           {/* Resultados de búsqueda */}
           {searchQuery.length >= 2 && (
-            <div className="mb-4 max-h-48 overflow-y-auto rounded-lg bg-slate-800 border border-slate-700">
+            <div className="mb-4 max-h-48 overflow-y-auto rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
               {isSearching ? (
-                <div className="p-4 text-center text-slate-400">Buscando...</div>
+                <div className="p-4 text-center text-slate-600 dark:text-slate-400">Buscando...</div>
               ) : searchResults.length === 0 ? (
-                <div className="p-4 text-center text-slate-400">No se encontraron usuarios</div>
+                <div className="p-4 text-center text-slate-600 dark:text-slate-400">No se encontraron usuarios</div>
               ) : (
                 <div className="divide-y divide-slate-700">
                   {searchResults
@@ -122,8 +122,8 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
                           onClick={() => {
                             handleToggleParticipant(user.id);
                           }}
-                          className={`w-full p-3 flex items-center gap-3 hover:bg-slate-700/50 transition ${
-                            isSelected ? 'bg-slate-700/30' : ''
+                          className={`w-full p-3 flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-700/50 transition ${
+                            isSelected ? 'bg-slate-100 dark:bg-slate-700/30' : ''
                           }`}
                         >
                           <div className="relative size-10 flex-shrink-0">
@@ -135,12 +135,12 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
                             />
                           </div>
                           <div className="flex-1 text-left">
-                            <p className="font-medium text-white">{user.displayName}</p>
-                            <p className="text-sm text-slate-400">@{user.handle}</p>
+                            <p className="font-medium text-slate-900 dark:text-white">{user.displayName}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">@{user.handle}</p>
                           </div>
                           {isSelected && (
                             <div className="size-5 rounded-full bg-primary-500 flex items-center justify-center">
-                              <svg className="size-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <svg className="size-3 text-white dark:text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                   fillRule="evenodd"
                                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -160,14 +160,14 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
           {/* Participantes seleccionados */}
           {selectedUsers.length > 0 && (
             <div className="mb-4">
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Participantes seleccionados ({selectedUsers.length})
               </label>
               <div className="flex flex-wrap gap-2">
                 {selectedUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
                   >
                     <div className="relative size-6">
                       <Image
@@ -177,13 +177,13 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
                         className="rounded-full object-cover"
                       />
                     </div>
-                    <span className="text-sm text-white">{user.displayName}</span>
+                    <span className="text-sm text-slate-900 dark:text-white">{user.displayName}</span>
                     <button
                       type="button"
                       onClick={() => {
                         handleToggleParticipant(user.id);
                       }}
-                      className="text-slate-400 hover:text-white"
+                      className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     >
                       <svg className="size-4" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -204,7 +204,7 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 rounded-lg bg-slate-800 text-white font-medium hover:bg-slate-700 transition"
+              className="flex-1 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition"
             >
               Cancelar
             </button>
@@ -212,7 +212,7 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
               type="button"
               onClick={handleCreate}
               disabled={createGroupMutation.isPending || !groupName.trim() || selectedParticipants.length === 0}
-              className="flex-1 px-4 py-2 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 rounded-lg bg-primary-600 dark:bg-primary-600 text-white dark:text-white font-medium hover:bg-primary-700 dark:hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createGroupMutation.isPending ? 'Creando...' : 'Crear grupo'}
             </button>

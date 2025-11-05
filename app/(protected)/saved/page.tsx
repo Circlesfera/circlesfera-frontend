@@ -28,11 +28,11 @@ export default async function SavedPage(): Promise<ReactElement> {
         <h1 className="text-gradient-primary text-3xl font-bold md:text-4xl">
           Guardados
         </h1>
-        <p className="mt-2 text-sm md:text-base text-slate-400">
+        <p className="mt-2 text-sm md:text-base text-slate-600 dark:text-slate-400">
           Posts que has guardado
         </p>
       </div>
-      <Suspense fallback={<div className="p-6 text-sm text-slate-400">Cargando guardados...</div>}>
+      <Suspense fallback={<div className="p-6 text-sm text-slate-600 dark:text-slate-400">Cargando guardados...</div>}>
         <SavedPostsShell />
       </Suspense>
     </main>

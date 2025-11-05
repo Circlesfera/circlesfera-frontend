@@ -71,8 +71,8 @@ export function StoriesBar(): ReactElement {
         <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar px-1">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="flex-shrink-0 flex flex-col items-center gap-1.5">
-              <div className="animate-pulse size-[64px] rounded-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-2 border-white/10" />
-              <div className="h-3 w-14 bg-slate-800/50 rounded-full" />
+              <div className="animate-pulse size-[64px] rounded-full bg-gradient-to-br from-slate-200 dark:from-slate-800/50 to-slate-100 dark:to-slate-900/50 border-2 border-slate-300/50 dark:border-white/10" />
+              <div className="h-3 w-14 bg-slate-200 dark:bg-slate-800/50 rounded-full" />
             </div>
           ))}
         </div>
@@ -111,7 +111,7 @@ export function StoriesBar(): ReactElement {
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
-        className="relative rounded-2xl glass-card border border-white/[0.08] p-2.5 md:p-3.5 mb-1 shadow-[0_4px_16px_rgba(0,0,0,0.1)]"
+        className="relative rounded-2xl glass-card border border-slate-200/50 dark:border-white/[0.08] p-2.5 md:p-3.5 mb-1 shadow-[0_4px_16px_rgba(0,0,0,0.1)]"
       >
         {/* Flecha izquierda */}
         <AnimatePresence>
@@ -127,10 +127,10 @@ export function StoriesBar(): ReactElement {
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-10 rounded-full bg-black/50 backdrop-blur-xl border border-white/20 flex items-center justify-center hover:bg-black/70 hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/30"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-10 rounded-full bg-black/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 dark:border-white/20 flex items-center justify-center hover:bg-black/70 dark:hover:bg-black/70 hover:border-white/30 dark:hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/30"
               aria-label="Scroll izquierda"
             >
-              <svg className="size-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-5 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </motion.button>
@@ -168,7 +168,7 @@ export function StoriesBar(): ReactElement {
                       ? 'p-[2.5px] bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 group-hover:from-orange-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:shadow-lg group-hover:shadow-pink-500/50 group-hover:scale-105' 
                       : 'p-[2px] bg-gradient-to-br from-slate-600/80 to-slate-700/80 group-hover:from-slate-500 group-hover:to-slate-600 group-hover:shadow-lg group-hover:shadow-slate-500/20'
                   }`}>
-                    <div className="relative size-full rounded-full bg-black overflow-hidden ring-2 ring-black/50 group-hover:ring-primary-500/30 transition-all duration-300">
+                    <div className="relative size-full rounded-full bg-black dark:bg-black overflow-hidden ring-2 ring-black/50 dark:ring-black/50 group-hover:ring-primary-500/30 transition-all duration-300">
                       <Image
                         src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
                         alt={currentUser.displayName}
@@ -179,7 +179,7 @@ export function StoriesBar(): ReactElement {
                       />
                     </div>
                   </div>
-                  <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-300 group-hover:text-white transition-colors duration-200">
+                  <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-200">
                     Tu historia
                   </span>
                 </motion.button>
@@ -196,7 +196,7 @@ export function StoriesBar(): ReactElement {
               whileTap={{ scale: 0.95 }}
               className="flex-shrink-0 flex flex-col items-center gap-2 group"
             >
-                  <div className="relative size-[64px] overflow-hidden rounded-full border-2 border-white/30 bg-gradient-to-br from-slate-900/90 to-black/90 transition-all duration-200 group-hover:border-primary-400/60 group-hover:shadow-lg group-hover:shadow-primary-500/40 group-hover:scale-105 backdrop-blur-sm">
+                  <div className="relative size-[64px] overflow-hidden rounded-full border-2 border-slate-300 dark:border-white/30 bg-gradient-to-br from-slate-100 dark:from-slate-900/90 to-white dark:to-black/90 transition-all duration-200 group-hover:border-primary-400/60 group-hover:shadow-lg group-hover:shadow-primary-500/40 group-hover:scale-105 backdrop-blur-sm">
                 <Image
                   src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
                   alt={currentUser.displayName}
@@ -205,15 +205,15 @@ export function StoriesBar(): ReactElement {
                   unoptimized
                   sizes="64px"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/15 transition-colors duration-300">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 dark:bg-black/30 group-hover:bg-black/15 dark:group-hover:bg-black/15 transition-colors duration-300">
                       <div className="size-7 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg shadow-primary-500/50 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110">
-                        <svg className="size-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="size-3.5 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
                     </svg>
                   </div>
                 </div>
               </div>
-                  <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-300 group-hover:text-white transition-colors duration-200">
+                  <span className="block w-[64px] truncate text-center text-xs font-semibold text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-200">
                 Tu historia
               </span>
             </motion.button>
@@ -291,10 +291,10 @@ export function StoriesBar(): ReactElement {
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-10 rounded-full bg-black/50 backdrop-blur-xl border border-white/20 flex items-center justify-center hover:bg-black/70 hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/30"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-10 rounded-full bg-black/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 dark:border-white/20 flex items-center justify-center hover:bg-black/70 dark:hover:bg-black/70 hover:border-white/30 dark:hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/30"
               aria-label="Scroll derecha"
             >
-              <svg className="size-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-5 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </motion.button>

@@ -15,7 +15,7 @@ export default function ReelsPage(): ReactElement {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center">
-          <div className="animate-pulse text-slate-400">Cargando reels...</div>
+          <div className="animate-pulse text-slate-600 dark:text-slate-400">Cargando reels...</div>
         </div>
       }
     >

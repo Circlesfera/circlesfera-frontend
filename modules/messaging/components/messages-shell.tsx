@@ -84,8 +84,8 @@ export function MessagesShell(): ReactElement {
   return (
     <div className="flex h-screen">
       {/* Lista de conversaciones */}
-      <div className="w-full md:w-96 border-r border-white/5 glass-sidebar flex flex-col">
-        <div className="p-5 border-b border-white/5 flex items-center justify-between">
+      <div className="w-full md:w-96 border-r border-slate-200/50 dark:border-white/5 glass-sidebar flex flex-col">
+        <div className="p-5 border-b border-slate-200/50 dark:border-white/5 flex items-center justify-between">
           <h1 className="text-gradient-primary text-xl font-bold">
             Mensajes
           </h1>
@@ -108,7 +108,7 @@ export function MessagesShell(): ReactElement {
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-2" />
-              <p className="text-sm text-slate-400">Cargando conversaciones...</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Cargando conversaciones...</p>
             </div>
           </div>
         ) : conversations.length === 0 ? (
@@ -126,7 +126,7 @@ export function MessagesShell(): ReactElement {
                 className="relative mx-auto mb-6"
               >
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-primary-400/20 to-accent-500/20 blur-2xl" />
-                <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-900/50 to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+                <div className="relative size-24 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-100 dark:from-slate-900/50 to-white dark:to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
                   <svg className="size-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                   </svg>
@@ -137,8 +137,8 @@ export function MessagesShell(): ReactElement {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
               >
-                <h2 className="text-xl font-bold text-white mb-2">No tienes conversaciones aún</h2>
-                <p className="text-sm text-slate-400">Inicia una conversación con alguien para empezar</p>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No tienes conversaciones aún</h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Inicia una conversación con alguien para empezar</p>
               </motion.div>
             </div>
           </motion.div>
@@ -183,8 +183,8 @@ export function MessagesShell(): ReactElement {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
               >
-                <h3 className="text-xl font-bold text-white mb-2">Selecciona una conversación</h3>
-                <p className="text-sm text-slate-400">Elige una conversación de la lista para empezar a chatear</p>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Selecciona una conversación</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Elige una conversación de la lista para empezar a chatear</p>
               </motion.div>
             </div>
           </motion.div>

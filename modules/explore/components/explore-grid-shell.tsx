@@ -50,7 +50,7 @@ export const ExploreGridShell = (): ReactElement => {
           return (
             <div 
               key={i} 
-              className="w-full rounded-lg glass-card bg-slate-800/50 animate-shimmer"
+              className="w-full rounded-lg glass-card bg-slate-200 dark:bg-slate-800/50 animate-shimmer"
               style={{ aspectRatio: ratio }}
             />
           );
@@ -111,8 +111,8 @@ export const ExploreGridShell = (): ReactElement => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <h2 className="text-xl font-bold text-white mb-2">No hay contenido para explorar</h2>
-            <p className="text-sm text-slate-400">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No hay contenido para explorar</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Aún no hay publicaciones disponibles
             </p>
           </motion.div>
@@ -184,8 +184,8 @@ export const ExploreGridShell = (): ReactElement => {
                 href={`/posts/${post.id}`}
                 className={`group relative flex items-center justify-center w-full h-full overflow-hidden rounded-xl border transition-all duration-300 ${
                   isReelItem 
-                    ? 'bg-black border-white/5 hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10' 
-                    : 'bg-slate-900 border-white/5 hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10 p-1'
+                    ? 'bg-black dark:bg-black border-slate-300/50 dark:border-white/5 hover:border-slate-400/50 dark:hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10' 
+                    : 'bg-slate-50 dark:bg-slate-900 border-slate-300/50 dark:border-white/5 hover:border-slate-400/50 dark:hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10 p-1'
                 }`}
               >
               {firstMedia.kind === 'image' ? (
@@ -210,11 +210,11 @@ export const ExploreGridShell = (): ReactElement => {
                     className="w-full h-full object-contain"
                   />
                   {/* Indicador de reel */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 backdrop-blur-sm px-2 py-1">
-                    <svg className="size-3.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 dark:bg-black/60 backdrop-blur-sm px-2 py-1">
+                    <svg className="size-3.5 text-white dark:text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
                     </svg>
-                    <span className="text-xs font-semibold text-white">Reel</span>
+                    <span className="text-xs font-semibold text-white dark:text-white">Reel</span>
                   </div>
                 </div>
               ) : (
@@ -227,15 +227,15 @@ export const ExploreGridShell = (): ReactElement => {
                     unoptimized={isLocalImage(firstMedia.thumbnailUrl || firstMedia.url)}
                     sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
-                    <div className="rounded-full bg-black/60 p-3 backdrop-blur-sm">
-                      <svg className="size-8 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 dark:bg-black/40 backdrop-blur-[1px]">
+                    <div className="rounded-full bg-black/60 dark:bg-black/60 p-3 backdrop-blur-sm">
+                      <svg className="size-8 text-white/90 dark:text-white/90" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
                     </div>
                   </div>
                   {firstMedia.durationMs ? (
-                    <div className="absolute bottom-2 right-2 rounded-lg bg-black/80 backdrop-blur-sm px-2 py-1 text-xs font-semibold text-white border border-white/20">
+                    <div className="absolute bottom-2 right-2 rounded-lg bg-black/80 dark:bg-black/80 backdrop-blur-sm px-2 py-1 text-xs font-semibold text-white dark:text-white border border-white/20 dark:border-white/20">
                       {formatDuration(firstMedia.durationMs)}
                     </div>
                   ) : null}
@@ -244,7 +244,7 @@ export const ExploreGridShell = (): ReactElement => {
 
               {/* Overlay con estadísticas en hover */}
               <div className="absolute inset-0 flex items-center justify-center gap-4 bg-gradient-to-t from-black/95 via-black/85 to-black/65 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-md">
-                <div className="flex items-center gap-2 text-white">
+                <div className="flex items-center gap-2 text-white dark:text-white">
                   <div className="rounded-full bg-red-500/30 p-2.5 backdrop-blur-md border border-red-500/30">
                     <svg className="size-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -252,7 +252,7 @@ export const ExploreGridShell = (): ReactElement => {
                   </div>
                   <span className="text-lg font-bold">{formatNumber(Math.max(0, post.stats.likes))}</span>
                 </div>
-                <div className="flex items-center gap-2 text-white">
+                <div className="flex items-center gap-2 text-white dark:text-white">
                   <div className="rounded-full bg-blue-500/30 p-2.5 backdrop-blur-md border border-blue-500/30">
                     <svg className="size-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path

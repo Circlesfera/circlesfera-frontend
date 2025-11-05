@@ -71,12 +71,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-slate-900 px-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-800/50 p-8 text-center backdrop-blur-sm">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-slate-900 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-8 text-center backdrop-blur-sm">
             <div className="mb-6 flex justify-center">
               <div className="rounded-full bg-red-500/20 p-4">
                 <svg
-                  className="size-12 text-red-400"
+                  className="size-12 text-red-500 dark:text-red-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -92,15 +92,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </div>
             </div>
 
-            <h1 className="mb-3 text-2xl font-bold text-white">Algo salió mal</h1>
-            <p className="mb-6 text-slate-400">
+            <h1 className="mb-3 text-2xl font-bold text-slate-900 dark:text-white">Algo salió mal</h1>
+            <p className="mb-6 text-slate-600 dark:text-slate-400">
               Lo sentimos, ocurrió un error inesperado. Por favor, intenta recargar la página.
             </p>
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-left">
-                <p className="mb-2 text-sm font-semibold text-red-400">Error (solo en desarrollo):</p>
-                <pre className="overflow-auto text-xs text-red-300">{this.state.error.message}</pre>
+                <p className="mb-2 text-sm font-semibold text-red-500 dark:text-red-400">Error (solo en desarrollo):</p>
+                <pre className="overflow-auto text-xs text-red-600 dark:text-red-300">{this.state.error.message}</pre>
               </div>
             )}
 
@@ -117,7 +117,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </button>
               <Link
                 href="/feed"
-                className="rounded-xl border border-slate-700 bg-slate-800 px-6 py-3 font-semibold text-slate-300 transition-colors hover:border-slate-600 hover:bg-slate-700"
+                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-6 py-3 font-semibold text-slate-700 dark:text-slate-300 transition-colors hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-700"
               >
                 Ir al inicio
               </Link>

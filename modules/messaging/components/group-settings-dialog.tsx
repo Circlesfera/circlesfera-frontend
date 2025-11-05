@@ -104,21 +104,21 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl max-h-[90vh] overflow-hidden"
+        className="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl max-h-[90vh] overflow-hidden"
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
         {/* Header */}
-        <div className="p-6 border-b border-slate-800/50 bg-slate-900/50">
+        <div className="p-6 border-b border-slate-200/50 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/50">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-white">Configuración del grupo</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Configuración del grupo</h2>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-slate-800 transition text-slate-400 hover:text-white"
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             >
               <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -128,7 +128,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-slate-800/50">
+        <div className="flex border-b border-slate-200/50 dark:border-slate-800/50">
           <button
             type="button"
             onClick={() => {
@@ -136,8 +136,8 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
             }}
             className={`flex-1 px-4 py-3 text-sm font-medium transition ${
               activeTab === 'info'
-                ? 'text-primary-400 border-b-2 border-primary-500 bg-slate-900/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+                ? 'text-primary-400 border-b-2 border-primary-500 bg-slate-50 dark:bg-slate-900/30'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/30'
             }`}
           >
             Información
@@ -149,8 +149,8 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
             }}
             className={`flex-1 px-4 py-3 text-sm font-medium transition ${
               activeTab === 'members'
-                ? 'text-primary-400 border-b-2 border-primary-500 bg-slate-900/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+                ? 'text-primary-400 border-b-2 border-primary-500 bg-slate-50 dark:bg-slate-900/30'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/30'
             }`}
           >
             Miembros ({participants.length})
@@ -163,8 +163,8 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
               }}
               className={`flex-1 px-4 py-3 text-sm font-medium transition ${
                 activeTab === 'add'
-                  ? 'text-primary-400 border-b-2 border-primary-500 bg-slate-900/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+                  ? 'text-primary-400 border-b-2 border-primary-500 bg-slate-50 dark:bg-slate-900/30'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/30'
               }`}
             >
               Agregar
@@ -177,7 +177,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
           {activeTab === 'info' && (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Nombre del grupo</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Nombre del grupo</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -186,7 +186,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
                       setGroupName(e.target.value);
                     }}
                     placeholder="Nombre del grupo"
-                    className="flex-1 px-4 py-2 rounded-lg bg-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="flex-1 px-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                     maxLength={100}
                     disabled={!canManage}
                   />
@@ -219,7 +219,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
               {participants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"
+                  className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-300/50 dark:border-slate-700/50"
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative size-12 flex-shrink-0">
@@ -231,8 +231,8 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
                       />
                     </div>
                     <div>
-                      <p className="font-medium text-white">{participant.displayName}</p>
-                      <p className="text-sm text-slate-400">@{participant.handle}</p>
+                      <p className="font-medium text-slate-900 dark:text-white">{participant.displayName}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">@{participant.handle}</p>
                     </div>
                     {participant.id === conversation.createdBy && (
                       <span className="text-xs px-2 py-1 rounded-md bg-primary-500/20 text-primary-400 font-medium">
@@ -247,7 +247,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
                         handleRemoveParticipant(participant.id);
                       }}
                       disabled={removeParticipantMutation.isPending}
-                      className="p-2 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-red-400 transition disabled:opacity-50"
+                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 hover:text-red-400 transition disabled:opacity-50"
                       title="Remover del grupo"
                     >
                       <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,7 +263,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
           {activeTab === 'add' && canManage && (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Buscar usuarios</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Buscar usuarios</label>
                 <input
                   type="text"
                   value={searchQuery}
@@ -271,16 +271,16 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
                     setSearchQuery(e.target.value);
                   }}
                   placeholder="Buscar por nombre o handle..."
-                  className="w-full px-4 py-2 rounded-lg bg-slate-800 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
               {searchQuery.length >= 2 && (
-                <div className="max-h-64 overflow-y-auto rounded-lg bg-slate-800 border border-slate-700">
+                <div className="max-h-64 overflow-y-auto rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
                   {isSearching ? (
-                    <div className="p-4 text-center text-slate-400">Buscando...</div>
+                    <div className="p-4 text-center text-slate-600 dark:text-slate-400">Buscando...</div>
                   ) : availableUsers.length === 0 ? (
-                    <div className="p-4 text-center text-slate-400">No se encontraron usuarios</div>
+                    <div className="p-4 text-center text-slate-600 dark:text-slate-400">No se encontraron usuarios</div>
                   ) : (
                     <div className="divide-y divide-slate-700">
                       {availableUsers.map((user) => (
@@ -291,7 +291,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
                             handleAddParticipant(user.id);
                           }}
                           disabled={addParticipantMutation.isPending}
-                          className="w-full p-3 flex items-center gap-3 hover:bg-slate-700/50 transition disabled:opacity-50"
+                          className="w-full p-3 flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-700/50 transition disabled:opacity-50"
                         >
                           <div className="relative size-10 flex-shrink-0">
                             <Image
@@ -302,8 +302,8 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
                             />
                           </div>
                           <div className="flex-1 text-left">
-                            <p className="font-medium text-white">{user.displayName}</p>
-                            <p className="text-sm text-slate-400">@{user.handle}</p>
+                            <p className="font-medium text-slate-900 dark:text-white">{user.displayName}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">@{user.handle}</p>
                           </div>
                           <svg className="size-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

@@ -14,7 +14,7 @@ export const metadata = {
 
 export default function MessagesPage() {
   return (
-    <main className="flex min-h-screen flex-col text-white">
+    <main className="flex min-h-screen flex-col text-slate-900 dark:text-white">
       <Suspense fallback={<MessagesShellSkeleton />}>
         <MessagesShell />
       </Suspense>

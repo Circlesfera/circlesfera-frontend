@@ -28,11 +28,11 @@ export default async function NotificationsPage(): Promise<ReactElement> {
         <h1 className="text-gradient-primary text-3xl font-bold md:text-4xl">
           Notificaciones
         </h1>
-        <p className="mt-2 text-sm md:text-base text-slate-400">
+        <p className="mt-2 text-sm md:text-base text-slate-600 dark:text-slate-400">
           Mantente al día con las últimas actualizaciones
         </p>
       </div>
-      <Suspense fallback={<div className="flex min-h-[400px] items-center justify-center"><div className="text-center"><div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" /><p className="text-sm text-slate-400">Cargando notificaciones...</p></div></div>}>
+      <Suspense fallback={<div className="flex min-h-[400px] items-center justify-center"><div className="text-center"><div className="size-8 animate-spin rounded-full border-3 border-primary-500 border-t-transparent mx-auto mb-3" /><p className="text-sm text-slate-600 dark:text-slate-400">Cargando notificaciones...</p></div></div>}>
         <NotificationsShell />
       </Suspense>
     </main>

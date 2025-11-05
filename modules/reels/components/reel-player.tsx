@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, useRef, type ReactElement } from 'react';
+import { useState, useEffect, useRef, useMemo, type ReactElement } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -26,6 +26,38 @@ interface ReelPlayerProps {
 export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
   const queryClient = useQueryClient();
   const currentUser = useSessionStore((state) => state.user);
+  
+  // Estado para forzar re-render cuando cambie el cache
+  const [, forceUpdate] = useState(0);
+  
+  // Suscribirse a cambios en el cache de reels para forzar re-render
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
+      // Solo re-renderizar si cambió la query de reels
+      if (event?.query?.queryKey?.[0] === 'reels') {
+        forceUpdate((prev) => prev + 1);
+      }
+    });
+    
+    return unsubscribe;
+  }, [queryClient]);
+  
+  // Obtener el reel actualizado del cache en cada render para reflejar cambios en tiempo real
+  const currentReel = useMemo(() => {
+    const reelsData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
+    
+    if (reelsData) {
+      for (const page of reelsData.pages) {
+        const foundReel = page.data.find((item) => item.id === reel.id);
+        if (foundReel) {
+          return foundReel;
+        }
+      }
+    }
+    
+    // Si no se encuentra en el cache, usar el prop como fallback
+    return reel;
+  }, [queryClient, reel.id, reel, forceUpdate]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -34,48 +66,47 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Actualización optimista de likes (similar al feed)
+  // Actualización optimista de likes (sincronizada con todas las queries) - Replicando lógica del feed
   const likeMutation = useMutation({
-    mutationFn: async (postId: string) => {
-      const feedData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
-      let currentReel: FeedItem | undefined;
-      
-      if (feedData) {
-        for (const page of feedData.pages) {
-          currentReel = page.data.find((item) => item.id === postId);
-          if (currentReel) break;
-        }
-      }
-      
-      const isCurrentlyLiked = currentReel?.isLikedByViewer ?? reel.isLikedByViewer;
-      
+    mutationFn: async ({ postId, isCurrentlyLiked }: { postId: string; isCurrentlyLiked: boolean }) => {
+      // Ejecutar la acción correspondiente basada en el estado que se pasó desde onMutate
       if (isCurrentlyLiked) {
         return await unlikePost(postId);
       } else {
         return await likePost(postId);
       }
     },
-    onMutate: async (postId: string) => {
-      await queryClient.cancelQueries({ queryKey: ['reels'] });
-      
-      const previousReels = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
-      
-      let currentReelState: FeedItem | undefined;
-      if (previousReels) {
-        for (const page of previousReels.pages) {
-          currentReelState = page.data.find((item) => item.id === postId);
-          if (currentReelState) break;
+    onMutate: async ({ postId, isCurrentlyLiked }: { postId: string; isCurrentlyLiked: boolean }) => {
+      // Cancelar cualquier query en progreso para evitar sobrescribir nuestro update optimista
+      await queryClient.cancelQueries({ 
+        predicate: (query) => {
+          const key = query.queryKey;
+          return (
+            (Array.isArray(key) && key[0] === 'reels') ||
+            (Array.isArray(key) && key[0] === 'feed' && key[1] === 'home') ||
+            (Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore') ||
+            (Array.isArray(key) && key[0] === 'userPosts') ||
+            (Array.isArray(key) && key[0] === 'post' && key[1] === postId)
+          );
         }
-      }
-      
-      const isCurrentlyLiked = currentReelState?.isLikedByViewer ?? reel.isLikedByViewer;
+      });
 
-      // Actualización optimista
+      // Snapshot del valor anterior
+      const previousReels = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
+      const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      const previousPost = queryClient.getQueryData<{ post: FeedItem }>(['post', postId]);
+
+      // Actualizar optimistamente todas las queries (igual que en feed-item-actions)
+      // Actualizar reels feed
       queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-        { queryKey: ['reels'] },
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'reels';
+          }
+        },
         (old) => {
           if (!old) return old;
-          
           return {
             ...old,
             pages: old.pages.map((page) => ({
@@ -102,21 +133,205 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
         }
       );
 
-      return { previousReels };
-    },
-    onError: (err, postId, context) => {
-      if (context?.previousReels) {
-        queryClient.setQueryData(['reels'], context.previousReels);
-      }
-      toast.error('No se pudo actualizar el like');
-    },
-    onSuccess: (data: LikeResponse, postId: string) => {
-      // Confirmar estado con respuesta del servidor
+      // Actualizar feed principal
       queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-        { queryKey: ['reels'] },
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'feed' && key[1] === 'home';
+          }
+        },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  const newLikes = isCurrentlyLiked 
+                    ? Math.max(0, item.stats.likes - 1)
+                    : item.stats.likes + 1;
+                  
+                  return {
+                    ...item,
+                    isLikedByViewer: !isCurrentlyLiked,
+                    stats: {
+                      ...item.stats,
+                      likes: newLikes
+                    }
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar explore feed
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
+          }
+        },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  const newLikes = isCurrentlyLiked 
+                    ? Math.max(0, item.stats.likes - 1)
+                    : item.stats.likes + 1;
+                  
+                  return {
+                    ...item,
+                    isLikedByViewer: !isCurrentlyLiked,
+                    stats: {
+                      ...item.stats,
+                      likes: newLikes
+                    }
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar posts del perfil del autor
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'userPosts' && key[1] === reel.author.handle;
+          }
+        },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  const newLikes = isCurrentlyLiked 
+                    ? Math.max(0, item.stats.likes - 1)
+                    : item.stats.likes + 1;
+                  
+                  return {
+                    ...item,
+                    isLikedByViewer: !isCurrentlyLiked,
+                    stats: {
+                      ...item.stats,
+                      likes: newLikes
+                    }
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar post individual
+      queryClient.setQueryData<{ post: FeedItem }>(
+        ['post', postId],
         (old) => {
           if (!old) return old;
           
+          const newLikes = isCurrentlyLiked 
+            ? Math.max(0, old.post.stats.likes - 1)
+            : old.post.stats.likes + 1;
+          
+          return {
+            ...old,
+            post: {
+              ...old.post,
+              isLikedByViewer: !isCurrentlyLiked,
+              stats: {
+                ...old.post.stats,
+                likes: newLikes
+              }
+            }
+          };
+        }
+      );
+
+      // Retornar contexto con snapshot para rollback y el estado original para mutationFn
+      return { 
+        previousReels, 
+        previousFeed, 
+        previousPost,
+        isCurrentlyLiked,
+        postId
+      };
+    },
+    onError: (err, variables, context) => {
+      const postId = typeof variables === 'string' ? variables : variables.postId;
+      // Revertir al valor anterior en caso de error
+      if (context?.previousReels) {
+        queryClient.setQueryData(['reels'], context.previousReels);
+      }
+      if (context?.previousFeed) {
+        queryClient.setQueryData(['feed', 'home'], context.previousFeed);
+      }
+      if (context?.previousPost) {
+        queryClient.setQueryData(['post', postId], context.previousPost);
+      }
+      toast.error('No se pudo actualizar el like');
+    },
+    onSuccess: async (data, variables) => {
+      const postId = typeof variables === 'string' ? variables : variables.postId;
+      // Confirmar el estado con la respuesta del servidor
+      // La actualización optimista ya ajustó el contador, solo necesitamos confirmar isLikedByViewer
+      // (Igual que en feed-item-actions.tsx)
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'reels';
+          }
+        },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  // Confirmar el estado del like con la respuesta del servidor
+                  // El contador ya fue actualizado en onMutate, solo sincronizamos el estado
+                  return {
+                    ...item,
+                    isLikedByViewer: data.liked
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar feed principal
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'feed' && key[1] === 'home';
+          }
+        },
+        (old) => {
+          if (!old) return old;
           return {
             ...old,
             pages: old.pages.map((page) => ({
@@ -134,15 +349,91 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
           };
         }
       );
+
+      // Actualizar explore feed
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
+          }
+        },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  return {
+                    ...item,
+                    isLikedByViewer: data.liked
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar posts del perfil del autor
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { 
+          predicate: (query) => {
+            const key = query.queryKey;
+            return Array.isArray(key) && key[0] === 'userPosts' && key[1] === reel.author.handle;
+          }
+        },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((item: FeedItem) => {
+                if (item.id === postId) {
+                  return {
+                    ...item,
+                    isLikedByViewer: data.liked
+                  };
+                }
+                return item;
+              })
+            }))
+          };
+        }
+      );
+
+      // Actualizar el post individual también
+      queryClient.setQueryData<{ post: FeedItem }>(
+        ['post', postId],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            post: {
+              ...old.post,
+              isLikedByViewer: data.liked
+            }
+          };
+        }
+      );
+    },
+    onSettled: () => {
+      // No hacer nada adicional aquí para mantener la fluidez de la UI
+      // La actualización optimista ya está aplicada y se sincronizó con el servidor
+      // (Igual que en feed-item-actions.tsx)
     }
   });
 
   const saveMutation = useMutation({
-    mutationFn: () => (reel.isSavedByViewer ? unsavePost(reel.id) : savePost(reel.id)),
+    mutationFn: () => (currentReel.isSavedByViewer ? unsavePost(currentReel.id) : savePost(currentReel.id)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reels'] });
       queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-      toast.success(reel.isSavedByViewer ? 'Eliminado de guardados' : 'Guardado');
+      toast.success(currentReel.isSavedByViewer ? 'Eliminado de guardados' : 'Guardado');
     },
     onError: () => {
       toast.error('No se pudo guardar el reel');
@@ -225,7 +516,23 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
   }, [isActive]);
 
   const handleLike = (): void => {
-    likeMutation.mutate(reel.id);
+    // Leer el estado actual del cache ANTES de la mutación para pasarlo correctamente
+    const reelsData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
+    let latestReel: FeedItem | undefined;
+    
+    if (reelsData) {
+      for (const page of reelsData.pages) {
+        latestReel = page.data.find((item) => item.id === currentReel.id);
+        if (latestReel) break;
+      }
+    }
+    
+    // Usar el reel más reciente del cache, o el actual como fallback
+    const reelToUse = latestReel ?? currentReel;
+    const isCurrentlyLiked = reelToUse.isLikedByViewer;
+    
+    // Pasar el estado actual junto con el postId para que mutationFn lo use
+    likeMutation.mutate({ postId: reelToUse.id, isCurrentlyLiked });
   };
 
   const handleSave = (): void => {
@@ -254,12 +561,12 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
   };
 
   const handleShare = async (): Promise<void> => {
-    const shared = await sharePost(reel.id, `Reel de @${reel.author.handle}`);
+    const shared = await sharePost(currentReel.id, `Reel de @${currentReel.author.handle}`);
     if (shared) {
       toast.success('Enlace copiado al portapapeles');
       setShowShareMenu(false);
     } else {
-      const copied = await copyPostLink(reel.id);
+      const copied = await copyPostLink(currentReel.id);
       if (copied) {
         toast.success('Enlace copiado al portapapeles');
         setShowShareMenu(false);
@@ -269,29 +576,31 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
     }
   };
 
-  const videoMedia = reel.media.find((m: { kind: string }) => m.kind === 'video');
+  const videoMedia = currentReel.media.find((m: { kind: string }) => m.kind === 'video');
   if (!videoMedia) {
     return <></>;
   }
 
-  const avatarUrl = getAvatarUrl(reel.author.avatarUrl, reel.author.handle);
+  const avatarUrl = getAvatarUrl(currentReel.author.avatarUrl, currentReel.author.handle);
 
   return (
-    <div className="relative h-screen w-full bg-black flex items-center justify-center">
-      {/* Video con aspect ratio 9:16 vertical - tamaño reducido */}
-      <div className="relative w-auto aspect-[9/16] max-w-[260px] md:max-w-[320px] max-h-[70vh] md:max-h-[75vh] bg-black">
+    <div className="relative h-screen w-full bg-black dark:bg-black flex items-center justify-center">
+      {/* Video con aspect ratio 9:16 vertical - ocupa más espacio */}
+      <div className="relative w-full max-w-[400px] md:max-w-[450px] aspect-[9/16] max-h-[90vh] bg-black/30 dark:bg-black/30 rounded-2xl overflow-hidden shadow-2xl border border-white/10 dark:border-white/10">
       <video
         ref={videoRef}
         src={videoMedia.url}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-contain"
         loop
         playsInline
         muted={isMuted}
           onClick={handleTogglePlay}
+        autoPlay
+        preload="auto"
         />
 
         {/* Barra de progreso - diseño refinado */}
-        <div className="absolute top-0 left-0 right-0 z-40 h-1.5 bg-black/30 backdrop-blur-sm">
+        <div className="absolute top-0 left-0 right-0 z-40 h-1.5 bg-black/30 dark:bg-black/30 backdrop-blur-sm">
         <motion.div
           className="h-full bg-gradient-to-r from-primary-500 via-primary-400 to-accent-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]"
           initial={{ width: 0 }}
@@ -312,7 +621,7 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
           >
         {/* Contenido principal (autor, caption) - diseño refinado */}
             <div className="flex flex-1 flex-col justify-end p-3 md:p-4 pb-14 md:pb-18 pointer-events-auto">
-              <Link href={`/${reel.author.handle}`} className="mb-3 md:mb-4 flex items-center gap-2 md:gap-3 group">
+              <Link href={`/${currentReel.author.handle}`} className="mb-3 md:mb-4 flex items-center gap-2 md:gap-3 group">
                 <motion.div
                   whileHover={{ scale: 1.08 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 17 }}
@@ -320,20 +629,20 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
                 >
               <Image
                     src={avatarUrl}
-                alt={reel.author.displayName}
+                alt={currentReel.author.displayName}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-110"
                     unoptimized={isLocalImage(avatarUrl)}
                     sizes="64px"
               />
                 </motion.div>
-            <div className="text-white flex-1 min-w-0">
+            <div className="text-white dark:text-white flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-bold text-base md:text-lg truncate">@{reel.author.handle}</p>
-                {reel.author.isVerified && <VerifiedBadge size="sm" />}
+                    <p className="font-bold text-base md:text-lg truncate">@{currentReel.author.handle}</p>
+                {currentReel.author.isVerified && <VerifiedBadge size="sm" />}
               </div>
-              {reel.caption && (
-                    <p className="mt-1.5 line-clamp-2 text-sm md:text-base text-white/95 leading-relaxed">{reel.caption}</p>
+              {currentReel.caption && (
+                    <p className="mt-1.5 line-clamp-2 text-sm md:text-base text-white/95 dark:text-white/95 leading-relaxed">{currentReel.caption}</p>
               )}
             </div>
           </Link>
@@ -352,47 +661,47 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
           >
                 <motion.div
                   animate={{
-                    scale: reel.isLikedByViewer ? [1, 1.3, 1] : 1
+                    scale: currentReel.isLikedByViewer ? [1, 1.3, 1] : 1
                   }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                   className={`rounded-full p-3 transition-all duration-300 ${
-                    reel.isLikedByViewer 
+                    currentReel.isLikedByViewer 
                       ? 'bg-red-500/35 shadow-lg shadow-red-500/40 backdrop-blur-md border border-red-500/30' 
-                      : 'bg-black/50 backdrop-blur-md border border-white/20'
+                      : 'bg-black/50 dark:bg-black/50 backdrop-blur-md border border-white/20 dark:border-white/20'
                   }`}
                 >
               <svg
                     className={`size-7 md:size-8 transition-all ${
-                      reel.isLikedByViewer ? 'fill-red-500 text-red-500' : 'text-white'
+                      currentReel.isLikedByViewer ? 'fill-red-500 text-red-500' : 'text-white dark:text-white'
                     }`}
-                fill={reel.isLikedByViewer ? 'currentColor' : 'none'}
+                fill={currentReel.isLikedByViewer ? 'currentColor' : 'none'}
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                      strokeWidth={reel.isLikedByViewer ? 2.5 : 2}
+                      strokeWidth={currentReel.isLikedByViewer ? 2.5 : 2}
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
                 </motion.div>
-                <span className="text-xs md:text-sm font-bold text-white drop-shadow-lg">
-                  {reel.stats.likes.toLocaleString('es')}
+                <span className="text-xs md:text-sm font-bold text-white dark:text-white drop-shadow-lg">
+                  {currentReel.stats.likes.toLocaleString('es')}
                 </span>
               </motion.button>
 
           {/* Comentarios */}
               <Link 
-                href={`/posts/${reel.id}#comments`}
+                href={`/posts/${currentReel.id}#comments`}
                 className="flex flex-col items-center gap-2"
               >
                 <motion.div
                   whileHover={{ scale: 1.08, y: -2 }}
                   whileTap={{ scale: 0.92 }}
-                  className="rounded-full bg-black/50 backdrop-blur-md border border-white/20 p-3 transition-all duration-300 hover:border-white/30"
+                  className="rounded-full bg-black/50 dark:bg-black/50 backdrop-blur-md border border-white/20 dark:border-white/20 p-3 transition-all duration-300 hover:border-white/30 dark:hover:border-white/30"
                 >
-              <svg className="size-7 md:size-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-7 md:size-8 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -401,8 +710,8 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
                 />
               </svg>
                 </motion.div>
-                <span className="text-xs md:text-sm font-bold text-white drop-shadow-lg">
-                  {reel.stats.comments.toLocaleString('es')}
+                <span className="text-xs md:text-sm font-bold text-white dark:text-white drop-shadow-lg">
+                  {currentReel.stats.comments.toLocaleString('es')}
                 </span>
           </Link>
 
@@ -415,9 +724,9 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
                   }}
                   whileHover={{ scale: 1.08, y: -2 }}
                   whileTap={{ scale: 0.92 }}
-                  className="rounded-full bg-black/50 backdrop-blur-md border border-white/20 p-3 transition-all duration-300 hover:border-white/30"
+                  className="rounded-full bg-black/50 dark:bg-black/50 backdrop-blur-md border border-white/20 dark:border-white/20 p-3 transition-all duration-300 hover:border-white/30 dark:hover:border-white/30"
                 >
-                  <svg className="size-7 md:size-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="size-7 md:size-8 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -433,12 +742,12 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute bottom-full right-0 mb-2 rounded-xl bg-black/90 backdrop-blur-xl border border-white/[0.12] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]"
+                      className="absolute bottom-full right-0 mb-2 rounded-xl bg-black/90 dark:bg-black/90 backdrop-blur-xl border border-white/[0.12] dark:border-white/[0.12] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]"
                     >
           <button
                         type="button"
                         onClick={handleShare}
-                        className="flex w-full items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-medium text-white hover:bg-white/[0.08] transition-all duration-200"
+                        className="flex w-full items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-medium text-white dark:text-white hover:bg-white/[0.08] dark:hover:bg-white/[0.08] transition-all duration-200"
                       >
                         <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
@@ -466,27 +775,27 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
           >
                 <motion.div
                   animate={{
-                    scale: reel.isSavedByViewer ? [1, 1.2, 1] : 1
+                    scale: currentReel.isSavedByViewer ? [1, 1.2, 1] : 1
                   }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                   className={`rounded-full p-3 transition-all duration-300 ${
-                    reel.isSavedByViewer 
+                    currentReel.isSavedByViewer 
                       ? 'bg-primary-500/35 shadow-lg shadow-primary-500/40 backdrop-blur-md border border-primary-500/30' 
-                      : 'bg-black/50 backdrop-blur-md border border-white/20'
+                      : 'bg-black/50 dark:bg-black/50 backdrop-blur-md border border-white/20 dark:border-white/20'
                   }`}
                 >
               <svg
                     className={`size-7 md:size-8 transition-all ${
-                      reel.isSavedByViewer ? 'fill-primary-400 text-primary-400' : 'text-white'
+                      currentReel.isSavedByViewer ? 'fill-primary-400 text-primary-400' : 'text-white dark:text-white'
                     }`}
-                fill={reel.isSavedByViewer ? 'currentColor' : 'none'}
+                fill={currentReel.isSavedByViewer ? 'currentColor' : 'none'}
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                      strokeWidth={reel.isSavedByViewer ? 2.5 : 2}
+                      strokeWidth={currentReel.isSavedByViewer ? 2.5 : 2}
                   d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
                 />
               </svg>
@@ -502,7 +811,7 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
                 className="rounded-full bg-black/50 backdrop-blur-md border border-white/20 p-3 transition-all duration-300 hover:border-white/30"
               >
             {isMuted ? (
-              <svg className="size-7 md:size-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-7 md:size-8 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -512,7 +821,7 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
               </svg>
             ) : (
-              <svg className="size-7 md:size-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-7 md:size-8 text-white dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -537,9 +846,9 @@ export function ReelPlayer({ reel, isActive }: ReelPlayerProps): ReactElement {
           exit={{ opacity: 0, scale: 0.8 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/70 backdrop-blur-xl p-5 md:p-6 border border-white/30 shadow-lg shadow-black/50"
+          className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/70 dark:bg-black/70 backdrop-blur-xl p-5 md:p-6 border border-white/30 dark:border-white/30 shadow-lg shadow-black/50"
         >
-          <svg className="size-12 md:size-14 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="size-12 md:size-14 text-white dark:text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
         </motion.button>

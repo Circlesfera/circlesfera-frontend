@@ -34,11 +34,11 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 const inputClass =
-  'w-full rounded-xl border border-white/5 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 transition-all duration-200 focus:border-primary-500/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/20';
+  'w-full rounded-xl border border-slate-300 dark:border-white/5 bg-slate-50 dark:bg-white/5 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/30 transition-all duration-200 focus:border-primary-500/50 focus:bg-slate-100 dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/20';
 
 const textAreaClass = `${inputClass} min-h-[100px] resize-none`;
 const errorClass = 'mt-1.5 text-xs font-medium text-red-400';
-const helpTextClass = 'mt-1.5 text-xs text-white/40';
+const helpTextClass = 'mt-1.5 text-xs text-slate-600 dark:text-white/40';
 
 interface ProfileEditFormProps {
   readonly profile: PublicProfile;
@@ -202,8 +202,8 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
                 </div>
               )}
               {uploadingAvatar && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-full">
-                  <div className="size-8 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 dark:bg-black/60 backdrop-blur-sm rounded-full">
+                  <div className="size-8 animate-spin rounded-full border-2 border-white dark:border-white border-t-transparent" />
                 </div>
               )}
             </div>
@@ -215,7 +215,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
               disabled={uploadingAvatar}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-900 dark:text-white backdrop-blur-sm transition-all duration-300 hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-400 dark:hover:border-white/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {uploadingAvatar ? (
                 <>
@@ -238,7 +238,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
               onChange={handleAvatarFileChange}
               className="hidden"
             />
-            <p className="text-xs text-white/40">Formatos: JPG, PNG, WebP. Máximo 5MB</p>
+            <p className="text-xs text-slate-600 dark:text-white/40">Formatos: JPG, PNG, WebP. Máximo 5MB</p>
           </div>
         </div>
 
@@ -246,11 +246,11 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
         <div className="space-y-6">
           {/* Handle / Nombre de usuario */}
           <div className="space-y-2">
-            <label htmlFor="handle" className="block text-sm font-semibold text-white">
+            <label htmlFor="handle" className="block text-sm font-semibold text-slate-900 dark:text-white">
               Nombre de usuario
             </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">@</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-white/40 text-sm">@</span>
               <input
                 id="handle"
                 type="text"
@@ -268,7 +268,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
 
           {/* Display Name */}
           <div className="space-y-2">
-            <label htmlFor="displayName" className="block text-sm font-semibold text-white">
+            <label htmlFor="displayName" className="block text-sm font-semibold text-slate-900 dark:text-white">
               Nombre para mostrar
             </label>
             <input
@@ -287,7 +287,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
 
           {/* Bio */}
           <div className="space-y-2">
-            <label htmlFor="bio" className="block text-sm font-semibold text-white">
+            <label htmlFor="bio" className="block text-sm font-semibold text-slate-900 dark:text-white">
               Biografía
             </label>
             <textarea
@@ -307,11 +307,11 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-3 border-t border-white/5 pt-6">
+        <div className="flex items-center justify-end gap-3 border-t border-slate-200/50 dark:border-white/5 pt-6">
           <button
             type="button"
             onClick={() => router.back()}
-            className="rounded-xl border border-white/10 bg-transparent px-6 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+            className="rounded-xl border border-slate-300 dark:border-white/10 bg-transparent px-6 py-2.5 text-sm font-medium text-slate-700 dark:text-white/80 transition-colors hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
           >
             Cancelar
           </button>

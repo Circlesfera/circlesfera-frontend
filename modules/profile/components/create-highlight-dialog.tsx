@@ -36,12 +36,12 @@ export function CreateHighlightDialog({ onClose, onSuccess }: CreateHighlightDia
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-        <h2 className="mb-4 text-xl font-bold text-white">Crear nuevo highlight</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl">
+        <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-white">Crear nuevo highlight</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="highlight-name" className="mb-1 block text-sm font-medium text-slate-300">
+            <label htmlFor="highlight-name" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
               Nombre del highlight
             </label>
             <input
@@ -54,16 +54,16 @@ export function CreateHighlightDialog({ onClose, onSuccess }: CreateHighlightDia
               required
               maxLength={50}
               placeholder="Ej: Vacaciones, Recetas..."
-              className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
             />
-            <p className="mt-1 text-xs text-slate-500">Agrega stories después de crear el highlight</p>
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-500">Agrega stories después de crear el highlight</p>
           </div>
           <div className="flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
               disabled={createMutation.isPending}
-              className="rounded-xl border border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
+              className="rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
             >
               Cancelar
             </button>

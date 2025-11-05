@@ -51,7 +51,7 @@ export function NotificationsSettings(): ReactElement {
         <h2 className="text-gradient-primary text-2xl font-bold md:text-3xl">
           Notificaciones
         </h2>
-        <p className="mt-2 text-sm text-slate-400">Controla qué notificaciones recibes</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Controla qué notificaciones recibes</p>
       </motion.div>
 
       <motion.div
@@ -80,8 +80,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Likes</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien da like a tus publicaciones</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Likes</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien da like a tus publicaciones</p>
                 </div>
               </div>
             </div>
@@ -120,8 +120,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Comentarios</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien comenta en tus publicaciones</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Comentarios</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien comenta en tus publicaciones</p>
                 </div>
               </div>
             </div>
@@ -160,8 +160,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Seguimientos</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien te sigue</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Seguimientos</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien te sigue</p>
                 </div>
               </div>
             </div>
@@ -200,8 +200,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Menciones</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien te menciona</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Menciones</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien te menciona</p>
                 </div>
               </div>
             </div>
@@ -240,8 +240,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Respuestas</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien responde a tus comentarios</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Respuestas</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien responde a tus comentarios</p>
                 </div>
               </div>
             </div>
@@ -280,8 +280,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Etiquetas</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien te etiqueta en una foto</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Etiquetas</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien te etiqueta en una foto</p>
                 </div>
               </div>
             </div>
@@ -320,8 +320,8 @@ export function NotificationsSettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Compartidos</h3>
-                  <p className="mt-1 text-sm text-slate-400">Recibe notificaciones cuando alguien comparte tu publicación</p>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Compartidos</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Recibe notificaciones cuando alguien comparte tu publicación</p>
                 </div>
               </div>
             </div>

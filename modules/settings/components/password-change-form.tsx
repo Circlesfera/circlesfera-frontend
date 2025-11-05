@@ -67,12 +67,12 @@ export function PasswordChangeForm(): ReactElement {
         <h2 className="text-gradient-primary text-2xl font-bold md:text-3xl">
           Cambiar contraseña
         </h2>
-        <p className="mt-2 text-sm text-slate-400">Actualiza tu contraseña para mantener tu cuenta segura</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Actualiza tu contraseña para mantener tu cuenta segura</p>
       </motion.div>
 
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label htmlFor="currentPassword" className="block text-sm font-semibold text-slate-200">
+          <label htmlFor="currentPassword" className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
             Contraseña actual
           </label>
           <input
@@ -93,7 +93,7 @@ export function PasswordChangeForm(): ReactElement {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="newPassword" className="block text-sm font-semibold text-slate-200">
+          <label htmlFor="newPassword" className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
             Nueva contraseña
           </label>
           <input
@@ -115,7 +115,7 @@ export function PasswordChangeForm(): ReactElement {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-200">
+          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
             Confirmar nueva contraseña
           </label>
           <input
@@ -146,7 +146,7 @@ export function PasswordChangeForm(): ReactElement {
           </div>
         ) : null}
 
-        <div className="flex items-center justify-end gap-4 pt-6 border-t border-white/5">
+        <div className="flex items-center justify-end gap-4 pt-6 border-t border-slate-200/50 dark:border-white/5">
           <motion.button
             type="submit"
             disabled={isSubmitting}

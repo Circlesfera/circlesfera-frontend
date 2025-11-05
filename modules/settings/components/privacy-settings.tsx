@@ -58,7 +58,7 @@ export function PrivacySettings(): ReactElement {
         <h2 className="text-gradient-primary text-2xl font-bold md:text-3xl">
           Privacidad
         </h2>
-        <p className="mt-2 text-sm text-slate-400">Controla quién puede ver tu contenido y cómo interactúan contigo</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Controla quién puede ver tu contenido y cómo interactúan contigo</p>
       </motion.div>
 
       <motion.div
@@ -87,8 +87,8 @@ export function PrivacySettings(): ReactElement {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Cuenta privada</h3>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Cuenta privada</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                     Solo las personas que apruebes podrán ver tus publicaciones y seguirte
                   </p>
                 </div>
@@ -157,8 +157,8 @@ export function PrivacySettings(): ReactElement {
           className="rounded-2xl glass-card p-6"
         >
           <div className="mb-4">
-            <h3 className="font-semibold text-white mb-2">Quién puede comentar</h3>
-            <p className="text-sm text-slate-400">Controla quién puede comentar en tus publicaciones</p>
+            <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Quién puede comentar</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Controla quién puede comentar en tus publicaciones</p>
           </div>
           <div className="grid grid-cols-3 gap-3">
             {(['everyone', 'followers', 'nobody'] as const).map((option) => {
@@ -176,10 +176,10 @@ export function PrivacySettings(): ReactElement {
                   className={`rounded-xl border-2 p-3 transition-all duration-200 ${
                     isSelected
                       ? 'border-primary-500 bg-gradient-to-r from-primary-500/20 via-primary-500/15 to-transparent text-white shadow-lg shadow-primary-500/30'
-                      : 'border-white/10 bg-slate-900/50 hover:border-white/20 hover:bg-white/5 text-slate-400'
+                      : 'border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900/50 hover:border-slate-400 dark:hover:border-white/20 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400'
                   }`}
                 >
-                  <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-400'}`}>
+                  <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>
                     {option === 'everyone' ? 'Todos' : option === 'followers' ? 'Seguidores' : 'Nadie'}
                   </span>
                 </motion.button>
@@ -194,8 +194,8 @@ export function PrivacySettings(): ReactElement {
           className="rounded-2xl glass-card p-6"
         >
           <div className="mb-4">
-            <h3 className="font-semibold text-white mb-2">Quién puede mencionarte</h3>
-            <p className="text-sm text-slate-400">Controla quién puede mencionarte en comentarios y publicaciones</p>
+            <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Quién puede mencionarte</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Controla quién puede mencionarte en comentarios y publicaciones</p>
           </div>
           <div className="grid grid-cols-3 gap-3">
             {(['everyone', 'followers', 'nobody'] as const).map((option) => {
@@ -213,10 +213,10 @@ export function PrivacySettings(): ReactElement {
                   className={`rounded-xl border-2 p-3 transition-all duration-200 ${
                     isSelected
                       ? 'border-primary-500 bg-gradient-to-r from-primary-500/20 via-primary-500/15 to-transparent text-white shadow-lg shadow-primary-500/30'
-                      : 'border-white/10 bg-slate-900/50 hover:border-white/20 hover:bg-white/5 text-slate-400'
+                      : 'border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900/50 hover:border-slate-400 dark:hover:border-white/20 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400'
                   }`}
                 >
-                  <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-400'}`}>
+                  <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`}>
                     {option === 'everyone' ? 'Todos' : option === 'followers' ? 'Seguidores' : 'Nadie'}
                   </span>
                 </motion.button>
