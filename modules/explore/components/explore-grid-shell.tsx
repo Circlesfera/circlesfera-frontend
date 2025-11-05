@@ -43,9 +43,18 @@ export const ExploreGridShell = (): ReactElement => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-3 gap-1 md:grid-cols-4 lg:grid-cols-5">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div key={i} className="w-full aspect-[4/3] animate-pulse rounded-lg glass-card" />
-        ))}
+        {Array.from({ length: 20 }).map((_, i) => {
+          // Variar los aspect ratios en el skeleton para que se vea más realista
+          const ratios = ['1/1', '4/3', '3/4', '16/9', '9/16'];
+          const ratio = ratios[i % ratios.length];
+          return (
+            <div 
+              key={i} 
+              className="w-full rounded-lg glass-card bg-slate-800/50 animate-shimmer"
+              style={{ aspectRatio: ratio }}
+            />
+          );
+        })}
       </div>
     );
   }
@@ -117,9 +126,9 @@ export const ExploreGridShell = (): ReactElement => {
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="mx-auto w-full max-w-6xl"
+      className="w-full"
     >
-      <div className="grid grid-cols-3 gap-1 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-2.5">
         {posts.map((post) => {
           const firstMedia = post.media[0];
           if (!firstMedia) {
@@ -128,71 +137,105 @@ export const ExploreGridShell = (): ReactElement => {
 
           // Calcular aspect ratio dinámicamente
           const getAspectRatio = (): string => {
+            // Para reels, siempre usar aspect ratio vertical (9:16)
+            if (isReel(post)) {
+              return '9 / 16';
+            }
+
+            // Si tenemos dimensiones reales, usarlas
             if (firstMedia.width && firstMedia.height) {
               const ratio = firstMedia.width / firstMedia.height;
-              // Para imágenes, usar el ratio real
-              if (firstMedia.kind === 'image') {
-                return `${firstMedia.width} / ${firstMedia.height}`;
+              
+              // Limitar ratios extremos para mejor visualización en grid
+              if (ratio > 2) {
+                // Muy landscape, limitar a 2:1
+                return '2 / 1';
+              } else if (ratio < 0.6) {
+                // Muy portrait, limitar a 3:5
+                return '3 / 5';
               }
-              // Para videos, usar el ratio real también
+              
               return `${firstMedia.width} / ${firstMedia.height}`;
             }
-            // Valores por defecto si no hay dimensiones
+            
+            // Valores por defecto
             if (firstMedia.kind === 'image') {
               return '1 / 1'; // Cuadrado por defecto para imágenes
             }
-            return '16 / 9'; // 16:9 por defecto para videos
+            return '16 / 9'; // 16:9 por defecto para videos largos
           };
+
+          const aspectRatio = getAspectRatio();
+          const isPortrait = isReel(post) || (firstMedia.width && firstMedia.height && firstMedia.width < firstMedia.height);
+          const isReelItem = isReel(post);
 
           return (
             <motion.div
               key={post.id}
               variants={staggerItem}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               className="w-full"
               style={{
-                aspectRatio: getAspectRatio()
+                aspectRatio: aspectRatio
               }}
             >
               <Link
                 href={`/posts/${post.id}`}
-                className="group relative block w-full h-full overflow-hidden rounded-lg bg-slate-900"
+                className={`group relative flex items-center justify-center w-full h-full overflow-hidden rounded-xl border transition-all duration-300 ${
+                  isReelItem 
+                    ? 'bg-black border-white/5 hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10' 
+                    : 'bg-slate-900 border-white/5 hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10 p-1'
+                }`}
               >
               {firstMedia.kind === 'image' ? (
                 <Image
                   src={firstMedia.url}
                   alt={post.caption || 'Imagen'}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className={isPortrait ? 'object-contain' : 'object-cover'}
+                  style={{
+                    objectPosition: 'center'
+                  }}
                   unoptimized={isLocalImage(firstMedia.url)}
                   sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                 />
               ) : isReel(post) ? (
-                <video
-                  src={firstMedia.url}
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <video
+                    src={firstMedia.url}
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-contain"
+                  />
+                  {/* Indicador de reel */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 backdrop-blur-sm px-2 py-1">
+                    <svg className="size-3.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+                    </svg>
+                    <span className="text-xs font-semibold text-white">Reel</span>
+                  </div>
+                </div>
               ) : (
                 <Fragment>
                   <Image
                     src={firstMedia.thumbnailUrl || firstMedia.url}
                     alt={post.caption || 'Video'}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover"
                     unoptimized={isLocalImage(firstMedia.thumbnailUrl || firstMedia.url)}
                     sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <svg className="size-8 text-white/90" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+                    <div className="rounded-full bg-black/60 p-3 backdrop-blur-sm">
+                      <svg className="size-8 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
                   </div>
                   {firstMedia.durationMs ? (
-                    <div className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
+                    <div className="absolute bottom-2 right-2 rounded-lg bg-black/80 backdrop-blur-sm px-2 py-1 text-xs font-semibold text-white border border-white/20">
                       {formatDuration(firstMedia.durationMs)}
                     </div>
                   ) : null}
@@ -200,17 +243,17 @@ export const ExploreGridShell = (): ReactElement => {
               )}
 
               {/* Overlay con estadísticas en hover */}
-              <div className="absolute inset-0 flex items-center justify-center gap-6 bg-gradient-to-t from-black/90 via-black/70 to-black/50 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-[2px]">
+              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-gradient-to-t from-black/95 via-black/85 to-black/65 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-md">
                 <div className="flex items-center gap-2 text-white">
-                  <div className="rounded-full bg-red-500/20 p-2 backdrop-blur-sm">
+                  <div className="rounded-full bg-red-500/30 p-2.5 backdrop-blur-md border border-red-500/30">
                     <svg className="size-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
                   </div>
-                  <span className="text-base font-bold">{formatNumber(Math.max(0, post.stats.likes))}</span>
+                  <span className="text-lg font-bold">{formatNumber(Math.max(0, post.stats.likes))}</span>
                 </div>
                 <div className="flex items-center gap-2 text-white">
-                  <div className="rounded-full bg-blue-500/20 p-2 backdrop-blur-sm">
+                  <div className="rounded-full bg-blue-500/30 p-2.5 backdrop-blur-md border border-blue-500/30">
                     <svg className="size-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -220,7 +263,7 @@ export const ExploreGridShell = (): ReactElement => {
                       />
                     </svg>
                   </div>
-                  <span className="text-base font-bold">{formatNumber(post.stats.comments)}</span>
+                  <span className="text-lg font-bold">{formatNumber(post.stats.comments)}</span>
                 </div>
               </div>
             </Link>
@@ -234,7 +277,7 @@ export const ExploreGridShell = (): ReactElement => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex justify-center mt-10"
+          className="flex justify-center mt-12 mb-4"
         >
           <motion.button
             type="button"
@@ -242,9 +285,10 @@ export const ExploreGridShell = (): ReactElement => {
               void fetchNextPage();
             }}
             disabled={isFetchingNextPage}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/50 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
           >
             {isFetchingNextPage ? (
               <span className="flex items-center gap-2">
@@ -252,7 +296,7 @@ export const ExploreGridShell = (): ReactElement => {
                 Cargando...
               </span>
             ) : (
-              'Cargar más'
+              'Cargar más contenido'
             )}
           </motion.button>
         </motion.div>

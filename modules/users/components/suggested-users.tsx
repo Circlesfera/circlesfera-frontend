@@ -129,20 +129,21 @@ export function SuggestedUsers(): ReactElement {
         variants={fadeUpVariants}
         initial="hidden"
         animate="visible"
-        className="sticky top-6 rounded-2xl glass-card p-5"
+        className="sticky top-6 self-start rounded-2xl glass-card pl-5 pt-5 pb-5 max-h-[calc(100vh-3rem)] overflow-y-auto border border-white/5"
       >
-        <div className="mb-4">
-          <h2 className="text-lg font-bold text-white mb-1">Usuarios sugeridos</h2>
-          <p className="text-xs text-slate-400">Descubre nuevas cuentas</p>
+        <div className="mb-6">
+          <div className="h-6 w-32 bg-slate-800/50 rounded-lg animate-pulse mb-2" />
+          <div className="h-3 w-40 bg-slate-800/30 rounded animate-pulse" />
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-3 animate-pulse">
-              <div className="size-10 rounded-full bg-slate-800/50" />
-              <div className="flex-1">
-                <div className="h-4 w-24 bg-slate-800/50 rounded mb-2" />
-                <div className="h-3 w-32 bg-slate-800/50 rounded" />
+            <div key={i} className="flex items-center gap-3">
+              <div className="size-12 rounded-full bg-slate-800/50 animate-pulse shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-28 bg-slate-800/50 rounded animate-pulse" />
+                <div className="h-3 w-36 bg-slate-800/30 rounded animate-pulse" />
               </div>
+              <div className="h-8 w-20 bg-slate-800/50 rounded-lg animate-pulse shrink-0" />
             </div>
           ))}
         </div>
@@ -150,98 +151,150 @@ export function SuggestedUsers(): ReactElement {
     );
   }
 
-  if (suggestedUsers.length === 0) {
-    return <></>;
-  }
-
   return (
     <motion.div
       variants={fadeUpVariants}
       initial="hidden"
       animate="visible"
-      className="sticky top-6 rounded-2xl glass-card p-5"
+      transition={{ duration: 0.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      className="sticky top-6 self-start rounded-2xl glass-card pl-5 pt-6 pb-6 max-h-[calc(100vh-3rem)] overflow-y-auto border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_48px_rgba(139,92,246,0.15)] transition-all duration-300"
     >
-      <div className="mb-5">
-        <h2 className="text-lg font-bold text-gradient-primary mb-1">Usuarios sugeridos</h2>
-        <p className="text-xs text-slate-400">Descubre nuevas cuentas</p>
+      {/* Header mejorado */}
+      <div className="mb-6 pr-5">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="size-8 rounded-lg bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center">
+            <svg className="size-4 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h2 className="text-lg font-bold text-white">Usuarios sugeridos</h2>
+        </div>
+        <p className="text-xs text-slate-400/70 ml-10">Descubre nuevas cuentas para seguir</p>
       </div>
 
-      <div className="space-y-4">
-        {suggestedUsers.map((user) => {
+      {suggestedUsers.length === 0 ? (
+        <div className="py-12 text-center pr-5">
+          <div className="mb-5 flex justify-center">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="size-16 rounded-2xl bg-gradient-to-br from-primary-500/10 via-primary-400/10 to-accent-500/10 flex items-center justify-center ring-2 ring-primary-500/10"
+            >
+              <svg className="size-7 text-primary-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </motion.div>
+          </div>
+          <p className="text-sm text-slate-400/70 mb-5 font-medium">No hay usuarios sugeridos en este momento</p>
+          <Link
+            href="/explore"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-primary-400 bg-primary-500/10 hover:bg-primary-500/20 hover:text-primary-300 transition-all duration-200 hover:gap-3 border border-primary-500/20"
+          >
+            <span>Explorar usuarios</span>
+            <svg className="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-2 pr-5">
+          {suggestedUsers.map((user, index) => {
           const isFollowing = followedUsers.has(user.id);
           const isFollowingMutation = followMutation.isPending;
 
           return (
             <motion.div
               key={user.id}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="flex items-center gap-3 group"
+              transition={{ duration: 0.35, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              className="group relative"
             >
-              <Link
-                href={`/${user.handle}`}
-                className="relative size-11 shrink-0 rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-primary-400/30 transition-all duration-300"
-              >
-                <Image
-                  src={getAvatarUrl(user.avatarUrl, user.handle)}
-                  alt={user.displayName}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  unoptimized
-                />
-              </Link>
-
-              <div className="flex-1 min-w-0">
+              <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-all duration-300 ease-out border border-transparent hover:border-white/5 hover:shadow-md">
                 <Link
                   href={`/${user.handle}`}
-                  className="block hover:text-primary-400 transition-colors"
+                  className="relative size-14 shrink-0 rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-primary-400/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2"
                 >
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="text-sm font-semibold text-white truncate">
-                      {user.displayName}
-                    </span>
-                    {user.isVerified && <VerifiedBadge size="sm" />}
-                  </div>
-                  <span className="text-xs text-slate-400 block truncate">
-                    @{user.handle}
-                  </span>
+                  <Image
+                    src={getAvatarUrl(user.avatarUrl, user.handle)}
+                    alt={user.displayName}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    unoptimized
+                  />
                 </Link>
-              </div>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => {
-                  handleFollow(user);
-                }}
-                disabled={isFollowingMutation}
-                className={`shrink-0 px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-300 ${
-                  isFollowing
-                    ? 'glass-dark text-slate-300 hover:bg-white/10 hover:text-white'
-                    : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {isFollowingMutation ? (
-                  <span className="size-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                ) : isFollowing ? (
-                  'Siguiendo'
-                ) : (
-                  'Seguir'
-                )}
-              </motion.button>
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <Link
+                    href={`/${user.handle}`}
+                    className="block group/link"
+                  >
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-sm font-semibold text-white group-hover/link:text-primary-400 transition-colors truncate">
+                        {user.displayName}
+                      </span>
+                      {user.isVerified && <VerifiedBadge size="sm" />}
+                    </div>
+                    <span className="text-xs text-slate-400/80 block truncate mb-1">
+                      @{user.handle}
+                    </span>
+                    {user.bio && (
+                      <p className="text-xs text-slate-400/60 line-clamp-2 mt-1">
+                        {user.bio}
+                      </p>
+                    )}
+                  </Link>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  type="button"
+                  onClick={() => {
+                    handleFollow(user);
+                  }}
+                  disabled={isFollowingMutation}
+                  className={`shrink-0 px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-300 ease-out ${
+                    isFollowing
+                      ? 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20 hover:shadow-lg hover:shadow-white/5'
+                      : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/50 hover:from-primary-500 hover:to-accent-400 hover:-translate-y-0.5'
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {isFollowingMutation ? (
+                    <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  ) : isFollowing ? (
+                    <span className="flex items-center gap-1.5">
+                      <svg className="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Siguiendo
+                    </span>
+                  ) : (
+                    'Seguir'
+                  )}
+                </motion.button>
+              </div>
             </motion.div>
           );
         })}
-      </div>
+        </div>
+      )}
 
-      <Link
-        href="/explore"
-        className="mt-5 block text-center text-xs font-medium text-primary-400 hover:text-primary-300 transition-colors"
-      >
-        Ver más sugerencias →
-      </Link>
+      {suggestedUsers.length > 0 && (
+        <div className="mt-6 pt-6 border-t border-white/5 pr-5">
+          <Link
+            href="/explore"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-semibold text-primary-400 bg-primary-500/5 hover:bg-primary-500/10 hover:text-primary-300 transition-all duration-200 group border border-primary-500/10 hover:border-primary-500/20"
+          >
+            <span>Ver más sugerencias</span>
+            <svg className="size-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      )}
     </motion.div>
   );
 }
