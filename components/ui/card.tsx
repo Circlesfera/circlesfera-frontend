@@ -9,7 +9,7 @@ const cardVariants = cva('card-base', {
   variants: {
     variant: {
       default: '',
-      elevated: 'shadow-card hover:shadow-card-hover',
+      elevated: 'shadow-card hover:shadow-card-hover transition-shadow duration-300',
       glass: 'glass-dark',
       primary: 'glass-primary'
     },
