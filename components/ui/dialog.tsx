@@ -30,14 +30,14 @@ export function Dialog({ open, onOpenChange, children, size = 'md' }: DialogProp
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Overlay */}
           <motion.div
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="overlay"
+            className="overlay backdrop-blur-md"
             onClick={() => onOpenChange(false)}
             aria-hidden="true"
           />
@@ -49,7 +49,7 @@ export function Dialog({ open, onOpenChange, children, size = 'md' }: DialogProp
             animate="visible"
             exit="exit"
             className={twMerge(
-              'relative z-50 w-full mx-4',
+              'relative z-50 w-full',
               sizeClasses[size]
             )}
             role="dialog"
@@ -73,14 +73,14 @@ export function DialogContent({ children, className, onClose }: DialogContentPro
   return (
     <div
       className={twMerge(
-        'glass-modal rounded-2xl p-6',
+        'glass-modal rounded-2xl p-6 md:p-8 shadow-elegant-xl',
         className
       )}
     >
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200 focus-ring z-10"
+          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200 focus-ring z-10 hover:scale-105 active:scale-95"
           aria-label="Cerrar"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +100,7 @@ export interface DialogHeaderProps {
 
 export function DialogHeader({ children, className }: DialogHeaderProps): ReactElement {
   return (
-    <div className={twMerge('mb-6', className)}>
+    <div className={twMerge('mb-6 pr-8', className)}>
       {children}
     </div>
   );
@@ -139,7 +139,7 @@ export interface DialogFooterProps {
 
 export function DialogFooter({ children, className }: DialogFooterProps): ReactElement {
   return (
-    <div className={twMerge('flex items-center justify-end gap-3 mt-6', className)}>
+    <div className={twMerge('flex items-center justify-end gap-3 mt-8 pt-6 border-t border-white/5', className)}>
       {children}
     </div>
   );
