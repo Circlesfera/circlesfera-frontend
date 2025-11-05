@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useRef, useEffect, type ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,9 +16,9 @@ interface CreateStoryDialogProps {
 }
 
 const modalVariants = {
-  hidden: { opacity: 0, scale: 0.96, y: 8 },
+  hidden: { opacity: 0, scale: 0.96, y: -20 },
   visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.96, y: 8 }
+  exit: { opacity: 0, scale: 0.96, y: -20 }
 };
 
 const backdropVariants = {
@@ -32,6 +33,7 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const createStoryMutation = useMutation({
     mutationFn: (payload: CreateStoryPayload) => createStory(payload),
@@ -126,6 +128,11 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
     };
   }, [preview]);
 
+  // Verificar que el componente está montado (para SSR)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Prevenir scroll del body cuando el modal está abierto
   useEffect(() => {
     if (open) {
@@ -138,10 +145,14 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
     };
   }, [open]);
 
-  return (
+  if (!mounted) {
+    return <></>;
+  }
+
+  const modalContent = (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <>
           {/* Backdrop */}
           <motion.div
             key="backdrop"
@@ -150,37 +161,55 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
             animate="visible"
             exit="exit"
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm"
             onClick={handleClose}
             aria-hidden="true"
           />
 
-          {/* Modal */}
-          <motion.div
-            key="modal"
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ 
-              type: 'spring', 
-              damping: 30, 
-              stiffness: 400,
-              duration: 0.3
+          {/* Contenedor centrado del modal */}
+          <div 
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1rem',
+              pointerEvents: 'none'
             }}
-            className={`
-              relative z-10 w-full
-              rounded-3xl border border-white/10
-              bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95
-              backdrop-blur-2xl shadow-2xl shadow-black/50
-              overflow-hidden
-              flex flex-col
-              ${selectedFile ? 'max-w-sm' : 'max-w-md'}
-              max-h-[90vh]
-            `}
-            style={{ maxHeight: '90vh' }}
-            onClick={(e) => e.stopPropagation()}
           >
+            {/* Modal */}
+            <motion.div
+              key="modal"
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{ 
+                type: 'spring', 
+                damping: 30, 
+                stiffness: 400,
+                duration: 0.3
+              }}
+              className={`
+                relative w-full pointer-events-auto
+                rounded-3xl border border-white/10
+                bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95
+                backdrop-blur-2xl shadow-2xl shadow-black/50
+                overflow-hidden
+                flex flex-col
+                ${selectedFile ? 'max-w-sm' : 'max-w-md'}
+                max-h-[90vh]
+              `}
+              style={{ 
+                maxHeight: '90vh'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
               <AnimatePresence mode="wait">
                 {!selectedFile ? (
                   <motion.div
@@ -416,9 +445,12 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
               className="hidden"
               aria-label="Seleccionar archivo para story"
             />
-          </motion.div>
-        </div>
+            </motion.div>
+          </div>
+        </>
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modalContent, document.body);
 }
