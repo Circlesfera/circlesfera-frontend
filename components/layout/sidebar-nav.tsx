@@ -245,24 +245,32 @@ export function SidebarNav(): ReactElement {
       <motion.div
         key={item.href}
         whileHover={{ x: 4 }}
-        transition={{ duration: 0.2 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
         <Link
           href={item.href}
-          className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-300 ${
+          className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-300 ease-out ${
             active
               ? 'bg-gradient-to-r from-primary-500/20 via-primary-500/15 to-transparent font-semibold shadow-lg shadow-primary-500/10 before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:rounded-r-full before:bg-gradient-to-b before:from-primary-400 before:to-accent-500'
               : 'hover:bg-white/5 hover:shadow-md'
           }`}
         >
           <div className="relative flex items-center justify-center">
-            <div className={`transition-all duration-300 ${active ? 'scale-110 text-primary-400' : 'text-slate-400 group-hover:text-slate-200'}`}>
+            <motion.div 
+              className={`transition-all duration-300 ${active ? 'scale-110 text-primary-400' : 'text-slate-400 group-hover:text-slate-200'}`}
+              whileHover={!active ? { scale: 1.1 } : {}}
+              transition={{ duration: 0.2 }}
+            >
               {active ? item.activeIcon : item.icon}
-            </div>
+            </motion.div>
             {showBadge && (
-              <span className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 ring-2 ring-black">
+              <motion.span 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 ring-2 ring-black"
+              >
                 {item.badge! > 9 ? '9+' : item.badge}
-              </span>
+              </motion.span>
             )}
           </div>
           <span className={`flex-1 text-sm font-medium transition-colors duration-300 ${
@@ -273,7 +281,11 @@ export function SidebarNav(): ReactElement {
             {item.label}
           </span>
           {active && (
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500/5 to-transparent" />
+            <motion.div 
+              layoutId="sidebarActiveIndicator"
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500/5 to-transparent"
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            />
           )}
         </Link>
       </motion.div>
@@ -294,8 +306,9 @@ export function SidebarNav(): ReactElement {
             className="group mb-8 flex items-center gap-3 px-3 transition-all duration-300"
           >
             <motion.div
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.1, rotate: 5 }}
               whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               className="relative flex size-9 items-center justify-center transition-all duration-300"
             >
               <Image
@@ -314,17 +327,17 @@ export function SidebarNav(): ReactElement {
         </motion.div>
 
         {/* Navigation Sections */}
-        <nav className="flex-1 space-y-6">
+        <nav className="flex-1 space-y-8">
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex}>
               {section.title && (
-                <div className="mb-2 px-3">
+                <div className="mb-3 px-3">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     {section.title}
                   </h3>
                 </div>
               )}
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 {section.items.map((item) => renderNavItem(item))}
               </div>
             </div>
@@ -337,11 +350,11 @@ export function SidebarNav(): ReactElement {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="mt-auto border-t border-white/5 pt-4"
+            className="mt-auto border-t border-white/5 pt-6"
           >
             <motion.div
               whileHover={{ x: 4 }}
-              transition={{ duration: 0.2 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             >
               <Link
                 href={`/${user.handle}`}
