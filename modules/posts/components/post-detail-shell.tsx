@@ -254,15 +254,14 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="relative w-full h-full overflow-hidden flex items-center justify-center group/media"
+                  className="relative w-full h-full overflow-hidden group/media"
                 >
-                  <div ref={mediaRef} className="relative size-full">
+                  <div ref={mediaRef} className="relative size-full flex items-center justify-center bg-black/20">
                     <Image
                       src={media.url}
                       alt={post.caption || `Imagen de @${post.author.handle}`}
-                      width={media.width ?? 1080}
-                      height={media.height ?? 1350}
-                      className="w-full h-full object-contain transition-transform duration-300"
+                      fill
+                      className="object-contain transition-transform duration-300"
                       unoptimized={isLocalImage(media.url)}
                       priority={mediaIndex === 0}
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 100vw"
@@ -303,14 +302,14 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
-                  className="relative w-full h-full overflow-hidden flex items-center justify-center"
+                  className="relative w-full h-full overflow-hidden"
                 >
                   <video
                     src={media.url}
                     {...(isReel(post) ? {} : { poster: media.thumbnailUrl })}
                     controls
                     preload="metadata"
-                    className="w-full h-full object-contain"
+                    className="absolute inset-0 w-full h-full object-contain"
                     onClick={(e) => {
                       e.preventDefault();
                     }}
