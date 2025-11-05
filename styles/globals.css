@@ -86,6 +86,12 @@ a {
   @apply shadow-[0_4px_20px_rgba(0,0,0,0.08)];
   border-color: rgba(255, 255, 255, 0.1);
   background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 0.5));
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: auto;
+  /* Transición suave para backdrop-filter cuando se modifica inline */
+  transition: backdrop-filter 0.15s ease-out, -webkit-backdrop-filter 0.15s ease-out, background-color 0.15s ease-out;
 }
 
 .glass-sidebar {
