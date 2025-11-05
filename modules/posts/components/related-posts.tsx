@@ -8,6 +8,17 @@ import { motion } from 'framer-motion';
 
 import { getRelatedPosts } from '@/services/api/feed';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import type { FeedItem } from '@/services/api/types/feed';
+
+// Función para determinar si un item es un reel
+const isReel = (item: FeedItem): boolean => {
+  return (
+    item.media.length === 1 &&
+    item.media[0]?.kind === 'video' &&
+    item.media[0]?.durationMs !== undefined &&
+    item.media[0].durationMs <= 60000
+  );
+};
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -73,6 +84,14 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
                   alt={post.caption || 'Publicación relacionada'}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              ) : isReel(post) ? (
+                <video
+                  src={firstMedia.url}
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               ) : (
                 <Fragment>

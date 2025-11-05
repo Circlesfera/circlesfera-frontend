@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, memo, useMemo, useCallback, useState, useRef, useEffect, type ReactElement } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { fadeUpVariants, cardVariants } from '@/lib/motion-config';
 
-import type { FeedItem } from '@/services/api/types/feed';
+import type { FeedItem, FeedCursorResponse } from '@/services/api/types/feed';
 import { formatRelativeTime } from '../utils/formatters';
 import { likePost, unlikePost } from '@/services/api/likes';
 import { savePost, unsavePost } from '@/services/api/saves';
@@ -126,6 +126,17 @@ interface FeedItemProps {
   readonly item: FeedItem;
   readonly isArchivedPage?: boolean; // Si true, muestra opción de desarchivar en lugar de archivar
 }
+
+// Función para determinar si un item es un reel
+// Un reel es un post que tiene exactamente un media de tipo video con duración <= 60 segundos
+const isReel = (item: FeedItem): boolean => {
+  return (
+    item.media.length === 1 &&
+    item.media[0]?.kind === 'video' &&
+    item.media[0]?.durationMs !== undefined &&
+    item.media[0].durationMs <= 60000
+  );
+};
 
 function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps): ReactElement {
   const queryClient = useQueryClient();
@@ -468,16 +479,17 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
         <Link key={media.id} href={`/posts/${item.id}`} className="block w-full group/media relative">
           <Fragment>
             {media.kind === 'image' ? (
-              <div className="relative w-full overflow-hidden bg-gradient-to-br from-slate-900/50 to-black flex justify-center">
+              <div 
+                className="relative w-full overflow-hidden"
+                style={{
+                  aspectRatio: '4 / 5'
+                }}
+              >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="relative flex items-center justify-center w-full bg-black/20 overflow-hidden"
-                  style={{
-                    maxWidth: 'min(100%, 380px)',
-                    ...(media.width && media.height ? { aspectRatio: `${media.width} / ${media.height}` } : {})
-                  }}
+                  className="relative w-full h-full overflow-hidden flex items-center justify-center"
                 >
                 <Image
                   src={media.url}
@@ -488,24 +500,25 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                   unoptimized={isLocalImage(media.url)}
                     priority={mediaIndex === 0 && isInView}
                     loading={mediaIndex === 0 ? undefined : 'lazy'}
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 380px, 380px"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 100vw"
                     />
                 </motion.div>
                 </div>
               ) : (
-              <div className="relative w-full bg-gradient-to-br from-slate-900/50 to-black flex justify-center">
+              <div 
+                className="relative w-full overflow-hidden"
+                style={{
+                  aspectRatio: isReel(item) ? '9 / 16' : '4 / 5'
+                }}
+              >
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
-                  className="relative flex items-center justify-center w-full bg-black/20 overflow-hidden"
-                  style={{
-                    maxWidth: 'min(100%, 380px)',
-                    ...(media.width && media.height ? { aspectRatio: `${media.width} / ${media.height}` } : {})
-                  }}
+                  className="relative w-full h-full overflow-hidden flex items-center justify-center"
                 >
                   <video
                     src={media.url}
-                    poster={media.thumbnailUrl}
+                    {...(isReel(item) ? {} : { poster: media.thumbnailUrl })}
                     controls
                     preload="metadata"
                     className="w-full h-full object-contain"
@@ -756,11 +769,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             }}
             onSuccess={() => {
               setShowDeleteConfirm(false);
-              queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-              queryClient.invalidateQueries({ queryKey: ['post', item.id] });
-              queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
-              queryClient.invalidateQueries({ queryKey: ['analytics'] });
-              toast.success('Publicación eliminada');
+              // El DeletePostDialog ya maneja todas las invalidaciones y actualizaciones del cache
             }}
           />
         )}
@@ -1034,19 +1043,128 @@ interface DeletePostDialogProps {
 function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePostDialogProps): ReactElement {
   const queryClient = useQueryClient();
 
+  // Función helper para remover un post de todas las queries InfiniteData
+  const removePostFromInfiniteQueries = (postIdToRemove: string): void => {
+    // Remover del feed principal - usar InfiniteData<FeedCursorResponse>
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['feed', 'home'] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+
+    // Remover del explore
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['feed', 'explore'] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+
+    // Remover de reels
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['reels'] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+
+    // Remover de userPosts
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['userPosts', authorHandle] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+  };
+
   const deleteMutation = useMutation({
     mutationFn: () => deletePost(postId),
+    onMutate: async () => {
+      // Cancelar queries en progreso para evitar conflictos
+      await queryClient.cancelQueries({ queryKey: ['feed', 'home'] });
+      await queryClient.cancelQueries({ queryKey: ['feed', 'explore'] });
+      await queryClient.cancelQueries({ queryKey: ['reels'] });
+      
+      // Guardar snapshot del estado anterior para rollback en caso de error
+      const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      const previousExplore = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'explore']);
+      const previousReels = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
+      const previousUserPosts = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['userPosts', authorHandle]);
+      
+      // Remover optimísticamente del cache ANTES de la mutación
+      removePostFromInfiniteQueries(postId);
+      
+      return { previousFeed, previousExplore, previousReels, previousUserPosts };
+    },
+    onError: (_error, _variables, context) => {
+      // Rollback en caso de error
+      if (context?.previousFeed) {
+        queryClient.setQueryData(['feed', 'home'], context.previousFeed);
+      }
+      if (context?.previousExplore) {
+        queryClient.setQueryData(['feed', 'explore'], context.previousExplore);
+      }
+      if (context?.previousReels) {
+        queryClient.setQueryData(['reels'], context.previousReels);
+      }
+      if (context?.previousUserPosts) {
+        queryClient.setQueryData(['userPosts', authorHandle], context.previousUserPosts);
+      }
+      
+      const axiosError = _error as { response?: { data?: { message?: string } } };
+      toast.error(axiosError.response?.data?.message || 'No se pudo eliminar la publicación');
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      // Invalidar queries en segundo plano (sin refetch inmediato) para asegurar sincronización
+      queryClient.invalidateQueries({ 
+        queryKey: ['feed', 'home'],
+        refetchType: 'none'
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['feed', 'explore'],
+        refetchType: 'none'
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['reels'],
+        refetchType: 'none'
+      });
       queryClient.invalidateQueries({ queryKey: ['post', postId] });
-      queryClient.invalidateQueries({ queryKey: ['userPosts', authorHandle] });
+      queryClient.invalidateQueries({ 
+        queryKey: ['userPosts', authorHandle],
+        refetchType: 'none'
+      });
       queryClient.invalidateQueries({ queryKey: ['analytics'] });
       toast.success('Publicación eliminada');
       onSuccess();
-    },
-    onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string } } };
-      toast.error(axiosError.response?.data?.message || 'No se pudo eliminar la publicación');
     }
   });
 

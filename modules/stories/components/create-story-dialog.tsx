@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, useRef, useEffect, type ReactElement } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { createStory, type CreateStoryPayload } from '@/services/api/stories';
 import { uploadMedia } from '@/services/api/media';
@@ -12,6 +13,18 @@ interface CreateStoryDialogProps {
   readonly open: boolean;
   readonly onClose: () => void;
 }
+
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.96, y: 8 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.96, y: 8 }
+};
+
+const backdropVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 }
+};
 
 export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): ReactElement {
   const queryClient = useQueryClient();
@@ -37,7 +50,6 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validar que sea imagen o video
     const isImage = file.type.startsWith('image/');
     const isVideo = file.type.startsWith('video/');
 
@@ -46,7 +58,6 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
       return;
     }
 
-    // Validar tamaño (máximo 15MB para stories)
     if (file.size > 15 * 1024 * 1024) {
       toast.error('El archivo es demasiado grande. Máximo 15MB');
       return;
@@ -54,7 +65,6 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
 
     setSelectedFile(file);
 
-    // Crear preview
     if (isImage) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -62,7 +72,6 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
       };
       reader.readAsDataURL(file);
     } else {
-      // Para videos, crear preview usando FileReader
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreview(e.target?.result as string);
@@ -89,10 +98,8 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
 
     setUploading(true);
     try {
-      // Subir media primero
       const mediaResult = await uploadMedia(selectedFile);
 
-      // Crear story
       const payload: CreateStoryPayload = {
         media: {
           kind: selectedFile.type.startsWith('video/') ? 'video' : 'image',
@@ -111,7 +118,6 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
     }
   };
 
-  // Cleanup preview URL on unmount
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith('blob:')) {
@@ -120,133 +126,299 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
     };
   }, [preview]);
 
-  if (!open) {
-    return <></>;
-  }
+  // Prevenir scroll del body cuando el modal está abierto
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={handleClose}
-    >
-      <div
-        className="relative w-full max-w-md rounded-2xl border border-slate-800/50 bg-slate-900/95 backdrop-blur-xl shadow-2xl"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800/50 px-6 py-4">
-          <h2 className="text-xl font-semibold text-white">Crear Story</h2>
-          <button
-            type="button"
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <motion.div
+            key="backdrop"
+            variants={backdropVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
             onClick={handleClose}
-            className="rounded-full p-1.5 text-slate-400 transition hover:bg-slate-800/50 hover:text-white"
-          >
-            <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          {!selectedFile ? (
-            <div className="space-y-4">
-              <div className="flex flex-col items-center gap-4 rounded-xl border-2 border-dashed border-slate-700/50 bg-slate-900/30 p-12">
-                <div className="size-16 rounded-full bg-gradient-to-br from-primary-500/20 to-primary-600/20 flex items-center justify-center">
-                  <svg className="size-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-medium text-white mb-2">Sube una foto o video</p>
-                  <p className="text-xs text-slate-400 mb-4">
-                    Las stories duran 24 horas y solo puedes ver quién las ha visto
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      fileInputRef.current?.click();
-                    }}
-                    className="rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all hover:from-primary-500 hover:to-primary-400 hover:shadow-xl active:scale-95"
-                  >
-                    Seleccionar archivo
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {/* Preview */}
-              <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl border border-slate-800/50 bg-black">
-                {selectedFile.type.startsWith('image/') ? (
-                  <Image
-                    src={preview || ''}
-                    alt="Preview"
-                    fill
-                    className="object-contain"
-                    unoptimized
-                  />
-                ) : (
-                  <video
-                    src={preview || ''}
-                    className="h-full w-full object-contain"
-                    controls
-                  />
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedFile(null);
-                    setPreview(null);
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = '';
-                    }
-                  }}
-                  disabled={uploading}
-                  className="rounded-xl border border-slate-700/50 bg-transparent px-6 py-2.5 text-sm font-medium text-slate-300 transition-all hover:bg-slate-800/50 hover:text-white disabled:opacity-50 active:scale-95"
-                >
-                  Cambiar
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={uploading || createStoryMutation.isPending}
-                  className="rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all hover:from-primary-500 hover:to-primary-400 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
-                >
-                  {uploading || createStoryMutation.isPending ? (
-                    <span className="flex items-center gap-2">
-                      <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      {uploading ? 'Subiendo...' : 'Publicando...'}
-                    </span>
-                  ) : (
-                    'Compartir Story'
-                  )}
-                </button>
-              </div>
-            </div>
-          )}
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*,video/*"
-            onChange={handleFileSelect}
-            className="hidden"
+            aria-hidden="true"
           />
+
+          {/* Modal */}
+          <motion.div
+            key="modal"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ 
+              type: 'spring', 
+              damping: 30, 
+              stiffness: 400,
+              duration: 0.3
+            }}
+            className={`
+              relative z-10 w-full
+              rounded-3xl border border-white/10
+              bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95
+              backdrop-blur-2xl shadow-2xl shadow-black/50
+              overflow-hidden
+              flex flex-col
+              ${selectedFile ? 'max-w-sm' : 'max-w-md'}
+              max-h-[90vh]
+            `}
+            style={{ maxHeight: '90vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+              <AnimatePresence mode="wait">
+                {!selectedFile ? (
+                  <motion.div
+                    key="upload"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col"
+                  >
+                    {/* Header minimalista */}
+                    <div className="flex items-center justify-between px-5 py-3 border-b border-white/5 shrink-0">
+                      <h2 className="text-base font-semibold text-white">Crear Story</h2>
+                      <motion.button
+                        type="button"
+                        onClick={handleClose}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="rounded-full p-1.5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                        aria-label="Cerrar"
+                      >
+                        <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </motion.button>
+                    </div>
+
+                    {/* Upload Area - Centrado verticalmente y compacto */}
+                    <div className="flex-1 flex items-center justify-center p-5 min-h-0 overflow-y-auto">
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="
+                          w-full max-w-xs mx-auto
+                          flex flex-col items-center gap-4
+                          rounded-2xl border-2 border-dashed border-white/10
+                          bg-gradient-to-br from-white/5 to-white/[0.02]
+                          p-6
+                          cursor-pointer
+                          transition-all duration-300
+                          hover:border-primary-500/40 hover:bg-white/10
+                          group
+                        "
+                      >
+                        <motion.div
+                          initial={{ scale: 0.9, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
+                          className="
+                            size-14 rounded-full
+                            bg-gradient-to-br from-primary-500/20 via-primary-400/20 to-accent-500/20
+                            flex items-center justify-center
+                            ring-4 ring-primary-500/10
+                            group-hover:ring-primary-500/30
+                            transition-all duration-300
+                          "
+                        >
+                          <svg 
+                            className="size-7 text-primary-400 group-hover:text-primary-300 transition-colors" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </motion.div>
+                        
+                        <div className="text-center space-y-1.5">
+                          <p className="text-sm font-semibold text-white">Sube una foto o video</p>
+                          <p className="text-xs text-slate-400 max-w-[200px]">
+                            Las stories duran 24 horas
+                          </p>
+                        </div>
+
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="
+                            rounded-xl
+                            bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500
+                            px-5 py-2
+                            text-sm font-semibold text-white
+                            shadow-lg shadow-primary-500/30
+                            transition-all duration-300
+                            hover:shadow-xl hover:shadow-primary-500/40
+                          "
+                        >
+                          Seleccionar archivo
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="preview"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col flex-1 min-h-0"
+                    style={{ maxHeight: '90vh' }}
+                  >
+                    {/* Header compacto */}
+                    <div className="flex items-center justify-between px-5 py-3 border-b border-white/5 shrink-0">
+                      <h2 className="text-base font-semibold text-white">Vista previa</h2>
+                      <div className="flex items-center gap-2">
+                        <motion.button
+                          type="button"
+                          onClick={() => {
+                            setSelectedFile(null);
+                            setPreview(null);
+                            if (fileInputRef.current) {
+                              fileInputRef.current.value = '';
+                            }
+                          }}
+                          disabled={uploading}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="
+                            rounded-lg px-3 py-1.5
+                            text-xs font-medium text-slate-300
+                            bg-white/5 border border-white/10
+                            transition-all duration-200
+                            hover:bg-white/10 hover:text-white
+                            disabled:opacity-50 disabled:cursor-not-allowed
+                          "
+                        >
+                          Cambiar
+                        </motion.button>
+                        <motion.button
+                          type="button"
+                          onClick={handleClose}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="
+                            rounded-full p-1.5
+                            text-slate-400
+                            hover:text-white hover:bg-white/10
+                            transition-colors
+                          "
+                          aria-label="Cerrar"
+                        >
+                          <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </motion.button>
+                      </div>
+                    </div>
+
+                    {/* Preview - Aspect ratio 9:16, perfectamente centrado */}
+                    <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-y-auto">
+                      <div 
+                        className="
+                          relative w-full max-w-[240px]
+                          rounded-2xl border border-white/10
+                          bg-black/50 shadow-xl
+                          overflow-hidden
+                        "
+                        style={{ 
+                          aspectRatio: '9/16',
+                          maxHeight: 'calc(90vh - 160px)'
+                        }}
+                      >
+                        {selectedFile.type.startsWith('image/') ? (
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={preview || ''}
+                              alt="Preview de story"
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                          </div>
+                        ) : (
+                          <video
+                            src={preview || ''}
+                            className="w-full h-full object-cover"
+                            controls
+                            playsInline
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Actions - Fijas en la parte inferior */}
+                    <div className="border-t border-white/5 bg-white/5 px-5 py-3 shrink-0">
+                      <motion.button
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={uploading || createStoryMutation.isPending}
+                        whileHover={{ 
+                          scale: uploading || createStoryMutation.isPending ? 1 : 1.02 
+                        }}
+                        whileTap={{ 
+                          scale: uploading || createStoryMutation.isPending ? 1 : 0.98 
+                        }}
+                        className="
+                          w-full rounded-xl
+                          bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500
+                          px-6 py-3
+                          text-sm font-semibold text-white
+                          shadow-lg shadow-primary-500/30
+                          transition-all duration-300
+                          hover:shadow-xl hover:shadow-primary-500/40
+                          disabled:opacity-50 disabled:cursor-not-allowed
+                        "
+                      >
+                        {uploading || createStoryMutation.isPending ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            {uploading ? 'Subiendo...' : 'Publicando...'}
+                          </span>
+                        ) : (
+                          'Compartir Story'
+                        )}
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+            {/* Input oculto */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileSelect}
+              className="hidden"
+              aria-label="Seleccionar archivo para story"
+            />
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
-

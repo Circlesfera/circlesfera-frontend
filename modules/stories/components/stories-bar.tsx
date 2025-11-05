@@ -140,7 +140,7 @@ export function StoriesBar(): ReactElement {
         {/* Container de stories */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar px-1"
+          className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar px-2 py-1"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {/* Story propia - Mostrar si tiene stories, sino botón para crear */}
@@ -163,7 +163,7 @@ export function StoriesBar(): ReactElement {
                   whileTap={{ scale: 0.97 }}
                   className="flex-shrink-0 flex flex-col items-center gap-2 group"
                 >
-                  <div className={`relative size-[64px] rounded-full transition-all duration-300 ${
+                  <div className={`relative size-[64px] rounded-full transition-all duration-200 ${
                     currentUserStoryGroup.stories.some((s) => !s.hasViewed)
                       ? 'p-[2.5px] bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 group-hover:from-orange-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:shadow-lg group-hover:shadow-pink-500/50 group-hover:scale-105' 
                       : 'p-[2px] bg-gradient-to-br from-slate-600/80 to-slate-700/80 group-hover:from-slate-500 group-hover:to-slate-600 group-hover:shadow-lg group-hover:shadow-slate-500/20'
@@ -196,7 +196,7 @@ export function StoriesBar(): ReactElement {
               whileTap={{ scale: 0.95 }}
               className="flex-shrink-0 flex flex-col items-center gap-2 group"
             >
-                  <div className="relative size-[64px] overflow-hidden rounded-full border-2 border-white/30 bg-gradient-to-br from-slate-900/90 to-black/90 transition-all duration-300 group-hover:border-primary-400/60 group-hover:shadow-lg group-hover:shadow-primary-500/40 group-hover:scale-105 backdrop-blur-sm">
+                  <div className="relative size-[64px] overflow-hidden rounded-full border-2 border-white/30 bg-gradient-to-br from-slate-900/90 to-black/90 transition-all duration-200 group-hover:border-primary-400/60 group-hover:shadow-lg group-hover:shadow-primary-500/40 group-hover:scale-105 backdrop-blur-sm">
                 <Image
                   src={getAvatarUrl(currentUser.avatarUrl, currentUser.handle)}
                   alt={currentUser.displayName}
@@ -244,7 +244,7 @@ export function StoriesBar(): ReactElement {
                 className="flex-shrink-0 flex flex-col items-center gap-2 group"
               >
                 {/* Borde degradado premium para historias no vistas, borde elegante para vistas */}
-                <div className={`relative size-[64px] rounded-full transition-all duration-300 ${
+                <div className={`relative size-[64px] rounded-full transition-all duration-200 ${
                   hasUnviewed 
                     ? 'p-[2.5px] bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 group-hover:from-orange-400 group-hover:via-pink-400 group-hover:to-purple-400 group-hover:shadow-lg group-hover:shadow-pink-500/50 group-hover:scale-105' 
                     : 'p-[2px] bg-gradient-to-br from-slate-600/80 to-slate-700/80 group-hover:from-slate-500 group-hover:to-slate-600 group-hover:shadow-lg group-hover:shadow-slate-500/20'

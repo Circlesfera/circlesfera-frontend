@@ -11,6 +11,17 @@ import { formatNumber } from '@/lib/utils';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 import { useSessionStore } from '@/store/session';
 import { isLocalImage } from '@/lib/image-utils';
+import type { FeedItem } from '@/services/api/types/feed';
+
+// Función para determinar si un item es un reel
+const isReel = (item: FeedItem): boolean => {
+  return (
+    item.media.length === 1 &&
+    item.media[0]?.kind === 'video' &&
+    item.media[0]?.durationMs !== undefined &&
+    item.media[0].durationMs <= 60000
+  );
+};
 
 /**
  * Renderiza el grid de explorar con posts populares.
@@ -33,7 +44,7 @@ export const ExploreGridShell = (): ReactElement => {
     return (
       <div className="grid grid-cols-3 gap-1 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 20 }).map((_, i) => (
-          <div key={i} className="aspect-square animate-pulse rounded-lg glass-card" />
+          <div key={i} className="w-full aspect-[4/3] animate-pulse rounded-lg glass-card" />
         ))}
       </div>
     );
@@ -115,16 +126,38 @@ export const ExploreGridShell = (): ReactElement => {
             return null;
           }
 
+          // Calcular aspect ratio dinámicamente
+          const getAspectRatio = (): string => {
+            if (firstMedia.width && firstMedia.height) {
+              const ratio = firstMedia.width / firstMedia.height;
+              // Para imágenes, usar el ratio real
+              if (firstMedia.kind === 'image') {
+                return `${firstMedia.width} / ${firstMedia.height}`;
+              }
+              // Para videos, usar el ratio real también
+              return `${firstMedia.width} / ${firstMedia.height}`;
+            }
+            // Valores por defecto si no hay dimensiones
+            if (firstMedia.kind === 'image') {
+              return '1 / 1'; // Cuadrado por defecto para imágenes
+            }
+            return '16 / 9'; // 16:9 por defecto para videos
+          };
+
           return (
             <motion.div
               key={post.id}
               variants={staggerItem}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              className="w-full"
+              style={{
+                aspectRatio: getAspectRatio()
+              }}
             >
               <Link
                 href={`/posts/${post.id}`}
-                className="group relative block aspect-square overflow-hidden rounded-lg bg-slate-900"
+                className="group relative block w-full h-full overflow-hidden rounded-lg bg-slate-900"
               >
               {firstMedia.kind === 'image' ? (
                 <Image
@@ -134,6 +167,14 @@ export const ExploreGridShell = (): ReactElement => {
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                   unoptimized={isLocalImage(firstMedia.url)}
                   sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                />
+              ) : isReel(post) ? (
+                <video
+                  src={firstMedia.url}
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               ) : (
                 <Fragment>

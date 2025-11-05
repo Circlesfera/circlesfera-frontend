@@ -10,6 +10,17 @@ import { motion } from 'framer-motion';
 import { getUserPosts, type UserPostsResponse } from '@/services/api/users';
 import { staggerContainer, staggerItem } from '@/lib/motion-config';
 import { useSessionStore } from '@/store/session';
+import type { FeedItem } from '@/services/api/types/feed';
+
+// Función para determinar si un item es un reel
+const isReel = (item: FeedItem): boolean => {
+  return (
+    item.media.length === 1 &&
+    item.media[0]?.kind === 'video' &&
+    item.media[0]?.durationMs !== undefined &&
+    item.media[0].durationMs <= 60000
+  );
+};
 
 interface ProfilePostsGridProps {
   readonly handle: string;
@@ -103,6 +114,14 @@ export function ProfilePostsGrid({ handle }: ProfilePostsGridProps): ReactElemen
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     unoptimized={isLocalImage(firstMedia.url)}
+                  />
+                ) : isReel(post) ? (
+                  <video
+                    src={firstMedia.url}
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 ) : (
                   <div className="relative size-full">

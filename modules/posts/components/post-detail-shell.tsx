@@ -1,12 +1,13 @@
 'use client';
 
 import React, { Fragment, useState, useRef, type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { getPostById, updatePost, deletePost } from '@/services/api/feed';
+import type { FeedCursorResponse } from '@/services/api/types/feed';
 import { formatRelativeTime } from '@/modules/feed/utils/formatters';
 import { formatNumber } from '@/lib/utils';
 import { renderCaptionWithLinks } from '@/modules/feed/utils/caption-renderer';
@@ -27,6 +28,17 @@ import { VerifiedBadge } from '@/components/verified-badge';
 import { ImageTags } from '@/modules/feed/components/image-tags';
 import { AddTagDialog } from '@/modules/tags/components/add-tag-dialog';
 import { isLocalImage, getAvatarUrl } from '@/lib/image-utils';
+import type { FeedItem } from '@/services/api/types/feed';
+
+// Función para determinar si un item es un reel
+const isReel = (item: FeedItem): boolean => {
+  return (
+    item.media.length === 1 &&
+    item.media[0]?.kind === 'video' &&
+    item.media[0]?.durationMs !== undefined &&
+    item.media[0].durationMs <= 60000
+  );
+};
 
 /**
  * Renderiza la vista detallada de un post individual.
@@ -232,16 +244,17 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
         return (
           <Fragment key={media.id}>
             {media.kind === 'image' ? (
-              <div className="relative w-full overflow-hidden bg-gradient-to-br from-slate-900/50 to-black flex justify-center">
+              <div 
+                className="relative w-full overflow-hidden"
+                style={{
+                  aspectRatio: '4 / 5'
+                }}
+              >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="relative flex items-center justify-center w-full bg-black/20 overflow-hidden group/media"
-                  style={{
-                    maxWidth: 'min(100%, 380px)',
-                    ...(media.width && media.height ? { aspectRatio: `${media.width} / ${media.height}` } : {})
-                  }}
+                  className="relative w-full h-full overflow-hidden flex items-center justify-center group/media"
                 >
                   <div ref={mediaRef} className="relative size-full">
                     <Image
@@ -252,7 +265,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                       className="w-full h-full object-contain transition-transform duration-300"
                       unoptimized={isLocalImage(media.url)}
                       priority={mediaIndex === 0}
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 380px, 380px"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 100vw"
                     />
                     {media.tags && media.tags.length > 0 && (
                       <ImageTags
@@ -281,19 +294,20 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                 </motion.div>
               </div>
             ) : (
-              <div className="relative w-full bg-gradient-to-br from-slate-900/50 to-black flex justify-center">
+              <div 
+                className="relative w-full overflow-hidden"
+                style={{
+                  aspectRatio: isReel(post) ? '9 / 16' : '4 / 5'
+                }}
+              >
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
-                  className="relative flex items-center justify-center w-full bg-black/20 overflow-hidden"
-                  style={{
-                    maxWidth: 'min(100%, 380px)',
-                    ...(media.width && media.height ? { aspectRatio: `${media.width} / ${media.height}` } : {})
-                  }}
+                  className="relative w-full h-full overflow-hidden flex items-center justify-center"
                 >
                   <video
                     src={media.url}
-                    poster={media.thumbnailUrl}
+                    {...(isReel(post) ? {} : { poster: media.thumbnailUrl })}
                     controls
                     preload="metadata"
                     className="w-full h-full object-contain"
@@ -412,9 +426,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
           }}
           onSuccess={() => {
             setShowDeleteConfirm(false);
-            queryClient.invalidateQueries({ queryKey: ['post', postId] });
-            queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-            toast.success('Publicación eliminada');
+            // El DeletePostDialog ya maneja todas las invalidaciones y actualizaciones del cache
             window.history.back();
           }}
         />
@@ -542,13 +554,149 @@ interface DeletePostDialogProps {
 }
 
 function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps): ReactElement {
+  const queryClient = useQueryClient();
+  const { data: postData } = useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => getPostById(postId),
+    enabled: false // Solo para obtener el post si ya está en cache
+  });
+  
+  // Función helper para remover un post de todas las queries InfiniteData
+  const removePostFromInfiniteQueries = (postIdToRemove: string, authorHandle?: string): void => {
+    // Remover del feed principal - usar InfiniteData<FeedCursorResponse>
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['feed', 'home'] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+
+    // Remover del explore
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['feed', 'explore'] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+
+    // Remover de reels
+    queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+      { queryKey: ['reels'] },
+      (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.filter((item) => item.id !== postIdToRemove)
+          }))
+        };
+      }
+    );
+
+    // Remover de userPosts si tenemos el handle
+    if (authorHandle) {
+      queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
+        { queryKey: ['userPosts', authorHandle] },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.filter((item) => item.id !== postIdToRemove)
+            }))
+          };
+        }
+      );
+    }
+  };
+  
   const deleteMutation = useMutation({
     mutationFn: () => deletePost(postId),
-    onSuccess: () => {
-      onSuccess();
+    onMutate: async () => {
+      const authorHandle = postData?.post?.author.handle;
+      
+      // Cancelar queries en progreso para evitar conflictos
+      await queryClient.cancelQueries({ queryKey: ['feed', 'home'] });
+      await queryClient.cancelQueries({ queryKey: ['feed', 'explore'] });
+      await queryClient.cancelQueries({ queryKey: ['reels'] });
+      if (authorHandle) {
+        await queryClient.cancelQueries({ queryKey: ['userPosts', authorHandle] });
+      }
+      
+      // Guardar snapshot del estado anterior para rollback en caso de error
+      const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
+      const previousExplore = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'explore']);
+      const previousReels = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
+      const previousUserPosts = authorHandle 
+        ? queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['userPosts', authorHandle])
+        : undefined;
+      
+      // Remover optimísticamente del cache ANTES de la mutación
+      removePostFromInfiniteQueries(postId, authorHandle);
+      
+      return { previousFeed, previousExplore, previousReels, previousUserPosts };
     },
-    onError: () => {
+    onError: (_error, _variables, context) => {
+      // Rollback en caso de error
+      if (context?.previousFeed) {
+        queryClient.setQueryData(['feed', 'home'], context.previousFeed);
+      }
+      if (context?.previousExplore) {
+        queryClient.setQueryData(['feed', 'explore'], context.previousExplore);
+      }
+      if (context?.previousReels) {
+        queryClient.setQueryData(['reels'], context.previousReels);
+      }
+      if (context?.previousUserPosts) {
+        const authorHandle = postData?.post?.author.handle;
+        if (authorHandle) {
+          queryClient.setQueryData(['userPosts', authorHandle], context.previousUserPosts);
+        }
+      }
+      
       toast.error('No se pudo eliminar la publicación');
+    },
+    onSuccess: () => {
+      const authorHandle = postData?.post?.author.handle;
+      
+      // Invalidar queries en segundo plano (sin refetch inmediato) para asegurar sincronización
+      queryClient.invalidateQueries({ 
+        queryKey: ['feed', 'home'],
+        refetchType: 'none'
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['feed', 'explore'],
+        refetchType: 'none'
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['reels'],
+        refetchType: 'none'
+      });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      if (authorHandle) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['userPosts', authorHandle],
+          refetchType: 'none'
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      onSuccess();
     }
   });
 

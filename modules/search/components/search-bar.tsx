@@ -12,6 +12,16 @@ import { searchPosts } from '@/services/api/feed';
 import type { FeedItem } from '@/services/api/types/feed';
 import { FollowHashtagButton } from '@/modules/hashtags/components/follow-hashtag-button';
 
+// Función para determinar si un item es un reel
+const isReel = (item: FeedItem): boolean => {
+  return (
+    item.media.length === 1 &&
+    item.media[0]?.kind === 'video' &&
+    item.media[0]?.durationMs !== undefined &&
+    item.media[0].durationMs <= 60000
+  );
+};
+
 export function SearchBar(): ReactElement {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -250,6 +260,14 @@ export function SearchBar(): ReactElement {
                                   alt={post.caption || 'Post'}
                                   width={40}
                                   height={40}
+                                  className="size-10 flex-shrink-0 rounded object-cover"
+                                />
+                              ) : isReel(post) ? (
+                                <video
+                                  src={firstMedia.url}
+                                  loop
+                                  muted
+                                  playsInline
                                   className="size-10 flex-shrink-0 rounded object-cover"
                                 />
                               ) : (
