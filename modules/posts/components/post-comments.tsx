@@ -1,41 +1,83 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, type ReactElement } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type InfiniteData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { type ReactElement, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { fetchComments, createComment } from '@/services/api/comments';
-import { useSessionStore } from '@/store/session';
-import { CommentItem } from './comment-item';
 import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
 import { fadeUpVariants } from '@/lib/motion-config';
-import { useMemo } from 'react';
+import {
+  type CommentCursorResponse,
+  type CommentResourceType,
+  createComment,
+  fetchComments
+} from '@/services/api/comments';
+import { useSessionStore } from '@/store/session';
+
+import { CommentItem } from './comment-item';
 
 interface PostCommentsProps {
   readonly postId: string;
+  readonly resourceType?: CommentResourceType;
 }
 
-/**
- * Renderiza la sección de comentarios de un post.
- */
-export function PostComments({ postId }: PostCommentsProps): ReactElement {
+const PAGE_SIZE = 20;
+
+export function PostComments({ postId, resourceType = 'post' }: PostCommentsProps): ReactElement {
   const queryClient = useQueryClient();
   const currentUser = useSessionStore((state) => state.user);
   const [commentText, setCommentText] = useState('');
 
-  const commentsQuery = useQuery({
-    queryKey: ['comments', postId],
-    queryFn: () => fetchComments(postId),
-    staleTime: 1000 * 60 * 2 // 2 minutes
+  const commentsQueryKey = [resourceType === 'frame' ? 'frame-comments' : 'comments', postId] as const;
+
+  const commentsQuery = useInfiniteQuery({
+    queryKey: commentsQueryKey,
+    queryFn: async ({ pageParam }) => await fetchComments(postId, pageParam ?? null, PAGE_SIZE, resourceType),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    staleTime: 1000 * 60 * 2
   });
 
   const createCommentMutation = useMutation({
-    mutationFn: (content: string) => createComment(postId, { content }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+    mutationFn: (content: string) => createComment(postId, { content }, resourceType),
+    onSuccess: (response) => {
+      queryClient.setQueryData<InfiniteData<CommentCursorResponse> | undefined>(commentsQueryKey, (previous) => {
+        if (!previous || previous.pages.length === 0) {
+          return {
+            pageParams: [null],
+            pages: [
+              {
+                data: [response.comment],
+                nextCursor: null
+              }
+            ]
+          };
+        }
+
+        const firstPage = previous.pages[0];
+        if (!firstPage) {
+          return previous;
+        }
+
+        const rest = previous.pages.slice(1);
+        const exists = firstPage.data.some((entry) => entry.id === response.comment.id);
+        const updatedFirstPage = exists
+          ? firstPage
+          : {
+              ...firstPage,
+              data: [response.comment, ...firstPage.data].slice(0, PAGE_SIZE)
+            };
+
+        return {
+          pageParams: previous.pageParams,
+          pages: [updatedFirstPage, ...rest]
+        };
+      });
+
+      void queryClient.invalidateQueries({ queryKey: commentsQueryKey });
+      void queryClient.invalidateQueries({ queryKey: [resourceType === 'frame' ? 'frame' : 'post', postId] });
       setCommentText('');
       toast.success('Comentario publicado');
     },
@@ -53,131 +95,168 @@ export function PostComments({ postId }: PostCommentsProps): ReactElement {
     createCommentMutation.mutate(trimmed);
   };
 
-  const comments = commentsQuery.data?.data ?? [];
-  const isLoading = commentsQuery.isLoading;
+  const comments = commentsQuery.data?.pages.flatMap((page) => page.data) ?? [];
+  const totalComments = comments.length;
+  const hasComments = totalComments > 0;
+  const isInitialLoading = commentsQuery.isLoading && !hasComments;
+  const hasMore = commentsQuery.hasNextPage;
+  const isFetchingNext = commentsQuery.isFetchingNextPage;
 
-  // Obtener avatar sincronizado del usuario actual - usar useMemo para re-renderizar cuando cambie
   const avatarUrl = useMemo(() => {
     if (!currentUser) return null;
     return getAvatarUrl(currentUser.avatarUrl ?? null, currentUser.handle);
-  }, [currentUser?.avatarUrl, currentUser?.handle]);
+  }, [currentUser]);
 
   return (
-    <div className="px-3 md:px-4 py-3 md:py-4">
-      {currentUser && (
-        <motion.form
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate="visible"
-          onSubmit={handleSubmit}
-          className="mb-6 flex gap-2 md:gap-3 items-start"
-        >
-          <motion.div 
-            className="relative shrink-0"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+    <section aria-labelledby={`comments-${postId}`} className="space-y-6">
+      <header className="flex items-center justify-between gap-3">
+        <div>
+          <h3 id={`comments-${postId}`} className="text-lg font-semibold text-white">
+            Comentarios
+          </h3>
+          <p className="text-sm text-white/50">
+            {hasComments ? `${totalComments} ${totalComments === 1 ? 'comentario' : 'comentarios'}` : 'Aún no hay comentarios'}
+          </p>
+        </div>
+        <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white/80">
+          {totalComments}
+        </span>
+      </header>
+
+      <div className="rounded-[32px] border border-white/[0.08] bg-white/[0.03] p-5 md:p-6 shadow-[0_35px_80px_-40px_rgba(15,23,42,0.65)] backdrop-blur-xl">
+        {currentUser ? (
+          <motion.form
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+            onSubmit={handleSubmit}
+            className="mb-6 flex flex-col gap-3 rounded-2xl border border-white/[0.08] bg-slate-950/60 p-4 md:p-5 shadow-inner shadow-black/20"
           >
-            <div className="relative size-7 md:size-8 rounded-full ring-1 ring-white/[0.05] overflow-hidden bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm group-hover:ring-primary-500/30 transition-all duration-300">
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  alt={currentUser.displayName ?? 'Usuario'}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
-                  sizes="(max-width: 768px) 28px, 32px"
-                  unoptimized={isLocalImage(avatarUrl)}
-                  key={`${currentUser.id}-${currentUser.avatarUrl ?? 'no-avatar'}`}
-                />
-              ) : (
-                <div className="flex size-full items-center justify-center">
-                  <span className="text-xs font-bold text-primary-400">
-                    {currentUser.displayName?.charAt(0).toUpperCase() ?? currentUser.handle?.charAt(0).toUpperCase() ?? 'U'}
-                  </span>
-                </div>
-              )}
-            </div>
-          </motion.div>
-          <div className="flex-1 space-y-2">
-            <textarea
-              value={commentText}
-              onChange={(e) => {
-                setCommentText(e.target.value);
-              }}
-              placeholder="Añade un comentario..."
-              maxLength={2200}
-              rows={commentText.length > 80 ? 3 : 1}
-              className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.06] px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm text-white placeholder:text-white/40 transition-all duration-200 focus:border-primary-500/60 focus:bg-white/[0.10] focus:outline-none focus:ring-2 focus:ring-primary-500/30 backdrop-blur-sm"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  if (commentText.trim().length > 0 && !createCommentMutation.isPending) {
-                    handleSubmit(e);
-                  }
-                }
-              }}
-            />
-            {commentText.length > 0 && (
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-white/40">
-                  {commentText.length}/2200
-                </span>
-                <motion.button
-                  type="submit"
-                  disabled={createCommentMutation.isPending || commentText.trim().length === 0}
-                  whileHover={{ scale: commentText.trim().length === 0 ? 1 : 1.05, y: -1 }}
-                  whileTap={{ scale: commentText.trim().length === 0 ? 1 : 0.95 }}
-                  className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-4 md:px-5 py-2 md:py-2.5 text-xs md:text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-lg"
-                >
-                  {createCommentMutation.isPending ? (
-                    <span className="flex items-center gap-2">
-                      <span className="size-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      Publicando...
-                    </span>
+            <div className="flex items-start gap-3 md:gap-4">
+              <div className="relative shrink-0">
+                <div className="pointer-events-none absolute -inset-1 rounded-full bg-primary-500/30 blur-md" />
+                <div className="relative size-10 overflow-hidden rounded-full border border-white/15">
+                  {avatarUrl ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={currentUser.displayName ?? 'Usuario'}
+                      fill
+                      className="object-cover"
+                      unoptimized={isLocalImage(avatarUrl)}
+                    />
                   ) : (
-                    'Publicar'
+                    <div className="flex size-full items-center justify-center text-sm font-semibold text-primary-200">
+                      {currentUser.displayName?.charAt(0).toUpperCase() ?? currentUser.handle?.charAt(0).toUpperCase() ?? 'U'}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex-1 space-y-3">
+                <textarea
+                  value={commentText}
+                  onChange={(e) => {
+                    setCommentText(e.target.value);
+                  }}
+                  placeholder="Comparte algo con la comunidad..."
+                  maxLength={2200}
+                  rows={commentText.length > 120 ? 4 : 2}
+                  className="w-full resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/40 transition focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/30"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (commentText.trim().length > 0 && !createCommentMutation.isPending) {
+                        handleSubmit(e);
+                      }
+                    }
+                  }}
+                />
+                <div className="flex items-center justify-between text-xs text-white/40">
+                  <span>{commentText.length} / 2200</span>
+                  <motion.button
+                    type="submit"
+                    disabled={createCommentMutation.isPending || commentText.trim().length === 0}
+                    whileHover={{ scale: commentText.trim().length === 0 ? 1 : 1.02, y: commentText.trim().length === 0 ? 0 : -1 }}
+                    whileTap={{ scale: commentText.trim().length === 0 ? 1 : 0.97 }}
+                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-primary-500 via-accent-500 to-primary-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary-500/35 transition disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {createCommentMutation.isPending ? (
+                      <>
+                        <span className="size-3.5 animate-spin rounded-full border-2 border-white/70 border-t-transparent" />
+                        Publicando...
+                      </>
+                    ) : (
+                      'Publicar comentario'
+                    )}
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          </motion.form>
+        ) : null}
+
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02]">
+          {isInitialLoading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center gap-3 py-12 text-center"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-primary-500/20 blur-xl" />
+                <div className="relative size-10 animate-spin rounded-full border-2 border-primary-500/40 border-t-primary-300" />
+              </div>
+              <p className="text-sm text-white/60">Recuperando comentarios...</p>
+            </motion.div>
+          ) : !hasComments ? (
+            <motion.div
+              variants={fadeUpVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col items-center gap-3 py-12 text-center"
+            >
+              <div className="flex size-16 items-center justify-center rounded-full border border-dashed border-white/12 bg-white/[0.02]">
+                <svg className="size-7 text-white/45" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white/85">Aún no hay comentarios</p>
+                <p className="text-xs text-white/40">Sé el primero en iniciar la conversación.</p>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="max-h-[420px] space-y-4 overflow-y-auto px-1 py-4">
+              {comments.map((comment) => (
+                <CommentItem key={comment.id} comment={comment} postId={postId} resourceType={resourceType} />
+              ))}
+              {hasMore && (
+                <motion.button
+                  type="button"
+                  onClick={() => {
+                    if (!isFetchingNext) {
+                      void commentsQuery.fetchNextPage();
+                    }
+                  }}
+                  disabled={isFetchingNext}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="mx-auto flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-5 py-2 text-sm font-medium text-white/80 transition hover:border-white/25 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isFetchingNext ? (
+                    <>
+                      <span className="size-3.5 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
+                      Cargando más
+                    </>
+                  ) : (
+                    'Ver más comentarios'
                   )}
                 </motion.button>
-              </div>
-            )}
-          </div>
-        </motion.form>
-      )}
-
-      {isLoading ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="py-8 text-center"
-        >
-          <div className="size-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent mx-auto mb-3" />
-          <p className="text-sm text-slate-400">Cargando comentarios...</p>
-        </motion.div>
-      ) : comments.length === 0 ? (
-        <motion.div
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate="visible"
-          className="py-8 text-center"
-        >
-          <div className="size-16 rounded-full glass-dark mx-auto mb-3 flex items-center justify-center">
-            <svg className="size-7 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-          </div>
-          <p className="text-sm font-medium text-slate-300">Sé el primero en comentar</p>
-        </motion.div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-4"
-        >
-          {comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} postId={postId} />
-          ))}
-        </motion.div>
-      )}
-    </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 

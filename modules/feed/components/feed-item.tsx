@@ -1,30 +1,30 @@
 'use client';
 
+import { type InfiniteData,useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment, memo, useMemo, useCallback, useState, useRef, useEffect, type ReactElement } from 'react';
-import { useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
-
-import { fadeUpVariants, cardVariants } from '@/lib/motion-config';
-
-import type { FeedItem, FeedCursorResponse } from '@/services/api/types/feed';
-import { formatRelativeTime } from '../utils/formatters';
-import { likePost, unlikePost } from '@/services/api/likes';
-import { savePost, unsavePost } from '@/services/api/saves';
-import { getCollections, type Collection } from '@/services/api/collections';
-import { fetchComments, createComment, type Comment } from '@/services/api/comments';
+import type { MutableRefObject, ReactElement } from 'react';
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { sharePost, copyPostLink } from '@/lib/share';
-import { ReportDialog } from '@/modules/moderation/components/report-dialog';
-import { renderCaptionWithLinks } from '../utils/caption-renderer';
-import { updatePost, deletePost, archivePost, unarchivePost } from '@/services/api/feed';
-import { useSessionStore } from '@/store/session';
+
 import { VerifiedBadge } from '@/components/verified-badge';
-import { ImageTags } from './image-tags';
-import { ShareToStoryDialog } from '@/modules/stories/components/share-to-story-dialog';
-import { isLocalImage, getAvatarUrl } from '@/lib/image-utils';
+import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
+import { fadeUpVariants } from '@/lib/motion-config';
+import { copyFrameLink, copyPostLink, shareFrame, sharePost } from '@/lib/share';
+import { ReportDialog } from '@/modules/moderation/components/report-dialog';
 import { FeedItemActions } from '@/modules/posts/components/feed-item-actions';
+import { ShareToStoryDialog } from '@/modules/stories/components/share-to-story-dialog';
+import { type Collection, type CollectionsResponse, getCollections } from '@/services/api/collections';
+import { type Comment, type CommentCursorResponse, type CommentResourceType, createComment, fetchComments } from '@/services/api/comments';
+import { archivePost, deletePost, unarchivePost, updatePost } from '@/services/api/feed';
+import { savePost, unsavePost } from '@/services/api/saves';
+import type { FeedCursorResponse, FeedItem } from '@/services/api/types/feed';
+import { useSessionStore } from '@/store/session';
+
+import { renderCaptionWithLinks } from '../utils/caption-renderer';
+import { formatRelativeTime } from '../utils/formatters';
+import { ImageTags } from './image-tags';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -39,65 +39,53 @@ interface CommentWithReportProps {
 
 function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
   const [showReportDialog, setShowReportDialog] = useState(false);
-
   return (
     <>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -2 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
-        className="flex gap-3 group"
+        className="flex gap-3 md:gap-4"
       >
         <Link
           href={`/${comment.author?.handle ?? ''}`}
-          className="relative shrink-0 group/avatar"
+          className="relative block size-9 shrink-0 overflow-hidden rounded-full border border-white/15 bg-white/[0.06]"
         >
-          <motion.div 
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/30 via-accent-500/25 to-primary-500/30 opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 blur-lg"
-            whileHover={{ scale: 1.05 }}
+          <Image
+            src={comment.author?.avatarUrl || `https://api.dicebear.com/7.x/thumbs/svg?seed=${comment.author?.handle || 'user'}`}
+            alt={comment.author?.displayName ?? ''}
+            fill
+            className="object-cover"
+            sizes="36px"
           />
-          <motion.div 
-            className="relative size-8 md:size-9 rounded-full ring-2 ring-white/[0.08] group-hover/avatar:ring-primary-500/40 transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-          >
-            <Image
-              src={comment.author?.avatarUrl || `https://api.dicebear.com/7.x/thumbs/svg?seed=${comment.author?.handle || 'user'}`}
-              alt={comment.author?.displayName ?? ''}
-              fill
-              className="object-cover transition-transform duration-300 group-hover/avatar:scale-110"
-                  sizes="(max-width: 768px) 28px, 32px"
-            />
-          </motion.div>
         </Link>
-        <div className="flex-1 rounded-xl glass-card p-2.5 md:p-3.5 border border-slate-200/50 dark:border-white/[0.08] hover:border-slate-300/50 dark:hover:border-white/15 transition-all duration-300 bg-slate-50/80 dark:bg-slate-900/30 backdrop-blur-sm">
-          <div className="mb-1.5 md:mb-2 flex items-start justify-between gap-2">
-            <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
-              <Link
-                href={`/${comment.author?.handle ?? ''}`}
-                className="text-xs md:text-sm font-semibold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
-              >
-                {comment.author?.displayName ?? 'Usuario'}
-              </Link>
-              {comment.author?.isVerified && <VerifiedBadge size="sm" />}
-              <Link
-                href={`/${comment.author?.handle ?? ''}`}
-                className="text-[10px] md:text-xs text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80 transition-colors duration-200 font-medium"
-              >
-                @{comment.author?.handle ?? ''}
-              </Link>
-              <span className="text-[10px] md:text-xs text-slate-500 dark:text-white/45">•</span>
-              <span className="text-[10px] md:text-xs text-slate-600 dark:text-white/55">{formatRelativeTime(comment.createdAt)}</span>
+        <div className="flex-1 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3.5 md:p-4 shadow-sm backdrop-blur">
+          <div className="mb-2 flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <Link
+                  href={`/${comment.author?.handle ?? ''}`}
+                  className="truncate text-sm font-semibold text-white"
+                >
+                  {comment.author?.displayName ?? 'Usuario'}
+                </Link>
+                {comment.author?.isVerified && <VerifiedBadge size="sm" />}
+              </div>
+              <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-white/45">
+                <Link href={`/${comment.author?.handle ?? ''}`} className="hover:text-primary-200 transition">
+                  @{comment.author?.handle ?? ''}
+                </Link>
+                <span className="opacity-50">•</span>
+                <span>{formatRelativeTime(comment.createdAt)}</span>
+              </div>
             </div>
             <motion.button
               type="button"
               onClick={() => {
                 setShowReportDialog(true);
               }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="rounded-lg p-1.5 text-slate-600 dark:text-white/50 hover:text-slate-900 dark:hover:text-white/70 hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-all duration-200 opacity-0 group-hover:opacity-100"
+              whileTap={{ scale: 0.95 }}
+              className="rounded-full border border-white/12 bg-white/[0.05] p-2 text-white/60 transition hover:border-white/25 hover:text-white"
               title="Reportar comentario"
             >
               <svg className="size-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +93,7 @@ function CommentWithReport({ comment }: CommentWithReportProps): ReactElement {
               </svg>
             </motion.button>
           </div>
-          <p className="text-xs md:text-sm text-slate-900 dark:text-white/90 leading-relaxed whitespace-pre-wrap break-words">{comment.content}</p>
+          <p className="text-sm leading-relaxed text-white/85">{comment.content}</p>
         </div>
       </motion.div>
       {showReportDialog && (
@@ -127,9 +115,44 @@ interface FeedItemProps {
   readonly isArchivedPage?: boolean; // Si true, muestra opción de desarchivar en lugar de archivar
 }
 
-// Función para determinar si un item es un reel
-// Un reel es un post que tiene exactamente un media de tipo video con duración <= 60 segundos
-const isReel = (item: FeedItem): boolean => {
+const FRAME_FEED_PREVIEW_RATIO = 9 / 16;
+
+const ALLOWED_PROTOCOLS = new Set(['http:', 'https:', 'blob:']);
+
+const getSafeMediaUrl = (value?: string | null): string | null => {
+  if (!value) {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+
+  try {
+    const parsed = new URL(trimmed);
+    if (ALLOWED_PROTOCOLS.has(parsed.protocol)) {
+      return trimmed;
+    }
+
+    if (parsed.protocol === 'data:') {
+      const lower = trimmed.toLowerCase();
+      return lower.startsWith('data:image/') || lower.startsWith('data:video/') ? trimmed : null;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+// Función para determinar si un item es un frame
+// Un frame es un post que tiene exactamente un media de tipo video con duración <= 60 segundos
+const isFrame = (item: FeedItem): boolean => {
   return (
     item.media.length === 1 &&
     item.media[0]?.kind === 'video' &&
@@ -150,16 +173,29 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showShareToStoryDialog, setShowShareToStoryDialog] = useState(false);
+  const [commentsCount, setCommentsCount] = useState(item.stats.comments);
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
+  const [videoRatios, setVideoRatios] = useState<Record<string, number>>({});
+  const [frameVideoReady, setFrameVideoReady] = useState<Record<string, boolean>>({});
+  const mediaContainerRefs = useRef<Record<string, MutableRefObject<HTMLDivElement | null>>>({});
+
+  const getMediaContainerRef = useCallback((mediaId: string): MutableRefObject<HTMLDivElement | null> => {
+    let ref = mediaContainerRefs.current[mediaId];
+    if (!ref) {
+      ref = { current: null };
+      mediaContainerRefs.current[mediaId] = ref;
+    }
+    return ref;
+  }, []);
 
   const archiveMutation = useMutation({
     mutationFn: () => archivePost(item.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'archived'] });
-      queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
-      queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'archived'] });
+      void queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       setShowOptionsMenu(false);
       toast.success('Publicación archivada');
     },
@@ -172,10 +208,10 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
   const unarchiveMutation = useMutation({
     mutationFn: () => unarchivePost(item.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed', 'archived'] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-      queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
-      queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'archived'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      void queryClient.invalidateQueries({ queryKey: ['userPosts', item.author.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       setShowOptionsMenu(false);
       toast.success('Publicación desarchivada');
     },
@@ -185,23 +221,11 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
     }
   });
 
-  const likeMutationFn = useMemo(() => (item.isLikedByViewer ? unlikePost : likePost), [item.isLikedByViewer]);
-
-  const likeMutation = useMutation({
-    mutationFn: likeMutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-    },
-    onError: () => {
-      toast.error('No se pudo actualizar el like');
-    }
-  });
-
   const saveMutation = useMutation({
     mutationFn: (collectionId?: string) => (item.isSavedByViewer ? unsavePost(item.id) : savePost(item.id, collectionId)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-      queryClient.invalidateQueries({ queryKey: ['saved'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      void queryClient.invalidateQueries({ queryKey: ['saved'] });
       setShowSaveDialog(false);
       toast.success(item.isSavedByViewer ? 'Post desguardado' : 'Post guardado');
     },
@@ -210,18 +234,48 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
     }
   });
 
+  const isFrameItem = useMemo(() => isFrame(item), [item]);
+  const commentResourceType: CommentResourceType = isFrameItem ? 'frame' : 'post';
+  const commentsQueryKey = isFrameItem ? (['frame-comments', item.id] as const) : (['comments', item.id] as const);
+
   const commentsQuery = useQuery({
-    queryKey: ['comments', item.id],
-    queryFn: () => fetchComments(item.id),
+    queryKey: commentsQueryKey,
+    queryFn: () => fetchComments(item.id, undefined, 20, commentResourceType),
     enabled: showComments
   });
 
+  const commentsList = commentsQuery.data?.data ?? [];
+
   const createCommentMutation = useMutation({
-    mutationFn: (content: string) => createComment(item.id, { content }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', item.id] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+    mutationFn: (content: string) => createComment(item.id, { content }, commentResourceType),
+    onSuccess: (response) => {
+      queryClient.setQueryData<CommentCursorResponse | undefined>(commentsQueryKey, (previous) => {
+        if (!previous) {
+          return {
+            data: [response.comment],
+            nextCursor: null
+          };
+        }
+
+        const exists = previous.data.some((entry) => entry.id === response.comment.id);
+        const updatedData = exists ? previous.data : [response.comment, ...previous.data];
+
+        return {
+          ...previous,
+          data: updatedData.slice(0, 20)
+        };
+      });
+      void queryClient.invalidateQueries({ queryKey: commentsQueryKey });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      if (isFrameItem) {
+        void queryClient.invalidateQueries({ queryKey: ['frames'] });
+        void queryClient.invalidateQueries({ queryKey: ['frame', item.id] });
+      } else {
+        void queryClient.invalidateQueries({ queryKey: ['post', item.id] });
+      }
+      setCommentsCount((prev) => prev + (response.comment.parentId ? 0 : 1));
       setCommentText('');
+      setShowComments(true);
       toast.success('Comentario publicado');
     },
     onError: () => {
@@ -229,9 +283,9 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
     }
   });
 
-  const handleLike = useCallback((): void => {
-    likeMutation.mutate(item.id);
-  }, [item.id, likeMutation]);
+  useEffect(() => {
+    setCommentsCount(item.stats.comments);
+  }, [item.stats.comments]);
 
   const handleSave = useCallback((): void => {
     if (item.isSavedByViewer) {
@@ -243,20 +297,44 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
     }
   }, [item.isSavedByViewer, saveMutation]);
 
+  const detailHref = useMemo(() => (isFrameItem ? `/frames/${item.id}` : `/posts/${item.id}`), [isFrameItem, item.id]);
+
   const handleShare = useCallback(async (): Promise<void> => {
-    const shared = await sharePost(item.id, `Publicación de @${item.author.handle}`);
+    const shared = await (isFrameItem
+      ? shareFrame(item.id, `Frame de @${item.author.handle}`)
+      : sharePost(item.id, `Publicación de @${item.author.handle}`));
     if (shared) {
       toast.success('Enlace copiado al portapapeles');
     } else {
       // Si falla sharePost, intentar copiar directamente
-      const copied = await copyPostLink(item.id);
+      const copied = await (isFrameItem ? copyFrameLink(item.id) : copyPostLink(item.id));
       if (copied) {
         toast.success('Enlace copiado al portapapeles');
       } else {
         toast.error('No se pudo copiar el enlace');
       }
     }
-  }, [item.id, item.author.handle]);
+  }, [isFrameItem, item.id, item.author.handle]);
+
+  const handleVideoMetadata = useCallback(
+    (mediaId: string) => (event: React.SyntheticEvent<HTMLVideoElement>): void => {
+      if (isFrameItem) {
+        return;
+      }
+
+      const video = event.currentTarget;
+      if (video.videoWidth && video.videoHeight) {
+        setVideoRatios((prev) => {
+          const nextRatio = video.videoWidth / video.videoHeight;
+          if (prev[mediaId] && Math.abs(prev[mediaId] - nextRatio) < 0.0001) {
+            return prev;
+          }
+          return { ...prev, [mediaId]: nextRatio };
+        });
+      }
+    },
+    [isFrameItem]
+  );
 
   const handleSubmitComment = useCallback((e: React.FormEvent): void => {
     e.preventDefault();
@@ -268,7 +346,10 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
 
   // Intersection Observer para lazy loading - Optimizado con throttling
   useEffect(() => {
-    if (!containerRef.current) return;
+    const target = containerRef.current;
+    if (!target) {
+      return;
+    }
 
     let rafId: number | null = null;
     let lastIntersection = false;
@@ -304,15 +385,13 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
       }
     );
 
-    observer.observe(containerRef.current);
+    observer.observe(target);
 
     return () => {
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
       }
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
+      observer.disconnect();
     };
   }, []);
 
@@ -322,17 +401,17 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
       variants={fadeUpVariants}
       initial="hidden"
       animate="visible"
-      className="group relative overflow-hidden glass-card border border-white/[0.06] mb-6 last:mb-0 hover:border-white/12 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(139,92,246,0.12)]"
+      className="group relative overflow-hidden glass-card border border-border/60 mb-6 last:mb-0 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:border-border-strong hover:shadow-[0_8px_32px_rgba(139,92,246,0.12)]"
     >
       {/* Header mejorado - diseño refinado con responsive */}
-      <header className="flex items-center justify-between gap-2 md:gap-3 px-3 md:px-4 py-2.5 md:py-3 border-b border-white/[0.06]">
+      <header className="flex items-center justify-between gap-2 md:gap-3 px-3 md:px-4 py-2.5 md:py-3 border-b border-border/60">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
           <Link 
             href={`/${item.author.handle}`}
             className="relative shrink-0 group/avatar transition-all duration-300"
           >
             <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-primary-500/40 via-accent-500/30 to-primary-500/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 blur-lg" />
-            <div className="relative size-9 md:size-10 rounded-full ring-1 ring-white/[0.05] group-hover/avatar:ring-primary-500/30 transition-all duration-300 overflow-hidden bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm">
+            <div className="relative size-9 md:size-10 rounded-full ring-1 ring-border/50 group-hover/avatar:ring-primary-500/30 transition-all duration-300 overflow-hidden bg-gradient-to-br from-surface-strong/80 via-surface/85 to-surface-strong/80 dark:from-slate-800/90 dark:via-slate-900/90 dark:to-slate-900/90 backdrop-blur-sm">
             <Image
               src={item.author.avatarUrl || `https://api.dicebear.com/7.x/thumbs/svg?seed=${item.author.handle}`}
                 alt={item.author.displayName || item.author.handle}
@@ -348,7 +427,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
               <Link 
                 href={`/${item.author.handle}`} 
-                className="font-semibold text-sm md:text-base text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200 truncate"
+                className="font-semibold text-sm md:text-base text-foreground hover:text-primary-300 transition-colors duration-200 truncate"
                 title={item.author.displayName || item.author.handle}
               >
                 {item.author.displayName || item.author.handle}
@@ -358,19 +437,21 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             <div className="flex items-center gap-1 md:gap-1.5 flex-wrap">
               <Link
                 href={`/${item.author.handle}`}
-                className="text-xs text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white/90 transition-colors duration-200 truncate font-medium"
+                className="text-xs text-foreground-muted hover:text-foreground transition-colors duration-200 truncate font-medium"
                 title={`@${item.author.handle}`}
               >
                 @{item.author.handle}
               </Link>
-              <span className="text-[10px] md:text-xs text-slate-500 dark:text-white/50">•</span>
-            <Link
-              href={`/posts/${item.id}`}
-                className="text-xs text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white/80 transition-colors duration-200"
-            >
-              {formatRelativeTime(item.createdAt)}
-            </Link>
-          </div>
+              <span className="text-[10px] md:text-xs text-foreground-muted/80">•</span>
+              <span className="text-xs text-foreground-muted hover:text-foreground transition-colors duration-200">
+                <Link
+                  href={detailHref}
+                  className="text-xs text-foreground-muted hover:text-foreground transition-colors duration-200"
+                >
+                  {formatRelativeTime(item.createdAt)}
+                </Link>
+              </span>
+            </div>
           </div>
         </div>
         <div className="relative shrink-0">
@@ -385,7 +466,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="rounded-xl p-2.5 text-slate-600 dark:text-white/70 transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white active:scale-95"
+            className="rounded-xl p-2.5 text-foreground-muted transition-all duration-300 hover:bg-surface-muted hover:text-foreground active:scale-95"
             title={isAuthor ? 'Opciones del post' : 'Reportar'}
           >
             <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
@@ -404,7 +485,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl glass-card border border-white/[0.12] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-xl overflow-hidden"
+                className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl glass-card border border-border/60 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-xl overflow-hidden"
               >
                 {/* Opción: Compartir en story (disponible para todos) */}
                 {!isAuthor && (
@@ -414,7 +495,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                       setShowShareToStoryDialog(true);
                       setShowOptionsMenu(false);
                     }}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-slate-200 dark:active:bg-slate-700/50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-surface-muted"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -427,6 +508,42 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                     Compartir en story
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleShare();
+                    setShowOptionsMenu(false);
+                  }}
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-surface-muted"
+                >
+                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 8a3 3 0 11-6 0 3 3 0 016 0zm-9 9a6 6 0 0112 0v1H6v-1z"
+                    />
+                  </svg>
+                  Copiar enlace
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleSave();
+                    setShowOptionsMenu(false);
+                  }}
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-surface-muted"
+                >
+                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                    />
+                  </svg>
+                  {item.isSavedByViewer ? 'Gestionar colecciones' : 'Guardar en colección'}
+                </button>
 
                 {/* Opciones del autor */}
                 {isAuthor && (
@@ -437,7 +554,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                         setShowEditDialog(true);
                         setShowOptionsMenu(false);
                       }}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-slate-200 dark:active:bg-slate-700/50"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent active:bg-surface-muted"
                     >
                       <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -451,7 +568,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                       unarchiveMutation.mutate();
                     }}
                     disabled={unarchiveMutation.isPending}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -465,7 +582,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                       archiveMutation.mutate();
                     }}
                     disabled={archiveMutation.isPending}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-slate-900 dark:text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/10 hover:to-transparent disabled:opacity-50"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -495,9 +612,31 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
       </header>
 
       {/* Media mejorado - más compacto */}
-      {item.media.map((media, mediaIndex) => (
-        <Link key={media.id} href={`/posts/${item.id}`} className="block w-full group/media relative">
-          <Fragment>
+      {item.media.map((media, mediaIndex) => {
+        const isVideo = media.kind === 'video';
+        const isFrameMedia = isVideo && isFrameItem;
+        const ratioFromState = isFrameMedia ? undefined : videoRatios[media.id];
+        const hasDimensions = !isFrameMedia && Boolean(media.width && media.height);
+        const resolvedAspectRatio = ratioFromState
+          ? ratioFromState
+          : hasDimensions
+            ? media.width! / media.height!
+            : isFrameMedia
+              ? FRAME_FEED_PREVIEW_RATIO
+              : 4 / 5;
+        const videoObjectFit = isFrameMedia ? 'object-cover' : 'object-contain';
+        const wrapperClassName = `block w-full group/media relative ${
+          isFrameMedia ? 'overflow-hidden bg-black' : ''
+        }`;
+        const isFrameReady = frameVideoReady[media.id] ?? false;
+        const mediaContainerRef = getMediaContainerRef(media.id);
+
+        const safePosterUrl = !isFrameMedia ? getSafeMediaUrl(media.thumbnailUrl) : null;
+        const videoPosterProps = safePosterUrl ? { poster: safePosterUrl } : {};
+
+        return (
+        <Link key={media.id} href={detailHref} className={wrapperClassName}>
+            <Fragment>
             {media.kind === 'image' ? (
               <div 
                 className="relative w-full overflow-hidden"
@@ -507,6 +646,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
                 <motion.div
+                  ref={mediaContainerRef}
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                   className="relative w-full h-full overflow-hidden flex items-center justify-center"
@@ -522,33 +662,59 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                     loading={mediaIndex === 0 ? undefined : 'lazy'}
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 100vw"
                     />
+                  {media.tags && media.tags.length > 0 ? (
+                    <ImageTags
+                      tags={media.tags}
+                      imageWidth={media.width ?? 1080}
+                      imageHeight={media.height ?? 1350}
+                      containerRef={mediaContainerRef}
+                    />
+                  ) : null}
                 </motion.div>
                 </div>
               ) : (
-              <div 
-                className="relative w-full overflow-hidden"
+              <div
+                className={`relative w-full overflow-hidden ${
+                  isFrameMedia ? 'mx-auto max-w-[340px] sm:max-w-[380px] lg:max-w-[420px]' : ''
+                }`}
                 style={{
-                  aspectRatio: isReel(item) ? '9 / 16' : '4 / 5'
+                  aspectRatio: resolvedAspectRatio,
+                  maxHeight: isFrameMedia ? 'min(72vh, 520px)' : undefined
                 }}
               >
+                {isFrameMedia ? null : (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+                )}
                 <motion.div
+                  ref={mediaContainerRef}
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
-                  className="relative w-full h-full overflow-hidden flex items-center justify-center"
+                  className={`relative w-full h-full overflow-hidden flex items-center justify-center ${
+                    isFrameMedia
+                      ? 'bg-black max-h-[480px] sm:max-h-[520px] md:max-h-[540px]'
+                      : 'bg-surface-strong dark:bg-black'
+                  }`}
                 >
                   <video
                     src={media.url}
-                    {...(isReel(item) ? {} : { poster: media.thumbnailUrl })}
-                    controls
+                    {...videoPosterProps}
+                    controls={!isFrameMedia}
                     preload="metadata"
-                    className="w-full h-full object-contain"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = `/posts/${item.id}`;
+                    className={`block w-full h-full ${videoObjectFit} ${isFrameMedia ? 'pointer-events-none' : ''}`}
+                    onLoadedMetadata={handleVideoMetadata(media.id)}
+                    onLoadedData={() => {
+                      if (isFrameMedia) {
+                        setFrameVideoReady((prev) => ({ ...prev, [media.id]: true }));
+                      }
                     }}
                   />
+                  {isFrameMedia && !isFrameReady ? (
+                    <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black">
+                      <span className="size-6 animate-spin rounded-full border-2 border-white/30 border-t-transparent" />
+                    </div>
+                  ) : null}
                   {media.durationMs ? (
-                    <div className="absolute bottom-3 right-3 rounded-lg bg-black/90 dark:bg-black/90 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white dark:text-white shadow-lg border border-white/20 dark:border-white/20">
+                    <div className="absolute bottom-3 right-3 rounded-lg bg-overlay/80 backdrop-blur-md px-2.5 py-1 text-xs font-bold text-white shadow-lg border border-border-strong/60">
                       {formatDuration(media.durationMs)}
                     </div>
                   ) : null}
@@ -557,31 +723,32 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               )}
             </Fragment>
           </Link>
-        ))}
+        );
+      })}
       
       {/* Acciones mejoradas - diseño refinado con responsive */}
-      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-slate-200/50 dark:border-white/[0.06]">
+      <div className="px-3 md:px-4 py-2.5 md:py-3 border-b border-border/60">
         <FeedItemActions post={item} />
       </div>
 
       {/* Estadísticas mejoradas - diseño refinado con responsive */}
-      {(item.stats.likes > 0 || item.stats.comments > 0) && (
-        <div className="px-3 md:px-4 py-2.5 md:py-2.5 border-b border-white/[0.06]">
+      {(item.stats.likes > 0 || commentsCount > 0) && (
+        <div className="px-3 md:px-4 py-2.5 md:py-2.5 border-b border-border/60">
           <div className="flex items-center gap-3 md:gap-5">
             {item.stats.likes > 0 && (
               <Link
-                href={`/posts/${item.id}#likes`}
-                className="text-xs md:text-sm font-bold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
+                href={`${detailHref}#likes`}
+                className="text-xs md:text-sm font-bold text-foreground hover:text-primary-300 transition-colors duration-200"
               >
                 {item.stats.likes.toLocaleString('es')} me gusta{item.stats.likes !== 1 ? 's' : ''}
           </Link>
             )}
-            {item.stats.comments > 0 && (
+            {commentsCount > 0 && (
               <Link
-                href={`/posts/${item.id}#comments`}
-                className="text-xs md:text-sm font-bold text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200"
+                href={`${detailHref}#comments`}
+                className="text-xs md:text-sm font-bold text-foreground hover:text-primary-300 transition-colors duration-200"
               >
-                {item.stats.comments.toLocaleString('es')} comentario{item.stats.comments !== 1 ? 's' : ''}
+                {commentsCount.toLocaleString('es')} comentario{commentsCount !== 1 ? 's' : ''}
               </Link>
             )}
         </div>
@@ -594,11 +761,11 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
           <div className="space-y-1 md:space-y-1.5">
             <Link
               href={`/${item.author.handle}`}
-              className="font-semibold text-sm md:text-base text-slate-900 dark:text-white hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
+              className="font-semibold text-sm md:text-base text-foreground hover:text-primary-300 transition-colors duration-200 inline-block mr-2"
             >
               {item.author.handle}
           </Link>
-            <div className="text-sm md:text-base text-slate-900 dark:text-white/90 leading-relaxed whitespace-pre-wrap break-words">
+            <div className="text-sm md:text-base text-foreground leading-relaxed whitespace-pre-wrap break-words">
               {renderCaptionWithLinks(item.caption)}
         </div>
           </div>
@@ -606,8 +773,8 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
       )}
 
       {/* Ver comentarios mejorado - diseño refinado con responsive */}
-      {item.stats.comments > 0 && (
-        <div className="px-3 md:px-4 pb-2.5 md:pb-3 border-b border-white/[0.06]">
+      {commentsCount > 0 && (
+        <div className="px-3 md:px-4 pb-2.5 md:pb-3 border-b border-border/60">
           <motion.button
             type="button"
             onClick={() => {
@@ -615,22 +782,22 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="text-xs md:text-sm font-semibold text-slate-700 dark:text-white/75 hover:text-primary-400 transition-colors duration-200"
+            className="text-xs md:text-sm font-semibold text-foreground hover:text-primary-400 transition-colors duration-200"
           >
-            {showComments ? 'Ocultar' : 'Ver'} todos los comentarios ({item.stats.comments.toLocaleString('es')})
+            {showComments ? 'Ocultar' : 'Ver'} todos los comentarios ({commentsCount.toLocaleString('es')})
           </motion.button>
         </div>
       )}
 
       {/* Formulario de comentario - siempre visible */}
-      <div className="px-3 md:px-4 py-3 md:py-4 border-b border-white/[0.06]">
+      <div className="px-3 md:px-4 py-3 md:py-4 border-b border-border/60">
           <form onSubmit={handleSubmitComment} className="flex gap-2 md:gap-3 items-start">
             <motion.div 
               className="relative shrink-0"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 17 }}
             >
-              <div className="relative size-7 md:size-8 rounded-full ring-1 ring-white/[0.05] overflow-hidden bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm group-hover:ring-primary-500/30 transition-all duration-300">
+              <div className="relative size-7 md:size-8 rounded-full ring-1 ring-border/50 overflow-hidden bg-gradient-to-br from-surface-strong/80 via-surface/85 to-surface-strong/80 dark:from-slate-800/90 dark:via-slate-900/90 dark:to-slate-900/90 backdrop-blur-sm group-hover:ring-primary-500/30 transition-all duration-300">
                 {currentUser?.avatarUrl ? (
                   <Image
                     key={currentUser.avatarUrl}
@@ -659,7 +826,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               placeholder="Añade un comentario..."
               maxLength={2200}
                 rows={commentText.length > 80 ? 3 : 1}
-                className="w-full resize-none rounded-xl border border-slate-300 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.06] px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/40 transition-all duration-200 focus:border-primary-500/60 focus:bg-slate-100 dark:focus:bg-white/[0.10] focus:outline-none focus:ring-2 focus:ring-primary-500/30 backdrop-blur-sm"
+                className="w-full resize-none rounded-xl border border-border bg-surface px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm text-foreground placeholder:text-foreground-muted transition-all duration-200 focus:border-primary-500/60 focus:bg-surface-strong focus:outline-none focus:ring-2 focus:ring-primary-500/30 backdrop-blur-sm"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -671,7 +838,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               />
               {commentText.length > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-white/40">
+                  <span className="text-xs text-foreground-muted">
                     {commentText.length}/2200
                   </span>
                   <motion.button
@@ -683,7 +850,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             >
                     {createCommentMutation.isPending ? (
                       <span className="flex items-center gap-2">
-                        <span className="size-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        <span className="size-3 animate-spin rounded-full border-2 border-foreground border-t-transparent dark:border-white" />
                         Publicando...
                       </span>
                     ) : (
@@ -716,15 +883,15 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-xl animate-pulse" />
                 <div className="relative size-8 animate-spin rounded-full border-2 border-primary-500/30 border-t-primary-500" />
               </div>
-              <p className="text-sm text-slate-700 dark:text-white/70 font-medium">Cargando comentarios...</p>
+              <p className="text-sm text-foreground-muted font-medium">Cargando comentarios...</p>
             </motion.div>
-          ) : commentsQuery.data?.data.length === 0 ? (
+          ) : commentsList.length === 0 ? (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="py-8 text-center"
             >
-              <p className="text-sm text-slate-600 dark:text-white/60">No hay comentarios aún</p>
+              <p className="text-sm text-foreground-muted">No hay comentarios aún</p>
             </motion.div>
           ) : (
             <motion.div 
@@ -733,7 +900,7 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
               transition={{ staggerChildren: 0.05 }}
               className="space-y-3 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
             >
-              {commentsQuery.data?.data.map((comment: Comment, index: number) => (
+              {commentsList.map((comment: Comment, index: number) => (
                 <motion.div
                   key={comment.id}
                   initial={{ opacity: 0, x: -10 }}
@@ -770,9 +937,9 @@ function FeedItemComponentInner({ item, isArchivedPage = false }: FeedItemProps)
             }}
             onSuccess={() => {
               setShowEditDialog(false);
-              queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-              queryClient.invalidateQueries({ queryKey: ['post', item.id] });
-              queryClient.invalidateQueries({ queryKey: ['analytics'] });
+              void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+              void queryClient.invalidateQueries({ queryKey: ['post', item.id] });
+              void queryClient.invalidateQueries({ queryKey: ['analytics'] });
             }}
           />
         )}
@@ -830,21 +997,21 @@ interface SaveToCollectionDialogProps {
 function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps): ReactElement {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<CollectionsResponse>({
     queryKey: ['collections'],
     queryFn: getCollections
   });
 
-  const collections = data?.collections ?? [];
+  const collections: Collection[] = data?.collections ?? [];
   const defaultCollection = collections.find((c) => c.id === 'default');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl">
-        <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-white">Guardar en colección</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay/70 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface-strong p-6 shadow-2xl">
+        <h2 className="mb-4 text-xl font-bold text-foreground">Guardar en colección</h2>
 
         {isLoading ? (
-          <div className="py-8 text-center text-sm text-slate-600 dark:text-slate-400">Cargando colecciones...</div>
+          <div className="py-8 text-center text-sm text-foreground-muted">Cargando colecciones...</div>
         ) : (
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {/* Opción por defecto */}
@@ -856,12 +1023,12 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
               className={`w-full rounded-lg border p-3 text-left transition ${
                 selectedCollectionId === null
                   ? 'border-primary-500 bg-primary-500/10'
-                  : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-slate-600'
+                  : 'border-border bg-surface hover:border-border-strong'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className="flex size-12 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
-                  <svg className="size-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="size-6 text-foreground-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -871,8 +1038,8 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-slate-900 dark:text-white">{defaultCollection?.name ?? 'Guardados'}</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">{defaultCollection?.postCount ?? 0} posts</p>
+                  <h3 className="font-semibold text-foreground">{defaultCollection?.name ?? 'Guardados'}</h3>
+                  <p className="text-xs text-foreground-muted">{defaultCollection?.postCount ?? 0} posts</p>
                 </div>
               </div>
             </button>
@@ -890,7 +1057,7 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                   className={`w-full rounded-lg border p-3 text-left transition ${
                     selectedCollectionId === collection.id
                       ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-slate-600'
+                      : 'border-border bg-surface hover:border-border-strong'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -900,7 +1067,7 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                       </div>
                     ) : (
                       <div className="flex size-12 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
-                        <svg className="size-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="size-6 text-foreground-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -911,8 +1078,8 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
                       </div>
                     )}
                     <div className="flex-1">
-                      <h3 className="font-semibold text-slate-900 dark:text-white">{collection.name}</h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-400">{collection.postCount} posts</p>
+                      <h3 className="font-semibold text-foreground">{collection.name}</h3>
+                      <p className="text-xs text-foreground-muted">{collection.postCount} posts</p>
                     </div>
                   </div>
                 </button>
@@ -924,7 +1091,7 @@ function SaveToCollectionDialog({ onClose, onSave }: SaveToCollectionDialogProps
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent px-6 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="rounded-xl border border-border bg-transparent px-6 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
           >
             Cancelar
           </button>
@@ -957,9 +1124,9 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
   const updateMutation = useMutation({
     mutationFn: (payload: { caption: string }) => updatePost(postId, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
-      queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+      void queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       toast.success('Publicación actualizada');
       onSuccess();
     },
@@ -983,7 +1150,7 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -997,7 +1164,7 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className="w-full max-w-lg rounded-3xl glass-card border border-white/10 p-6 md:p-8 shadow-elegant-lg"
+        className="w-full max-w-lg rounded-3xl glass-card border border-border/60 p-6 md:p-8 shadow-elegant-lg"
       >
         <h2 className="mb-6 text-2xl font-bold text-gradient-primary">Editar publicación</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -1009,12 +1176,12 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
               }}
               maxLength={2200}
               rows={6}
-              className="w-full rounded-xl border border-white/5 bg-white/5 px-4 py-3 text-base text-white placeholder:text-white/30 transition-all duration-200 focus:border-primary-500/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+              className="w-full rounded-xl border border-border/60 bg-surface px-4 py-3 text-base text-foreground placeholder:text-foreground-muted transition-all duration-200 focus:border-primary-400 focus:bg-surface-strong focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40 dark:focus:bg-white/10"
               placeholder="Escribe un pie de foto..."
               autoFocus
             />
             <div className="mt-2 flex justify-end">
-              <span className={`text-xs ${caption.length > 2100 ? 'text-red-400' : 'text-white/40'}`}>
+              <span className={`text-xs ${caption.length > 2100 ? 'text-red-500 dark:text-red-400' : 'text-foreground-muted dark:text-white/50'}`}>
                 {caption.length} / 2200
               </span>
             </div>
@@ -1026,7 +1193,7 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
               disabled={updateMutation.isPending}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="rounded-xl border border-white/10 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20 disabled:opacity-50"
+              className="rounded-xl border border-border/60 bg-surface px-6 py-2.5 text-sm font-semibold text-foreground backdrop-blur-sm transition-all duration-300 hover:bg-surface-strong hover:border-border-strong disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/20"
             >
               Cancelar
             </motion.button>
@@ -1039,7 +1206,7 @@ function EditPostDialog({ postId, currentCaption, onClose, onSuccess }: EditPost
             >
               {updateMutation.isPending ? (
                 <span className="flex items-center gap-2">
-                  <span className="size-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span className="size-3 animate-spin rounded-full border-2 border-foreground border-t-transparent dark:border-white" />
                   Guardando...
                 </span>
               ) : (
@@ -1120,12 +1287,12 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
       }
     );
 
-    // Remover de reels - usar predicate para todas las variaciones
+    // Remover de frames - usar predicate para todas las variaciones
     queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
       { 
         predicate: (query) => {
           const key = query.queryKey;
-          return Array.isArray(key) && key[0] === 'reels';
+          return Array.isArray(key) && key[0] === 'frames';
         }
       },
       (old) => {
@@ -1183,7 +1350,7 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
           return Array.isArray(key) && (
             (key[0] === 'feed' && key[1] === 'home') ||
             (key[0] === 'feed' && key[1] === 'explore') ||
-            key[0] === 'reels' ||
+            key[0] === 'frames' ||
             (key[0] === 'userPosts' && key[1] === authorHandle)
           );
         }
@@ -1199,9 +1366,9 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
         const key = q.queryKey;
         return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
       });
-      const reelsQueries = allQueries.filter(q => {
+      const framesQueries = allQueries.filter(q => {
         const key = q.queryKey;
-        return Array.isArray(key) && key[0] === 'reels';
+        return Array.isArray(key) && key[0] === 'frames';
       });
       const userPostsQueries = allQueries.filter(q => {
         const key = q.queryKey;
@@ -1211,7 +1378,7 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
       const previousQueries = {
         feed: feedQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
         explore: exploreQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
-        reels: reelsQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
+        frames: framesQueries.map(q => ({ key: q.queryKey, data: q.state.data })),
         userPosts: userPostsQueries.map(q => ({ key: q.queryKey, data: q.state.data }))
       };
       
@@ -1229,7 +1396,7 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
         context.explore.forEach(({ key, data }) => {
           queryClient.setQueryData(key, data);
         });
-        context.reels.forEach(({ key, data }) => {
+        context.frames.forEach(({ key, data }) => {
           queryClient.setQueryData(key, data);
         });
         context.userPosts.forEach(({ key, data }) => {
@@ -1243,36 +1410,36 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
     onSuccess: () => {
       // Invalidar queries en segundo plano (sin refetch inmediato) para asegurar sincronización
       // Usar predicate para cubrir todas las variaciones de queryKey (con/sin cursor)
-      queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({ 
         predicate: (query) => {
           const key = query.queryKey;
           return Array.isArray(key) && key[0] === 'feed' && key[1] === 'home';
         },
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({ 
         predicate: (query) => {
           const key = query.queryKey;
           return Array.isArray(key) && key[0] === 'feed' && key[1] === 'explore';
         },
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({ 
         predicate: (query) => {
           const key = query.queryKey;
-          return Array.isArray(key) && key[0] === 'reels';
+          return Array.isArray(key) && key[0] === 'frames';
         },
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
-      queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      void queryClient.invalidateQueries({ 
         predicate: (query) => {
           const key = query.queryKey;
           return Array.isArray(key) && key[0] === 'userPosts' && key[1] === authorHandle;
         },
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       toast.success('Publicación eliminada');
       onSuccess();
     }
@@ -1283,7 +1450,7 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -1318,7 +1485,7 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
             disabled={deleteMutation.isPending}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="rounded-xl border border-white/10 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20 disabled:opacity-50"
+            className="rounded-xl border border-border/60 bg-surface px-6 py-2.5 text-sm font-semibold text-foreground backdrop-blur-sm transition-all duration-300 hover:bg-surface-strong hover:border-border-strong disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/20"
           >
             Cancelar
           </motion.button>
@@ -1334,7 +1501,7 @@ function DeletePostDialog({ postId, authorHandle, onClose, onSuccess }: DeletePo
           >
             {deleteMutation.isPending ? (
               <span className="flex items-center gap-2">
-                <span className="size-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <span className="size-3 animate-spin rounded-full border-2 border-foreground border-t-transparent dark:border-white" />
                 Eliminando...
               </span>
             ) : (

@@ -1,19 +1,20 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, type ReactElement } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
 
-import { fetchReplies, createComment, type Comment } from '@/services/api/comments';
-import { formatRelativeTime } from '@/modules/feed/utils/formatters';
-import { useSessionStore } from '@/store/session';
 import { getAvatarUrl } from '@/lib/image-utils';
+import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { type Comment, type CommentResourceType,createComment, fetchReplies } from '@/services/api/comments';
+import { useSessionStore } from '@/store/session';
 
 interface CommentItemProps {
   readonly comment: Comment;
   readonly postId: string;
+  readonly resourceType?: CommentResourceType;
   readonly depth?: number;
 }
 
@@ -22,7 +23,7 @@ const MAX_DEPTH = 3; // Máximo de niveles de replies
 /**
  * Renderiza un comentario individual con soporte para replies anidados.
  */
-export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): ReactElement | null {
+export function CommentItem({ comment, postId, resourceType = 'post', depth = 0 }: CommentItemProps): ReactElement | null {
   const queryClient = useQueryClient();
   const currentUser = useSessionStore((state) => state.user);
   const [showReplies, setShowReplies] = useState(false);
@@ -37,11 +38,11 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
   });
 
   const createReplyMutation = useMutation({
-    mutationFn: (content: string) => createComment(postId, { content, parentId: comment.id }),
+    mutationFn: (content: string) => createComment(postId, { content, parentId: comment.id }, resourceType),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment-replies', comment.id] });
-      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      void queryClient.invalidateQueries({ queryKey: ['comment-replies', comment.id] });
+      void queryClient.invalidateQueries({ queryKey: [resourceType === 'frame' ? 'frame-comments' : 'comments', postId] });
+      void queryClient.invalidateQueries({ queryKey: [resourceType === 'frame' ? 'frame' : 'post', postId] });
       setReplyText('');
       setShowReplyForm(false);
       setShowReplies(true); // Mostrar replies después de crear uno
@@ -64,33 +65,34 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
   const replies = repliesQuery.data?.data ?? [];
   const hasReplies = replies.length > 0;
   const canReply = depth < MAX_DEPTH && currentUser !== null;
-
-  if (!comment.author) {
+  const author = comment.author;
+  if (!author) {
     return null;
   }
+  const avatarSrc = getAvatarUrl(author.avatarUrl, author.handle);
 
   return (
-    <div className={depth > 0 ? 'ml-8 border-l-2 border-slate-700/50 pl-4' : ''}>
-      <div className="flex gap-3">
-        <Link href={`/${comment.author.handle}`} className="relative size-8 shrink-0 overflow-hidden rounded-full">
-          <Image
-            src={getAvatarUrl(comment.author.avatarUrl, comment.author.handle)}
-            alt={comment.author.displayName}
-            fill
-            className="object-cover"
-          />
+    <div className={`${depth > 0 ? 'ml-8 border-l border-white/12 pl-4' : ''} space-y-3`}>
+      <div className="flex gap-3 md:gap-4">
+        <Link
+          href={`/${author.handle}`}
+          className="relative size-9 shrink-0 overflow-hidden rounded-full border border-white/15 bg-white/[0.06]"
+        >
+          <Image src={avatarSrc} alt={author.displayName} fill className="object-cover" />
         </Link>
         <div className="flex-1">
-          <div className="rounded-lg bg-slate-800/60 px-3 py-2">
-            <Link
-              href={`/${comment.author.handle}`}
-              className="font-semibold text-white hover:underline"
-            >
-              {comment.author.displayName}
-            </Link>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-slate-100">{comment.content}</p>
+          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-3 shadow-sm backdrop-blur">
+            <div className="flex flex-wrap items-center gap-2">
+              <Link href={`/${author.handle}`} className="text-sm font-semibold text-white hover:text-primary-200 transition-colors">
+                {author.displayName}
+              </Link>
+              <Link href={`/${author.handle}`} className="text-xs text-white/50 hover:text-primary-200 transition-colors">
+                @{author.handle}
+              </Link>
+            </div>
+            <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-white/85">{comment.content}</p>
           </div>
-          <div className="mt-1 flex items-center gap-4 text-xs text-slate-500">
+          <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-white/50">
             <span>{formatRelativeTime(comment.createdAt)}</span>
             {comment.likes > 0 && <span>{comment.likes.toLocaleString('es')} me gusta</span>}
             {canReply && (
@@ -99,7 +101,7 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
                 onClick={() => {
                   setShowReplyForm(!showReplyForm);
                 }}
-                className="hover:text-slate-400 transition"
+                className="font-medium text-primary-300 transition hover:text-primary-100"
               >
                 Responder
               </button>
@@ -110,7 +112,7 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
                 onClick={() => {
                   setShowReplies(!showReplies);
                 }}
-                className="hover:text-slate-400 transition"
+                className="font-medium text-primary-300 transition hover:text-primary-100"
               >
                 {showReplies ? 'Ocultar' : 'Ver'} {replies.length} {replies.length === 1 ? 'respuesta' : 'respuestas'}
               </button>
@@ -134,13 +136,13 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
                 onChange={(e) => {
                   setReplyText(e.target.value);
                 }}
-                placeholder={`Responder a ${comment.author.displayName}...`}
-                className="flex-1 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-xs text-white placeholder:text-white/40 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/40"
+                placeholder={`Responder a ${author.displayName}...`}
+                className="flex-1 rounded-lg border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs text-white placeholder:text-white/50 focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-300/40"
               />
               <button
                 type="submit"
                 disabled={createReplyMutation.isPending || replyText.trim().length === 0}
-                className="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-3 py-1.5 text-xs font-medium text-white shadow-lg shadow-primary-500/30 transition hover:shadow-xl hover:shadow-primary-500/40 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {createReplyMutation.isPending ? '...' : 'Responder'}
               </button>
@@ -150,7 +152,7 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
                   setShowReplyForm(false);
                   setReplyText('');
                 }}
-                className="rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700/60"
+                className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white transition hover:bg-white/[0.08]"
               >
                 Cancelar
               </button>
@@ -164,7 +166,7 @@ export function CommentItem({ comment, postId, depth = 0 }: CommentItemProps): R
                 <div className="py-2 text-center text-xs text-slate-400">Cargando respuestas...</div>
               ) : (
                 replies.map((reply) => (
-                  <CommentItem key={reply.id} comment={reply} postId={postId} depth={depth + 1} />
+                  <CommentItem key={reply.id} comment={reply} postId={postId} resourceType={resourceType} depth={depth + 1} />
                 ))
               )}
             </div>
