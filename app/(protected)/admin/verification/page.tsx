@@ -1,4 +1,5 @@
 import { type ReactElement } from 'react';
+
 import { AdminVerificationShell } from '@/modules/admin/components/admin-verification-shell';
 
 export const metadata = {

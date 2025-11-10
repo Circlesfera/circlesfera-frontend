@@ -1,11 +1,13 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useState, type ReactElement, FormEvent } from 'react';
-
-import { getCollections, createCollection, deleteCollection, type Collection } from '@/services/api/collections';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { FormEvent, ReactElement } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
+
+import type { Collection } from '@/services/api/collections';
+import { createCollection, deleteCollection, getCollections } from '@/services/api/collections';
 
 interface CollectionsSidebarProps {
   readonly selectedCollectionId: string | null;
@@ -21,10 +23,12 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
     queryFn: getCollections
   });
 
+  const collections: Collection[] = data?.collections ?? [];
+
   const createMutation = useMutation({
     mutationFn: createCollection,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['collections'] });
+      void queryClient.invalidateQueries({ queryKey: ['collections'] });
       setShowCreateDialog(false);
       toast.success('Colección creada');
     },
@@ -36,9 +40,9 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
   const deleteMutation = useMutation({
     mutationFn: deleteCollection,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['collections'] });
-      queryClient.invalidateQueries({ queryKey: ['saved'] });
-      if (selectedCollectionId && !data?.collections.find((c) => c.id === selectedCollectionId)) {
+      void queryClient.invalidateQueries({ queryKey: ['collections'] });
+      void queryClient.invalidateQueries({ queryKey: ['saved'] });
+      if (selectedCollectionId && !collections.find((c) => c.id === selectedCollectionId)) {
         onSelectCollection(null); // Volver a la colección por defecto si se eliminó la seleccionada
       }
       toast.success('Colección eliminada');
@@ -47,8 +51,6 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
       toast.error('No se pudo eliminar la colección');
     }
   });
-
-  const collections = data?.collections ?? [];
 
   const handleCreate = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -94,7 +96,7 @@ export function CollectionsSidebar({ selectedCollectionId, onSelectCollection }:
 
         {isLoading ? (
           <div className="space-y-2">
-            {[...Array(3)].map((_, i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="h-16 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800" />
             ))}
           </div>

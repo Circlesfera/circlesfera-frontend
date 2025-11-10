@@ -3,6 +3,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
+import { logger } from '@/lib/logger';
+
 export interface SessionUser {
   readonly id: string;
   readonly email: string;
@@ -16,7 +18,7 @@ export interface SessionUser {
   readonly updatedAt: string;
 }
 
-interface SessionState {
+export interface SessionState {
   readonly user: SessionUser | null;
   readonly accessToken: string | null;
   readonly expiresAt: number | null;
@@ -46,17 +48,25 @@ export const useSessionStore = create<SessionState>()(
       
       // Configurar refresh automático del token
       // Importar dinámicamente para evitar circular dependencies
-      import('@/lib/token-refresh').then(({ setupTokenRefresh }) => {
-        setupTokenRefresh();
-      });
+      void import('@/lib/token-refresh')
+        .then(({ setupTokenRefresh }) => {
+          setupTokenRefresh();
+        })
+        .catch((error) => {
+          logger.warn('No se pudo configurar el refresh automático del token', error);
+        });
     },
     clearSession: () => {
       set({ user: null, accessToken: null, expiresAt: null });
       
       // Limpiar timer de refresh
-      import('@/lib/token-refresh').then(({ clearTokenRefresh }) => {
-        clearTokenRefresh();
-      });
+      void import('@/lib/token-refresh')
+        .then(({ clearTokenRefresh }) => {
+          clearTokenRefresh();
+        })
+        .catch((error) => {
+          logger.warn('No se pudo limpiar el refresh automático del token', error);
+        });
     },
     updateUser: (user) => {
       set((state) => ({
@@ -79,6 +89,8 @@ export const useSessionStore = create<SessionState>()(
  */
 export const sessionStore = {
   getState: (): SessionState => useSessionStore.getState(),
-  setState: useSessionStore.setState
+  setState: (...args: Parameters<typeof useSessionStore.setState>): void => {
+    useSessionStore.setState(...args);
+  }
 };
 

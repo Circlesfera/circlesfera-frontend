@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useRef, type ReactElement } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { type ReactElement, useEffect, useMemo, useRef } from 'react';
 
-import { useFeedStream } from '../hooks/use-feed-stream';
-import { FeedItemComponent as FeedItem } from './feed-item';
-import { CreatePostForm } from './create-post-form';
+import { fadeUpVariants } from '@/lib/motion-config';
+import { enhanceFrameVideos } from '@/modules/frames/utils/enhance-frame-videos';
+import { isFrameFeedItem } from '@/modules/frames/utils/is-frame-feed-item';
 import { StoriesBar } from '@/modules/stories/components/stories-bar';
 import { SuggestedUsers } from '@/modules/users/components/suggested-users';
-import { fadeUpVariants } from '@/lib/motion-config';
+
+import { useFeedStream } from '../hooks/use-feed-stream';
+import { CreatePostForm } from './create-post-form';
+import { FeedItemComponent as FeedItem } from './feed-item';
 
 /**
  * Renderiza el feed principal con soporte para carga incremental, diseño moderno
@@ -27,7 +29,17 @@ export const FeedShell = (): ReactElement => {
     }
   }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const items = data?.pages.flatMap((page) => page.data) ?? [];
+  const items = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) ?? [];
+  }, [data]);
+  const frameItemsSignature = useMemo(
+    () => items.filter(isFrameFeedItem).map((item) => item.id).join('|'),
+    [items]
+  );
+
+  useEffect(() => {
+    enhanceFrameVideos('[data-frame-player=\"true\"] video');
+  }, [frameItemsSignature]);
 
   // Estado de carga inicial
   if (status === 'pending') {
@@ -44,8 +56,8 @@ export const FeedShell = (): ReactElement => {
             <div className="relative size-16 animate-spin rounded-full border-[3px] border-primary-500/20 border-t-primary-500" />
           </div>
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Preparando tu feed</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400">Cargando las últimas publicaciones...</p>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Preparando tu feed</h3>
+            <p className="text-sm text-foreground-muted">Cargando las últimas publicaciones...</p>
           </div>
         </motion.div>
       </div>
@@ -71,12 +83,12 @@ export const FeedShell = (): ReactElement => {
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Error al cargar el feed</h3>
-              <p className="text-sm text-slate-700 dark:text-white/60 mb-4">
+              <h3 className="text-lg font-semibold text-foreground mb-2">Error al cargar el feed</h3>
+              <p className="text-sm text-foreground-muted mb-4">
                 Ocurrió un error al cargar las publicaciones. Intenta nuevamente más tarde.
               </p>
               {error instanceof Error && (
-                <p className="text-xs text-red-500 dark:text-red-400/80 font-mono bg-slate-100 dark:bg-black/30 rounded-lg p-2 mb-4">
+                <p className="text-xs text-red-500 dark:text-red-400/80 font-mono bg-surface-muted rounded-lg p-2 mb-4">
                   {error.message}
                 </p>
               )}
@@ -132,7 +144,7 @@ export const FeedShell = (): ReactElement => {
                   transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500/20 via-accent-500/20 to-primary-500/20 blur-2xl" />
-                  <div className="relative size-20 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-slate-100 dark:from-slate-900/50 to-white dark:to-black/50 backdrop-blur-sm flex items-center justify-center shadow-elegant">
+                  <div className="relative size-20 rounded-2xl border border-primary-500/30 bg-gradient-to-br from-surface-strong to-surface backdrop-blur-sm flex items-center justify-center shadow-elegant">
                     <svg className="size-10 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                     </svg>
@@ -144,8 +156,8 @@ export const FeedShell = (): ReactElement => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.3 }}
                 >
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Tu feed está vacío</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                  <h3 className="text-lg font-bold text-foreground mb-2">Tu feed está vacío</h3>
+                  <p className="text-sm text-foreground-muted mb-6">
                     Comienza a seguir a otros usuarios para ver sus publicaciones aquí
                   </p>
                 </motion.div>
@@ -227,22 +239,26 @@ export const FeedShell = (): ReactElement => {
 
             {/* Lista de posts */}
             <section className="flex w-full flex-col">
-              {items.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  variants={fadeUpVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ 
-                    duration: 0.5,
-                    delay: Math.min(index * 0.05, 0.4) + 0.2,
-                    ease: [0.16, 1, 0.3, 1]
-                  }}
-                  className="mb-8 last:mb-0"
-                >
-                  <FeedItem item={item} />
-                </motion.div>
-              ))}
+              {items.map((item, index) => {
+                const isFrame = isFrameFeedItem(item);
+                return (
+                  <motion.div
+                    key={item.id}
+                    data-frame-player={isFrame ? 'true' : undefined}
+                    variants={fadeUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ 
+                      duration: 0.5,
+                      delay: Math.min(index * 0.05, 0.4) + 0.2,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    className="mb-8 last:mb-0"
+                  >
+                    <FeedItem item={item} />
+                  </motion.div>
+                );
+              })}
 
               {/* Indicador de carga automática */}
               {hasNextPage && (
@@ -258,7 +274,7 @@ export const FeedShell = (): ReactElement => {
                         <div className="absolute inset-0 rounded-full bg-primary-500/20 blur-2xl animate-pulse" />
                         <div className="relative size-10 animate-spin rounded-full border-[3px] border-primary-500/20 border-t-primary-500" />
                       </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Cargando más publicaciones...</p>
+                      <p className="text-sm text-foreground-muted font-medium">Cargando más publicaciones...</p>
                     </motion.div>
                   ) : (
                     <motion.button
@@ -269,7 +285,7 @@ export const FeedShell = (): ReactElement => {
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                      className="rounded-xl border border-slate-300 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-6 py-3 text-sm font-semibold text-slate-900 dark:text-white backdrop-blur-sm transition-all duration-300 hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-400 dark:hover:border-white/20 hover:shadow-lg hover:shadow-primary-500/10"
+                      className="rounded-xl border border-border bg-surface px-6 py-3 text-sm font-semibold text-foreground backdrop-blur-sm transition-all duration-300 hover:bg-surface-strong hover:border-border-strong hover:shadow-lg hover:shadow-primary-500/10"
                     >
                       Cargar más
                     </motion.button>
@@ -295,8 +311,8 @@ export const FeedShell = (): ReactElement => {
                           </svg>
                         </div>
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">¡Has visto todo!</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                      <h3 className="text-lg font-bold text-foreground mb-2">¡Has visto todo!</h3>
+                      <p className="text-sm text-foreground-muted">
                         Has llegado al final de tu feed. Revisa más tarde para ver nuevas publicaciones.
                       </p>
                     </div>

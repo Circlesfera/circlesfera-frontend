@@ -1,12 +1,12 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { type ReactElement } from 'react';
-import { motion } from 'framer-motion';
 
-import { type Conversation } from '@/services/api/messages';
-import { formatRelativeTime } from '@/modules/feed/utils/formatters';
 import { staggerContainer, staggerItem } from '@/lib/motion-config';
+import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { type Conversation } from '@/services/api/messages';
 
 interface ConversationsListProps {
   readonly conversations: Conversation[];

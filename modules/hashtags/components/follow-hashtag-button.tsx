@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type ReactElement, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { followHashtag, unfollowHashtag, checkFollowingHashtag, type FollowHashtagResponse } from '@/services/api/hashtags';
+import { checkFollowingHashtag, followHashtag, type FollowHashtagResponse,unfollowHashtag } from '@/services/api/hashtags';
 
 interface FollowHashtagButtonProps {
   readonly tag: string;
@@ -27,18 +27,19 @@ export function FollowHashtagButton({ tag, variant = 'default' }: FollowHashtagB
 
   const [isFollowing, setIsFollowing] = useState<boolean>(followStatus?.followed ?? false);
 
-  // Actualizar estado local cuando cambia la query
-  if (followStatus?.followed !== undefined && followStatus.followed !== isFollowing) {
+  useEffect(() => {
+    if (followStatus?.followed !== undefined) {
     setIsFollowing(followStatus.followed);
   }
+  }, [followStatus?.followed]);
 
   const followMutation = useMutation({
     mutationFn: () => followHashtag(normalizedTag),
     onSuccess: () => {
       setIsFollowing(true);
-      queryClient.invalidateQueries({ queryKey: ['hashtag-follow-status', normalizedTag] });
-      queryClient.invalidateQueries({ queryKey: ['hashtags', 'following'] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] }); // Invalidar feed para incluir nuevos posts
+      void queryClient.invalidateQueries({ queryKey: ['hashtag-follow-status', normalizedTag] });
+      void queryClient.invalidateQueries({ queryKey: ['hashtags', 'following'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] }); // Invalidar feed para incluir nuevos posts
       toast.success(`Ahora sigues #${normalizedTag}`);
     },
     onError: () => {
@@ -50,9 +51,9 @@ export function FollowHashtagButton({ tag, variant = 'default' }: FollowHashtagB
     mutationFn: () => unfollowHashtag(normalizedTag),
     onSuccess: () => {
       setIsFollowing(false);
-      queryClient.invalidateQueries({ queryKey: ['hashtag-follow-status', normalizedTag] });
-      queryClient.invalidateQueries({ queryKey: ['hashtags', 'following'] });
-      queryClient.invalidateQueries({ queryKey: ['feed', 'home'] }); // Invalidar feed
+      void queryClient.invalidateQueries({ queryKey: ['hashtag-follow-status', normalizedTag] });
+      void queryClient.invalidateQueries({ queryKey: ['hashtags', 'following'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] }); // Invalidar feed
       toast.success(`Dejaste de seguir #${normalizedTag}`);
     },
     onError: () => {

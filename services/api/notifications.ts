@@ -1,7 +1,7 @@
 import { apiClient } from './client';
-import type { PublicProfile } from './users';
 
-export type NotificationType = 'like' | 'comment' | 'follow' | 'mention' | 'reply';
+export type NotificationType = 'like' | 'comment' | 'follow' | 'mention' | 'reply' | 'tagged' | 'share';
+export type NotificationTargetModel = 'Post' | 'Frame';
 
 export interface NotificationActor {
   id: string;
@@ -14,6 +14,8 @@ export interface Notification {
   id: string;
   type: NotificationType;
   actor: NotificationActor | null;
+  targetModel?: NotificationTargetModel;
+  targetId?: string;
   postId?: string;
   commentId?: string;
   isRead: boolean;

@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import type { JSX } from 'react';
 import { lazy, Suspense } from 'react';
 
 import { UploadShellSkeleton } from '@/components/skeletons';
@@ -8,11 +10,11 @@ const UploadShell = lazy(() =>
   }))
 );
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Crear contenido — CircleSfera'
 };
 
-export default function UploadPage() {
+export default function UploadPage(): JSX.Element {
   return (
     <main className="flex min-h-screen flex-col items-center px-6 py-8 text-white">
       <Suspense fallback={<UploadShellSkeleton />}>

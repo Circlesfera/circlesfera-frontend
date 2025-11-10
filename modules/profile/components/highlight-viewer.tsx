@@ -1,12 +1,13 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useState, useEffect, useCallback, type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { type ReactElement,useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { getHighlightById, removeStoryFromHighlight, type HighlightWithStories } from '../../../services/api/highlights';
 import { useSessionStore } from '@/store/session';
+
+import { getHighlightById,removeStoryFromHighlight } from '../../../services/api/highlights';
 
 interface HighlightViewerProps {
   readonly highlightId: string;
@@ -28,8 +29,8 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
   const removeStoryMutation = useMutation({
     mutationFn: (storyId: string) => removeStoryFromHighlight(highlightId, storyId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['highlight', highlightId] });
-      queryClient.invalidateQueries({ queryKey: ['highlights'] });
+      void queryClient.invalidateQueries({ queryKey: ['highlight', highlightId] });
+      void queryClient.invalidateQueries({ queryKey: ['highlights'] });
       toast.success('Story eliminada del highlight');
     },
     onError: () => {
@@ -38,6 +39,18 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
   });
 
   const highlight = data?.highlight;
+
+  const handleNext = useCallback((): void => {
+    if (!highlight) {
+      return;
+    }
+
+    if (currentStoryIndex < highlight.stories.length - 1) {
+      setCurrentStoryIndex(currentStoryIndex + 1);
+    } else {
+      onClose();
+    }
+  }, [highlight, currentStoryIndex, onClose]);
 
   useEffect(() => {
     if (!highlight || highlight.stories.length === 0) {
@@ -57,19 +70,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
     return () => {
       clearTimeout(timer);
     };
-  }, [highlight, currentStoryIndex, isPaused]);
-
-  const handleNext = useCallback((): void => {
-    if (!highlight) {
-      return;
-    }
-
-    if (currentStoryIndex < highlight.stories.length - 1) {
-      setCurrentStoryIndex(currentStoryIndex + 1);
-    } else {
-      onClose();
-    }
-  }, [highlight, currentStoryIndex, onClose]);
+  }, [handleNext, highlight, currentStoryIndex, isPaused]);
 
   const handlePrevious = useCallback((): void => {
     if (currentStoryIndex > 0) {
@@ -87,7 +88,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
 
   if (!highlight || highlight.stories.length === 0) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background dark:bg-black">
         <div className="text-center text-white dark:text-white">
           <p className="mb-4">Este highlight no tiene stories</p>
           <button
@@ -107,7 +108,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
   // Validar que currentStory existe
   if (!currentStory) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background dark:bg-black">
         <div className="text-center text-white dark:text-white">
           <p className="mb-4">Story no encontrada</p>
           <button
@@ -126,7 +127,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
   const isOwnHighlight = currentUser?.id === highlight.userId;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background dark:bg-black">
       {/* Progress bar superior */}
       <div className="absolute top-0 left-0 right-0 z-10 flex gap-1 p-4">
         {highlight.stories.map((story, index) => {
@@ -224,7 +225,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
       <button
         type="button"
         onClick={handlePrevious}
-        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 dark:bg-black/30 p-3 text-white dark:text-white transition hover:bg-black/50 dark:hover:bg-black/50"
+        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-overlay/40 p-3 text-white transition hover:bg-overlay/60 dark:bg-black/30 dark:hover:bg-black/50"
         disabled={currentStoryIndex === 0}
       >
         <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,7 +236,7 @@ export function HighlightViewer({ highlightId, onClose }: HighlightViewerProps):
       <button
         type="button"
         onClick={handleNext}
-        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 dark:bg-black/30 p-3 text-white dark:text-white transition hover:bg-black/50 dark:hover:bg-black/50"
+        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-overlay/40 p-3 text-white transition hover:bg-overlay/60 dark:bg-black/30 dark:hover:bg-black/50"
       >
         <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

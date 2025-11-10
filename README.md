@@ -3,8 +3,8 @@
 Aplicación web de CircleSfera construida con Next.js 16, React 19, Zustand y React Query. Incluye la landing pública y el área autenticada bajo el mismo dominio, comunicándose con el backend vía APIs tipadas.
 
 ## Requisitos
-- Node.js >= 20.10
-- npm >= 10
+- Node.js >= 24.11
+- npm >= 11.6.2
 
 ## Scripts
 - `npm run dev`: ejecuta el entorno de desarrollo.
@@ -30,8 +30,8 @@ styles/                 Tailwind tokens y estilos globales
 tests/                  Suites unitarias/e2e
 ```
 
-## Middlewares y seguridad
-- `middleware.ts` protege rutas autenticadas y envía a `/` a usuarios sin sesión; bloquea acceso a `/login`/`/register` para usuarios autenticados.
+## Proxy y seguridad
+- `proxy.ts` protege rutas autenticadas y envía a `/` a usuarios sin sesión; bloquea acceso a `/login`/`/register` para usuarios autenticados.
 - Encabezados de seguridad definidos en `next.config.ts`.
 
 ## Estado Global y Datos

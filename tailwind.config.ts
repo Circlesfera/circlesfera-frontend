@@ -1,5 +1,7 @@
 import type { Config } from 'tailwindcss';
 
+const cssVar = (variable: string): string => `rgb(var(${variable}) / <alpha-value>)`;
+
 const config: Config = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
@@ -26,7 +28,17 @@ const config: Config = {
         accent: '#f97316',
         success: '#22c55e',
         warning: '#facc15',
-        danger: '#ef4444'
+        danger: '#ef4444',
+        background: cssVar('--color-bg-body'),
+        surface: cssVar('--color-bg-surface'),
+        'surface-muted': cssVar('--color-bg-soft'),
+        'surface-strong': cssVar('--color-bg-elevated'),
+        border: cssVar('--color-border-subtle'),
+        'border-strong': cssVar('--color-border-strong'),
+        foreground: cssVar('--color-text-primary'),
+        'foreground-secondary': cssVar('--color-text-secondary'),
+        'foreground-muted': cssVar('--color-text-muted'),
+        overlay: cssVar('--color-overlay')
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -40,7 +52,7 @@ const config: Config = {
         'glow-primary': '0 0 20px rgba(168, 85, 247, 0.4)',
         'glow-accent': '0 0 20px rgba(236, 72, 153, 0.4)',
         'glow-combined': '0 0 30px rgba(168, 85, 247, 0.4), 0 0 60px rgba(236, 72, 153, 0.2)',
-        'elegant': '0 20px 50px -20px rgba(0, 0, 0, 0.3)',
+        elegant: '0 20px 50px -20px rgba(0, 0, 0, 0.3)',
         'elegant-lg': '0 30px 80px -40px rgba(0, 0, 0, 0.4)',
         'elegant-xl': '0 40px 100px -50px rgba(0, 0, 0, 0.5)'
       },
@@ -49,7 +61,7 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(8px)' },
           to: { opacity: '1', transform: 'translateY(0)' }
         },
-        'shimmer': {
+        shimmer: {
           '0%': { backgroundPosition: '-1000px 0' },
           '100%': { backgroundPosition: '1000px 0' }
         },
@@ -64,7 +76,7 @@ const config: Config = {
       },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out forwards',
-        'shimmer': 'shimmer 2s infinite linear',
+        shimmer: 'shimmer 2s infinite linear',
         'scale-in': 'scale-in 0.3s ease-out forwards',
         'slide-up': 'slide-up 0.4s ease-out forwards'
       }

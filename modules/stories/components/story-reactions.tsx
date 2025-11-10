@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type ReactElement,useState } from 'react';
+import { toast } from 'sonner';
 
-import { reactToStory, type ReactionEmoji } from '@/services/api/story-reactions';
+import { logger } from '@/lib/logger';
 import type { StoryItem } from '@/services/api/stories';
+import { type ReactionEmoji,reactToStory } from '@/services/api/story-reactions';
 
 const ALLOWED_EMOJIS: ReactionEmoji[] = ['❤️', '😂', '😮', '😢', '👍', '🔥', '💯'];
 
@@ -17,25 +19,23 @@ export function StoryReactions({ story }: StoryReactionsProps): ReactElement {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const reactMutation = useMutation({
-    mutationFn: (emoji: ReactionEmoji) => reactToStory(story.id, { emoji }),
+    mutationFn: async (emoji: ReactionEmoji) => reactToStory(story.id, { emoji }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
-      queryClient.invalidateQueries({ queryKey: ['story', story.id] });
-      queryClient.invalidateQueries({ queryKey: ['story-reactions', story.id] });
+      void queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['story', story.id] });
+      void queryClient.invalidateQueries({ queryKey: ['story-reactions', story.id] });
       setShowEmojiPicker(false);
     },
-    onError: (error: any) => {
-      // Si la reacción fue eliminada (toggle), también invalidar
-      if (error?.response?.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
-        queryClient.invalidateQueries({ queryKey: ['story', story.id] });
-        queryClient.invalidateQueries({ queryKey: ['story-reactions', story.id] });
-        setShowEmojiPicker(false);
-      }
+    onError: (error: unknown) => {
+      logger.error('No se pudo registrar la reacción de story', error);
+      toast.error('No se pudo registrar tu reacción');
     }
   });
 
   const handleEmojiClick = (emoji: ReactionEmoji): void => {
+    if (reactMutation.isPending) {
+      return;
+    }
     reactMutation.mutate(emoji);
   };
 

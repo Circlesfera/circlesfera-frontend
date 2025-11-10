@@ -48,6 +48,9 @@
       "@/store/*": [
         "store/*"
       ],
+      "@sentry/nextjs": [
+        "lib/vendor/sentry-nextjs.ts"
+      ],
       "@/styles/*": [
         "styles/*"
       ]

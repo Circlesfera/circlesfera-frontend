@@ -1,6 +1,6 @@
-import { apiClient } from './client';
-
 import type { SessionUser } from '@/store/session';
+
+import { apiClient } from './client';
 
 interface AuthResponse {
   user: SessionUser;

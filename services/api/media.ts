@@ -6,6 +6,7 @@ export interface MediaUploadResult {
   durationMs?: number;
   width?: number;
   height?: number;
+  rotation?: number;
 }
 
 /**

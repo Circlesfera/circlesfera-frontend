@@ -1,12 +1,12 @@
 'use client';
 
-import { type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { type ReactElement } from 'react';
 
+import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 import { FeedItemComponent } from '@/modules/feed/components/feed-item';
 import { getArchivedPosts } from '@/services/api/feed';
-import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 
 /**
  * Renderiza el listado de posts archivados con soporte para carga incremental.

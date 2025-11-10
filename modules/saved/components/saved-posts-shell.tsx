@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { type ReactElement,useState } from 'react';
 
-import { fetchSavedPosts, type SavedPostsResponse } from '@/services/api/saves';
-import { FeedItemComponent } from '@/modules/feed/components/feed-item';
-import { CollectionsSidebar } from './collections-sidebar';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { FeedItemComponent } from '@/modules/feed/components/feed-item';
+import { fetchSavedPosts, type SavedPostsResponse } from '@/services/api/saves';
 import { useSessionStore } from '@/store/session';
+
+import { CollectionsSidebar } from './collections-sidebar';
 
 /**
  * Renderiza el listado de posts guardados con soporte para carga incremental y colecciones.
@@ -59,7 +60,7 @@ export function SavedPostsShell(): ReactElement {
           Intenta nuevamente más tarde
         </p>
         <pre className="mt-3 text-xs text-red-500/80 opacity-80">
-          {(error as Error).message}
+          {(error).message}
         </pre>
       </motion.div>
     );

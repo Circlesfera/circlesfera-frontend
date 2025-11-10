@@ -5,10 +5,10 @@ const PROTECTED_ROUTES = ['/feed', '/explore', '/upload', '/notifications', '/se
 const AUTH_ROUTES = ['/login', '/register'];
 
 /**
- * Middleware de protección de rutas. Redirige a la landing cuando el usuario no
- * posee sesión y evita que usuarios autenticados visiten la pantalla de login.
+ * Proxy de protección de rutas. Redirige a la landing cuando el usuario no posee
+ * sesión y evita que usuarios autenticados visiten la pantalla de login.
  */
-export function middleware(request: NextRequest): NextResponse {
+export default function proxy(request: NextRequest): NextResponse {
   // El backend establece la cookie 'circlesfera_refresh' después del login
   const refreshCookie = request.cookies.get('circlesfera_refresh');
 

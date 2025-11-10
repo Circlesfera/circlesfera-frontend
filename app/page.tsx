@@ -1,14 +1,15 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import type { JSX } from 'react';
 
 import { CallToActionSection } from '@/components/marketing/cta-section';
 import { FeaturesSection } from '@/components/marketing/features-section';
-import { HeroSection } from '@/components/marketing/hero-section';
 import { MarketingFooter } from '@/components/marketing/footer';
+import { HeroSection } from '@/components/marketing/hero-section';
 import { MarketingNav } from '@/components/marketing/marketing-nav';
 import { MetricsSection } from '@/components/marketing/metrics-section';
 
-export default async function HomePage() {
+export default async function HomePage(): Promise<JSX.Element> {
   const cookieStore = await cookies();
   // El backend establece la cookie 'circlesfera_refresh' después del login
   const refreshCookie = cookieStore.get('circlesfera_refresh');

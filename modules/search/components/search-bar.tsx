@@ -1,19 +1,19 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, useRef, type ReactElement } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { type ReactElement,useEffect, useRef, useState } from 'react';
 
-import { searchUsers, type PublicProfile } from '@/services/api/users';
-import { searchHashtags, getTrendingHashtags, type Hashtag } from '@/services/api/hashtags';
-import { searchPosts } from '@/services/api/feed';
-import type { FeedItem } from '@/services/api/types/feed';
+import { logger } from '@/lib/logger';
 import { FollowHashtagButton } from '@/modules/hashtags/components/follow-hashtag-button';
+import { searchPosts } from '@/services/api/feed';
+import { getTrendingHashtags, type Hashtag,searchHashtags } from '@/services/api/hashtags';
+import type { FeedCursorResponse, FeedItem } from '@/services/api/types/feed';
+import { type PublicProfile,searchUsers } from '@/services/api/users';
 
-// Función para determinar si un item es un reel
-const isReel = (item: FeedItem): boolean => {
+// Función para determinar si un item es un frame
+const isFrame = (item: FeedItem): boolean => {
   return (
     item.media.length === 1 &&
     item.media[0]?.kind === 'video' &&
@@ -23,7 +23,6 @@ const isReel = (item: FeedItem): boolean => {
 };
 
 export function SearchBar(): ReactElement {
-  const router = useRouter();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [showTrending, setShowTrending] = useState(false);
@@ -32,42 +31,77 @@ export function SearchBar(): ReactElement {
   const hasQuery = query.trim().length >= 2;
 
   // Búsqueda de usuarios
-  const { data: users = [], isLoading: isLoadingUsers } = useQuery({
+  const usersQuery = useQuery<PublicProfile[], unknown>({
     queryKey: ['search', 'users', query],
     queryFn: () => searchUsers({ q: query, limit: 5 }),
     enabled: hasQuery,
-    staleTime: 30000
+    staleTime: 30000,
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        logger.error('Error buscando usuarios', error);
+      } else {
+        logger.error('Error buscando usuarios', { error });
+      }
+    }
   });
+  const users = Array.isArray(usersQuery.data) ? (usersQuery.data as PublicProfile[]) : [];
+  const isLoadingUsers = usersQuery.isLoading;
 
   // Búsqueda de hashtags
-  const { data: hashtagsData, isLoading: isLoadingHashtags } = useQuery({
+  const hashtagsQuery = useQuery<{ hashtags: Hashtag[] }, unknown>({
     queryKey: ['search', 'hashtags', query],
     queryFn: () => searchHashtags(query, 5),
     enabled: hasQuery,
-    staleTime: 30000
+    staleTime: 30000,
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        logger.error('Error buscando hashtags', error);
+      } else {
+        logger.error('Error buscando hashtags', { error });
+      }
+    }
   });
-
-  const hashtags = hashtagsData?.hashtags ?? [];
+  const hashtags = Array.isArray(hashtagsQuery.data?.hashtags)
+    ? (hashtagsQuery.data.hashtags as Hashtag[])
+    : [];
+  const isLoadingHashtags = hashtagsQuery.isLoading;
 
   // Búsqueda de posts
-  const { data: postsData, isLoading: isLoadingPosts } = useQuery({
+  const postsQuery = useQuery<FeedCursorResponse, unknown>({
     queryKey: ['search', 'posts', query],
     queryFn: () => searchPosts({ q: query, limit: 5 }),
     enabled: hasQuery,
-    staleTime: 30000
+    staleTime: 30000,
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        logger.error('Error buscando publicaciones', error);
+      } else {
+        logger.error('Error buscando publicaciones', { error });
+      }
+    }
   });
-
-  const posts = postsData?.data ?? [];
+  const posts = Array.isArray(postsQuery.data?.data)
+    ? (postsQuery.data.data as FeedItem[])
+    : [];
+  const isLoadingPosts = postsQuery.isLoading;
 
   // Trending hashtags (cuando no hay query)
-  const { data: trendingData } = useQuery({
+  const trendingQuery = useQuery<{ hashtags: Hashtag[] }, unknown>({
     queryKey: ['hashtags', 'trending'],
     queryFn: () => getTrendingHashtags(10),
     enabled: showTrending && !hasQuery,
-    staleTime: 1000 * 60 * 5 // 5 minutos
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        logger.error('Error obteniendo hashtags trending', error);
+      } else {
+        logger.error('Error obteniendo hashtags trending', { error });
+      }
+    }
   });
-
-  const trendingHashtags = trendingData?.hashtags ?? [];
+  const trendingHashtags = Array.isArray(trendingQuery.data?.hashtags)
+    ? (trendingQuery.data.hashtags as Hashtag[])
+    : [];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -262,7 +296,7 @@ export function SearchBar(): ReactElement {
                                   height={40}
                                   className="size-10 flex-shrink-0 rounded object-cover"
                                 />
-                              ) : isReel(post) ? (
+                              ) : isFrame(post) ? (
                                 <video
                                   src={firstMedia.url}
                                   loop

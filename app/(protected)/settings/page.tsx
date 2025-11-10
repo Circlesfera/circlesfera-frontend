@@ -1,10 +1,13 @@
+import type { Metadata } from 'next';
+import type { JSX } from 'react';
+
 import { SettingsShell } from '@/modules/settings/components/settings-shell';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Configuración — CircleSfera'
 };
 
-export default function SettingsPage() {
+export default function SettingsPage(): JSX.Element {
   return (
     <div className="w-full p-6">
       <div className="mx-auto max-w-7xl">

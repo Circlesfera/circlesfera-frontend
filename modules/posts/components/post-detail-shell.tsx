@@ -1,19 +1,18 @@
 'use client';
 
-import React, { Fragment, useState, useRef, type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query';
+import { type InfiniteData,useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence,motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-
-import { getPostById, updatePost, deletePost } from '@/services/api/feed';
-import type { FeedCursorResponse } from '@/services/api/types/feed';
-import { formatRelativeTime } from '@/modules/feed/utils/formatters';
-import { formatNumber } from '@/lib/utils';
-import { renderCaptionWithLinks } from '@/modules/feed/utils/caption-renderer';
-import { useSessionStore } from '@/store/session';
+import React, { Fragment, type ReactElement,useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
+
 import { fadeUpVariants, modalVariants, overlayVariants } from '@/lib/motion-config';
+import { renderCaptionWithLinks } from '@/modules/feed/utils/caption-renderer';
+import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { deletePost,getPostById, updatePost } from '@/services/api/feed';
+import type { FeedCursorResponse , FeedItem } from '@/services/api/types/feed';
+import { useSessionStore } from '@/store/session';
 
 export const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
@@ -21,17 +20,17 @@ export const formatDuration = (ms: number): string => {
   const remainingSeconds = seconds % 60;
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
+import { VerifiedBadge } from '@/components/verified-badge';
+import { getAvatarUrl,isLocalImage } from '@/lib/image-utils';
+import { ImageTags } from '@/modules/feed/components/image-tags';
+import { AddTagDialog } from '@/modules/tags/components/add-tag-dialog';
+
 import { FeedItemActions } from './feed-item-actions';
 import { PostComments } from './post-comments';
 import { RelatedPosts } from './related-posts';
-import { VerifiedBadge } from '@/components/verified-badge';
-import { ImageTags } from '@/modules/feed/components/image-tags';
-import { AddTagDialog } from '@/modules/tags/components/add-tag-dialog';
-import { isLocalImage, getAvatarUrl } from '@/lib/image-utils';
-import type { FeedItem } from '@/services/api/types/feed';
 
-// Función para determinar si un item es un reel
-const isReel = (item: FeedItem): boolean => {
+// Función para determinar si un item es un frame
+const isFrame = (item: FeedItem): boolean => {
   return (
     item.media.length === 1 &&
     item.media[0]?.kind === 'video' &&
@@ -52,6 +51,23 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
   const [showAddTagDialog, setShowAddTagDialog] = useState(false);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(null);
   const mediaRefs = useRef<Map<number, React.RefObject<HTMLDivElement | null>>>(new Map());
+  const [videoRatios, setVideoRatios] = useState<Record<string, number>>({});
+
+  const handleVideoMetadata = useCallback(
+    (mediaId: string) => (event: React.SyntheticEvent<HTMLVideoElement>): void => {
+      const video = event.currentTarget;
+      if (video.videoWidth && video.videoHeight) {
+        setVideoRatios((prev) => {
+          const nextRatio = video.videoWidth / video.videoHeight;
+          if (prev[mediaId] && Math.abs(prev[mediaId] - nextRatio) < 0.0001) {
+            return prev;
+          }
+          return { ...prev, [mediaId]: nextRatio };
+        });
+      }
+    },
+    []
+  );
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['post', postId],
@@ -240,6 +256,22 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
           mediaRefs.current.set(mediaIndex, React.createRef<HTMLDivElement>());
         }
         const mediaRef = mediaRefs.current.get(mediaIndex)!;
+        const isVideo = media.kind === 'video';
+        const isFrameMedia = isVideo && isFrame(post);
+        const ratioFromState = videoRatios[media.id];
+        const hasDimensions = Boolean(media.width && media.height);
+        const resolvedAspectRatio = ratioFromState
+          ? ratioFromState
+          : hasDimensions
+            ? media.width! / media.height!
+            : isFrameMedia
+              ? 9 / 16
+              : 4 / 5;
+        const videoObjectFit = ratioFromState || hasDimensions ? 'object-contain' : isFrameMedia ? 'object-cover' : 'object-contain';
+        const detailAspectRatio = resolvedAspectRatio;
+        const wrapperClassName = `relative w-full overflow-hidden ${
+          isFrameMedia ? 'bg-black' : ''
+        }`;
 
         return (
           <Fragment key={media.id}>
@@ -247,7 +279,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
               <div 
                 className="relative w-full overflow-hidden"
                 style={{
-                  aspectRatio: '4 / 5'
+                  aspectRatio: `${detailAspectRatio}`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
@@ -256,7 +288,10 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                   className="relative w-full h-full overflow-hidden group/media"
                 >
-                  <div ref={mediaRef} className="relative size-full flex items-center justify-center bg-black/20 dark:bg-black/20">
+                  <div
+                    ref={mediaRef}
+                    className="relative size-full flex items-center justify-center bg-black/20 dark:bg-black/20"
+                  >
                     <Image
                       src={media.url}
                       alt={post.caption || `Imagen de @${post.author.handle}`}
@@ -294,22 +329,24 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
               </div>
             ) : (
               <div 
-                className="relative w-full overflow-hidden"
+                className={wrapperClassName}
                 style={{
-                  aspectRatio: isReel(post) ? '9 / 16' : '4 / 5'
+                  aspectRatio: resolvedAspectRatio
                 }}
               >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
-                  className="relative w-full h-full overflow-hidden"
+                  className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black"
                 >
                   <video
                     src={media.url}
-                    {...(isReel(post) ? {} : { poster: media.thumbnailUrl })}
+                    {...(media.thumbnailUrl ? { poster: media.thumbnailUrl } : {})}
                     controls
                     preload="metadata"
-                    className="absolute inset-0 w-full h-full object-contain"
+                    className={`block w-full h-full ${videoObjectFit}`}
+                    onLoadedMetadata={handleVideoMetadata(media.id)}
                     onClick={(e) => {
                       e.preventDefault();
                     }}
@@ -410,8 +447,8 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
           }}
           onSuccess={() => {
             setShowEditDialog(false);
-            queryClient.invalidateQueries({ queryKey: ['post', postId] });
-            queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
+            void queryClient.invalidateQueries({ queryKey: ['post', postId] });
+            void queryClient.invalidateQueries({ queryKey: ['feed', 'home'] });
           }}
         />
       )}
@@ -436,8 +473,6 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
         <AddTagDialog
           postId={post.id}
           mediaIndex={selectedMediaIndex}
-          mediaWidth={post.media[selectedMediaIndex]?.width ?? 1080}
-          mediaHeight={post.media[selectedMediaIndex]?.height ?? 1920}
           imageRef={mediaRefs.current.get(selectedMediaIndex)!}
           isOpen={showAddTagDialog}
           onClose={() => {
@@ -445,7 +480,7 @@ export function PostDetailShell({ postId }: { postId: string }): ReactElement {
             setSelectedMediaIndex(null);
           }}
           onTagAdded={() => {
-            queryClient.invalidateQueries({ queryKey: ['post', postId] });
+            void queryClient.invalidateQueries({ queryKey: ['post', postId] });
           }}
         />
       )}
@@ -592,9 +627,9 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
       }
     );
 
-    // Remover de reels
+    // Remover de frames
     queryClient.setQueriesData<InfiniteData<FeedCursorResponse>>(
-      { queryKey: ['reels'] },
+      { queryKey: ['frames'] },
       (old) => {
         if (!old) return old;
         return {
@@ -633,7 +668,7 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
       // Cancelar queries en progreso para evitar conflictos
       await queryClient.cancelQueries({ queryKey: ['feed', 'home'] });
       await queryClient.cancelQueries({ queryKey: ['feed', 'explore'] });
-      await queryClient.cancelQueries({ queryKey: ['reels'] });
+      await queryClient.cancelQueries({ queryKey: ['frames'] });
       if (authorHandle) {
         await queryClient.cancelQueries({ queryKey: ['userPosts', authorHandle] });
       }
@@ -641,7 +676,7 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
       // Guardar snapshot del estado anterior para rollback en caso de error
       const previousFeed = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
       const previousExplore = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'explore']);
-      const previousReels = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['reels']);
+      const previousFrames = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['frames']);
       const previousUserPosts = authorHandle 
         ? queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['userPosts', authorHandle])
         : undefined;
@@ -649,7 +684,7 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
       // Remover optimísticamente del cache ANTES de la mutación
       removePostFromInfiniteQueries(postId, authorHandle);
       
-      return { previousFeed, previousExplore, previousReels, previousUserPosts };
+      return { previousFeed, previousExplore, previousFrames, previousUserPosts };
     },
     onError: (_error, _variables, context) => {
       // Rollback en caso de error
@@ -659,8 +694,8 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
       if (context?.previousExplore) {
         queryClient.setQueryData(['feed', 'explore'], context.previousExplore);
       }
-      if (context?.previousReels) {
-        queryClient.setQueryData(['reels'], context.previousReels);
+      if (context?.previousFrames) {
+        queryClient.setQueryData(['frames'], context.previousFrames);
       }
       if (context?.previousUserPosts) {
         const authorHandle = postData?.post?.author.handle;
@@ -675,26 +710,26 @@ function DeletePostDialog({ postId, onClose, onSuccess }: DeletePostDialogProps)
       const authorHandle = postData?.post?.author.handle;
       
       // Invalidar queries en segundo plano (sin refetch inmediato) para asegurar sincronización
-      queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({
         queryKey: ['feed', 'home'],
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ 
+      void queryClient.invalidateQueries({
         queryKey: ['feed', 'explore'],
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ 
-        queryKey: ['reels'],
+      void queryClient.invalidateQueries({
+        queryKey: ['frames'],
         refetchType: 'none'
       });
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      void queryClient.invalidateQueries({ queryKey: ['post', postId] });
       if (authorHandle) {
-        queryClient.invalidateQueries({ 
+        void queryClient.invalidateQueries({
           queryKey: ['userPosts', authorHandle],
           refetchType: 'none'
         });
       }
-      queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       onSuccess();
     }
   });

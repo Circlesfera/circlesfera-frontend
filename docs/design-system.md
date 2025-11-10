@@ -72,19 +72,36 @@ Slate (Escala de grises)
 - 950: #020617  (Base casi negra)
 ```
 
-### 2.4 Colores Semánticos
+### 2.4 Tokens de Superficie (CSS Variables)
+| Token | Modo Claro | Modo Oscuro | Utility Tailwind |
+|-------|------------|-------------|------------------|
+| `--color-background` | `#ffffff` | `#050509` | `bg-background`, `text-foreground` |
+| `--color-background-soft` | `#f8fafc` | `#0b1120` | `bg-background-soft` |
+| `--color-surface` | `rgba(255,255,255,0.82)` | `rgba(15,23,42,0.6)` | `bg-surface` |
+| `--color-surface-muted` | `rgba(241,245,249,0.75)` | `rgba(15,23,42,0.45)` | `bg-surface-muted` |
+| `--color-surface-strong` | `#ffffff` | `rgba(15,23,42,0.85)` | `bg-surface-strong` |
+| `--color-border` | `rgba(15,23,42,0.08)` | `rgba(148,163,184,0.18)` | `border-border` |
+| `--color-border-strong` | `rgba(15,23,42,0.18)` | `rgba(148,163,184,0.32)` | `border-border-strong` |
+| `--color-text-primary` | `#0f172a` | `#e2e8f0` | `text-foreground` |
+| `--color-text-muted` | `#475569` | `#94a3b8` | `text-foreground-muted` |
+| `--color-text-inverse` | `#f8fafc` | `#111827` | `text-foreground-inverse` |
+| `--color-overlay` | `rgba(15,23,42,0.05)` | `rgba(15,23,42,0.65)` | `bg-overlay` |
+
+> **Guía**: Los componentes deben usar estas utilidades en lugar de valores directos (`bg-white`, `text-slate-600`, etc.) para garantizar contraste consistente entre temas. Las clases `glass-*` y `focus-ring` han sido actualizadas para consumir estos tokens automáticamente.
+
+### 2.5 Colores Semánticos
 - **Success (Verde)**: Confirmaciones, acciones exitosas
 - **Warning (Amarillo)**: Advertencias, atención requerida
 - **Danger (Rojo)**: Errores, acciones destructivas
 
-### 2.5 Gradientes Principales
+### 2.6 Gradientes Principales
 ```
 Primary Gradient: from-primary-600 via-primary-500 to-accent-500
 Text Gradient: from-primary-400 via-primary-500 to-accent-500
 Hover Gradient: from-primary-500 via-accent-500 to-primary-600
 ```
 
-### 2.6 Modo Oscuro
+### 2.7 Modo Oscuro
 - **Background Base**: `#000000` (Negro puro)
 - **Background Elevado**: `rgba(15, 23, 42, 0.4)` (Slate-900 con transparencia)
 - **Bordes**: `rgba(51, 65, 85, 0.3)` (Slate-700 con transparencia)

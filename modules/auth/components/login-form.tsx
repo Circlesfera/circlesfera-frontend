@@ -1,9 +1,10 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, type ReactElement } from 'react';
+import { type ReactElement,useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { logger } from '@/lib/logger';
 import { login } from '@/services/api/auth';
 import { useSessionStore } from '@/store/session';
 
@@ -52,13 +53,22 @@ export function LoginForm(): ReactElement {
       // Esto evita problemas de timing con el middleware
       window.location.href = '/feed';
     } catch (error) {
+      if (error instanceof Error && error.message) {
+        setFormError(error.message);
+      } else {
       setFormError('Credenciales inválidas. Verifica tus datos e inténtalo de nuevo.');
-      console.error(error);
+      }
+      logger.error('Error iniciando sesión', error);
     }
   });
 
   return (
-    <form onSubmit={onSubmit} className="glass-card flex w-full max-w-md flex-col gap-6 p-8 shadow-elegant-lg">
+    <form
+      onSubmit={(event) => {
+        void onSubmit(event);
+      }}
+      className="glass-card flex w-full max-w-md flex-col gap-6 p-8 shadow-elegant-lg"
+    >
       <div className="space-y-2">
         <label className="text-sm font-semibold text-white">Correo o usuario</label>
         <input

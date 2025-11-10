@@ -1,15 +1,16 @@
 'use client';
 
-import { type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { type ReactElement } from 'react';
 
-import { getProfileAnalytics, type ProfileAnalytics } from '../../../services/api/analytics';
-import { AnalyticsOverview } from './analytics-overview';
-import { AnalyticsPosts } from './analytics-posts';
-import { AnalyticsEngagement } from './analytics-engagement';
 import { fadeUpVariants } from '@/lib/motion-config';
 import { useSessionStore } from '@/store/session';
+
+import { getProfileAnalytics, type ProfileAnalytics } from '../../../services/api/analytics';
+import { AnalyticsEngagement } from './analytics-engagement';
+import { AnalyticsOverview } from './analytics-overview';
+import { AnalyticsPosts } from './analytics-posts';
 
 export function AnalyticsShell(): ReactElement {
   const isHydrated = useSessionStore((state) => state.isHydrated);
@@ -35,7 +36,7 @@ export function AnalyticsShell(): ReactElement {
         className="space-y-6"
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-32 animate-pulse rounded-2xl glass-card" />
           ))}
         </div>

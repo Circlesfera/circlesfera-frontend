@@ -15,3 +15,13 @@ export const unlikePost = async (postId: string): Promise<LikeResponse> => {
   return data;
 };
 
+export const likeFrame = async (frameId: string): Promise<LikeResponse> => {
+  const { data } = await apiClient.post<LikeResponse>(`/likes/frames/${frameId}/like`);
+  return data;
+};
+
+export const unlikeFrame = async (frameId: string): Promise<LikeResponse> => {
+  const { data } = await apiClient.delete<LikeResponse>(`/likes/frames/${frameId}/like`);
+  return data;
+};
+

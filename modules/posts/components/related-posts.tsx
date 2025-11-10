@@ -1,17 +1,17 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, type ReactElement } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
 
-import { getRelatedPosts } from '@/services/api/feed';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { getRelatedPosts } from '@/services/api/feed';
 import type { FeedItem } from '@/services/api/types/feed';
 
-// Función para determinar si un item es un reel
-const isReel = (item: FeedItem): boolean => {
+// Función para determinar si un item es un frame
+const isFrame = (item: FeedItem): boolean => {
   return (
     item.media.length === 1 &&
     item.media[0]?.kind === 'video' &&
@@ -63,29 +63,39 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
       >
         {relatedPosts.map((post) => {
           const firstMedia = post.media[0];
+
           if (!firstMedia) {
             return null;
           }
+
+          const hasThumbnail = Boolean(firstMedia.thumbnailUrl && firstMedia.thumbnailUrl.trim().length > 0);
+          const fallbackSrc = hasThumbnail ? firstMedia.thumbnailUrl : firstMedia.url;
+          const safeImageSrc = fallbackSrc && fallbackSrc.trim().length > 0 ? fallbackSrc : null;
 
           return (
             <motion.div
               key={post.id}
               variants={staggerItem}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full"
             >
               <Link
                 href={`/posts/${post.id}`}
-                className="group relative block aspect-square overflow-hidden rounded-xl bg-slate-900/50 border border-white/5"
+                className="group relative block aspect-square overflow-hidden rounded-2xl border border-border/60 bg-surface transition-all duration-300 hover:border-border-strong hover:shadow-xl hover:shadow-primary-500/10"
               >
-              {firstMedia.kind === 'image' ? (
+                {!safeImageSrc ? (
+                  <div className="flex h-full w-full items-center justify-center bg-slate-900">
+                    <span className="size-5 rounded-full border-2 border-white/40 border-t-transparent animate-spin" />
+                  </div>
+                ) : firstMedia.kind === 'image' ? (
                 <Image
-                  src={firstMedia.url}
+                    src={safeImageSrc}
                   alt={post.caption || 'Publicación relacionada'}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-              ) : isReel(post) ? (
+              ) : isFrame(post) ? (
                 <video
                   src={firstMedia.url}
                   loop
@@ -96,7 +106,7 @@ export function RelatedPosts({ postId }: RelatedPostsProps): ReactElement | null
               ) : (
                 <Fragment>
                   <Image
-                    src={firstMedia.thumbnailUrl}
+                      src={safeImageSrc}
                     alt={post.caption || 'Publicación relacionada'}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"

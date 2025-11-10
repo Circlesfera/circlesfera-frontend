@@ -1,7 +1,7 @@
 'use client';
 
-import type { ReactElement } from 'react';
 import { motion } from 'framer-motion';
+import type { ReactElement } from 'react';
 
 const METRICS: Array<{ label: string; value: string; description: string }> = [
   {

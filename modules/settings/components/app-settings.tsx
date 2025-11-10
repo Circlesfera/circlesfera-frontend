@@ -1,12 +1,12 @@
 'use client';
 
-import { type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { type ReactElement } from 'react';
+import { toast } from 'sonner';
 
-import { getPreferences, updatePreferences, type UpdatePreferencesPayload } from '@/services/api/preferences';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { getPreferences, updatePreferences, type UpdatePreferencesPayload } from '@/services/api/preferences';
 
 export function AppSettings(): ReactElement {
   const queryClient = useQueryClient();
@@ -17,8 +17,8 @@ export function AppSettings(): ReactElement {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdatePreferencesPayload) => updatePreferences(payload),
-    onMutate: async (payload) => {
+    mutationFn: async (payload: UpdatePreferencesPayload) => updatePreferences(payload),
+    onMutate: (payload) => {
       // Actualización optimista del tema en localStorage para aplicación inmediata
       if (payload.theme) {
         try {
@@ -36,13 +36,13 @@ export function AppSettings(): ReactElement {
             root.classList.remove('dark');
             root.style.colorScheme = 'light';
           }
-        } catch (e) {
+        } catch {
           // Ignorar errores de localStorage
         }
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preferences'] });
+      void queryClient.invalidateQueries({ queryKey: ['preferences'] });
       toast.success('Preferencias actualizadas');
       // El ThemeProvider se encargará de sincronizar el tema con el servidor
     },
@@ -52,14 +52,14 @@ export function AppSettings(): ReactElement {
       // Revertir tema en localStorage si falla
       if (variables.theme) {
         try {
-          const currentData = queryClient.getQueryData(['preferences']) as { preferences?: { theme?: string } } | undefined;
+          const currentData = queryClient.getQueryData<{ preferences?: { theme?: 'light' | 'dark' | 'system' } }>(['preferences']);
           const currentTheme = currentData?.preferences?.theme || 'dark';
           localStorage.setItem('theme', currentTheme);
           // Revertir visualmente
           const root = document.documentElement;
           const effectiveTheme = currentTheme === 'system'
             ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-            : currentTheme as 'light' | 'dark';
+            : (currentTheme);
           
           if (effectiveTheme === 'dark') {
             root.classList.add('dark');
@@ -68,7 +68,7 @@ export function AppSettings(): ReactElement {
             root.classList.remove('dark');
             root.style.colorScheme = 'light';
           }
-        } catch (e) {
+        } catch {
           // Ignorar errores
         }
       }

@@ -1,14 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useState, type ReactElement } from 'react';
-import { z } from 'zod';
-import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { type ReactElement,useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { changePassword } from '@/services/api/users';
 import { fadeUpVariants } from '@/lib/motion-config';
+import { changePassword } from '@/services/api/users';
 
 const passwordSchema = z
   .object({
@@ -25,8 +26,6 @@ type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export function PasswordChangeForm(): ReactElement {
   const [formError, setFormError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -36,25 +35,25 @@ export function PasswordChangeForm(): ReactElement {
     resolver: zodResolver(passwordSchema)
   });
 
-  const onSubmit = handleSubmit(async (values: PasswordFormValues) => {
-    setFormError(null);
-    setIsSubmitting(true);
-
-    try {
-      await changePassword({
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword
-      });
-
+  const changePasswordMutation = useMutation({
+    mutationFn: async (payload: { currentPassword: string; newPassword: string }) => changePassword(payload),
+    onSuccess: () => {
       toast.success('Contraseña actualizada exitosamente');
       reset();
-    } catch (error: unknown) {
+    },
+    onError: (error: unknown) => {
       const message = error instanceof Error ? error.message : 'No se pudo actualizar la contraseña';
       setFormError(message);
       toast.error(message);
-    } finally {
-      setIsSubmitting(false);
     }
+  });
+
+  const onSubmit = handleSubmit((values: PasswordFormValues) => {
+    setFormError(null);
+    changePasswordMutation.mutate({
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword
+    });
   });
 
   return (
@@ -70,7 +69,12 @@ export function PasswordChangeForm(): ReactElement {
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Actualiza tu contraseña para mantener tu cuenta segura</p>
       </motion.div>
 
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form
+        onSubmit={(event) => {
+          void onSubmit(event);
+        }}
+        className="space-y-6"
+      >
         <div className="space-y-2">
           <label htmlFor="currentPassword" className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
             Contraseña actual
@@ -149,12 +153,12 @@ export function PasswordChangeForm(): ReactElement {
         <div className="flex items-center justify-end gap-4 pt-6 border-t border-slate-200/50 dark:border-white/5">
           <motion.button
             type="submit"
-            disabled={isSubmitting}
+            disabled={changePasswordMutation.isPending}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
           >
-            {isSubmitting ? (
+            {changePasswordMutation.isPending ? (
               <span className="flex items-center gap-2">
                 <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                 Actualizando...

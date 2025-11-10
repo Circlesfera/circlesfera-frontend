@@ -1,5 +1,6 @@
 'use client';
 
+import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchHomeFeed } from '@/services/api/feed';
@@ -16,13 +17,17 @@ interface UseFeedStreamOptions {
  * Hook que obtiene el feed principal del usuario con paginación infinita.
  * Solo ejecuta la query cuando la sesión está hidratada y hay un token válido.
  */
-export const useFeedStream = ({ initialCursor }: UseFeedStreamOptions = {}) => {
+type FeedQueryKey = [...typeof FEED_QUERY_KEY, { readonly cursor: string | null }];
+
+export const useFeedStream = ({ initialCursor }: UseFeedStreamOptions = {}): UseInfiniteQueryResult<InfiniteData<FeedCursorResponse>, Error> => {
   const isHydrated = useSessionStore((state) => state.isHydrated);
   const accessToken = useSessionStore((state) => state.accessToken);
+  const queryKey: FeedQueryKey = [...FEED_QUERY_KEY, { cursor: initialCursor ?? null }];
 
-  return useInfiniteQuery<FeedCursorResponse>({
-    queryKey: [...FEED_QUERY_KEY, { cursor: initialCursor ?? null }],
-    queryFn: ({ pageParam }) => fetchHomeFeed({ cursor: (pageParam as string | null) ?? null }),
+  return useInfiniteQuery<FeedCursorResponse, Error, InfiniteData<FeedCursorResponse>, FeedQueryKey, string | null>({
+    queryKey,
+    queryFn: async ({ pageParam }): Promise<FeedCursorResponse> =>
+      fetchHomeFeed({ cursor: pageParam ?? null }),
     initialPageParam: initialCursor ?? null,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
     staleTime: 15_000,

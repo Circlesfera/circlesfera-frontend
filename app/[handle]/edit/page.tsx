@@ -1,9 +1,9 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
-  const resolvedParams = await params;
+export function generateMetadata({ params }: { params: { handle: string } }): Metadata {
   return {
-    title: `Editar perfil — @${resolvedParams.handle} — CircleSfera`
+    title: `Editar perfil — @${params.handle} — CircleSfera`
   };
 }
 
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
  * Redirige la ruta antigua /[handle]/edit a la nueva página de settings
  * para mantener compatibilidad con enlaces antiguos.
  */
-export default async function EditProfilePage(): Promise<never> {
+export default function EditProfilePage(): never {
   redirect('/settings?tab=profile');
 }
 

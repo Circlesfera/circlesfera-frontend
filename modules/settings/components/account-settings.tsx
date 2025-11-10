@@ -1,24 +1,24 @@
 'use client';
 
-import { type ReactElement, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { type ReactElement, useState } from 'react';
+import { toast } from 'sonner';
+
 import { useSession } from '@/hooks/use-session';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
-import { updateProfile } from '@/services/api/users';
-import { useSessionStore } from '@/store/session';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { getMyVerificationRequest } from '@/services/api/verification';
 import { VerificationRequestDialog } from '@/modules/verification/components/verification-request-dialog';
+import { updateProfile } from '@/services/api/users';
+import { getMyVerificationRequest } from '@/services/api/verification';
+import { useSessionStore } from '@/store/session';
 
 export function AccountSettings(): ReactElement {
   const { user } = useSession();
-  const updateUser = useSessionStore((state) => state.updateUser);
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [isEditingHandle, setIsEditingHandle] = useState(false);
   const [newHandle, setNewHandle] = useState(user?.handle ?? '');
-  const [isUpdating, setIsUpdating] = useState(false);
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
 
   // Obtener estado de solicitud de verificación
@@ -31,7 +31,36 @@ export function AccountSettings(): ReactElement {
 
   const verificationRequest = verificationData?.request;
 
-  const handleSaveHandle = async (): Promise<void> => {
+  const updateHandleMutation = useMutation({
+    mutationFn: async (trimmedHandle: string) => updateProfile({ handle: trimmedHandle }),
+    onSuccess: (updated) => {
+      void queryClient.invalidateQueries({ queryKey: ['profile', updated.handle] });
+      useSessionStore.getState().updateUser(updated);
+      toast.success('Nombre de usuario actualizado correctamente');
+      setIsEditingHandle(false);
+
+      if (updated.handle !== user?.handle) {
+        router.push(`/${updated.handle}`);
+        setTimeout(() => {
+          router.push('/settings?tab=account');
+        }, 1000);
+      } else {
+        router.refresh();
+      }
+    },
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string; code?: string } } };
+      const code = axiosError.response?.data?.code;
+
+      if (code === 'HANDLE_ALREADY_EXISTS') {
+        toast.error('Este nombre de usuario ya está en uso. Por favor, elige otro.');
+      } else {
+        toast.error(axiosError.response?.data?.message || 'No se pudo actualizar el nombre de usuario');
+      }
+    }
+  });
+
+  const handleSaveHandle = (): void => {
     if (!user || !newHandle.trim()) return;
 
     const trimmedHandle = newHandle.trim().toLowerCase();
@@ -51,34 +80,7 @@ export function AccountSettings(): ReactElement {
       return;
     }
 
-    setIsUpdating(true);
-    try {
-      const updated = await updateProfile({ handle: trimmedHandle });
-      updateUser(updated);
-      toast.success('Nombre de usuario actualizado correctamente');
-      setIsEditingHandle(false);
-      
-      // Si el handle cambió, redirigir
-      if (updated.handle !== user.handle) {
-        router.push(`/${updated.handle}`);
-        setTimeout(() => {
-          router.push('/settings?tab=account');
-        }, 1000);
-      } else {
-        router.refresh();
-      }
-    } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string; code?: string } } };
-      const code = axiosError.response?.data?.code;
-      
-      if (code === 'HANDLE_ALREADY_EXISTS') {
-        toast.error('Este nombre de usuario ya está en uso. Por favor, elige otro.');
-      } else {
-        toast.error(axiosError.response?.data?.message || 'No se pudo actualizar el nombre de usuario');
-      }
-    } finally {
-      setIsUpdating(false);
-    }
+    updateHandleMutation.mutate(trimmedHandle);
   };
 
   return (
@@ -177,10 +179,10 @@ export function AccountSettings(): ReactElement {
                         <button
                           type="button"
                           onClick={handleSaveHandle}
-                          disabled={isUpdating || newHandle.trim() === user?.handle}
+                          disabled={updateHandleMutation.isPending || newHandle.trim() === user?.handle}
                           className="rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isUpdating ? 'Guardando...' : 'Guardar'}
+                          {updateHandleMutation.isPending ? 'Guardando...' : 'Guardar'}
                         </button>
                         <button
                           type="button"
@@ -188,7 +190,7 @@ export function AccountSettings(): ReactElement {
                             setIsEditingHandle(false);
                             setNewHandle(user?.handle ?? '');
                           }}
-                          disabled={isUpdating}
+                          disabled={updateHandleMutation.isPending}
                           className="rounded-xl glass-dark px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 transition-all duration-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
                         >
                           Cancelar

@@ -1,9 +1,10 @@
 'use client';
 
-import { type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { type ReactElement } from 'react';
 
-import { searchHashtags, type Hashtag } from '@/services/api/hashtags';
+import { searchHashtags } from '@/services/api/hashtags';
+
 import { FollowHashtagButton } from './follow-hashtag-button';
 
 interface HashtagHeaderProps {

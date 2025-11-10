@@ -1,19 +1,19 @@
 'use client';
 
-import { useState, useEffect, type ReactElement } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence,motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
+import { type ReactElement,useEffect, useState } from 'react';
 
-import { fadeUpVariants, scaleVariants } from '@/lib/motion-config';
-
-import { ProfileEditForm } from '@/modules/profile/components/profile-edit-form';
 import { useSession } from '@/hooks/use-session';
-import { PasswordChangeForm } from './password-change-form';
-import { PrivacySettings } from './privacy-settings';
-import { NotificationsSettings } from './notifications-settings';
+import { fadeUpVariants, scaleVariants } from '@/lib/motion-config';
+import { ProfileEditForm } from '@/modules/profile/components/profile-edit-form';
+
 import { AccountSettings } from './account-settings';
 import { AppSettings } from './app-settings';
 import { DangerZone } from './danger-zone';
+import { NotificationsSettings } from './notifications-settings';
+import { PasswordChangeForm } from './password-change-form';
+import { PrivacySettings } from './privacy-settings';
 
 type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy' | 'app' | 'password' | 'danger';
 

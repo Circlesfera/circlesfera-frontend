@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactElement } from 'react';
+
 import { SuggestedUsersCarousel } from './suggested-users-carousel';
 
 /**

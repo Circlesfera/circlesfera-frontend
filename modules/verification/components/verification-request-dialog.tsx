@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, type ReactElement, FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { FormEvent , type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
+
+import { logger } from '@/lib/logger';
 
 import { createVerificationRequest, type CreateVerificationRequestPayload } from '../../../services/api/verification';
 
@@ -17,14 +19,16 @@ export function VerificationRequestDialog({ onClose, onSuccess }: VerificationRe
   const [documentsUrl, setDocumentsUrl] = useState('');
 
   const createMutation = useMutation({
-    mutationFn: (payload: CreateVerificationRequestPayload) => createVerificationRequest(payload),
+    mutationFn: async (payload: CreateVerificationRequestPayload) => createVerificationRequest(payload),
     onSuccess: () => {
       toast.success('Solicitud de verificación enviada');
-      queryClient.invalidateQueries({ queryKey: ['verification', 'request'] });
+      void queryClient.invalidateQueries({ queryKey: ['verification', 'request'] });
       onSuccess();
     },
-    onError: (error: { message?: string }) => {
-      toast.error(error.message ?? 'No se pudo crear la solicitud de verificación');
+    onError: (error: unknown) => {
+      const message = error instanceof Error ? error.message : 'No se pudo crear la solicitud de verificación';
+      toast.error(message);
+      logger.error('Error al crear solicitud de verificación', error);
     }
   });
 

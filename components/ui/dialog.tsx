@@ -1,8 +1,7 @@
 'use client';
 
-import { type ReactElement, type ReactNode } from 'react';
-
 import { AnimatePresence, motion } from 'framer-motion';
+import { type ReactElement, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { modalVariants, overlayVariants } from '@/lib/motion-config';
@@ -80,7 +79,7 @@ export function DialogContent({ children, className, onClose }: DialogContentPro
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200 focus-ring z-10 hover:scale-105 active:scale-95"
+          className="absolute top-4 right-4 p-2 rounded-xl text-foreground-muted hover:text-foreground hover:bg-surface-muted transition-all duration-200 focus-ring z-10 hover:scale-105 active:scale-95"
           aria-label="Cerrar"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +112,7 @@ export interface DialogTitleProps {
 
 export function DialogTitle({ children, className }: DialogTitleProps): ReactElement {
   return (
-    <h2 className={twMerge('text-2xl font-bold text-slate-900 dark:text-white mb-2', className)}>
+    <h2 className={twMerge('text-2xl font-bold text-foreground mb-2', className)}>
       {children}
     </h2>
   );
@@ -126,7 +125,7 @@ export interface DialogDescriptionProps {
 
 export function DialogDescription({ children, className }: DialogDescriptionProps): ReactElement {
   return (
-    <p className={twMerge('text-sm text-slate-600 dark:text-slate-400', className)}>
+    <p className={twMerge('text-sm text-foreground-muted', className)}>
       {children}
     </p>
   );
@@ -139,7 +138,7 @@ export interface DialogFooterProps {
 
 export function DialogFooter({ children, className }: DialogFooterProps): ReactElement {
   return (
-    <div className={twMerge('flex items-center justify-end gap-3 mt-8 pt-6 border-t border-slate-200/50 dark:border-white/5', className)}>
+    <div className={twMerge('flex items-center justify-end gap-3 mt-8 pt-6 border-t border-border/60', className)}>
       {children}
     </div>
   );

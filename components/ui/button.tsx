@@ -1,8 +1,7 @@
 'use client';
 
-import { forwardRef, type ReactElement } from 'react';
-
 import { cva, type VariantProps } from 'class-variance-authority';
+import { forwardRef, type ReactElement } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const buttonVariants = cva(
@@ -11,8 +10,8 @@ const buttonVariants = cva(
     variants: {
       intent: {
         primary: 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/50 hover:scale-[1.02] hover:from-primary-500 hover:via-primary-400 hover:to-accent-400',
-        secondary: 'bg-slate-100 dark:bg-slate-800/80 backdrop-blur-sm text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700/50 shadow-md hover:bg-slate-200 dark:hover:bg-slate-700/80 hover:border-slate-400 dark:hover:border-slate-600/50 hover:scale-[1.02] hover:shadow-lg',
-        ghost: 'bg-transparent text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 hover:backdrop-blur-sm hover:scale-[1.02]'
+        secondary: 'bg-surface text-foreground border border-border shadow-[0_8px_24px_rgba(15,23,42,0.08)] hover:bg-surface-strong hover:border-border-strong hover:shadow-[0_16px_32px_rgba(15,23,42,0.12)] hover:scale-[1.02] backdrop-blur-sm',
+        ghost: 'bg-transparent text-foreground hover:bg-surface-muted hover:backdrop-blur-sm hover:scale-[1.02]'
       },
       size: {
         sm: 'px-3 py-1.5 text-xs',

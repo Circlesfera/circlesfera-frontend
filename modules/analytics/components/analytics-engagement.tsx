@@ -1,9 +1,11 @@
 'use client';
 
-import { type ReactElement } from 'react';
 import { motion } from 'framer-motion';
-import type { EngagementByType } from '../../../services/api/analytics';
+import { type ReactElement } from 'react';
+
 import { fadeUpVariants } from '@/lib/motion-config';
+
+import type { EngagementByType } from '../../../services/api/analytics';
 
 interface AnalyticsEngagementProps {
   readonly engagementByType: EngagementByType;

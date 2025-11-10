@@ -1,14 +1,15 @@
 'use client';
 
+import { type InfiniteData,useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useEffect, useRef, useState, type ReactElement } from 'react';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { type ReactElement,useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import { getMessages, sendMessage, type Conversation, type Message } from '@/services/api/messages';
 import { getSocketClient } from '@/lib/socket-client';
 import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { type Conversation, getMessages, type Message, type MessagesResponse,sendMessage } from '@/services/api/messages';
 import { useSessionStore } from '@/store/session';
+
 import { GroupSettingsDialog } from './group-settings-dialog';
 
 interface ChatViewProps {
@@ -16,27 +17,73 @@ interface ChatViewProps {
 }
 
 export function ChatView({ conversation }: ChatViewProps): ReactElement {
+  type MessagesQueryKey = ['messages', string];
+
   const [messageText, setMessageText] = useState('');
   const [isGroupSettingsOpen, setIsGroupSettingsOpen] = useState(false);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentUser = useSessionStore((state) => state.user);
   const queryClient = useQueryClient();
+  const messagesQueryKey = useMemo<MessagesQueryKey>(() => ['messages', conversation.id], [conversation.id]);
 
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['messages', conversation.id],
-    queryFn: ({ pageParam }) => getMessages(conversation.id, 50, pageParam),
+  const messagesQuery = useInfiniteQuery<
+    MessagesResponse,
+    Error,
+    InfiniteData<MessagesResponse>,
+    MessagesQueryKey,
+    string | undefined
+  >({
+    queryKey: messagesQueryKey,
+    queryFn: async ({ pageParam }) => getMessages(conversation.id, 50, pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    initialPageParam: undefined as string | undefined
+    initialPageParam: undefined
   });
 
+  const aggregatedMessages = useMemo(
+    () => messagesQuery.data?.pages.flatMap((page) => page.messages) ?? [],
+    [messagesQuery.data]
+  );
+
+  const hasNextPage = messagesQuery.hasNextPage ?? false;
+  const isFetchingNextPage = messagesQuery.isFetchingNextPage;
+  const isLoadingMessages = messagesQuery.isLoading;
+
+  const loadMoreMessages = useCallback(async () => {
+    await messagesQuery.fetchNextPage();
+  }, [messagesQuery]);
+
   const sendMessageMutation = useMutation({
-    mutationFn: (content: string) => sendMessage(conversation.id, { content }),
-    onSuccess: () => {
+    mutationFn: async (content: string) => sendMessage(conversation.id, { content }),
+    onSuccess: (response) => {
       setMessageText('');
-      queryClient.invalidateQueries({ queryKey: ['messages', conversation.id] });
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.setQueryData<InfiniteData<MessagesResponse>>(messagesQueryKey, (old) => {
+        if (!old) {
+          return {
+            pageParams: [undefined],
+            pages: [{ messages: [response.message], nextCursor: null }]
+          };
+        }
+
+        const updatedPages = [...old.pages];
+        if (updatedPages.length === 0) {
+          updatedPages.push({ messages: [response.message], nextCursor: null });
+        } else {
+          const lastIndex = updatedPages.length - 1;
+          const lastPage = updatedPages[lastIndex]!;
+          updatedPages[lastIndex] = {
+            messages: [...lastPage.messages, response.message],
+            nextCursor: lastPage.nextCursor ?? null
+          };
+        }
+
+        return {
+          ...old,
+          pages: updatedPages
+        };
+      });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
     onError: () => {
       toast.error('No se pudo enviar el mensaje');
@@ -50,32 +97,27 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       return;
     }
 
-    const handleNewMessage = (data: { id: string; conversationId: string; senderId: string; content: string; createdAt: string }) => {
+    const handleNewMessage = (data: { id: string; conversationId: string; senderId: string; content: string; createdAt: string }): void => {
       if (data.conversationId === conversation.id) {
-        queryClient.setQueryData(['messages', conversation.id], (old: any) => {
+        queryClient.setQueryData<InfiniteData<MessagesResponse>>(messagesQueryKey, (old) => {
           if (!old) {
             return old;
           }
 
-          // En grupos, necesitamos obtener la info del sender desde los participantes
-          // Por ahora usamos un placeholder que se actualizará cuando se cargue el mensaje completo
-          let senderInfo;
-          if (conversation.type === 'group' && conversation.participants) {
-            const sender = conversation.participants.find((p) => p.id === data.senderId);
-            senderInfo = sender || {
-              id: data.senderId,
-              handle: 'usuario',
-              displayName: 'Usuario',
-              avatarUrl: ''
-            };
-          } else {
-            senderInfo = conversation.otherUser || {
-              id: data.senderId,
-              handle: 'usuario',
-              displayName: 'Usuario',
-              avatarUrl: ''
-            };
-          }
+          const senderInfo =
+            conversation.type === 'group' && conversation.participants
+              ? conversation.participants.find((participant) => participant.id === data.senderId) ?? {
+                  id: data.senderId,
+                  handle: 'usuario',
+                  displayName: 'Usuario',
+                  avatarUrl: ''
+                }
+              : conversation.otherUser ?? {
+                  id: data.senderId,
+                  handle: 'usuario',
+                  displayName: 'Usuario',
+                  avatarUrl: ''
+                };
 
           const newMessage: Message = {
             id: data.id,
@@ -86,29 +128,30 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
             createdAt: data.createdAt
           };
 
-          // Actualizar la última página
-          const pages = old.pages;
-          const lastPage = pages[pages.length - 1];
+          const updatedPages = [...old.pages];
+          if (updatedPages.length === 0) {
+            updatedPages.push({ messages: [newMessage], nextCursor: null });
+          } else {
+            const lastIndex = updatedPages.length - 1;
+            const lastPage = updatedPages[lastIndex]!;
+            updatedPages[lastIndex] = {
+              messages: [...lastPage.messages, newMessage],
+              nextCursor: lastPage.nextCursor ?? null
+            };
+          }
+
           return {
             ...old,
-            pages: [
-              ...pages.slice(0, -1),
-              {
-                ...lastPage,
-                messages: [...lastPage.messages, newMessage]
-              }
-            ]
+            pages: updatedPages
           };
         });
 
-        queryClient.invalidateQueries({ queryKey: ['conversations'] });
-        // Invalidar mensajes para obtener la info completa del sender
-        queryClient.invalidateQueries({ queryKey: ['messages', conversation.id] });
+        void queryClient.invalidateQueries({ queryKey: ['conversations'] });
       }
     };
 
     // Escuchar indicadores de escritura
-    const handleTyping = (data: { userId: string; userName: string }) => {
+    const handleTyping = (data: { userId: string; userName: string }): void => {
       if (data.userId !== currentUser?.id) {
         setTypingUsers((prev) => new Set(prev).add(data.userId));
         // Limpiar después de 3 segundos sin escribir
@@ -123,7 +166,7 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
     };
 
     // Escuchar cuando se detiene de escribir
-    const handleStopTyping = (data: { userId: string }) => {
+    const handleStopTyping = (data: { userId: string }): void => {
       setTypingUsers((prev) => {
         const next = new Set(prev);
         next.delete(data.userId);
@@ -132,14 +175,14 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
     };
 
     // Escuchar actualizaciones de lectura
-    const handleMessageRead = (data: { messageId: string; userId: string }) => {
-      queryClient.setQueryData(['messages', conversation.id], (old: any) => {
+    const handleMessageRead = (data: { messageId: string; userId: string }): void => {
+      queryClient.setQueryData<InfiniteData<MessagesResponse>>(messagesQueryKey, (old) => {
         if (!old) return old;
         return {
           ...old,
-          pages: old.pages.map((page: { messages: Message[] }) => ({
+          pages: old.pages.map((page) => ({
             ...page,
-            messages: page.messages.map((msg: Message) =>
+            messages: page.messages.map((msg) =>
               msg.id === data.messageId ? { ...msg, isRead: true } : msg
             )
           }))
@@ -158,48 +201,66 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       socket.off('stop-typing', handleStopTyping);
       socket.off('message-read', handleMessageRead);
     };
-  }, [conversation.id, queryClient, conversation.type, conversation.otherUser, conversation.participants, currentUser?.id]);
+  }, [
+    conversation.id,
+    conversation.otherUser,
+    conversation.participants,
+    conversation.type,
+    currentUser?.id,
+    messagesQueryKey,
+    queryClient
+  ]);
 
   // Auto-scroll al final cuando hay nuevos mensajes o usuarios escribiendo
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [data, typingUsers]);
+  }, [aggregatedMessages, typingUsers]);
 
   // Enviar indicador de escritura
   useEffect(() => {
     const socket = getSocketClient();
-    if (!socket || messageText.trim().length === 0) {
+    if (!socket) {
       return;
     }
 
-    // Emitir evento de escritura
-    socket.emit('typing', { conversationId: conversation.id });
+    const trimmedText = messageText.trim();
 
-    // Limpiar timeout anterior
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
+    if (trimmedText.length === 0) {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
+      }
+      socket.emit('stop-typing', { conversationId: conversation.id });
+      return;
     }
 
-    // Emitir evento de dejar de escribir después de 1 segundo sin cambios
-    const timeout = setTimeout(() => {
+    socket.emit('typing', { conversationId: conversation.id });
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
       socket.emit('stop-typing', { conversationId: conversation.id });
+      typingTimeoutRef.current = null;
     }, 1000);
 
-    setTypingTimeout(timeout);
-
     return () => {
-      if (timeout) clearTimeout(timeout);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
+      }
     };
   }, [messageText, conversation.id]);
 
-  // Limpiar timeout al desmontar
   useEffect(() => {
     return () => {
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
       }
     };
-  }, [typingTimeout]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
@@ -213,12 +274,15 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
     if (socket) {
       socket.emit('stop-typing', { conversationId: conversation.id });
     }
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
     
     sendMessageMutation.mutate(trimmed);
   };
 
-  const allMessages: Message[] = data?.pages.flatMap((page) => page.messages) ?? [];
-  const isLoadingMessages = isLoading;
+  const allMessages: Message[] = aggregatedMessages;
   
   // Marcar mensajes como leídos al verlos
   useEffect(() => {
@@ -236,13 +300,13 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       });
       
       // Actualizar estado local
-      queryClient.setQueryData(['messages', conversation.id], (old: any) => {
+      queryClient.setQueryData<InfiniteData<MessagesResponse>>(messagesQueryKey, (old) => {
         if (!old) return old;
         return {
           ...old,
-          pages: old.pages.map((page: { messages: Message[] }) => ({
+          pages: old.pages.map((page) => ({
             ...page,
-            messages: page.messages.map((msg: Message) =>
+            messages: page.messages.map((msg) =>
               unreadMessages.some((um) => um.id === msg.id) ? { ...msg, isRead: true } : msg
             )
           }))
@@ -250,9 +314,9 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
       });
       
       // Invalidar conversaciones para actualizar contador
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     }
-  }, [allMessages, currentUser, conversation.id, queryClient]);
+  }, [allMessages, currentUser, conversation.id, messagesQueryKey, queryClient]);
 
   const isGroup = conversation.type === 'group';
   const displayName = isGroup ? conversation.groupName || 'Grupo sin nombre' : conversation.otherUser?.displayName || 'Usuario';
@@ -314,11 +378,12 @@ export function ChatView({ conversation }: ChatViewProps): ReactElement {
             <button
               type="button"
               onClick={() => {
-                fetchNextPage();
+                void loadMoreMessages();
               }}
-              className="text-sm px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-800/70 hover:text-primary-300 transition-all duration-200 border border-slate-300/50 dark:border-slate-700/50 hover:border-primary-500/30"
+              disabled={isFetchingNextPage}
+              className="text-sm px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-800/70 hover:text-primary-300 transition-all duration-200 border border-slate-300/50 dark:border-slate-700/50 hover:border-primary-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Cargar mensajes anteriores
+              {isFetchingNextPage ? 'Cargando...' : 'Cargar mensajes anteriores'}
             </button>
           </div>
         )}

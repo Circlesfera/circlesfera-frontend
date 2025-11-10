@@ -1,10 +1,12 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { type ReactElement } from 'react';
-import { motion } from 'framer-motion';
-import type { PostAnalytics } from '../../../services/api/analytics';
+
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+
+import type { PostAnalytics } from '../../../services/api/analytics';
 
 interface AnalyticsPostsProps {
   readonly recentPosts: PostAnalytics[];

@@ -1,19 +1,20 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, useMemo, type ReactElement, useRef, useEffect, useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence,motion } from 'framer-motion';
+import Image from 'next/image';
+import { type ReactElement, useCallback,useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
+
+import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
+import { logger } from '@/lib/logger';
+import { fadeUpVariants } from '@/lib/motion-config';
+import { createPost } from '@/services/api/feed';
+import { createFrame } from '@/services/api/frames';
+import type { FeedItem } from '@/services/api/types/feed';
 import { useSessionStore } from '@/store/session';
 
-import { fadeUpVariants } from '@/lib/motion-config';
-
-import { createPost } from '@/services/api/feed';
-import { logger } from '@/lib/logger';
-import { toast } from 'sonner';
-import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
-
-type ContentType = 'post' | 'reel';
+type ContentType = 'post' | 'frame';
 
 interface CreatePostFormProps {
   readonly onSuccess?: () => void;
@@ -21,13 +22,13 @@ interface CreatePostFormProps {
 
 // Componente para el preview de media - aislado para evitar re-renders del formulario
 // Definido como función nombrada para mejor compatibilidad con React 19/Turbopack
-function MediaPreview({ 
-  previews, 
-  files, 
-  currentPreviewIndex, 
-  contentType, 
+function MediaPreview({
+  previews,
+  files,
+  currentPreviewIndex,
+  contentType,
   onRemove,
-  onIndexChange 
+  onIndexChange
 }: {
   previews: string[];
   files: File[];
@@ -35,98 +36,89 @@ function MediaPreview({
   contentType: ContentType;
   onRemove: (index: number) => void;
   onIndexChange: (index: number) => void;
-}) {
-  const currentPreview = previews[currentPreviewIndex] || '';
-  const currentFile = files[currentPreviewIndex];
+}): ReactElement | null {
+  const hasFiles = files.length > 0;
+  const currentPreview = hasFiles ? previews[currentPreviewIndex] ?? '' : '';
+  const currentFile = hasFiles ? files[currentPreviewIndex] : undefined;
   const hasMultipleFiles = files.length > 1;
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
   const [videoAspectRatio, setVideoAspectRatio] = useState<number | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  if (files.length === 0) return null;
-
   // Detectar aspect ratio real de la imagen - verificar tanto en useEffect como en onLoad
   useEffect(() => {
-    if (currentFile?.type.startsWith('image/') && imgRef.current) {
-      const img = imgRef.current;
-      // Verificar si la imagen ya está cargada
-      if (img.complete && img.naturalWidth && img.naturalHeight) {
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-        setImageAspectRatio(aspectRatio);
-      } else {
-        // Si no está cargada, esperar a que se cargue
-        const handleLoad = () => {
-          if (img.naturalWidth && img.naturalHeight) {
-            const aspectRatio = img.naturalWidth / img.naturalHeight;
-            setImageAspectRatio(aspectRatio);
-          }
-        };
-        img.addEventListener('load', handleLoad);
-        return () => {
-          img.removeEventListener('load', handleLoad);
-        };
-      }
+    if (!hasFiles || !currentFile || !currentFile.type.startsWith('image/') || !imgRef.current) {
+      return;
     }
-  }, [currentPreview, currentFile?.type]);
+
+    const imageElement = imgRef.current;
+    const updateAspectRatio = (): void => {
+      if (imageElement.naturalWidth && imageElement.naturalHeight) {
+        setImageAspectRatio(imageElement.naturalWidth / imageElement.naturalHeight);
+      }
+    };
+
+    if (imageElement.complete) {
+      updateAspectRatio();
+    }
+
+    imageElement.addEventListener('load', updateAspectRatio);
+    return () => {
+      imageElement.removeEventListener('load', updateAspectRatio);
+    };
+  }, [hasFiles, currentFile]);
 
   // Detectar aspect ratio real del video
   useEffect(() => {
-    if (currentFile?.type.startsWith('video/') && videoRef.current) {
-      const video = videoRef.current;
-      const handleLoadedMetadata = () => {
-        if (video.videoWidth && video.videoHeight) {
-          const aspectRatio = video.videoWidth / video.videoHeight;
-          setVideoAspectRatio(aspectRatio);
-        }
-      };
-      video.addEventListener('loadedmetadata', handleLoadedMetadata);
-      if (video.readyState >= 1) {
-        handleLoadedMetadata();
-      }
-      return () => {
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      };
+    if (!hasFiles || !currentFile || !currentFile.type.startsWith('video/') || !videoRef.current) {
+      return;
     }
-  }, [currentPreview, currentFile?.type]);
+
+    const videoElement = videoRef.current;
+    const handleLoadedMetadata = (): void => {
+      if (videoElement.videoWidth && videoElement.videoHeight) {
+        setVideoAspectRatio(videoElement.videoWidth / videoElement.videoHeight);
+      }
+    };
+
+    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+    if (videoElement.readyState >= 1) {
+      handleLoadedMetadata();
+    }
+    return () => {
+      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+  }, [hasFiles, currentFile]);
 
   // Calcular aspect ratio a usar: priorizar el real de la imagen/video, sino usar el default
   // Usar el aspect ratio real del archivo para que el contenedor se adapte y no haya márgenes
   // Asegurar formato correcto para CSS aspect-ratio (puede ser número o string "width / height")
-  const aspectRatio = useMemo(() => {
-    if (currentFile?.type.startsWith('video/')) {
+  const aspectRatio = useMemo((): string => {
+    if (!hasFiles || !currentFile) {
+      return contentType === 'frame' ? '9 / 16' : '4 / 5';
+    }
+
+    if (currentFile.type.startsWith('video/')) {
       if (videoAspectRatio) {
-        // Para videos, usar el aspect ratio detectado directamente
         return videoAspectRatio.toString();
       }
-      return contentType === 'reel' ? '9 / 16' : '4 / 5';
+      return contentType === 'frame' ? '9 / 16' : '4 / 5';
     }
-    if (currentFile?.type.startsWith('image/')) {
+
+    if (currentFile.type.startsWith('image/')) {
       if (imageAspectRatio) {
-        // Para imágenes, usar el aspect ratio detectado directamente
-        // Si es 1:1, devolver '1' o '1 / 1' (ambos funcionan en CSS)
         return imageAspectRatio.toString();
       }
       return '4 / 5';
     }
-    return contentType === 'reel' ? '9 / 16' : '4 / 5';
-  }, [currentFile?.type, videoAspectRatio, imageAspectRatio, contentType]);
 
-  // Debug: Log cuando cambian los previews
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      logger.debug('[MediaPreview] Preview state updated', {
-        currentPreviewIndex,
-        currentPreviewExists: !!currentPreview,
-        currentPreviewLength: currentPreview?.length || 0,
-        totalPreviews: previews.length,
-        totalFiles: files.length,
-        imageAspectRatio,
-        videoAspectRatio,
-        calculatedAspectRatio: aspectRatio
-      });
-    }
-  }, [currentPreviewIndex, currentPreview, previews.length, files.length, imageAspectRatio, videoAspectRatio, aspectRatio]);
+    return contentType === 'frame' ? '9 / 16' : '4 / 5';
+  }, [hasFiles, currentFile, videoAspectRatio, imageAspectRatio, contentType]);
+
+  if (!hasFiles) {
+    return null;
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -171,27 +163,24 @@ function MediaPreview({
                 loop
                 autoPlay
                 preload="metadata"
-                onError={(e) => {
-                  const target = e.target as HTMLVideoElement;
+                onError={(event) => {
+                  const mediaError = event.currentTarget.error;
                   logger.error('[CreatePostForm] Error al cargar video preview', {
-                    error: target.error?.message || 'Unknown error',
-                    code: target.error?.code,
+                    error: mediaError?.message ?? 'Unknown error',
+                    code: mediaError?.code ?? null,
                     srcLength: currentPreview?.length || 0,
                     fileType: currentFile?.type
                   });
                 }}
                 onLoadStart={() => {
-                  if (process.env.NODE_ENV === 'development') {
-                    logger.debug('[CreatePostForm] Video preview iniciando carga');
-                  }
+                  // noop: solo para asegurar que el video comience a cargar
                 }}
                 onLoadedData={() => {
-                  if (process.env.NODE_ENV === 'development') {
-                    logger.debug('[CreatePostForm] Video preview cargado correctamente');
-                  }
+                  // noop: evento manejado para asegurar transición limpia
                 }}
               />
             ) : currentFile?.type.startsWith('image/') ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 ref={imgRef}
                 key={currentPreviewIndex}
@@ -209,26 +198,18 @@ function MediaPreview({
                 }}
                 loading="eager"
                 decoding="sync"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
+                onError={() => {
                   logger.error('[CreatePostForm] Error al cargar imagen preview', {
                     error: 'Failed to load image',
                     srcLength: currentPreview?.length || 0,
                     fileType: currentFile?.type
                   });
                 }}
-                onLoad={(e) => {
-                  const img = e.target as HTMLImageElement;
+                onLoad={(event) => {
+                  const img = event.currentTarget;
                   if (img.naturalWidth && img.naturalHeight) {
                     const aspectRatio = img.naturalWidth / img.naturalHeight;
                     setImageAspectRatio(aspectRatio);
-                  }
-                  if (process.env.NODE_ENV === 'development') {
-                    logger.debug('[CreatePostForm] Imagen preview cargada correctamente', {
-                      width: img.naturalWidth,
-                      height: img.naturalHeight,
-                      aspectRatio: img.naturalWidth / img.naturalHeight
-                    });
                   }
                 }}
               />
@@ -329,7 +310,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
   const previewUpdateQueueRef = useRef<Map<number, string>>(new Map());
   const previewUpdateTimeoutRef = useRef<number | null>(null);
 
-  const batchUpdatePreviews = useCallback((index: number, preview: string) => {
+  const batchUpdatePreviews = useCallback((index: number, preview: string): void => {
     previewUpdateQueueRef.current.set(index, preview);
 
     // Limpiar animationFrame anterior
@@ -347,16 +328,6 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
           }
           updated[key] = value;
         });
-        
-        if (process.env.NODE_ENV === 'development') {
-          logger.debug('[CreatePostForm] Batch update previews executed', {
-            queueSize: previewUpdateQueueRef.current.size,
-            updatedIndices: Array.from(previewUpdateQueueRef.current.keys()),
-            previewsLength: updated.length,
-            previewAtIndex: updated[index]?.substring(0, 50) || 'empty'
-          });
-        }
-        
         previewUpdateQueueRef.current.clear();
         previewUpdateTimeoutRef.current = null;
         return updated;
@@ -366,29 +337,22 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
 
   // Cleanup del batch update
   useEffect(() => {
+    const queue = previewUpdateQueueRef.current;
     return () => {
-      if (previewUpdateTimeoutRef.current !== null) {
-        cancelAnimationFrame(previewUpdateTimeoutRef.current);
+      const timeoutId = previewUpdateTimeoutRef.current;
+      if (timeoutId !== null) {
+        cancelAnimationFrame(timeoutId);
+        previewUpdateTimeoutRef.current = null;
       }
-      previewUpdateQueueRef.current.clear();
+      queue.clear();
     };
   }, []);
 
   // Memoizar callback de success para evitar re-renders
-  const handleSuccess = useCallback(() => {
-    if (process.env.NODE_ENV === 'development') {
-      logger.debug('[CreatePostForm] Post created successfully', {
-        contentType
-      });
-    }
+  const userHandle = user?.handle ?? null;
 
-    // Revocar ObjectURLs antes de limpiar
-    previews.forEach((preview) => {
-      if (preview && preview.startsWith('blob:')) {
-        URL.revokeObjectURL(preview);
-      }
-    });
-
+  const handleSuccess = useCallback((result: { post?: FeedItem; frame?: FeedItem }): void => {
+    const createdItem = result.frame ?? result.post;
     // Limpiar estado local
     setCaption('');
     setFiles([]);
@@ -398,32 +362,46 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
     setHasPreviewState(false);
     hasEverHadPreviewRef.current = false;
     
-    toast.success(contentType === 'reel' ? 'Reel creado exitosamente' : 'Publicación creada exitosamente');
+    toast.success(contentType === 'frame' ? 'Frame creado exitosamente' : 'Publicación creada exitosamente');
 
     // Invalidar queries sin refetch inmediato para evitar re-renders durante scroll
-    const invalidateQueries = () => {
-      queryClient.invalidateQueries({ 
-        queryKey: ['feed', 'home'],
-        refetchType: 'none'
+    const invalidateQueries = (): void => {
+      void queryClient.invalidateQueries({
+        queryKey: ['feed', 'home']
       });
-      if (contentType === 'reel') {
-        queryClient.invalidateQueries({ 
-          queryKey: ['feed', 'reels'],
-          refetchType: 'none'
+      void queryClient.invalidateQueries({
+        queryKey: ['feed', 'explore']
+      });
+      if (userHandle) {
+        void queryClient.invalidateQueries({
+          queryKey: ['userPosts', userHandle]
         });
       }
-      if (process.env.NODE_ENV === 'development') {
-        logger.debug('[CreatePostForm] Queries invalidated (stale marked, no immediate refetch)');
+      if (contentType === 'frame') {
+        void queryClient.invalidateQueries({ queryKey: ['frames'] });
+        if (createdItem) {
+          queryClient.setQueryData(['frame', createdItem.id], { frame: createdItem });
+        }
       }
       onSuccess?.();
     };
 
     // Invalidar inmediatamente pero sin refetch
     invalidateQueries();
-  }, [contentType, previews, onSuccess, queryClient]);
+  }, [contentType, onSuccess, queryClient, userHandle]);
 
   const createPostMutation = useMutation({
-    mutationFn: createPost,
+    mutationFn: async ({ caption, media }: { caption: string; media: File[] }) => {
+      if (contentType === 'frame') {
+        if (media.length === 0) {
+          throw new Error('FRAME_MEDIA_REQUIRED');
+        }
+        const frameFile = media[0]!;
+        return await createFrame({ caption, media: frameFile });
+      }
+
+      return await createPost({ caption, media });
+    },
     onSuccess: handleSuccess,
     onError: (error: unknown) => {
       // Extraer información del error de Axios de manera más robusta
@@ -455,7 +433,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
         errorMessage = axiosError.message;
         errorCode = axiosError.code;
         responseData = axiosError.response?.data;
-      } catch (e) {
+      } catch {
         // Si hay error al extraer, usar el error original
         errorMessage = String(error);
       }
@@ -477,7 +455,11 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
       logger.error('Error al crear publicación', JSON.stringify(errorInfo, null, 2));
 
       // Mostrar mensaje de error apropiado al usuario
-      if (status === 503 || code === 'STORAGE_SERVICE_UNAVAILABLE') {
+      if (error instanceof Error && error.message === 'FRAME_MEDIA_REQUIRED') {
+        toast.error('Debes adjuntar un video para crear un frame');
+      } else if (code === 'FRAME_DURATION_EXCEEDED') {
+        toast.error('El video supera los 60 segundos permitidos para un frame.');
+      } else if (status === 503 || code === 'STORAGE_SERVICE_UNAVAILABLE') {
         toast.error('El servicio de almacenamiento no está disponible. Por favor, verifica que MinIO esté corriendo.', {
           duration: 5000
         });
@@ -517,15 +499,15 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
       return;
     }
 
-    // Si es reel, solo permitir videos y un solo archivo
-    if (contentType === 'reel') {
+    // Si es frame, solo permitir videos y un solo archivo
+    if (contentType === 'frame') {
       const videoFiles = selectedFiles.filter((file) => file.type.startsWith('video/'));
       if (videoFiles.length === 0) {
-        toast.error('Los reels solo pueden contener videos');
+        toast.error('Los frames solo pueden contener videos');
         return;
       }
       if (videoFiles.length > 1) {
-        toast.error('Los reels solo pueden tener un video');
+        toast.error('Los frames solo pueden tener un video');
         return;
       }
       const videoFile = videoFiles[0];
@@ -591,17 +573,11 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
         
         // Si es el primer archivo, actualizar inmediatamente
         if (isFirstFile) {
-          setPreviews((prev) => {
-            const updated = [...prev];
-            updated[targetIndex] = objectUrl;
-            if (process.env.NODE_ENV === 'development') {
-              logger.debug('[CreatePostForm] Immediate preview update for first file (video)', {
-                index: targetIndex,
-                previewLength: objectUrl.length
-              });
-            }
-            return updated;
-          });
+        setPreviews((prev) => {
+          const updated = [...prev];
+          updated[targetIndex] = objectUrl;
+          return updated;
+        });
         } else {
           // Para múltiples archivos, usar batch update
           batchUpdatePreviews(targetIndex, objectUrl);
@@ -616,12 +592,6 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
               setPreviews((prev) => {
                 const updated = [...prev];
                 updated[targetIndex] = result;
-                if (process.env.NODE_ENV === 'development') {
-                  logger.debug('[CreatePostForm] Immediate preview update for first file (image)', {
-                    index: targetIndex,
-                    previewLength: result.length
-                  });
-                }
                 return updated;
               });
             } else {
@@ -693,29 +663,32 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
     setContentType(type);
   };
 
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-    
-    // Validaciones específicas para reels
-    if (contentType === 'reel') {
-      if (files.length === 0) {
-        toast.error('Debes subir un video para crear un reel');
-        return;
+  const validateBeforeSubmit = (): boolean => {
+    if (contentType === 'frame') {
+      if (files.some((file) => !file.type.startsWith('video/'))) {
+        toast.error('Debes subir un video para crear un frame');
+        return false;
       }
       if (files.length > 1) {
-        toast.error('Los reels solo pueden tener un video');
-        return;
-      }
-      if (!files[0]?.type.startsWith('video/')) {
-        toast.error('Los reels solo pueden contener videos');
-        return;
+        toast.error('Los frames solo pueden tener un video');
+        return false;
       }
     } else {
       // Validaciones para posts
       if (caption.trim().length === 0 && files.length === 0) {
         toast.error('Debes añadir un texto o al menos un archivo');
-        return;
+        return false;
       }
+    }
+
+    return true;
+  };
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+
+    if (!validateBeforeSubmit()) {
+      return;
     }
 
     // El backend requiere caption.min(1), pero permite posts solo con media
@@ -729,17 +702,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
   const avatarUrl = useMemo(() => {
     if (!user) return null;
     return getAvatarUrl(user.avatarUrl ?? null, user.handle);
-  }, [user?.avatarUrl, user?.handle]);
-
-  // Logging para debug visual
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development' && createPostMutation.isPending) {
-      logger.debug('[CreatePostForm] Upload started', {
-        filesCount: files.length,
-        contentType
-      });
-    }
-  }, [createPostMutation.isPending, files.length, contentType]);
+  }, [user]);
 
   // Clase fija cuando hay preview - sin cambios dinámicos durante scroll
   // Usar estado para trackear si debemos usar fondo sólido (evita re-renders por ref)
@@ -805,14 +768,14 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
           </button>
           <button
             type="button"
-            onClick={() => handleContentTypeChange('reel')}
+            onClick={() => handleContentTypeChange('frame')}
             className={`flex-1 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 ${
-              contentType === 'reel'
+              contentType === 'frame'
                 ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30'
                 : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-white/60 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10'
             }`}
           >
-            Reel
+            Frame
           </button>
         </div>
 
@@ -855,7 +818,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                 onFocus={() => {
                   setIsExpanded(true);
                 }}
-                placeholder={contentType === 'reel' ? 'Escribe una descripción para tu reel...' : '¿Qué estás pensando?'}
+                placeholder={contentType === 'frame' ? 'Escribe una descripción para tu frame...' : '¿Qué estás pensando?'}
                 maxLength={2200}
                 rows={isExpanded ? 2 : 1}
                 className="w-full resize-none rounded-xl border border-slate-300 dark:border-white/5 bg-slate-50 dark:bg-white/5 px-3 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/30 transition-all duration-200 focus:border-primary-500/50 focus:bg-slate-100 dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
@@ -893,7 +856,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                             : 'border-white/20 hover:border-white/40'
                         }`}
                         style={{
-                          aspectRatio: contentType === 'reel' ? '9 / 16' : '4 / 5',
+                          aspectRatio: contentType === 'frame' ? '9 / 16' : '4 / 5',
                           width: '45px'
                         }}
                       >
@@ -907,6 +870,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                                 playsInline
                               />
                             ) : (
+                              /* eslint-disable-next-line @next/next/no-img-element */
                               <img
                                 src={preview}
                                 alt={`Thumbnail ${index + 1}`}
@@ -958,7 +922,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      {contentType === 'reel' ? 'Video' : 'Media'}
+                      {contentType === 'frame' ? 'Video' : 'Media'}
                     </motion.button>
 
                     <motion.button
@@ -971,10 +935,10 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
                       {createPostMutation.isPending ? (
                         <span className="flex items-center gap-1.5">
                           <span className="size-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          {contentType === 'reel' ? 'Publicando...' : 'Publicando...'}
+                          {contentType === 'frame' ? 'Publicando...' : 'Publicando...'}
                         </span>
                       ) : (
-                        contentType === 'reel' ? 'Publicar' : 'Publicar'
+                        contentType === 'frame' ? 'Publicar' : 'Publicar'
                       )}
                     </motion.button>
                   </motion.div>
@@ -1003,7 +967,7 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
           ref={fileInputRef}
           type="file"
           multiple={contentType === 'post'}
-          accept={contentType === 'reel' ? 'video/*' : 'image/*,video/*'}
+          accept={contentType === 'frame' ? 'video/*' : 'image/*,video/*'}
           onChange={handleFileChange}
           className="hidden"
         />
@@ -1015,4 +979,3 @@ function CreatePostForm({ onSuccess }: CreatePostFormProps): ReactElement {
 // Exportar componente - memo removido temporalmente para compatibilidad con React 19/Turbopack
 // El componente ya tiene optimizaciones internas (useMemo, useCallback) que previenen re-renders innecesarios
 export { CreatePostForm };
-export default CreatePostForm;

@@ -1,20 +1,20 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Fragment, type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Fragment, type ReactElement,useEffect, useState } from 'react';
 
-import { fetchExploreFeed } from '@/services/api/feed';
-import { formatNumber } from '@/lib/utils';
-import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
-import { useSessionStore } from '@/store/session';
 import { isLocalImage } from '@/lib/image-utils';
+import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { formatNumber } from '@/lib/utils';
+import { fetchExploreFeed } from '@/services/api/feed';
 import type { FeedItem } from '@/services/api/types/feed';
+import { useSessionStore } from '@/store/session';
 
-// Función para determinar si un item es un reel
-const isReel = (item: FeedItem): boolean => {
+// Función para determinar si un item es un frame
+const isFrame = (item: FeedItem): boolean => {
   return (
     item.media.length === 1 &&
     item.media[0]?.kind === 'video' &&
@@ -23,12 +23,48 @@ const isReel = (item: FeedItem): boolean => {
   );
 };
 
+const getSafeMediaUrl = (value?: string | null): string | null => {
+  if (!value) {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+
+  try {
+    const parsed = new URL(trimmed);
+    return ['http:', 'https:', 'blob:'].includes(parsed.protocol) ? trimmed : null;
+  } catch {
+    return null;
+  }
+};
+
 /**
  * Renderiza el grid de explorar con posts populares.
  */
 export const ExploreGridShell = (): ReactElement => {
+  const [enableAutoplay, setEnableAutoplay] = useState(false);
   const isHydrated = useSessionStore((state) => state.isHydrated);
   const accessToken = useSessionStore((state) => state.accessToken);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = (): void => {
+      setEnableAutoplay(!mediaQuery.matches);
+    };
+
+    update();
+    mediaQuery.addEventListener('change', update);
+    return () => {
+      mediaQuery.removeEventListener('change', update);
+    };
+  }, []);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useInfiniteQuery({
     queryKey: ['feed', 'explore'],
@@ -137,8 +173,8 @@ export const ExploreGridShell = (): ReactElement => {
 
           // Calcular aspect ratio dinámicamente
           const getAspectRatio = (): string => {
-            // Para reels, siempre usar aspect ratio vertical (9:16)
-            if (isReel(post)) {
+            // Para frames, siempre usar aspect ratio vertical (9:16)
+            if (isFrame(post)) {
               return '9 / 16';
             }
 
@@ -166,8 +202,10 @@ export const ExploreGridShell = (): ReactElement => {
           };
 
           const aspectRatio = getAspectRatio();
-          const isPortrait = isReel(post) || (firstMedia.width && firstMedia.height && firstMedia.width < firstMedia.height);
-          const isReelItem = isReel(post);
+          const isPortrait = isFrame(post) || (firstMedia.width && firstMedia.height && firstMedia.width < firstMedia.height);
+          const isFrameItem = isFrame(post);
+          const safePosterSrc = getSafeMediaUrl(firstMedia.thumbnailUrl ?? firstMedia.url);
+          const safeVideoSrc = getSafeMediaUrl(firstMedia.url);
 
           return (
             <motion.div
@@ -177,15 +215,16 @@ export const ExploreGridShell = (): ReactElement => {
               whileTap={{ scale: 0.98 }}
               className="w-full"
               style={{
-                aspectRatio: aspectRatio
+                aspectRatio: isFrameItem ? '9 / 16' : aspectRatio,
+                maxHeight: isFrameItem ? '420px' : undefined
               }}
             >
               <Link
-                href={`/posts/${post.id}`}
+                href={isFrameItem ? `/frames/${post.id}` : `/posts/${post.id}`}
                 className={`group relative flex items-center justify-center w-full h-full overflow-hidden rounded-xl border transition-all duration-300 ${
-                  isReelItem 
-                    ? 'bg-black dark:bg-black border-slate-300/50 dark:border-white/5 hover:border-slate-400/50 dark:hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10' 
-                    : 'bg-slate-50 dark:bg-slate-900 border-slate-300/50 dark:border-white/5 hover:border-slate-400/50 dark:hover:border-white/15 hover:shadow-lg hover:shadow-primary-500/10 p-1'
+                  isFrameItem
+                    ? 'bg-surface-strong dark:bg-black border-border/60 dark:border-white/10 hover:border-border-strong hover:shadow-lg hover:shadow-primary-500/10'
+                    : 'bg-surface dark:bg-slate-900 border-border/60 dark:border-white/10 hover:border-border-strong hover:shadow-lg hover:shadow-primary-500/10 p-1'
                 }`}
               >
               {firstMedia.kind === 'image' ? (
@@ -200,21 +239,49 @@ export const ExploreGridShell = (): ReactElement => {
                   unoptimized={isLocalImage(firstMedia.url)}
                   sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                 />
-              ) : isReel(post) ? (
-                <div className="relative w-full h-full flex items-center justify-center">
+              ) : isFrame(post) ? (
+                <div className="relative flex h-full w-full items-center justify-center bg-black">
+                  <div className="relative aspect-[9/16] h-full max-h-full w-auto overflow-hidden">
+                    {safePosterSrc ? (
+                      <Image
+                        src={safePosterSrc}
+                        alt={post.caption || 'Frame'}
+                        fill
+                        className="object-cover"
+                        unoptimized={isLocalImage(safePosterSrc)}
+                        sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-slate-900">
+                        <span className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-transparent" />
+                      </div>
+                    )}
+                    {safeVideoSrc ? (
                   <video
-                    src={firstMedia.url}
+                        src={safeVideoSrc}
+                        autoPlay={enableAutoplay}
                     loop
                     muted
                     playsInline
-                    className="w-full h-full object-contain"
-                  />
-                  {/* Indicador de reel */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 dark:bg-black/60 backdrop-blur-sm px-2 py-1">
-                    <svg className="size-3.5 text-white dark:text-white" fill="currentColor" viewBox="0 0 24 24">
+                        preload="metadata"
+                        poster={safePosterSrc ?? undefined}
+                        className="relative z-10 h-full w-full object-cover opacity-0 transition-opacity duration-300"
+                        onLoadedData={(event) => {
+                          event.currentTarget.classList.remove('opacity-0');
+                          event.currentTarget.classList.add('opacity-100');
+                          if (!enableAutoplay) {
+                            event.currentTarget.pause();
+                          }
+                        }}
+                      />
+                    ) : null}
+                  </div>
+                  {/* Indicador de frame */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-overlay/70 backdrop-blur-sm px-2 py-1 text-white">
+                    <svg className="size-3.5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
                     </svg>
-                    <span className="text-xs font-semibold text-white dark:text-white">Reel</span>
+                    <span className="text-xs font-semibold">Frame</span>
                   </div>
                 </div>
               ) : (
@@ -227,15 +294,15 @@ export const ExploreGridShell = (): ReactElement => {
                     unoptimized={isLocalImage(firstMedia.thumbnailUrl || firstMedia.url)}
                     sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 dark:bg-black/40 backdrop-blur-[1px]">
-                    <div className="rounded-full bg-black/60 dark:bg-black/60 p-3 backdrop-blur-sm">
-                      <svg className="size-8 text-white/90 dark:text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute inset-0 flex items-center justify-center bg-overlay/70 backdrop-blur-sm">
+                    <div className="rounded-full bg-overlay/80 p-3 backdrop-blur-md text-white">
+                      <svg className="size-8" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
                     </div>
                   </div>
                   {firstMedia.durationMs ? (
-                    <div className="absolute bottom-2 right-2 rounded-lg bg-black/80 dark:bg-black/80 backdrop-blur-sm px-2 py-1 text-xs font-semibold text-white dark:text-white border border-white/20 dark:border-white/20">
+                    <div className="absolute bottom-2 right-2 rounded-lg bg-overlay/80 backdrop-blur-sm px-2 py-1 text-xs font-semibold text-white border border-border-strong/60 dark:bg-black/80 dark:border-white/20">
                       {formatDuration(firstMedia.durationMs)}
                     </div>
                   ) : null}
@@ -243,8 +310,8 @@ export const ExploreGridShell = (): ReactElement => {
               )}
 
               {/* Overlay con estadísticas en hover */}
-              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-gradient-to-t from-black/95 via-black/85 to-black/65 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-md">
-                <div className="flex items-center gap-2 text-white dark:text-white">
+              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-gradient-to-t from-overlay/95 via-overlay/85 to-overlay/65 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-md text-white">
+                <div className="flex items-center gap-2">
                   <div className="rounded-full bg-red-500/30 p-2.5 backdrop-blur-md border border-red-500/30">
                     <svg className="size-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -252,7 +319,7 @@ export const ExploreGridShell = (): ReactElement => {
                   </div>
                   <span className="text-lg font-bold">{formatNumber(Math.max(0, post.stats.likes))}</span>
                 </div>
-                <div className="flex items-center gap-2 text-white dark:text-white">
+                <div className="flex items-center gap-2">
                   <div className="rounded-full bg-blue-500/30 p-2.5 backdrop-blur-md border border-blue-500/30">
                     <svg className="size-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path

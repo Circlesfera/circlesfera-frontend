@@ -1,22 +1,17 @@
 'use client';
 
-import type { ReactElement, ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
-
-import {
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-  type DehydratedState
-} from '@tanstack/react-query';
+import type { DehydratedState, QueryClient } from '@tanstack/react-query';
+import { HydrationBoundary, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import type { JSX, ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Toaster } from 'sonner';
 
 import { createQueryClient } from '@/lib/query-client';
-import { refreshSession, fetchCurrentUser } from '@/services/api/auth';
-import { useSessionStore } from '@/store/session';
-import { setupTokenRefresh } from '@/lib/token-refresh';
 import { ThemeProvider } from '@/lib/theme-provider';
+import { setupTokenRefresh } from '@/lib/token-refresh';
+import { fetchCurrentUser, refreshSession } from '@/services/api/auth';
+import { useSessionStore } from '@/store/session';
 
 const SessionHydrator = (): null => {
   const user = useSessionStore((state) => state.user);
@@ -58,9 +53,9 @@ const SessionHydrator = (): null => {
         
         // Configurar refresh automático
         setupTokenRefresh();
-      } catch (error) {
-        // Si falla el refresh, simplemente marcar como hidratado sin sesión
-        // No limpiar la sesión explícitamente para evitar loops - el interceptor se encargará
+      } catch {
+        // Si falla el refresh, limpiar la sesión para evitar estados inconsistentes
+        clearSession();
         markHydrated(null);
       } finally {
         isHydratingRef.current = false;
@@ -83,7 +78,7 @@ interface ProvidersProps {
  * Proveedor raíz del lado cliente. Enlaza React Query, notificaciones y cualquier
  * contexto global adicional (p.ej. internacionalización o feature flags).
  */
-export const Providers = ({ children, dehydratedState }: ProvidersProps): ReactElement => {
+export const Providers = ({ children, dehydratedState }: ProvidersProps): JSX.Element => {
   const [queryClient] = useState<QueryClient>(() => createQueryClient());
 
   return (

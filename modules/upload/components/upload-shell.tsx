@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, useRef, useEffect, type ReactElement, type ChangeEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { type ChangeEvent,type ReactElement, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
 
-import { fadeUpVariants } from '@/lib/motion-config';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-
+import { logger } from '@/lib/logger';
+import { fadeUpVariants } from '@/lib/motion-config';
 import { createPost } from '@/services/api/feed';
-import { createStory, type CreateStoryPayload } from '@/services/api/stories';
 import { uploadMedia } from '@/services/api/media';
-import { MediaPreview } from './media-preview';
-import { CaptionEditor } from './caption-editor';
+import { createStory, type CreateStoryPayload } from '@/services/api/stories';
 
-type ContentType = 'post' | 'reel' | 'story';
+import { CaptionEditor } from './caption-editor';
+import { MediaPreview } from './media-preview';
+
+type ContentType = 'post' | 'frame' | 'story';
 
 interface MediaFile {
   file: File;
@@ -33,9 +34,10 @@ export function UploadShell(): ReactElement {
   const [caption, setCaption] = useState('');
 
   const createPostMutation = useMutation({
-    mutationFn: ({ caption, media }: { caption: string; media: File[] }) => createPost({ caption, media }),
+    mutationFn: async ({ caption, media }: { caption: string; media: File[] }) => createPost({ caption, media }),
     onSuccess: (data) => {
       toast.success('Publicación creada exitosamente');
+      void queryClient.invalidateQueries({ queryKey: ['feed'] });
       router.push(`/posts/${data.post.id}`);
     },
     onError: (error: unknown) => {
@@ -51,6 +53,7 @@ export function UploadShell(): ReactElement {
       } else {
         toast.error(message || 'No se pudo crear la publicación');
       }
+      logger.error('Error al crear publicación', error);
     }
   });
 
@@ -74,9 +77,9 @@ export function UploadShell(): ReactElement {
 
       return createStory(payload);
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidar el query de stories para actualizar la barra
-      queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
       toast.success('Story creada exitosamente');
       router.push('/feed');
     },
@@ -84,6 +87,7 @@ export function UploadShell(): ReactElement {
       const axiosError = error as { response?: { status?: number; data?: { code?: string; message?: string } } };
       const message = axiosError.response?.data?.message;
       toast.error(message || 'No se pudo crear la story');
+      logger.error('Error al crear story desde upload', error);
     }
   });
 
@@ -120,10 +124,10 @@ export function UploadShell(): ReactElement {
         toast.error('Solo se permiten imágenes o videos');
         return;
       }
-    } else if (contentType === 'reel') {
-      // Reels solo permiten 1 video
+    } else if (contentType === 'frame') {
+      // Frames solo permiten 1 video
       if (files.length > 1) {
-        toast.error('Los reels solo pueden tener un video');
+        toast.error('Los frames solo pueden tener un video');
         return;
       }
       const file = files[0];
@@ -131,7 +135,7 @@ export function UploadShell(): ReactElement {
         return;
       }
       if (!file.type.startsWith('video/')) {
-        toast.error('Los reels solo pueden ser videos');
+        toast.error('Los frames solo pueden ser videos');
         return;
       }
       // Validar duración del video (máximo 60 segundos)
@@ -142,7 +146,7 @@ export function UploadShell(): ReactElement {
         window.URL.revokeObjectURL(videoUrl);
         const duration = video.duration;
         if (duration > 60) {
-          toast.error('Los reels deben tener una duración máxima de 60 segundos');
+          toast.error('Los frames deben tener una duración máxima de 60 segundos');
           return;
         }
         setSelectedFiles([{
@@ -205,6 +209,7 @@ export function UploadShell(): ReactElement {
       URL.revokeObjectURL(file.preview);
     });
     setSelectedFiles([]);
+    setCaption('');
   };
 
   const handleSubmit = (e: React.FormEvent): void => {
@@ -225,13 +230,13 @@ export function UploadShell(): ReactElement {
       createStoryMutation.mutate({
         media: storyFile.file
       });
-    } else if (contentType === 'reel') {
-      // Reels requieren caption
+    } else if (contentType === 'frame') {
+      // Frames requieren caption
       if (caption.trim().length === 0) {
-        toast.error('Escribe una descripción para tu reel');
+        toast.error('Escribe una descripción para tu frame');
         return;
       }
-      // Reels se crean como posts pero solo con videos
+      // Frames se crean como posts pero solo con videos
       createPostMutation.mutate({
         caption: caption.trim(),
         media: selectedFiles.map((m) => m.file)
@@ -258,15 +263,6 @@ export function UploadShell(): ReactElement {
     };
   }, [selectedFiles]);
 
-  // Limpiar cuando cambia el tipo de contenido
-  useEffect(() => {
-    return () => {
-      selectedFiles.forEach((file) => {
-        URL.revokeObjectURL(file.preview);
-      });
-    };
-  }, [contentType]);
-
   const isSubmitting = createPostMutation.isPending || createStoryMutation.isPending;
 
   return (
@@ -280,7 +276,7 @@ export function UploadShell(): ReactElement {
         <h1 className="text-3xl font-bold text-gradient-primary">
           Crear contenido
         </h1>
-        <p className="mt-2 text-sm text-slate-400">Comparte posts, reels o stories con la comunidad</p>
+        <p className="mt-2 text-sm text-slate-400">Comparte posts, frames o stories con la comunidad</p>
       </div>
 
       {/* Selector de tipo de contenido */}
@@ -290,7 +286,7 @@ export function UploadShell(): ReactElement {
             Tipo de contenido
           </label>
           <div className="grid grid-cols-3 gap-3">
-            {(['post', 'reel', 'story'] as ContentType[]).map((type) => (
+            {(['post', 'frame', 'story'] as ContentType[]).map((type) => (
               <motion.button
                 key={type}
                 type="button"
@@ -317,7 +313,7 @@ export function UploadShell(): ReactElement {
                       />
                     </svg>
                   )}
-                  {type === 'reel' && (
+                  {type === 'frame' && (
                     <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -354,8 +350,8 @@ export function UploadShell(): ReactElement {
           {contentType === 'post' && (
             <p>📸 <strong>Posts:</strong> Puedes subir hasta 10 imágenes o videos con una descripción</p>
           )}
-          {contentType === 'reel' && (
-            <p>🎬 <strong>Reels:</strong> Videos verticales cortos (máximo 60 segundos) con descripción</p>
+          {contentType === 'frame' && (
+            <p>🎬 <strong>Frames:</strong> Videos verticales cortos (máximo 60 segundos) con descripción</p>
           )}
           {contentType === 'story' && (
             <p>✨ <strong>Stories:</strong> Una imagen o video que desaparece después de 24 horas (sin descripción obligatoria)</p>
@@ -368,14 +364,14 @@ export function UploadShell(): ReactElement {
         <Card padding="lg" variant="glass">
           <div className="mb-4">
             <label htmlFor="media-input" className="block text-sm font-semibold text-slate-300 mb-3">
-              {contentType === 'story' ? 'Seleccionar imagen o video' : contentType === 'reel' ? 'Seleccionar video' : 'Seleccionar imágenes o videos'}
+              {contentType === 'story' ? 'Seleccionar imagen o video' : contentType === 'frame' ? 'Seleccionar video' : 'Seleccionar imágenes o videos'}
             </label>
             <input
               ref={fileInputRef}
               id="media-input"
               type="file"
-              accept={contentType === 'reel' ? 'video/*' : 'image/*,video/*'}
-              multiple={contentType !== 'story' && contentType !== 'reel'}
+              accept={contentType === 'frame' ? 'video/*' : 'image/*,video/*'}
+              multiple={contentType !== 'story' && contentType !== 'frame'}
               onChange={handleFileSelect}
               disabled={(contentType === 'post' && selectedFiles.length >= 10) || isSubmitting}
               className="hidden"
@@ -411,7 +407,7 @@ export function UploadShell(): ReactElement {
                   : `${selectedFiles.length} archivo${selectedFiles.length > 1 ? 's' : ''} seleccionado${selectedFiles.length > 1 ? 's' : ''}`}
               </p>
                   <p className="mt-2 text-xs text-slate-500">
-                    {contentType === 'reel'
+                    {contentType === 'frame'
                       ? 'Videos: MP4, WebM (máximo 60 segundos)'
                       : contentType === 'story'
                         ? 'Imágenes: JPG, PNG, WebP | Videos: MP4, WebM'
@@ -428,8 +424,8 @@ export function UploadShell(): ReactElement {
           )}
         </Card>
 
-        {/* Editor de caption (solo para posts y reels) */}
-        {(contentType === 'post' || contentType === 'reel') && (
+        {/* Editor de caption (solo para posts y frames) */}
+        {(contentType === 'post' || contentType === 'frame') && (
         <Card padding="lg" variant="glass">
           <CaptionEditor value={caption} onChange={setCaption} />
         </Card>
@@ -452,14 +448,14 @@ export function UploadShell(): ReactElement {
             type="submit"
             disabled={
               selectedFiles.length === 0 ||
-              ((contentType === 'post' || contentType === 'reel') && caption.trim().length === 0) ||
+              ((contentType === 'post' || contentType === 'frame') && caption.trim().length === 0) ||
               isSubmitting
             }
             intent="primary"
             size="lg"
             loading={isSubmitting}
           >
-            {contentType === 'story' ? 'Publicar Story' : contentType === 'reel' ? 'Publicar Reel' : 'Publicar'}
+            {contentType === 'story' ? 'Publicar Story' : contentType === 'frame' ? 'Publicar Frame' : 'Publicar'}
           </Button>
         </div>
       </form>

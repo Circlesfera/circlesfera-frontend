@@ -1,7 +1,9 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 import { clientEnv } from '@/lib/env';
+import { logger } from '@/lib/logger';
 import { sessionStore } from '@/store/session';
+
 import { refreshSession } from './auth';
 
 /**
@@ -16,20 +18,22 @@ export const apiClient = axios.create({
 
 // Flag para evitar múltiples refreshes simultáneos
 let isRefreshing = false;
-let failedQueue: Array<{
-  resolve: (value?: unknown) => void;
-  reject: (reason?: unknown) => void;
-}> = [];
+interface FailedRequest {
+  readonly resolve: (value?: string | null) => void;
+  readonly reject: (reason?: unknown) => void;
+}
+
+let failedQueue: FailedRequest[] = [];
 
 const processQueue = (error: AxiosError | null, token: string | null = null): void => {
-  failedQueue.forEach((prom) => {
+  failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
-      prom.reject(error);
+      reject(error);
     } else {
-      prom.resolve(token);
+      resolve(token);
     }
   });
-  
+
   failedQueue = [];
 };
 
@@ -50,7 +54,7 @@ apiClient.interceptors.request.use((config) => {
                            !config.url?.includes('/public');
   
   if (isProtectedRoute && isHydrated && !token) {
-    // No enviar la petición si no hay token para rutas protegidas
+    logger.warn('Intento de acceder a ruta protegida sin token');
     return Promise.reject(new Error('No hay token de autenticación disponible'));
   }
   
@@ -88,7 +92,7 @@ apiClient.interceptors.response.use(
             return apiClient(originalRequest);
           })
           .catch((err) => {
-            return Promise.reject(err);
+            return Promise.reject(err instanceof Error ? err : new Error('Refresh queue error'));
           });
       }
 
@@ -106,9 +110,13 @@ apiClient.interceptors.response.use(
         });
         
         // Configurar refresh automático para el nuevo token
-        import('@/lib/token-refresh').then(({ setupTokenRefresh }) => {
-          setupTokenRefresh();
-        });
+        import('@/lib/token-refresh')
+          .then(({ setupTokenRefresh }) => {
+            setupTokenRefresh();
+          })
+          .catch((refreshSetupError) => {
+            logger.error('Error configurando refresh automático de token', refreshSetupError);
+          });
 
         // Actualizar el header de la petición original
         if (originalRequest.headers) {
@@ -122,15 +130,17 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (refreshError) {
         // Si el refresh falla, limpiar sesión y rechazar todas las peticiones en cola
+        logger.error('Refresh de sesión falló', refreshError);
         processQueue(refreshError as AxiosError, null);
         sessionStore.getState().clearSession();
-        return Promise.reject(refreshError);
+        return Promise.reject(refreshError instanceof Error ? refreshError : new Error('Refresh de sesión falló'));
       } finally {
         isRefreshing = false;
       }
     }
 
-    return Promise.reject(error);
+    logger.error('Solicitud API fallida', error);
+    return Promise.reject(error instanceof Error ? error : new Error('Solicitud API fallida'));
   }
 );
 

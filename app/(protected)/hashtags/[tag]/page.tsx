@@ -1,4 +1,4 @@
-import { Suspense, type ReactElement } from 'react';
+import { type ReactElement,Suspense } from 'react';
 
 import { HashtagHeader } from '@/modules/hashtags/components/hashtag-header';
 import { HashtagPostsShell } from '@/modules/hashtags/components/hashtag-posts-shell';

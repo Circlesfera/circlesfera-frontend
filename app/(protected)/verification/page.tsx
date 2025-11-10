@@ -1,11 +1,13 @@
-import { type ReactElement } from 'react';
+import type { Metadata } from 'next';
+import type { JSX } from 'react';
+
 import { VerificationShell } from '@/modules/verification/components/verification-shell';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Verificación de cuenta — CircleSfera'
 };
 
-export default function VerificationPage(): ReactElement {
+export default function VerificationPage(): JSX.Element {
   return (
     <main className="flex min-h-screen flex-col items-center gap-8 px-6 py-16 text-white">
       <div className="text-center">

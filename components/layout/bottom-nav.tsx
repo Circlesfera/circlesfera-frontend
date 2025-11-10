@@ -1,14 +1,14 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type ReactElement } from 'react';
-import { motion } from 'framer-motion';
 
+import { getAvatarUrl } from '@/lib/image-utils';
 import { useNotifications } from '@/modules/notifications/hooks/use-notifications';
 import { useSessionStore } from '@/store/session';
-import { getAvatarUrl } from '@/lib/image-utils';
-import Image from 'next/image';
 
 interface BottomNavItem {
   readonly href: string;
@@ -47,7 +47,7 @@ const navItems: BottomNavItem[] = [
     label: 'Explorar'
   },
   {
-    href: '/reels',
+    href: '/frames',
     icon: (
       <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -59,7 +59,7 @@ const navItems: BottomNavItem[] = [
         <path d="M3 13.907l9 5.25 9-5.25-9-5.186-9 5.186zM3 18.132l9 5.25 9-5.25-9-5.186-9 5.186z" />
       </svg>
     ),
-    label: 'Reels'
+    label: 'Frames'
   },
   {
     href: '/messages',
@@ -107,7 +107,7 @@ export function BottomNav(): ReactElement {
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-w-[60px] transition-all duration-300 ease-out ${
                   active
                     ? 'text-primary-400'
-                    : 'text-slate-600 dark:text-slate-400'
+                    : 'text-foreground-muted'
                 }`}
               >
                 <div className="relative">
@@ -129,7 +129,7 @@ export function BottomNav(): ReactElement {
                   )}
                 </div>
                 <span className={`text-[10px] font-medium transition-colors duration-300 ${
-                  active ? 'text-primary-400' : 'text-slate-600 dark:text-slate-500'
+                  active ? 'text-primary-400' : 'text-foreground-muted'
                 }`}>
                   {item.label}
                 </span>
@@ -156,10 +156,10 @@ export function BottomNav(): ReactElement {
               className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-w-[60px] transition-all duration-300 ${
                 pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)
                   ? 'text-primary-400'
-                  : 'text-slate-600 dark:text-slate-400'
+                  : 'text-foreground-muted'
               }`}
             >
-              <div className="relative size-6 overflow-hidden rounded-full ring-2 ring-slate-300 dark:ring-slate-700 transition-all duration-300">
+              <div className="relative size-6 overflow-hidden rounded-full ring-2 ring-border transition-all duration-300">
                 <Image
                   src={getAvatarUrl(user.avatarUrl, user.handle)}
                   alt={user.displayName}
@@ -174,7 +174,7 @@ export function BottomNav(): ReactElement {
               <span className={`text-[10px] font-medium transition-colors duration-300 ${
                 pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)
                   ? 'text-primary-400'
-                  : 'text-slate-600 dark:text-slate-500'
+                  : 'text-foreground-muted'
               }`}>
                 Perfil
               </span>

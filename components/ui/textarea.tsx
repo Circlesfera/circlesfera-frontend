@@ -1,8 +1,7 @@
 'use client';
 
-import { forwardRef } from 'react';
-
 import { cva, type VariantProps } from 'class-variance-authority';
+import { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const textareaVariants = cva(
@@ -57,7 +56,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={textareaId}
-            className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2"
+            className="block text-sm font-medium text-foreground mb-2"
           >
             {label}
           </label>
@@ -77,7 +76,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             {...props}
           />
           {showCount && maxLength && (
-            <div className="absolute bottom-3 right-3 text-xs text-slate-500 dark:text-slate-500 pointer-events-none">
+            <div className="absolute bottom-3 right-3 text-xs text-foreground-muted pointer-events-none">
               <span className={remaining !== null && remaining < 20 ? 'text-warning-400' : ''}>
                 {currentLength}
               </span>
@@ -98,7 +97,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           </p>
         )}
         {helperText && !error && (
-          <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">{helperText}</p>
+          <p className="mt-1.5 text-sm text-foreground-muted">{helperText}</p>
         )}
       </div>
     );

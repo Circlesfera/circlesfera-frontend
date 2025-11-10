@@ -1,8 +1,9 @@
 import { io, type Socket } from 'socket.io-client';
 
+import { sessionStore } from '@/store/session';
+
 import { clientEnv } from './env';
 import { logger } from './logger';
-import { sessionStore } from '@/store/session';
 
 let socketInstance: Socket | null = null;
 let connectionAttempts = 0;
@@ -76,18 +77,20 @@ export const getSocketClient = (): Socket | null => {
       }
     });
 
-    socketInstance.on('connect_error', (error) => {
+    socketInstance.on('connect_error', (error: Error & { type?: unknown }) => {
       connectionAttempts++;
       
       // Solo mostrar warning en lugar de error para evitar ruido en consola
       // Los errores de conexión son comunes cuando el servidor no está disponible
       if (connectionAttempts <= MAX_CONNECTION_ATTEMPTS) {
-        logger.warn('No se pudo conectar a Socket.IO', { 
+        const errorMetadata: Record<string, unknown> = {
           intento: connectionAttempts,
-          maxIntentos: MAX_CONNECTION_ATTEMPTS,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          tipo: (error as any).type || 'unknown'
-        });
+          maxIntentos: MAX_CONNECTION_ATTEMPTS
+        };
+        if (typeof error.type === 'string') {
+          errorMetadata.tipo = error.type;
+        }
+        logger.warn('No se pudo conectar a Socket.IO', errorMetadata);
       } else {
         // Después de múltiples intentos, deshabilitar silenciosamente
         logger.warn('Socket.IO: Servidor no disponible. Funcionalidades en tiempo real deshabilitadas.');
@@ -99,12 +102,12 @@ export const getSocketClient = (): Socket | null => {
       }
     });
 
-    socketInstance.on('reconnect', (attemptNumber) => {
+    socketInstance.on('reconnect', (attemptNumber: number) => {
       connectionAttempts = 0;
       logger.info('Reconectado a Socket.IO', { intento: attemptNumber });
     });
 
-    socketInstance.on('reconnect_attempt', (attemptNumber) => {
+    socketInstance.on('reconnect_attempt', (attemptNumber: number) => {
       logger.info('Intentando reconectar a Socket.IO', { intento: attemptNumber });
     });
 

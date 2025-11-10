@@ -1,7 +1,22 @@
 'use client';
 
-import { Component, type ReactNode, type ReactElement } from 'react';
 import Link from 'next/link';
+import { Component, type ReactElement, type ReactNode } from 'react';
+const captureWithSentry = async (error: Error, errorInfo: { componentStack: string }): Promise<void> => {
+  try {
+    const sentry = await import('@sentry/nextjs');
+    sentry.captureException(error, {
+      contexts: {
+        react: {
+          componentStack: errorInfo.componentStack
+        }
+      }
+    });
+  } catch {
+    // Sentry no disponible, ignorar
+  }
+};
+
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -47,20 +62,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     // Enviar a Sentry en producción
     if (process.env.NODE_ENV === 'production') {
-      // Dynamic import para evitar bundle de Sentry si no está configurado
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - Sentry es opcional y puede no estar instalado
-      import('@sentry/nextjs').then((Sentry) => {
-        Sentry.captureException(error, {
-          contexts: {
-            react: {
-              componentStack: errorInfo.componentStack
-            }
-          }
-        });
-      }).catch(() => {
-        // Sentry no disponible, ignorar
-      });
+      void captureWithSentry(error, errorInfo);
     }
   }
 

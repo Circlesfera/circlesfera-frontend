@@ -2,12 +2,18 @@
 
 import { useMemo } from 'react';
 
+import type { SessionState } from '@/store/session';
 import { useSessionStore } from '@/store/session';
 
 /**
  * Hook para acceder a la sesión autenticada y sus acciones.
  */
-export const useSession = () => {
+type UseSessionResult = Pick<
+  SessionState,
+  'user' | 'accessToken' | 'expiresAt' | 'isHydrated' | 'setSession' | 'clearSession' | 'updateUser' | 'markHydrated'
+>;
+
+export const useSession = (): UseSessionResult => {
   const user = useSessionStore((state) => state.user);
   const accessToken = useSessionStore((state) => state.accessToken);
   const expiresAt = useSessionStore((state) => state.expiresAt);
@@ -17,7 +23,7 @@ export const useSession = () => {
   const updateUser = useSessionStore((state) => state.updateUser);
   const markHydrated = useSessionStore((state) => state.markHydrated);
 
-  return useMemo(
+  return useMemo<UseSessionResult>(
     () => ({
       user,
       accessToken,

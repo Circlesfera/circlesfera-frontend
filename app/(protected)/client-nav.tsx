@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ReactElement } from 'react';
 
-import { useSessionStore } from '@/store/session';
 import { useNotifications } from '@/modules/notifications/hooks/use-notifications';
+import { useSessionStore } from '@/store/session';
 
 export function ClientNav(): ReactElement {
   const user = useSessionStore((state) => state.user);
@@ -46,9 +46,9 @@ export function ClientNav(): ReactElement {
       </Link>
 
       <Link
-        href="/reels"
+        href="/frames"
         className="flex items-center justify-center p-2.5 rounded-xl text-slate-400 transition-all duration-200 hover:text-white hover:bg-slate-800/50 hover:scale-110 active:scale-95"
-        title="Reels"
+        title="Frames"
       >
         <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path

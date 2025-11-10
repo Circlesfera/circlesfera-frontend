@@ -39,13 +39,17 @@ export interface UserReactionResponse {
 /**
  * Reacciona a una story (o actualiza la reacción si ya existe).
  */
-export const reactToStory = async (storyId: string, payload: ReactToStoryPayload): Promise<ReactToStoryResponse | null> => {
+export const reactToStory = async (
+  storyId: string,
+  payload: ReactToStoryPayload
+): Promise<ReactToStoryResponse | null> => {
   try {
     const { data } = await apiClient.post<ReactToStoryResponse>(`/stories/${storyId}/reactions`, payload);
     return data;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const maybeAxiosError = error as { response?: { status?: number } };
     // Si la reacción fue eliminada (toggle), retornar null
-    if (error?.response?.status === 200) {
+    if (maybeAxiosError.response?.status === 200) {
       return null;
     }
     throw error;

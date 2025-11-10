@@ -1,7 +1,7 @@
 'use client';
 
-import type { ReactElement } from 'react';
 import { motion } from 'framer-motion';
+import type { ReactElement } from 'react';
 
 const FEATURES: Array<{ title: string; description: string; icon: ReactElement }> = [
   {

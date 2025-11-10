@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactElement } from 'react';
+
 import { SuggestedUsers } from './suggested-users';
 import { SuggestedUsersCompact } from './suggested-users-compact';
 

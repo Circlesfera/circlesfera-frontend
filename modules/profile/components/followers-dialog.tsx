@@ -1,12 +1,12 @@
 'use client';
 
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, type ReactElement } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { type ReactElement, useState } from 'react';
 // Icono X inline
-const XIcon = () => (
+const XIcon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
   </svg>

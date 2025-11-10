@@ -1,6 +1,7 @@
-import { apiClient } from './client';
-
+import { logger } from '@/lib/logger';
 import type { SessionUser } from '@/store/session';
+
+import { apiClient } from './client';
 import type { FeedCursorResponse } from './types/feed';
 
 export interface PublicProfile extends SessionUser {
@@ -40,20 +41,30 @@ export const getProfileByHandle = async (handle: string): Promise<PublicProfile>
  * Busca usuarios por query (handle o displayName).
  */
 export const searchUsers = async ({ q, limit = 20 }: SearchUsersParams): Promise<PublicProfile[]> => {
-  const { data } = await apiClient.get<{ users: PublicProfile[] }>('/users/search', {
-    params: { q, limit }
-  });
-  return data.users;
+  try {
+    const { data } = await apiClient.get<{ users: PublicProfile[] }>('/users/search', {
+      params: { q, limit }
+    });
+    return data.users;
+  } catch (error) {
+    logger.error('Error buscando usuarios', error);
+    throw error;
+  }
 };
 
 /**
  * Obtiene los posts de un usuario por su handle.
  */
 export const getUserPosts = async ({ handle, cursor, limit = 20 }: GetUserPostsParams): Promise<UserPostsResponse> => {
-  const { data } = await apiClient.get<UserPostsResponse>(`/users/${handle}/posts`, {
-    params: { cursor: cursor ?? undefined, limit }
-  });
-  return data;
+  try {
+    const { data } = await apiClient.get<UserPostsResponse>(`/users/${handle}/posts`, {
+      params: { cursor: cursor ?? undefined, limit }
+    });
+    return data;
+  } catch (error) {
+    logger.error('Error obteniendo posts de usuario', { error, handle });
+    throw error;
+  }
 };
 
 export interface UpdateProfilePayload {
@@ -64,8 +75,13 @@ export interface UpdateProfilePayload {
 }
 
 export const updateProfile = async (payload: UpdateProfilePayload): Promise<PublicProfile> => {
-  const { data } = await apiClient.patch<{ user: PublicProfile }>(`/users/me`, payload);
-  return data.user;
+  try {
+    const { data } = await apiClient.patch<{ user: PublicProfile }>(`/users/me`, payload);
+    return data.user;
+  } catch (error) {
+    logger.error('Error actualizando perfil', error);
+    throw error;
+  }
 };
 
 export interface ChangePasswordPayload {
@@ -74,10 +90,20 @@ export interface ChangePasswordPayload {
 }
 
 export const changePassword = async (payload: ChangePasswordPayload): Promise<void> => {
-  await apiClient.patch<{ message: string }>(`/users/me/password`, payload);
+  try {
+    await apiClient.patch<{ message: string }>(`/users/me/password`, payload);
+  } catch (error) {
+    logger.error('Error cambiando contraseña', error);
+    throw error;
+  }
 };
 
 export const deleteAccount = async (): Promise<void> => {
-  await apiClient.delete<{ message: string }>(`/users/me`);
+  try {
+    await apiClient.delete<{ message: string }>(`/users/me`);
+  } catch (error) {
+    logger.error('Error eliminando cuenta', error);
+    throw error;
+  }
 };
 

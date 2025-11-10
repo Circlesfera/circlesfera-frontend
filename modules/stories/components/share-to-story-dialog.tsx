@@ -1,16 +1,17 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, type ReactElement } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
+import { type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
 
-import type { FeedItem } from '@/services/api/types/feed';
-import { createStory, type CreateStoryPayload, type StoryMedia } from '@/services/api/stories';
-import { generateSharedPostImage } from '../utils/generate-shared-post-image';
 import { logger } from '@/lib/logger';
+import { uploadMedia } from '@/services/api/media';
+import { createStory, type CreateStoryPayload } from '@/services/api/stories';
+import type { FeedItem } from '@/services/api/types/feed';
 import { useSessionStore } from '@/store/session';
-import { apiClient } from '@/services/api/client';
+
+import { generateSharedPostImage } from '../utils/generate-shared-post-image';
 
 interface ShareToStoryDialogProps {
   readonly post: FeedItem;
@@ -23,15 +24,20 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
   const [isGenerating, setIsGenerating] = useState(false);
 
   const createStoryMutation = useMutation({
-    mutationFn: (payload: CreateStoryPayload) => createStory(payload),
+    mutationFn: async (payload: CreateStoryPayload) => createStory(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
       toast.success('Post compartido en tu story');
       onClose();
     },
-    onError: (error: any) => {
-      const message = error?.response?.data?.message || 'No se pudo compartir el post';
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      const message = axiosError.response?.data?.message ?? 'No se pudo compartir el post';
       toast.error(message);
+      logger.error('Error al compartir post en story', error);
+    },
+    onSettled: () => {
+      setIsGenerating(false);
     }
   });
 
@@ -54,6 +60,7 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
       const postMedia = post.media[0];
       if (!postMedia) {
         toast.error('El post no tiene media');
+        setIsGenerating(false);
         return;
       }
 
@@ -70,51 +77,23 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
       const blob = await response.blob();
       const file = new File([blob], 'shared-post.jpg', { type: 'image/jpeg' });
 
-      // Subir la imagen al backend usando FormData
-      // Usamos un endpoint temporal que procesa media y devuelve URL
-      // En producción, debería haber un endpoint /media/upload dedicado
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
+      const mediaResponse = await uploadMedia(file);
 
-      try {
-        // Intentamos usar un endpoint de media upload si existe
-        const uploadResponse = await apiClient.post<{ url: string; thumbnailUrl: string; width?: number; height?: number }>(
-          '/media/upload',
-          uploadFormData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        );
+      const payload: CreateStoryPayload = {
+        media: {
+          kind: 'image',
+          url: mediaResponse.url,
+          thumbnailUrl: mediaResponse.thumbnailUrl ?? mediaResponse.url,
+          width: mediaResponse.width,
+          height: mediaResponse.height
+        },
+        sharedPostId: post.id
+      };
 
-        // Crear la story con el post compartido
-        const payload: CreateStoryPayload = {
-          media: {
-            kind: 'image',
-            url: uploadResponse.data.url,
-            thumbnailUrl: uploadResponse.data.thumbnailUrl || uploadResponse.data.url,
-            width: uploadResponse.data.width,
-            height: uploadResponse.data.height
-          },
-          sharedPostId: post.id
-        };
-
-        createStoryMutation.mutate(payload);
-      } catch (uploadError) {
-        // Si el endpoint no existe, usamos la data URL directamente
-        // El backend debería poder procesar URLs de imágenes públicas
-        logger.warn('Endpoint /media/upload no disponible, usando data URL', { error: uploadError, postId: post.id });
-        
-        // Por ahora, creamos la story usando el thumbnail del post original
-        // como fallback. En producción, necesitaremos implementar el endpoint de upload.
-        toast.error('Error al subir la imagen. El endpoint de upload de media no está disponible.');
-      }
+      await createStoryMutation.mutateAsync(payload);
     } catch (error) {
-      logger.error('Error al generar imagen para compartir en story', { error, postId: post.id });
+      logger.error('Error al generar o subir imagen para compartir en story', { error, postId: post.id });
       toast.error('Error al generar la imagen para compartir');
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -183,7 +162,9 @@ export function ShareToStoryDialog({ post, onClose }: ShareToStoryDialogProps): 
           </button>
           <button
             type="button"
-            onClick={handleShare}
+            onClick={() => {
+              void handleShare();
+            }}
             disabled={isGenerating || createStoryMutation.isPending}
             className="flex-1 rounded-lg bg-primary-600 px-4 py-2 text-white font-medium transition hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >

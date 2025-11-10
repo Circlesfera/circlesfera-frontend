@@ -1,9 +1,11 @@
 'use client';
 
-import React, { type ReactElement } from 'react';
 import { motion } from 'framer-motion';
-import type { ProfileOverview, ProfileGrowth } from '../../../services/api/analytics';
+import React, { type ReactElement } from 'react';
+
 import { staggerContainer, staggerItem } from '@/lib/motion-config';
+
+import type { ProfileGrowth,ProfileOverview } from '../../../services/api/analytics';
 
 interface AnalyticsOverviewProps {
   readonly overview: ProfileOverview;

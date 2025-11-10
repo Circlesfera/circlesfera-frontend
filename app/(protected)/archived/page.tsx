@@ -1,4 +1,4 @@
-import { Suspense, type ReactElement } from 'react';
+import { type ReactElement,Suspense } from 'react';
 
 import { ArchivedPostsShell } from '@/modules/saved/components/archived-posts-shell';
 

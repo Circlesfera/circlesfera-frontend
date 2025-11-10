@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
+import { type ReactElement,useEffect } from 'react';
+
+import { useSession } from '@/hooks/use-session';
 
 import { ProfileEditForm } from './profile-edit-form';
-import { useSession } from '@/hooks/use-session';
 
 export function ProfileSettings(): ReactElement | null {
   const router = useRouter();

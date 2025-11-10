@@ -1,9 +1,9 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { type ReactElement } from 'react';
-import { motion } from 'framer-motion';
 
 /**
  * Barra de navegación para la homepage pública.

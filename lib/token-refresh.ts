@@ -60,7 +60,7 @@ const refreshTokenNow = async (): Promise<void> => {
 
     // Configurar el próximo refresh
     setupTokenRefresh();
-  } catch (error) {
+  } catch {
     // Si falla el refresh, verificar si el token todavía no ha expirado
     // Solo limpiar si realmente expiró o es un error de autenticación
     const state = sessionStore.getState();
@@ -68,8 +68,9 @@ const refreshTokenNow = async (): Promise<void> => {
     
     // Si el token ya expiró (más de 5 minutos de margen), limpiar sesión
     if (!state.expiresAt || state.expiresAt < now - 5 * 60 * 1000) {
+      const { clearSession } = sessionStore.getState();
       console.error('Token expirado y refresh falló, limpiando sesión');
-      sessionStore.getState().clearSession();
+      clearSession();
     } else {
       // Si todavía no expiró, intentar configurar el refresh de nuevo en un momento posterior
       // Esto maneja errores temporales de red

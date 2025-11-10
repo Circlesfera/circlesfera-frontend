@@ -1,8 +1,8 @@
+import '@/styles/globals.css';
+
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import type { ReactElement, ReactNode } from 'react';
-
-import '@/styles/globals.css';
+import type { JSX, ReactNode } from 'react';
 
 import { Providers } from './providers';
 
@@ -51,7 +51,7 @@ interface RootLayoutProps {
 /**
  * Layout raíz responsable de aplicar tipografías, proveedores globales y metadatos.
  */
-export default function RootLayout({ children }: RootLayoutProps): ReactElement {
+export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
   return (
     <html lang="es" className={inter.variable} suppressHydrationWarning>
       <head>
@@ -74,7 +74,7 @@ export default function RootLayout({ children }: RootLayoutProps): ReactElement 
                     document.documentElement.classList.remove('dark');
                     document.documentElement.style.colorScheme = 'light';
                   }
-                } catch (e) {
+                } catch (_error) {
                   // Fallback: usar preferencia del sistema o dark por defecto
                   const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                   if (systemTheme === 'dark') {

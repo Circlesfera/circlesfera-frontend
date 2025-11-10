@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ReactElement } from 'react';
+import { lazy, type ReactElement,Suspense } from 'react';
 
 import { AnalyticsShellSkeleton } from '@/components/skeletons';
 

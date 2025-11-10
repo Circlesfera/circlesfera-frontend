@@ -1,51 +1,49 @@
 'use client';
 
-import { useState, useRef, useEffect, type ReactElement } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 // Iconos SVG inline para evitar dependencia externa
-const MoreVerticalIcon = () => (
+const MoreVerticalIcon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
   </svg>
 );
 
-const Share2Icon = () => (
+const Share2Icon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.885 12.938 9 12.482 9 12c0-.482-.115-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
   </svg>
 );
 
-const FlagIcon = () => (
+const FlagIcon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
   </svg>
 );
 
-const BanIcon = () => (
+const BanIcon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
   </svg>
 );
 
-const CopyIcon = () => (
+const CopyIcon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
   </svg>
 );
 
-const CheckIcon = () => (
+const CheckIcon = (): ReactElement => (
   <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
   </svg>
 );
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { copyPostLink } from '@/lib/share';
-import { useSessionStore } from '@/store/session';
 import { ReportDialog } from '@/modules/moderation/components/report-dialog';
 import { blockUser } from '@/services/api/blocks';
-import { useMutation } from '@tanstack/react-query';
+import { useSessionStore } from '@/store/session';
 
 interface ProfileOptionsMenuProps {
   readonly profile: {
@@ -60,7 +58,6 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [copied, setCopied] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const currentUser = useSessionStore((state) => state.user);
   const isOwnProfile = currentUser?.handle?.toLowerCase() === profile.handle.toLowerCase();
 
@@ -92,7 +89,7 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
           url: profileUrl
         });
       } catch (error) {
-        if ((error as Error).name !== 'AbortError') {
+        if (error instanceof Error && error.name !== 'AbortError') {
           // Si falla, copiar al portapapeles
           await handleCopy();
         }
@@ -111,7 +108,7 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
       setTimeout(() => {
         setCopied(false);
       }, 2000);
-    } catch (error) {
+    } catch {
       toast.error('No se pudo copiar el enlace');
     }
   };
@@ -132,7 +129,7 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
     }
   });
 
-  const handleBlock = async (): Promise<void> => {
+  const handleBlock = (): void => {
     if (window.confirm(`¿Estás seguro de que quieres bloquear a ${profile.displayName}?`)) {
       blockMutation.mutate();
     }
@@ -167,7 +164,9 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
               <div className="p-1">
                 <button
                   type="button"
-                  onClick={handleShare}
+                  onClick={() => {
+                    void handleShare();
+                  }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-left"
                 >
                   <Share2Icon />
@@ -176,7 +175,9 @@ export function ProfileOptionsMenu({ profile }: ProfileOptionsMenuProps): ReactE
 
                 <button
                   type="button"
-                  onClick={handleCopy}
+                  onClick={() => {
+                    void handleCopy();
+                  }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-left"
                 >
                   {copied ? (

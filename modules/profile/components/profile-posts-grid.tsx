@@ -1,200 +1,177 @@
 'use client';
 
+import { type InfiniteData,useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { isLocalImage } from '@/lib/image-utils';
-import { type ReactElement } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import type { ReactElement } from 'react';
+import { useMemo } from 'react';
 
-import { getUserPosts, type UserPostsResponse } from '@/services/api/users';
-import { staggerContainer, staggerItem } from '@/lib/motion-config';
-import { useSessionStore } from '@/store/session';
-import type { FeedItem } from '@/services/api/types/feed';
-
-// Función para determinar si un item es un reel
-const isReel = (item: FeedItem): boolean => {
-  return (
-    item.media.length === 1 &&
-    item.media[0]?.kind === 'video' &&
-    item.media[0]?.durationMs !== undefined &&
-    item.media[0].durationMs <= 60000
-  );
-};
+import { isFrameFeedItem } from '@/modules/frames/utils/is-frame-feed-item';
+import { getSafeMediaUrl } from '@/modules/frames/utils/media';
+import type { FeedCursorResponse, FeedItem, FeedMedia } from '@/services/api/types/feed';
+import { getUserPosts } from '@/services/api/users';
 
 interface ProfilePostsGridProps {
   readonly handle: string;
 }
 
-export function ProfilePostsGrid({ handle }: ProfilePostsGridProps): ReactElement {
-  const isHydrated = useSessionStore((state) => state.isHydrated);
-  const accessToken = useSessionStore((state) => state.accessToken);
+type ProfilePostsQueryKey = ['profile', 'posts', string];
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery<UserPostsResponse>({
-    queryKey: ['userPosts', handle],
-    queryFn: ({ pageParam }) => getUserPosts({ handle, cursor: pageParam as string | null | undefined, limit: 20 }),
+export function ProfilePostsGrid({ handle }: ProfilePostsGridProps): ReactElement {
+  const queryKey = useMemo<ProfilePostsQueryKey>(() => ['profile', 'posts', handle], [handle]);
+
+  const postsQuery = useInfiniteQuery<
+    FeedCursorResponse,
+    Error,
+    InfiniteData<FeedCursorResponse>,
+    ProfilePostsQueryKey,
+    string | null
+  >({
+    queryKey,
+    queryFn: async ({ pageParam }) =>
+      getUserPosts({ handle, cursor: pageParam ?? undefined, limit: 12 }),
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: 60000,
-    // Solo ejecutar cuando la sesión esté hidratada y haya un token
-    enabled: isHydrated && !!accessToken
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
+    staleTime: 60_000
   });
 
-  if (status === 'pending') {
+  const posts = useMemo<FeedItem[]>(() => {
+    const items = postsQuery.data?.pages.flatMap((page) => page.data) ?? [];
+    return items.filter((item) => !isFrameFeedItem(item));
+  }, [postsQuery.data]);
+
+  const isInitialLoading = postsQuery.status === 'pending' && posts.length === 0;
+
+  if (isInitialLoading) {
+    return <ProfilePostsSkeleton />;
+  }
+
+  if (postsQuery.status === 'success' && posts.length === 0) {
     return (
-      <div className="w-full max-w-5xl">
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          {Array.from({ length: 9 }).map((_, i) => (
-            <div key={i} className="aspect-square animate-pulse rounded-xl glass-card" />
-          ))}
-        </div>
+      <div className="rounded-2xl border border-white/10 bg-slate-900/20 p-12 text-center">
+        <p className="text-sm font-semibold text-foreground-muted">Este perfil aún no tiene publicaciones.</p>
       </div>
     );
   }
 
-  if (status === 'error') {
+  if (postsQuery.status === 'error' && posts.length === 0) {
+    const message = postsQuery.error instanceof Error ? postsQuery.error.message : 'No se pudieron cargar las publicaciones.';
     return (
-      <div className="w-full max-w-5xl rounded-2xl glass-card p-8 text-center">
-        <div className="size-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-3">
-          <svg className="size-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <p className="text-sm font-medium text-slate-300">No se pudieron cargar las publicaciones</p>
-      </div>
-    );
-  }
-
-  const posts = data.pages.flatMap((page) => page.data);
-
-  if (posts.length === 0) {
-    return (
-      <div className="w-full max-w-5xl rounded-2xl glass-card p-8 text-center">
-        <div className="size-12 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center mx-auto mb-3">
-          <svg className="size-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <p className="text-sm font-medium text-slate-300 mb-1">Este usuario aún no ha publicado nada</p>
-        <p className="text-xs text-slate-500">Las publicaciones aparecerán aquí cuando se creen</p>
+      <div className="space-y-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-8 text-center">
+        <p className="text-sm font-semibold text-red-300">Ocurrió un error al cargar las publicaciones.</p>
+        <p className="text-xs text-red-200/80">{message}</p>
+        <button
+          type="button"
+          onClick={() => {
+            void postsQuery.refetch();
+          }}
+          className="rounded-xl bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-400"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
 
   return (
-    <section className="w-full max-w-5xl">
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-3 gap-2 sm:gap-3"
-      >
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => {
-          const firstMedia = post.media[0];
-          if (!firstMedia) {
+          const cover = getPrimaryMedia(post.media);
+          if (!cover) {
+            return null;
+          }
+
+          const safeCoverUrl = getSafeMediaUrl(cover.previewUrl);
+          if (!safeCoverUrl) {
             return null;
           }
 
           return (
-            <motion.div
+            <Link
               key={post.id}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
+              href={`/posts/${post.id}`}
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/40 shadow-lg transition hover:shadow-primary-500/20"
             >
-              <Link
-                href={`/posts/${post.id}`}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900 block"
-              >
-                {firstMedia.kind === 'image' ? (
+              <div className="relative aspect-[4/5] w-full" data-post-preview="true">
+                {cover.kind === 'image' ? (
                   <Image
-                    src={firstMedia.url}
-                    alt={post.caption}
+                    src={safeCoverUrl}
+                    alt={post.caption ?? 'Publicación sin descripción'}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    unoptimized={isLocalImage(firstMedia.url)}
-                  />
-                ) : isReel(post) ? (
-                  <video
-                    src={firstMedia.url}
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    unoptimized
                   />
                 ) : (
-                  <div className="relative size-full">
-                    <Image
-                      src={firstMedia.thumbnailUrl}
-                      alt={post.caption}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      unoptimized={isLocalImage(firstMedia.thumbnailUrl)}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-black/20">
-                      <div className="size-12 rounded-full glass-dark flex items-center justify-center">
-                        <svg className="size-6 text-white dark:text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
+                  <video
+                    src={cover.sourceUrl}
+                    poster={safeCoverUrl}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    preload="metadata"
+                    muted
+                    loop
+                    playsInline
+                  />
                 )}
-
-                {/* Overlay con estadísticas en hover */}
-                <div className="absolute inset-0 flex items-center justify-center gap-6 bg-gradient-to-t from-black/80 via-black/40 to-black/10 opacity-0 transition-all duration-300 group-hover:opacity-100 backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-white dark:text-white">
-                    <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                    <span className="font-bold text-base">{post.stats.likes.toLocaleString('es')}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-white dark:text-white">
-                    <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                      />
-                    </svg>
-                    <span className="font-bold text-base">{post.stats.comments.toLocaleString('es')}</span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+              </div>
+            </Link>
           );
         })}
-      </motion.div>
+      </div>
 
-      {hasNextPage ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="mt-10 text-center"
-        >
+      {postsQuery.hasNextPage ? (
+        <div className="flex justify-center">
           <button
             type="button"
             onClick={() => {
-              void fetchNextPage();
+              void postsQuery.fetchNextPage();
             }}
-            disabled={isFetchingNextPage}
-            className="mx-auto rounded-xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/40 transition-all duration-300 hover:from-primary-500 hover:via-accent-500 hover:to-primary-600 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={postsQuery.isFetchingNextPage}
+            className="rounded-xl bg-primary-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isFetchingNextPage ? (
-              <span className="flex items-center gap-2">
-                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Cargando...
-              </span>
-            ) : (
-              'Cargar más'
-            )}
+            {postsQuery.isFetchingNextPage ? 'Cargando...' : 'Ver más'}
           </button>
-        </motion.div>
+        </div>
       ) : null}
-    </section>
+    </div>
+  );
+}
+
+function getPrimaryMedia(media?: FeedMedia[]): {
+  isPortrait: boolean;
+  previewUrl: string;
+  sourceUrl: string;
+  kind: FeedMedia['kind'];
+} | null {
+  if (!media || media.length === 0) {
+    return null;
+  }
+
+  const [primary] = media;
+  if (!primary) {
+    return null;
+  }
+
+  const width = primary.width ?? (primary.kind === 'video' ? 9 : 4);
+  const height = primary.height ?? (primary.kind === 'video' ? 16 : 5);
+  const isPortrait = height / width >= 1;
+
+  return {
+    isPortrait,
+    previewUrl: primary.thumbnailUrl ?? primary.url,
+    sourceUrl: primary.url,
+    kind: primary.kind
+  };
+}
+
+function ProfilePostsSkeleton(): ReactElement {
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div key={index} className="aspect-[4/5] animate-pulse rounded-3xl bg-slate-800/60" />
+      ))}
+    </div>
   );
 }
 

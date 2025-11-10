@@ -1,14 +1,14 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type ReactElement } from 'react';
-import { motion } from 'framer-motion';
 
-import { useSessionStore } from '@/store/session';
-import { useNotifications } from '@/modules/notifications/hooks/use-notifications';
 import { getAvatarUrl } from '@/lib/image-utils';
+import { useNotifications } from '@/modules/notifications/hooks/use-notifications';
+import { useSessionStore } from '@/store/session';
 
 interface NavItem {
   readonly href: string;
@@ -67,7 +67,7 @@ export function SidebarNav(): ReactElement {
         label: 'Explorar'
       },
       {
-        href: '/reels',
+        href: '/frames',
         icon: (
           <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -79,7 +79,7 @@ export function SidebarNav(): ReactElement {
             <path d="M3 13.907l9 5.25 9-5.25-9-5.186-9 5.186zM3 18.132l9 5.25 9-5.25-9-5.186-9 5.186z" />
           </svg>
         ),
-        label: 'Reels'
+        label: 'Frames'
       },
       {
         href: '/messages',
@@ -237,7 +237,7 @@ export function SidebarNav(): ReactElement {
 
   const sections = [mainNavigation, interactionsSection, contentSection, settingsSection];
 
-  const renderNavItem = (item: NavItem) => {
+  const renderNavItem = (item: NavItem): ReactElement => {
     const active = isActive(item.href);
     const showBadge = item.badge !== undefined && item.badge > 0;
 
@@ -252,12 +252,12 @@ export function SidebarNav(): ReactElement {
               className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-300 ease-out ${
             active
               ? 'bg-gradient-to-r from-primary-500/20 via-primary-500/15 to-transparent font-semibold shadow-lg shadow-primary-500/10 before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:rounded-r-full before:bg-gradient-to-b before:from-primary-400 before:to-accent-500'
-              : 'hover:bg-slate-100/80 dark:hover:bg-white/5 hover:shadow-md'
+              : 'hover:bg-surface-muted hover:shadow-md'
           }`}
         >
           <div className="relative flex items-center justify-center">
             <motion.div 
-              className={`transition-all duration-300 ${active ? 'scale-110 text-primary-400' : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200'}`}
+              className={`transition-all duration-300 ${active ? 'scale-110 text-primary-400' : 'text-foreground-muted group-hover:text-foreground'}`}
               whileHover={!active ? { scale: 1.1 } : {}}
               transition={{ duration: 0.2 }}
             >
@@ -269,14 +269,14 @@ export function SidebarNav(): ReactElement {
                 animate={{ scale: 1 }}
                 className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 ring-2 ring-black"
               >
-                {item.badge! > 9 ? '9+' : item.badge}
+                {item.badge > 9 ? '9+' : item.badge}
               </motion.span>
             )}
           </div>
           <span className={`flex-1 text-sm font-medium transition-colors duration-300 ${
             active 
-              ? 'text-slate-900 dark:text-white' 
-              : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200'
+              ? 'text-foreground' 
+              : 'text-foreground-muted group-hover:text-foreground'
           }`}>
             {item.label}
           </span>
@@ -293,7 +293,7 @@ export function SidebarNav(): ReactElement {
   };
 
   return (
-    <aside className="fixed left-0 top-0 z-50 h-full w-[260px] glass-sidebar border-r border-slate-200/50 dark:border-white/5">
+    <aside className="fixed left-0 top-0 z-50 h-full w-[260px] glass-sidebar border-r border-border/60">
       <div className="flex h-full flex-col overflow-y-auto custom-scrollbar px-4 py-6">
         {/* Logo */}
         <motion.div
@@ -332,7 +332,7 @@ export function SidebarNav(): ReactElement {
             <div key={sectionIndex}>
               {section.title && (
                 <div className="mb-3 px-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground-muted">
                     {section.title}
                   </h3>
                 </div>
@@ -350,7 +350,7 @@ export function SidebarNav(): ReactElement {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="mt-auto border-t border-slate-200/50 dark:border-white/5 pt-6"
+            className="mt-auto border-t border-border/60 pt-6"
           >
             <motion.div
               whileHover={{ x: 4 }}
@@ -361,10 +361,10 @@ export function SidebarNav(): ReactElement {
                 className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-300 ${
                   pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)
                     ? 'bg-gradient-to-r from-primary-500/20 via-primary-500/15 to-transparent font-semibold shadow-lg shadow-primary-500/10 before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:rounded-r-full before:bg-gradient-to-b before:from-primary-400 before:to-accent-500'
-                    : 'hover:bg-slate-100/80 dark:hover:bg-white/5 hover:shadow-md'
+                    : 'hover:bg-surface-muted hover:shadow-md'
                 }`}
               >
-              <div className="relative size-8 overflow-hidden rounded-full ring-2 ring-slate-300 dark:ring-slate-800 transition-all duration-300 group-hover:ring-primary-500/50">
+              <div className="relative size-8 overflow-hidden rounded-full ring-2 ring-border transition-all duration-300 group-hover:ring-primary-500/50">
                 <Image
                   src={getAvatarUrl(user.avatarUrl, user.handle)}
                   alt={user.displayName}
@@ -379,12 +379,12 @@ export function SidebarNav(): ReactElement {
               <div className="flex flex-1 flex-col min-w-0">
                 <span className={`truncate text-sm font-medium transition-colors duration-300 ${
                   pathname === `/${user.handle}` || pathname.startsWith(`/${user.handle}/`)
-                    ? 'text-slate-900 dark:text-white'
-                    : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200'
+                    ? 'text-foreground'
+                    : 'text-foreground-muted group-hover:text-foreground'
                 }`}>
                   Perfil
                 </span>
-                <span className="truncate text-xs text-slate-400 dark:text-slate-500">
+                <span className="truncate text-xs text-foreground-muted">
                   @{user.handle}
                 </span>
               </div>

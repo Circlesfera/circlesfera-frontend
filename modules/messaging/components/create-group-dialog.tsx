@@ -1,13 +1,15 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, type ReactElement } from 'react';
+/* eslint-disable simple-import-sort/imports */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
+import { type ReactElement, useState } from 'react';
 import { toast } from 'sonner';
 
-import { createGroup, type CreateGroupPayload } from '@/services/api/messages';
-import { searchUsers, type PublicProfile } from '@/services/api/users';
+import { type CreateGroupPayload, createGroup } from '@/services/api/messages';
+import { type PublicProfile, searchUsers } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
+/* eslint-enable simple-import-sort/imports */
 
 interface CreateGroupDialogProps {
   readonly isOpen: boolean;
@@ -21,21 +23,21 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
   const currentUser = useSessionStore((state) => state.user);
   const queryClient = useQueryClient();
 
-  const { data: searchResults = [], isLoading: isSearching } = useQuery({
+  const { data: searchResults = [], isLoading: isSearching } = useQuery<PublicProfile[]>({
     queryKey: ['search', 'users', searchQuery],
-    queryFn: () => searchUsers({ q: searchQuery, limit: 10 }),
+    queryFn: async () => searchUsers({ q: searchQuery, limit: 10 }),
     enabled: searchQuery.length >= 2,
     staleTime: 30000
   });
 
   const createGroupMutation = useMutation({
-    mutationFn: (payload: CreateGroupPayload) => createGroup(payload),
-    onSuccess: (data) => {
+    mutationFn: async (payload: CreateGroupPayload) => createGroup(payload),
+    onSuccess: () => {
       toast.success('Grupo creado exitosamente');
       setGroupName('');
       setSelectedParticipants([]);
       setSearchQuery('');
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
       onClose();
     },
     onError: () => {
@@ -64,8 +66,6 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
       groupName: groupName.trim()
     });
   };
-
-  const selectedUsers = searchResults.filter((user) => selectedParticipants.includes(user.id));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/60 backdrop-blur-sm">
@@ -158,13 +158,21 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
           )}
 
           {/* Participantes seleccionados */}
-          {selectedUsers.length > 0 && (
+          {selectedParticipants.length > 0 && (
+            // useMemo no está disponible cuando el diálogo está cerrado, por lo que
+            // filtramos únicamente al renderizar la sección
+            (() => {
+              const users = searchResults.filter((user) => selectedParticipants.includes(user.id));
+              if (users.length === 0) {
+                return null;
+              }
+              return (
             <div className="mb-4">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Participantes seleccionados ({selectedUsers.length})
+                  Participantes seleccionados ({users.length})
               </label>
               <div className="flex flex-wrap gap-2">
-                {selectedUsers.map((user) => (
+                  {users.map((user) => (
                   <div
                     key={user.id}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
@@ -197,6 +205,8 @@ export function CreateGroupDialog({ isOpen, onClose }: CreateGroupDialogProps): 
                 ))}
               </div>
             </div>
+              );
+            })()
           )}
 
           {/* Botones */}

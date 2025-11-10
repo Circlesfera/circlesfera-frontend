@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
+import { type ReactElement,useState } from 'react';
+import { toast } from 'sonner';
+
+import { VerifiedBadge } from '@/components/verified-badge';
 
 import {
   getPendingVerificationRequests,
   reviewVerificationRequest,
   type VerificationRequest
 } from '../../../services/api/verification';
-import { VerifiedBadge } from '@/components/verified-badge';
 
 interface ReviewDialogProps {
   readonly request: VerificationRequest;
@@ -29,11 +30,13 @@ function ReviewDialog({ request, onClose, onSuccess }: ReviewDialogProps): React
       reviewVerificationRequest(request.id, payload),
     onSuccess: () => {
       toast.success(`Solicitud ${status === 'approved' ? 'aprobada' : 'rechazada'} exitosamente`);
-      queryClient.invalidateQueries({ queryKey: ['admin', 'verification', 'pending'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'verification', 'pending'] });
       onSuccess();
     },
-    onError: (error: { message?: string }) => {
-      toast.error(error.message ?? 'No se pudo procesar la solicitud');
+    onError: (error: unknown) => {
+      const message =
+        error instanceof Error ? error.message : 'No se pudo procesar la solicitud';
+      toast.error(message);
     }
   });
 
@@ -191,7 +194,7 @@ export function AdminVerificationShell(): ReactElement {
     return (
       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-8">
         <div className="space-y-3">
-          {[...Array(3)].map((_, i) => (
+          {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-20 animate-pulse rounded-lg bg-slate-800" />
           ))}
         </div>
@@ -203,7 +206,9 @@ export function AdminVerificationShell(): ReactElement {
     return (
       <div className="rounded-xl border border-red-500/50 bg-red-500/10 p-8 text-center">
         <p className="text-red-400">Error al cargar solicitudes</p>
-        <p className="mt-2 text-sm text-slate-400">{(error as Error).message}</p>
+        <p className="mt-2 text-sm text-slate-400">
+          {error instanceof Error ? error.message : 'Error desconocido'}
+        </p>
       </div>
     );
   }

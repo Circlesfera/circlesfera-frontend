@@ -1,16 +1,17 @@
 'use client';
 
-import Image from 'next/image';
-import { lazy, Suspense, useRef, useEffect, useState, type ReactElement } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-import { getStoryFeed, type StoryGroup } from '@/services/api/stories';
 import { useQuery } from '@tanstack/react-query';
-import { useSessionStore } from '@/store/session';
+import { AnimatePresence,motion } from 'framer-motion';
+import Image from 'next/image';
+import { lazy, type ReactElement,Suspense, useEffect, useRef, useState } from 'react';
+
 import { StoriesViewerSkeleton } from '@/components/skeletons';
 import { getAvatarUrl } from '@/lib/image-utils';
+import { fadeUpVariants } from '@/lib/motion-config';
+import { getStoryFeed } from '@/services/api/stories';
+import { useSessionStore } from '@/store/session';
+
 import { CreateStoryDialog } from './create-story-dialog';
-import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 
 const StoriesViewer = lazy(() =>
   import('./stories-viewer').then((module) => ({
@@ -69,7 +70,7 @@ export function StoriesBar(): ReactElement {
         className="relative rounded-2xl glass-card p-4"
       >
         <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar px-1">
-          {[...Array(8)].map((_, i) => (
+          {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex-shrink-0 flex flex-col items-center gap-1.5">
               <div className="animate-pulse size-[64px] rounded-full bg-gradient-to-br from-slate-200 dark:from-slate-800/50 to-slate-100 dark:to-slate-900/50 border-2 border-slate-300/50 dark:border-white/10" />
               <div className="h-3 w-14 bg-slate-200 dark:bg-slate-800/50 rounded-full" />

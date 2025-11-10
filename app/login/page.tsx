@@ -1,11 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import type { JSX } from 'react';
 
 import { LoginForm } from '@/modules/auth/components/login-form';
 
-export default function LoginPage() {
+export default function LoginPage(): JSX.Element {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-white">
       {/* Background effects adicionales */}

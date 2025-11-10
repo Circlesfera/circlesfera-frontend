@@ -1,19 +1,19 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, useRef, type ReactElement } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
-import { updateProfile, type PublicProfile } from '@/services/api/users';
-import { uploadMedia } from '@/services/api/media';
-import { useSessionStore } from '@/store/session';
+import { type ReactElement,useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { getAvatarUrl } from '@/lib/image-utils';
-import { Input } from '@/components/ui/input';
+
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter,CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { getAvatarUrl } from '@/lib/image-utils';
+import { uploadMedia } from '@/services/api/media';
+import { type PublicProfile,updateProfile } from '@/services/api/users';
+import { useSessionStore } from '@/store/session';
 
 interface EditProfileFormProps {
   readonly profile: PublicProfile;
@@ -28,7 +28,6 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
   const [handle, setHandle] = useState(profile.handle);
   const [bio, setBio] = useState(profile.bio ?? '');
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl ?? '');
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,10 +36,10 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
     mutationFn: updateProfile,
     onSuccess: (updatedProfile) => {
       // Invalidar todas las queries relacionadas
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
       if (updatedProfile.handle !== profile.handle) {
-        queryClient.invalidateQueries({ queryKey: ['profile', updatedProfile.handle] });
+        void queryClient.invalidateQueries({ queryKey: ['profile', updatedProfile.handle] });
       }
       
       // Actualizar el store de sesión
@@ -88,8 +87,6 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
       return;
     }
 
-    setAvatarFile(file);
-
     // Crear preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -103,16 +100,15 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
       const result = await uploadMedia(file);
       setAvatarUrl(result.url);
       toast.success('Avatar subido correctamente');
-    } catch (error) {
+    } catch {
       toast.error('Error al subir el avatar. Inténtalo de nuevo.');
-      setAvatarFile(null);
       setAvatarPreview(null);
     } finally {
       setUploadingAvatar(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
     // Validar handle
@@ -210,7 +206,9 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"
-                    onChange={handleAvatarFileChange}
+                    onChange={(event) => {
+                      void handleAvatarFileChange(event);
+                    }}
                     className="hidden"
                   />
                 </div>
@@ -222,7 +220,6 @@ export function EditProfileForm({ profile }: EditProfileFormProps): ReactElement
                     value={avatarUrl}
                     onChange={(e) => {
                       setAvatarUrl(e.target.value);
-                      setAvatarFile(null);
                       setAvatarPreview(null);
                     }}
                     helperText="URL alternativa del avatar"

@@ -1,8 +1,8 @@
 'use client';
 
-import { forwardRef } from 'react';
-
 import { cva, type VariantProps } from 'class-variance-authority';
+import type { ComponentPropsWithoutRef } from 'react';
+import { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const cardVariants = cva('card-base', {
@@ -31,9 +31,7 @@ const cardVariants = cva('card-base', {
   }
 } as const);
 
-export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+export type CardProps = ComponentPropsWithoutRef<'div'> & VariantProps<typeof cardVariants>;
 
 /**
  * Componente Card estilizado con diseño profesional.
@@ -53,7 +51,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = 'Card';
 
-export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardHeaderProps = ComponentPropsWithoutRef<'div'>;
 
 export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, ...props }, ref) => {
@@ -69,16 +67,21 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
 
 CardHeader.displayName = 'CardHeader';
 
-export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-}
+type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+type HeadingProps = ComponentPropsWithoutRef<'h3'>;
+
+export type CardTitleProps = HeadingProps & {
+  readonly as?: HeadingTag;
+};
 
 export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
   ({ className, as: Component = 'h3', ...props }, ref) => {
+    const Tag = Component;
     return (
-      <Component
+      <Tag
         ref={ref}
-        className={twMerge('text-xl font-semibold leading-none tracking-tight text-slate-900 dark:text-white', className)}
+        className={twMerge('text-xl font-semibold leading-none tracking-tight text-foreground', className)}
         {...props}
       />
     );
@@ -87,14 +90,14 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
 
 CardTitle.displayName = 'CardTitle';
 
-export interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type CardDescriptionProps = ComponentPropsWithoutRef<'p'>;
 
 export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
   ({ className, ...props }, ref) => {
     return (
       <p
         ref={ref}
-        className={twMerge('text-sm text-slate-600 dark:text-slate-400', className)}
+        className={twMerge('text-sm text-foreground-muted', className)}
         {...props}
       />
     );
@@ -103,7 +106,7 @@ export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionP
 
 CardDescription.displayName = 'CardDescription';
 
-export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardContentProps = ComponentPropsWithoutRef<'div'>;
 
 export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, ...props }, ref) => {
@@ -115,7 +118,7 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
 
 CardContent.displayName = 'CardContent';
 
-export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardFooterProps = ComponentPropsWithoutRef<'div'>;
 
 export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, ...props }, ref) => {

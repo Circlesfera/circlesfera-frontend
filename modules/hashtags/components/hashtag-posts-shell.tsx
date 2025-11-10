@@ -1,7 +1,7 @@
 'use client';
 
-import { type ReactElement } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { type ReactElement } from 'react';
 
 import { FeedItemComponent } from '@/modules/feed/components/feed-item';
 import { getHashtagPosts } from '@/services/api/hashtags';

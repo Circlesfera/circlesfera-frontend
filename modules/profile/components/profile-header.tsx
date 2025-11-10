@@ -1,18 +1,19 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useState, useEffect, type ReactElement } from 'react';
-import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { type ReactElement,useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import type { PublicProfile, UserStats } from '@/services/api/users';
-import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
 import { VerifiedBadge } from '@/components/verified-badge';
+import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
 import { followUser, unfollowUser } from '@/services/api/follows';
+import type { PublicProfile, UserStats } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
+
 import { FollowersDialog } from './followers-dialog';
 import { ProfileOptionsMenu } from './profile-options-menu';
 
@@ -29,7 +30,6 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
   const [isFollowing, setIsFollowing] = useState(initialFollowing ?? false);
   const [followersDialogOpen, setFollowersDialogOpen] = useState(false);
   const [followingDialogOpen, setFollowingDialogOpen] = useState(false);
-  const [dialogType, setDialogType] = useState<'followers' | 'following'>('followers');
   
   const avatarUrl = getAvatarUrl(profile.avatarUrl, profile.handle);
   const isOwnProfile = currentUser?.handle?.toLowerCase() === profile.handle.toLowerCase();
@@ -45,8 +45,8 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
     mutationFn: () => followUser(profile.handle),
     onSuccess: (data) => {
       setIsFollowing(data.following);
-      queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
-      queryClient.invalidateQueries({ queryKey: ['follow-status', profile.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['follow-status', profile.handle] });
       toast.success(data.following ? 'Ahora sigues a este usuario' : 'Dejaste de seguir a este usuario');
     },
     onError: () => {
@@ -58,8 +58,8 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
     mutationFn: () => unfollowUser(profile.handle),
     onSuccess: (data) => {
       setIsFollowing(data.following);
-      queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
-      queryClient.invalidateQueries({ queryKey: ['follow-status', profile.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['profile', profile.handle] });
+      void queryClient.invalidateQueries({ queryKey: ['follow-status', profile.handle] });
       toast.success('Dejaste de seguir a este usuario');
     },
     onError: () => {
@@ -76,7 +76,6 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
   };
 
   const openFollowersDialog = (type: 'followers' | 'following'): void => {
-    setDialogType(type);
     if (type === 'followers') {
       setFollowersDialogOpen(true);
     } else {
@@ -95,7 +94,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
       const { createConversation } = await import('@/services/api/messages');
       const result = await createConversation({ userId: profile.id });
       // Invalidar conversaciones para actualizar la lista
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      await queryClient.invalidateQueries({ queryKey: ['conversations'] });
       // Navegar a mensajes con el ID de la conversación en la URL
       router.push(`/messages?conversation=${result.id}`);
     } catch (error) {
@@ -175,7 +174,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="text-3xl font-bold text-slate-900 dark:text-white"
+            className="text-3xl font-bold text-foreground"
           >
             {profile.displayName}
           </motion.h1>
@@ -193,7 +192,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.15 }}
-          className="text-base text-slate-600 dark:text-white/70"
+          className="text-base text-foreground-muted"
         >
           @{profile.handle}
         </motion.p>
@@ -204,7 +203,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="max-w-xl text-sm leading-relaxed text-slate-900 dark:text-white/80"
+          className="max-w-xl text-sm leading-relaxed text-foreground"
         >
           {parseBioLinks(profile.bio)}
         </motion.div>
@@ -216,7 +215,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.22 }}
-          className="text-xs text-slate-500 dark:text-white/50"
+          className="text-xs text-foreground-muted"
         >
           {formatJoinDate(profile.createdAt)}
         </motion.p>
@@ -245,7 +244,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/settings"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 dark:border-white/20 bg-slate-100 dark:bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-900 dark:text-white backdrop-blur-sm transition-all duration-300 hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-400 dark:hover:border-white/30"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-foreground backdrop-blur-sm transition-all duration-300 hover:bg-surface-strong hover:border-border-strong"
                 title="Configuración completa"
               >
                 <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,7 +264,7 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
               whileTap={{ scale: 0.95 }}
               className={`rounded-xl px-6 py-2.5 text-sm font-semibold text-white dark:text-white shadow-lg transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
                 isFollowing
-                  ? 'border border-slate-300 dark:border-white/20 bg-slate-100 dark:bg-white/5 backdrop-blur-sm hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-400 dark:hover:border-white/30 text-slate-900 dark:text-white'
+                  ? 'border border-border bg-surface backdrop-blur-sm hover:bg-surface-strong hover:border-border-strong text-foreground'
                   : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 shadow-primary-500/30 hover:from-primary-500 hover:via-accent-500 hover:to-primary-600 hover:shadow-xl hover:shadow-primary-500/40'
               }`}
             >
@@ -282,10 +281,12 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
             </motion.button>
             <motion.button
               type="button"
-              onClick={handleMessageClick}
+              onClick={() => {
+                void handleMessageClick();
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="rounded-xl border border-white/20 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+              className="rounded-xl border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground backdrop-blur-sm transition-all duration-300 hover:bg-surface-strong hover:border-border-strong"
             >
               Mensaje
             </motion.button>
@@ -307,8 +308,8 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
             whileTap={{ scale: 0.95 }}
             className="flex flex-col items-center gap-1 transition-all duration-200 hover:text-primary-400"
           >
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{stats.posts.toLocaleString('es')}</span>
-            <span className="text-sm text-slate-600 dark:text-white/60">Publicaciones</span>
+            <span className="text-2xl font-bold text-foreground">{stats.posts.toLocaleString('es')}</span>
+            <span className="text-sm text-foreground-muted">Publicaciones</span>
           </motion.button>
           <motion.button
             type="button"
@@ -319,8 +320,8 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
               openFollowersDialog('followers');
             }}
           >
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{stats.followers.toLocaleString('es')}</span>
-            <span className="text-sm text-slate-600 dark:text-white/60">Seguidores</span>
+            <span className="text-2xl font-bold text-foreground">{stats.followers.toLocaleString('es')}</span>
+            <span className="text-sm text-foreground-muted">Seguidores</span>
           </motion.button>
           <motion.button
             type="button"
@@ -331,8 +332,8 @@ export function ProfileHeader({ profile, stats, isFollowing: initialFollowing }:
               openFollowersDialog('following');
             }}
           >
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{stats.following.toLocaleString('es')}</span>
-            <span className="text-sm text-slate-600 dark:text-white/60">Siguiendo</span>
+            <span className="text-2xl font-bold text-foreground">{stats.following.toLocaleString('es')}</span>
+            <span className="text-sm text-foreground-muted">Siguiendo</span>
           </motion.button>
         </motion.div>
       )}

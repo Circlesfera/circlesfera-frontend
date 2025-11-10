@@ -1,12 +1,12 @@
 'use client';
 
-import { type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { type ReactElement } from 'react';
+import { toast } from 'sonner';
 
-import { getPreferences, updatePreferences, type UpdatePreferencesPayload } from '@/services/api/preferences';
 import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { getPreferences, updatePreferences, type UpdatePreferencesPayload } from '@/services/api/preferences';
 
 export function PrivacySettings(): ReactElement {
   const queryClient = useQueryClient();
@@ -17,9 +17,9 @@ export function PrivacySettings(): ReactElement {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdatePreferencesPayload) => updatePreferences(payload),
+    mutationFn: async (payload: UpdatePreferencesPayload) => updatePreferences(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preferences'] });
+      void queryClient.invalidateQueries({ queryKey: ['preferences'] });
       toast.success('Preferencias actualizadas');
     },
     onError: () => {

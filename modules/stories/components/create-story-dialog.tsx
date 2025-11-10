@@ -1,14 +1,15 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, useRef, useEffect, type ReactElement } from 'react';
-import { createPortal } from 'react-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence,motion } from 'framer-motion';
+import Image from 'next/image';
+import { type ReactElement,useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
 
-import { createStory, type CreateStoryPayload } from '@/services/api/stories';
+import { logger } from '@/lib/logger';
 import { uploadMedia } from '@/services/api/media';
+import { createStory, type CreateStoryPayload } from '@/services/api/stories';
 
 interface CreateStoryDialogProps {
   readonly open: boolean;
@@ -36,15 +37,20 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
   const [mounted, setMounted] = useState(false);
 
   const createStoryMutation = useMutation({
-    mutationFn: (payload: CreateStoryPayload) => createStory(payload),
+    mutationFn: async (payload: CreateStoryPayload) => createStory(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
       toast.success('Story creada exitosamente');
       handleClose();
     },
     onError: (error: unknown) => {
       const axiosError = error as { response?: { data?: { message?: string } } };
-      toast.error(axiosError.response?.data?.message || 'No se pudo crear la story');
+      const message = axiosError.response?.data?.message ?? 'No se pudo crear la story';
+      toast.error(message);
+      logger.error('Error al crear story', error);
+    },
+    onSettled: () => {
+      setUploading(false);
     }
   });
 
@@ -69,16 +75,13 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
 
     if (isImage) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreview(e.target?.result as string);
+      reader.onload = (event) => {
+        setPreview(typeof event.target?.result === 'string' ? event.target.result : null);
       };
       reader.readAsDataURL(file);
     } else {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
     }
   };
 
@@ -113,8 +116,9 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
         }
       };
 
-      createStoryMutation.mutate(payload);
+      await createStoryMutation.mutateAsync(payload);
     } catch (error) {
+      logger.error('Error al subir archivo de story', error);
       toast.error('Error al subir el archivo');
       setUploading(false);
     }
@@ -403,7 +407,9 @@ export function CreateStoryDialog({ open, onClose }: CreateStoryDialogProps): Re
                     <div className="border-t border-white/5 bg-white/5 px-5 py-3 shrink-0">
                       <motion.button
                         type="button"
-                        onClick={handleSubmit}
+                        onClick={() => {
+                          void handleSubmit();
+                        }}
                         disabled={uploading || createStoryMutation.isPending}
                         whileHover={{ 
                           scale: uploading || createStoryMutation.isPending ? 1 : 1.02 

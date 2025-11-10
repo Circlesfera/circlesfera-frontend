@@ -1,7 +1,7 @@
 'use client';
 
-import { type ReactElement, type ReactNode, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { type ReactElement, type ReactNode, useEffect, useMemo } from 'react';
 
 import { getPreferences } from '@/services/api/preferences';
 import { useSessionStore } from '@/store/session';
@@ -44,7 +44,7 @@ function applyTheme(effectiveTheme: 'light' | 'dark', theme: Theme): void {
   // Guardar en localStorage para el script inline
   try {
     localStorage.setItem('theme', theme);
-  } catch (e) {
+  } catch {
     // Ignorar errores de localStorage (puede estar deshabilitado)
   }
 }
@@ -80,7 +80,7 @@ export function ThemeProvider({ children }: ThemeProviderProps): ReactElement {
         if (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system') {
           return storedTheme as Theme;
         }
-      } catch (e) {
+      } catch {
         // Ignorar errores de localStorage
       }
     }

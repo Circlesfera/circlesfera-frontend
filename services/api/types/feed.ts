@@ -42,6 +42,7 @@ export interface FeedMedia {
   readonly width?: number;
   readonly height?: number;
   readonly tags?: FeedTag[];
+  readonly rotation?: number;
 }
 
 /**

@@ -1,16 +1,18 @@
 'use client';
 
-import React, { type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { type ReactElement } from 'react';
 
+import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { formatRelativeTime } from '@/modules/feed/utils/formatters';
 // API imports
 import { getPostById } from '@/services/api/feed';
-import { formatRelativeTime } from '@/modules/feed/utils/formatters';
-import { useTaggedPosts } from '../hooks/use-tagged-posts';
-import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 import type { TaggedPost } from '@/services/api/tags';
+
+import { useTaggedPosts } from '../hooks/use-tagged-posts';
 
 export function TaggedPostsShell(): ReactElement {
   const { taggedPosts, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useTaggedPosts();
@@ -99,7 +101,7 @@ export function TaggedPostsShell(): ReactElement {
           <motion.button
             type="button"
             onClick={() => {
-              fetchNextPage();
+              void fetchNextPage();
             }}
             disabled={isFetchingNextPage}
             whileHover={{ scale: 1.05 }}
@@ -129,7 +131,7 @@ function TaggedPostCard({ taggedPost }: TaggedPostCardProps): ReactElement {
   const { data: postData, isLoading } = useQuery({
     queryKey: ['post', taggedPost.postId],
     queryFn: () => getPostById(taggedPost.postId),
-    enabled: true,
+    enabled: Boolean(taggedPost.postId),
     staleTime: 1000 * 60 * 5
   });
 
@@ -162,10 +164,13 @@ function TaggedPostCard({ taggedPost }: TaggedPostCardProps): ReactElement {
     >
       {taggedMedia && taggedMedia.kind === 'image' ? (
         <div className="relative aspect-square w-full">
-          <img
+          <Image
             src={taggedMedia.url}
             alt={post.caption || 'Post etiquetado'}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            unoptimized
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-4">

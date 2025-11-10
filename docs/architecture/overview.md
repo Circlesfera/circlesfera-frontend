@@ -35,8 +35,8 @@ tests/                     Utilidades y configuración de pruebas unitarias/UI
 - `/notifications` stream + historial.
 - `/settings` ajustes de cuenta, privacidad y seguridad.
 
-### Guardas y Middleware
-- Middleware Next (`middleware.ts`) valida cookie de sesión; redirige usuarios no autenticados desde rutas protegidas al home (`/`) y evita que usuarios autenticados accedan a `/login` o `/register`.
+### Guardas y Proxy
+- Proxy Next (`proxy.ts`) valida cookie de sesión; redirige usuarios no autenticados desde rutas protegidas al home (`/`) y evita que usuarios autenticados accedan a `/login` o `/register`.
 - `app/page.tsx` comprueba la sesión en server y deriva a `/feed` en caso de estar autenticado.
 
 ## UI y Accesibilidad

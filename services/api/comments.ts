@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 
+export type CommentResourceType = 'post' | 'frame';
+
 export interface CommentAuthor {
   id: string;
   handle: string;
@@ -33,15 +35,30 @@ export interface CreateCommentResponse {
   comment: Comment;
 }
 
-export const fetchComments = async (postId: string, cursor?: string | null, limit = 20): Promise<CommentCursorResponse> => {
-  const { data } = await apiClient.get<CommentCursorResponse>(`/comments/posts/${postId}/comments`, {
+const buildCommentsPath = (resourceType: CommentResourceType, resourceId: string): string => {
+  return resourceType === 'frame'
+    ? `/comments/frames/${resourceId}/comments`
+    : `/comments/posts/${resourceId}/comments`;
+};
+
+export const fetchComments = async (
+  resourceId: string,
+  cursor?: string | null,
+  limit = 20,
+  resourceType: CommentResourceType = 'post'
+): Promise<CommentCursorResponse> => {
+  const { data } = await apiClient.get<CommentCursorResponse>(buildCommentsPath(resourceType, resourceId), {
     params: { cursor: cursor ?? undefined, limit }
   });
   return data;
 };
 
-export const createComment = async (postId: string, payload: CreateCommentPayload): Promise<CreateCommentResponse> => {
-  const { data } = await apiClient.post<CreateCommentResponse>(`/comments/posts/${postId}/comments`, payload);
+export const createComment = async (
+  resourceId: string,
+  payload: CreateCommentPayload,
+  resourceType: CommentResourceType = 'post'
+): Promise<CreateCommentResponse> => {
+  const { data } = await apiClient.post<CreateCommentResponse>(buildCommentsPath(resourceType, resourceId), payload);
   return data;
 };
 
@@ -53,4 +70,15 @@ export const fetchReplies = async (commentId: string): Promise<RepliesResponse> 
   const { data } = await apiClient.get<RepliesResponse>(`/comments/${commentId}/replies`);
   return data;
 };
+
+export const fetchFrameComments = (
+  frameId: string,
+  cursor?: string | null,
+  limit = 20
+): Promise<CommentCursorResponse> => fetchComments(frameId, cursor, limit, 'frame');
+
+export const createFrameComment = (
+  frameId: string,
+  payload: CreateCommentPayload
+): Promise<CreateCommentResponse> => createComment(frameId, payload, 'frame');
 

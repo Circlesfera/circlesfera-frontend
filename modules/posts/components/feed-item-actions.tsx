@@ -1,16 +1,16 @@
 'use client';
 
-import { type ReactElement } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-
 import type { InfiniteData } from '@tanstack/react-query';
-import type { FeedItem, FeedCursorResponse } from '@/services/api/types/feed';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { type ReactElement } from 'react';
+import { toast } from 'sonner';
+
+import { copyPostLink,sharePost } from '@/lib/share';
 import { likePost, unlikePost } from '@/services/api/likes';
 import { savePost, unsavePost } from '@/services/api/saves';
-import { sharePost, copyPostLink } from '@/lib/share';
+import type { FeedCursorResponse,FeedItem } from '@/services/api/types/feed';
 
 interface FeedItemActionsProps {
   readonly post: FeedItem;
@@ -185,9 +185,9 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
       );
 
       // Invalidar analytics en background sin bloquear la UI
-      queryClient.invalidateQueries({ 
+      await queryClient.invalidateQueries({
         queryKey: ['analytics'],
-        exact: false 
+        exact: false
       });
     },
     onSettled: () => {
@@ -340,7 +340,7 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
       );
 
       // Invalidar queries relacionadas en background
-      queryClient.invalidateQueries({ queryKey: ['saved'] });
+      void queryClient.invalidateQueries({ queryKey: ['saved'] });
       
       const feedData = queryClient.getQueryData<InfiniteData<FeedCursorResponse>>(['feed', 'home']);
       let currentPost: FeedItem | undefined;
@@ -455,7 +455,9 @@ export function FeedItemActions({ post }: FeedItemActionsProps): ReactElement {
       {/* Share Button */}
       <motion.button
         type="button"
-        onClick={handleShare}
+        onClick={() => {
+          void handleShare();
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className="group rounded-xl p-2 text-slate-600 dark:text-slate-400 hover:text-primary-400 hover:bg-primary-500/15 transition-all duration-300"

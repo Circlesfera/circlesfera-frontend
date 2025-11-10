@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, type ReactElement } from 'react';
+import { type ReactElement,useEffect, useRef, useState } from 'react';
 
 interface CaptionEditorProps {
   readonly value: string;

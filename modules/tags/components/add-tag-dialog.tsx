@@ -1,18 +1,17 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, type ReactElement, useRef, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
+import { type ReactElement, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { createTag, type Tag, type CreateTagPayload } from '@/services/api/tags';
-import { searchUsers, type PublicProfile } from '@/services/api/users';
+import { logger } from '@/lib/logger';
+import { createTag, type CreateTagPayload } from '@/services/api/tags';
+import { type PublicProfile,searchUsers } from '@/services/api/users';
 
 interface AddTagDialogProps {
   readonly postId: string;
   readonly mediaIndex: number;
-  readonly mediaWidth: number;
-  readonly mediaHeight: number;
   readonly imageRef: React.RefObject<HTMLDivElement | null>;
   readonly isOpen: boolean;
   readonly onClose: () => void;
@@ -27,8 +26,6 @@ interface TagPosition {
 export function AddTagDialog({
   postId,
   mediaIndex,
-  mediaWidth,
-  mediaHeight,
   imageRef,
   isOpen,
   onClose,
@@ -36,10 +33,9 @@ export function AddTagDialog({
 }: AddTagDialogProps): ReactElement | null {
   const [tagPosition, setTagPosition] = useState<TagPosition | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: searchResults = [], isLoading: isSearching } = useQuery({
+  const { data: searchResults = [], isLoading: isSearching } = useQuery<PublicProfile[]>({
     queryKey: ['search', 'users', searchQuery],
     queryFn: () => searchUsers({ q: searchQuery, limit: 10 }),
     enabled: searchQuery.length >= 2,
@@ -47,14 +43,13 @@ export function AddTagDialog({
   });
 
   const createTagMutation = useMutation({
-    mutationFn: (payload: CreateTagPayload) => createTag(postId, payload),
+    mutationFn: async (payload: CreateTagPayload) => createTag(postId, payload),
     onSuccess: () => {
       toast.success('Etiqueta agregada exitosamente');
-      queryClient.invalidateQueries({ queryKey: ['post', postId] });
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      void queryClient.invalidateQueries({ queryKey: ['feed'] });
       setTagPosition(null);
       setSearchQuery('');
-      setSelectedUserId(null);
       onTagAdded?.();
       onClose();
     },
@@ -62,6 +57,7 @@ export function AddTagDialog({
       const axiosError = error as { response?: { status?: number; data?: { message?: string } } };
       const message = axiosError.response?.data?.message || 'No se pudo agregar la etiqueta';
       toast.error(message);
+      logger.error('Error al crear etiqueta en post', { error, postId });
     }
   });
 
@@ -105,7 +101,6 @@ export function AddTagDialog({
       return;
     }
 
-    setSelectedUserId(userId);
     createTagMutation.mutate({
       userId,
       mediaIndex,

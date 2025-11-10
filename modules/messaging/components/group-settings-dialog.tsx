@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
-import { useState, type ReactElement } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
+import { type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
 
-import { addParticipant, removeParticipant, updateGroupName, type Conversation } from '@/services/api/messages';
-import { searchUsers, type PublicProfile } from '@/services/api/users';
+import { addParticipant, type Conversation,removeParticipant, updateGroupName } from '@/services/api/messages';
+import { searchUsers } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
 
 interface GroupSettingsDialogProps {
@@ -33,7 +33,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
     mutationFn: (name: string) => updateGroupName(conversation.id, { groupName: name }),
     onSuccess: () => {
       toast.success('Nombre del grupo actualizado');
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
     onError: () => {
       toast.error('No se pudo actualizar el nombre del grupo');
@@ -44,7 +44,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
     mutationFn: (userId: string) => addParticipant(conversation.id, { userId }),
     onSuccess: () => {
       toast.success('Participante agregado');
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
       setSearchQuery('');
     },
     onError: () => {
@@ -56,7 +56,7 @@ export function GroupSettingsDialog({ conversation, isOpen, onClose }: GroupSett
     mutationFn: (userId: string) => removeParticipant(conversation.id, userId),
     onSuccess: () => {
       toast.success('Participante removido');
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
     onError: () => {
       toast.error('No se pudo remover el participante');

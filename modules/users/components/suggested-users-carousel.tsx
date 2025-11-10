@@ -1,17 +1,18 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, type ReactElement } from 'react';
-import { motion } from 'framer-motion';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { searchUsers } from '@/services/api/users';
-import { followUser, unfollowUser } from '@/services/api/follows';
-import { useSessionStore } from '@/store/session';
-import { getAvatarUrl } from '@/lib/image-utils';
-import { VerifiedBadge } from '@/components/verified-badge';
+import { type CSSProperties,type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
+
+import { VerifiedBadge } from '@/components/verified-badge';
+import { getAvatarUrl } from '@/lib/image-utils';
+import { logger } from '@/lib/logger';
+import { followUser, unfollowUser } from '@/services/api/follows';
+import { searchUsers } from '@/services/api/users';
+import { useSessionStore } from '@/store/session';
 
 interface SuggestedUser {
   id: string;
@@ -53,7 +54,7 @@ export function SuggestedUsersCarousel(): ReactElement {
           }));
         return filtered;
       } catch (error) {
-        console.error('Error fetching suggested users:', error);
+        logger.error('Error al obtener usuarios sugeridos (carousel)', error);
         return [];
       }
     },
@@ -73,7 +74,7 @@ export function SuggestedUsersCarousel(): ReactElement {
       await followUser(handle);
       return { following: true };
     },
-    onMutate: async ({ userId }) => {
+    onMutate: ({ userId }) => {
       const wasFollowing = followedUsers.has(userId);
       setFollowedUsers((prev) => {
         const newSet = new Set(prev);
@@ -84,6 +85,7 @@ export function SuggestedUsersCarousel(): ReactElement {
         }
         return newSet;
       });
+      return { wasFollowing };
     },
     onSuccess: (data) => {
       if (data.following) {
@@ -91,20 +93,23 @@ export function SuggestedUsersCarousel(): ReactElement {
       } else {
         toast.success('Has dejado de seguir a este usuario');
       }
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
-    onError: (error, variables) => {
+    onError: (_error, variables, context) => {
       setFollowedUsers((prev) => {
         const newSet = new Set(prev);
-        if (followedUsers.has(variables.userId)) {
-          newSet.delete(variables.userId);
-        } else {
+        if (context?.wasFollowing) {
           newSet.add(variables.userId);
+        } else {
+          newSet.delete(variables.userId);
         }
         return newSet;
       });
       toast.error('Error al actualizar la relación');
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ['suggested-users', currentUser?.id, 'carousel'] });
     }
   });
 
@@ -136,7 +141,7 @@ export function SuggestedUsersCarousel(): ReactElement {
       {/* Estado de carga */}
       {isLoading ? (
         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide justify-center md:justify-start">
-          {[...Array(5)].map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex-shrink-0 w-32 sm:w-36 animate-pulse">
               <div className="aspect-square rounded-2xl bg-slate-800/50 mb-3" />
               <div className="h-4 w-20 bg-slate-800/50 rounded mb-2" />
@@ -162,84 +167,84 @@ export function SuggestedUsersCarousel(): ReactElement {
             className="flex gap-4 overflow-x-auto pb-2 scroll-smooth scrollbar-hide justify-center md:justify-start"
             style={{
               WebkitOverflowScrolling: 'touch'
-            } as React.CSSProperties}
+            } as CSSProperties}
           >
             {suggestedUsers.map((user, index) => {
-            const isFollowing = followedUsers.has(user.id);
-            const isFollowingMutation = followMutation.isPending;
+              const isFollowing = followedUsers.has(user.id);
+              const isFollowingMutation = followMutation.isPending;
 
-            return (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="flex-shrink-0 w-32 sm:w-36"
-              >
-                <div className="group relative bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl p-4 border border-white/5 hover:border-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/10">
-                  {/* Avatar */}
-                  <Link
-                    href={`/${user.handle}`}
-                    className="block mb-3"
-                  >
-                    <div className="relative aspect-square rounded-xl overflow-hidden ring-2 ring-white/10 group-hover:ring-primary-400/40 transition-all duration-300">
-                      <Image
-                        src={getAvatarUrl(user.avatarUrl, user.handle)}
-                        alt={user.displayName}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-300"
-                        unoptimized
-                      />
-                    </div>
-                  </Link>
-
-                  {/* Información del usuario */}
-                  <div className="mb-3">
+              return (
+                <motion.div
+                  key={user.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="flex-shrink-0 w-32 sm:w-36"
+                >
+                  <div className="group relative bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl p-4 border border-white/5 hover:border-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/10">
+                    {/* Avatar */}
                     <Link
                       href={`/${user.handle}`}
-                      className="block group/link"
+                      className="block mb-3"
                     >
-                      <div className="flex items-center gap-1 mb-1">
-                        <span className="text-sm font-semibold text-white group-hover/link:text-primary-400 transition-colors truncate block">
-                          {user.displayName}
-                        </span>
-                        {user.isVerified && (
-                          <VerifiedBadge size="sm" className="shrink-0" />
-                        )}
+                      <div className="relative aspect-square rounded-xl overflow-hidden ring-2 ring-white/10 group-hover:ring-primary-400/40 transition-all duration-300">
+                        <Image
+                          src={getAvatarUrl(user.avatarUrl, user.handle)}
+                          alt={user.displayName}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                          unoptimized
+                        />
                       </div>
-                      <span className="text-xs text-slate-400/70 block truncate">
-                        @{user.handle}
-                      </span>
                     </Link>
-                  </div>
 
-                  {/* Botón seguir */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    type="button"
-                    onClick={() => {
-                      handleFollow(user);
-                    }}
-                    disabled={isFollowingMutation}
-                    className={`w-full py-2 px-3 text-xs font-semibold rounded-lg transition-all duration-300 ${
-                      isFollowing
-                        ? 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
-                        : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30'
-                    } disabled:opacity-50 disabled:cursor-not-allowed`}
-                  >
-                    {isFollowingMutation ? (
-                      <span className="size-3 animate-spin rounded-full border-2 border-current border-t-transparent inline-block" />
-                    ) : isFollowing ? (
-                      'Siguiendo'
-                    ) : (
-                      'Seguir'
-                    )}
-                  </motion.button>
-                </div>
-            </motion.div>
-          );
-        })}
+                    {/* Información del usuario */}
+                    <div className="mb-3">
+                      <Link
+                        href={`/${user.handle}`}
+                        className="block group/link"
+                      >
+                        <div className="flex items-center gap-1 mb-1">
+                          <span className="text-sm font-semibold text-white group-hover/link:text-primary-400 transition-colors truncate block">
+                            {user.displayName}
+                          </span>
+                          {user.isVerified && (
+                            <VerifiedBadge size="sm" className="shrink-0" />
+                          )}
+                        </div>
+                        <span className="text-xs text-slate-400/70 block truncate">
+                          @{user.handle}
+                        </span>
+                      </Link>
+                    </div>
+
+                    {/* Botón seguir */}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="button"
+                      onClick={() => {
+                        handleFollow(user);
+                      }}
+                      disabled={isFollowingMutation}
+                      className={`w-full py-2 px-3 text-xs font-semibold rounded-lg transition-all duration-300 ${
+                        isFollowing
+                          ? 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
+                          : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    >
+                      {isFollowingMutation ? (
+                        <span className="size-3 animate-spin rounded-full border-2 border-current border-t-transparent inline-block" />
+                      ) : isFollowing ? (
+                        'Siguiendo'
+                      ) : (
+                        'Seguir'
+                      )}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { Suspense, type ReactElement } from 'react';
+import { type ReactElement,Suspense } from 'react';
 
 import { SavedPostsShell } from '@/modules/saved/components/saved-posts-shell';
 

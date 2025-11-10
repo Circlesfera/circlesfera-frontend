@@ -1,11 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import type { JSX } from 'react';
 
 import { RegisterForm } from '@/modules/auth/components/register-form';
 
-export default function RegisterPage() {
+export default function RegisterPage(): JSX.Element {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-white">
       {/* Background effects adicionales */}

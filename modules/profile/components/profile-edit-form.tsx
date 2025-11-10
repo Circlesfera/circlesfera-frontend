@@ -1,20 +1,19 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useState, useEffect, useRef, type ReactElement } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { z } from 'zod';
-import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { type ReactElement,useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { updateProfile } from '@/services/api/users';
-import { useSessionStore } from '@/store/session';
 import { getAvatarUrl, isLocalImage } from '@/lib/image-utils';
 import { uploadMedia } from '@/services/api/media';
-
 import type { PublicProfile } from '@/services/api/users';
+import { updateProfile } from '@/services/api/users';
+import { useSessionStore } from '@/store/session';
 
 const profileSchema = z.object({
   displayName: z.string().min(2, 'Introduce al menos 2 caracteres').max(64, 'Nombre demasiado largo'),
@@ -48,7 +47,6 @@ interface ProfileEditFormProps {
 export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): ReactElement {
   const router = useRouter();
   const updateUser = useSessionStore((state) => state.updateUser);
-  const user = useSessionStore((state) => state.user);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(profile.avatarUrl);
   const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string | null>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -105,7 +103,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
       const result = await uploadMedia(file);
       setUploadedAvatarUrl(result.url);
       toast.success('Avatar subido correctamente');
-    } catch (error) {
+    } catch {
       toast.error('Error al subir el avatar. Inténtalo de nuevo.');
       setAvatarPreview(profile.avatarUrl);
       setUploadedAvatarUrl(null);
@@ -179,7 +177,12 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
   const previewAvatarUrl = avatarPreview ? getAvatarUrl(avatarPreview, profile.handle) : null;
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-3xl">
+    <form
+      onSubmit={(event) => {
+        void onSubmit(event);
+      }}
+      className="w-full max-w-3xl"
+    >
       <div className="space-y-8">
         {/* Avatar Preview Section */}
         <div className="flex flex-col items-center gap-6 rounded-2xl border border-white/5 bg-white/5 p-8">
@@ -195,7 +198,7 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
                   onError={() => setAvatarPreview(null)}
                 />
               ) : (
-                <div className="flex size-full items-center justify-center bg-gradient-to-br from-primary-500/20 to-primary-600/20">
+                <div className="absolute inset-0 flex items-center justify-center bg-overlay/60 backdrop-blur-sm rounded-full dark:bg-black/60">
                   <span className="text-4xl font-bold text-primary-400">
                     {profile.displayName.charAt(0).toUpperCase()}
                   </span>
@@ -235,7 +238,9 @@ export function ProfileEditForm({ profile, onSuccess }: ProfileEditFormProps): R
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              onChange={handleAvatarFileChange}
+              onChange={(event) => {
+                void handleAvatarFileChange(event);
+              }}
               className="hidden"
             />
             <p className="text-xs text-slate-600 dark:text-white/40">Formatos: JPG, PNG, WebP. Máximo 5MB</p>

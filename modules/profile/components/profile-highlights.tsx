@@ -1,15 +1,15 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useState, type ReactElement } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
 
-import { getHighlights, createHighlight, deleteHighlight, type HighlightItem } from '../../../services/api/highlights';
 import { useSessionStore } from '@/store/session';
-import { HighlightViewer } from './highlight-viewer';
+
+import { deleteHighlight, getHighlights } from '../../../services/api/highlights';
 import { CreateHighlightDialog } from './create-highlight-dialog';
+import { HighlightViewer } from './highlight-viewer';
 
 interface ProfileHighlightsProps {
   readonly profileHandle: string;
@@ -39,7 +39,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
   const deleteMutation = useMutation({
     mutationFn: deleteHighlight,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['highlights'] });
+      void queryClient.invalidateQueries({ queryKey: ['highlights'] });
       toast.success('Highlight eliminado');
     },
     onError: () => {
@@ -58,7 +58,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
   if (isLoading) {
     return (
       <div className="flex gap-4 overflow-x-auto p-4">
-        {[...Array(3)].map((_, i) => (
+        {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex flex-col items-center gap-2">
             <div className="size-16 animate-pulse rounded-full bg-slate-800" />
             <div className="h-3 w-16 animate-pulse rounded bg-slate-800" />
@@ -185,7 +185,7 @@ export function ProfileHighlights({ profileHandle, isOwnProfile: isOwnProfilePro
           }}
           onSuccess={() => {
             setShowCreateDialog(false);
-            queryClient.invalidateQueries({ queryKey: ['highlights'] });
+            void queryClient.invalidateQueries({ queryKey: ['highlights'] });
           }}
         />
       )}

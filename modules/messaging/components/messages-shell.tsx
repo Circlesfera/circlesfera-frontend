@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect, type ReactElement } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
+import { type ReactElement, useEffect, useMemo, useState } from 'react';
 
-import { getConversations, type Conversation } from '@/services/api/messages';
-import { getSocketClient } from '@/lib/socket-client';
-import { ConversationsList } from './conversations-list';
-import { ChatView } from './chat-view';
-import { CreateGroupDialog } from './create-group-dialog';
 import { fadeUpVariants } from '@/lib/motion-config';
+import { getSocketClient } from '@/lib/socket-client';
+import { type ConversationsResponse, getConversations } from '@/services/api/messages';
+
+import { ChatView } from './chat-view';
+import { ConversationsList } from './conversations-list';
+import { CreateGroupDialog } from './create-group-dialog';
 
 export function MessagesShell(): ReactElement {
   const searchParams = useSearchParams();
@@ -20,14 +21,16 @@ export function MessagesShell(): ReactElement {
   );
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['conversations'],
-    queryFn: () => getConversations(),
+  const conversationQueryKey = useMemo(() => ['conversations'], []);
+
+  const { data, isLoading } = useQuery<ConversationsResponse>({
+    queryKey: conversationQueryKey,
+    queryFn: async () => getConversations(),
     staleTime: 1000 * 30 // 30 segundos
   });
 
   const queryClient = useQueryClient();
-  const conversations = data?.conversations ?? [];
+  const conversations = useMemo(() => data?.conversations ?? [], [data]);
 
   // Escuchar eventos de grupos vía WebSocket
   useEffect(() => {
@@ -36,12 +39,12 @@ export function MessagesShell(): ReactElement {
       return;
     }
 
-    const handleGroupCreated = () => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    const handleGroupCreated = (): void => {
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     };
 
-    const handleGroupUpdated = () => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    const handleGroupUpdated = (): void => {
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
     };
 
     socket.on('group-created', handleGroupCreated);
@@ -63,7 +66,7 @@ export function MessagesShell(): ReactElement {
           setSelectedConversationId(conversation.id);
         } else {
           // Si no se encuentra, podría ser una nueva conversación - forzar recarga
-          queryClient.invalidateQueries({ queryKey: ['conversations'] });
+          void queryClient.invalidateQueries({ queryKey: ['conversations'] });
         }
       }
     }

@@ -1,15 +1,17 @@
 'use client';
 
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, type ReactElement } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import type { ReactElement } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import type { StoryGroup, StoryItem } from '@/services/api/stories';
-import { viewStory, getStoryViewers, type StoryUser } from '@/services/api/stories';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { useSessionStore } from '@/store/session';
 import { VerifiedBadge } from '@/components/verified-badge';
+import type { StoryGroup, StoryItem, StoryUser } from '@/services/api/stories';
+import { getStoryViewers, viewStory } from '@/services/api/stories';
+import { useSessionStore } from '@/store/session';
+
 import { StoryReactions } from './story-reactions';
 
 interface StoriesViewerProps {
@@ -32,8 +34,8 @@ export function StoriesViewer({
   const [isPaused, setIsPaused] = useState(false);
   const [showViewers, setShowViewers] = useState(false);
 
-  const currentGroup = groups[currentGroupIndex];
-  const currentStory = currentGroup?.stories[currentStoryIndex];
+  const currentGroup: StoryGroup | undefined = groups[currentGroupIndex];
+  const currentStory: StoryItem | undefined = currentGroup?.stories[currentStoryIndex];
   
   // Verificar si el usuario actual es el autor de la story
   const isAuthor = currentUser?.id === currentStory?.author.id;
@@ -46,27 +48,53 @@ export function StoriesViewer({
     staleTime: 1000 * 60 // 1 minuto
   });
 
-  const viewers = viewersData?.viewers ?? [];
+  const viewers: StoryUser[] = viewersData?.viewers ?? [];
+
+  const storyId = currentStory?.id ?? null;
+  const storyAlreadyViewed = currentStory?.hasViewed ?? false;
 
   useEffect(() => {
-    if (!currentStory || currentStory.hasViewed) {
+    if (!storyId || storyAlreadyViewed) {
       return;
     }
 
+    const markAsViewed = async (): Promise<void> => {
+      try {
+        await viewStory(storyId);
+        void queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
+      } catch {
+        // Ignorar errores
+      }
+    };
+
     const timer = setTimeout(() => {
-      viewStory(currentStory.id)
-        .then(() => {
-          queryClient.invalidateQueries({ queryKey: ['stories', 'feed'] });
-        })
-        .catch(() => {
-          // Ignorar errores
-        });
+      void markAsViewed();
     }, 500);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [currentStory?.id, currentStory?.hasViewed, queryClient]);
+  }, [queryClient, storyAlreadyViewed, storyId]);
+
+  const handleNext = useCallback((): void => {
+    const group = groups[currentGroupIndex];
+    if (!group) {
+      return;
+    }
+
+    if (currentStoryIndex < group.stories.length - 1) {
+      setCurrentStoryIndex((prev) => prev + 1);
+      return;
+    }
+
+    if (currentGroupIndex < groups.length - 1) {
+      setCurrentGroupIndex((prev) => prev + 1);
+      setCurrentStoryIndex(0);
+      return;
+    }
+
+    onClose();
+  }, [currentGroupIndex, currentStoryIndex, groups, onClose]);
 
   useEffect(() => {
     if (!currentStory || isPaused) {
@@ -81,34 +109,24 @@ export function StoriesViewer({
     return () => {
       clearTimeout(timer);
     };
-  }, [currentStory, isPaused]);
+  }, [currentStory, handleNext, isPaused]);
 
-  const handleNext = (): void => {
-    if (!currentGroup) {
+  const handlePrevious = useCallback((): void => {
+    if (currentStoryIndex > 0) {
+      setCurrentStoryIndex((prev) => prev - 1);
       return;
     }
 
-    if (currentStoryIndex < currentGroup.stories.length - 1) {
-      setCurrentStoryIndex(currentStoryIndex + 1);
-    } else if (currentGroupIndex < groups.length - 1) {
-      setCurrentGroupIndex(currentGroupIndex + 1);
-      setCurrentStoryIndex(0);
-    } else {
-      onClose();
-    }
-  };
+    if (currentGroupIndex > 0) {
+      const prevGroupIndex = currentGroupIndex - 1;
+      const prevGroup = groups[prevGroupIndex];
 
-  const handlePrevious = (): void => {
-    if (currentStoryIndex > 0) {
-      setCurrentStoryIndex(currentStoryIndex - 1);
-    } else if (currentGroupIndex > 0) {
-      const prevGroup = groups[currentGroupIndex - 1];
       if (prevGroup) {
-        setCurrentGroupIndex(currentGroupIndex - 1);
+        setCurrentGroupIndex(prevGroupIndex);
         setCurrentStoryIndex(prevGroup.stories.length - 1);
       }
     }
-  };
+  }, [currentGroupIndex, currentStoryIndex, groups]);
 
   if (!currentStory || !currentGroup) {
     return <></>;
@@ -217,7 +235,7 @@ export function StoriesViewer({
         </div>
       </div>
 
-      {/* Contenido de la story con aspect ratio 9:16 vertical - tamaño reducido */}
+      {/* Contenido de la story con aspect ratio 9:16 vertical */}
       <div
         className="absolute inset-0 flex items-center justify-center"
         onMouseDown={() => {

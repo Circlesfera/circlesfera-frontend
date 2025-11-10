@@ -1,21 +1,34 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { type ReactElement,useState } from 'react';
+import { toast } from 'sonner';
 
+import { fadeUpVariants } from '@/lib/motion-config';
 import { deleteAccount } from '@/services/api/users';
 import { useSessionStore } from '@/store/session';
-import { fadeUpVariants } from '@/lib/motion-config';
 
 export function DangerZone(): ReactElement {
   const router = useRouter();
   const clearSession = useSessionStore((state) => state.clearSession);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [confirmation, setConfirmation] = useState('');
 
-  const handleDeleteAccount = async (): Promise<void> => {
+  const deleteAccountMutation = useMutation({
+    mutationFn: deleteAccount,
+    onSuccess: () => {
+      toast.success('Cuenta eliminada exitosamente');
+      clearSession();
+      router.push('/');
+    },
+    onError: (error: unknown) => {
+      const message = error instanceof Error ? error.message : 'No se pudo eliminar la cuenta';
+      toast.error(message);
+    }
+  });
+
+  const handleDeleteAccount = (): void => {
     if (confirmation.toLowerCase() !== 'eliminar') {
       toast.error('Por favor, escribe "ELIMINAR" para confirmar');
       return;
@@ -25,17 +38,7 @@ export function DangerZone(): ReactElement {
       return;
     }
 
-    setIsDeleting(true);
-    try {
-      await deleteAccount();
-      toast.success('Cuenta eliminada exitosamente');
-      clearSession();
-      router.push('/');
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'No se pudo eliminar la cuenta';
-      toast.error(message);
-      setIsDeleting(false);
-    }
+    deleteAccountMutation.mutate();
   };
 
   return (
@@ -107,12 +110,12 @@ export function DangerZone(): ReactElement {
           <motion.button
             type="button"
             onClick={handleDeleteAccount}
-            disabled={isDeleting || confirmation.toLowerCase() !== 'eliminar'}
+            disabled={deleteAccountMutation.isPending || confirmation.toLowerCase() !== 'eliminar'}
             whileHover={{ scale: confirmation.toLowerCase() === 'eliminar' ? 1.02 : 1 }}
             whileTap={{ scale: confirmation.toLowerCase() === 'eliminar' ? 0.98 : 1 }}
             className="w-full rounded-xl border-2 border-red-500 bg-gradient-to-r from-red-600 via-red-500 to-red-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-red-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:scale-100"
           >
-            {isDeleting ? (
+            {deleteAccountMutation.isPending ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
                 Eliminando cuenta...

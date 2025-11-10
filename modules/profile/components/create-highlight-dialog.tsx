@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, type ReactElement, FormEvent } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import type { FormEvent, ReactElement } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { createHighlight, type CreateHighlightPayload } from '../../../services/api/highlights';

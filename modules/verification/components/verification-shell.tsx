@@ -1,25 +1,35 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { type ReactElement,useState } from 'react';
 
-import { getMyVerificationRequest } from '../../../services/api/verification';
-import { useSessionStore } from '@/store/session';
-import { VerificationRequestDialog } from './verification-request-dialog';
 import { VerifiedBadge } from '@/components/verified-badge';
+import { logger } from '@/lib/logger';
+import { useSessionStore } from '@/store/session';
+
+import { getMyVerificationRequest, type VerificationRequest, type VerificationRequestResponse } from '../../../services/api/verification';
+import { VerificationRequestDialog } from './verification-request-dialog';
 
 export function VerificationShell(): ReactElement {
   const currentUser = useSessionStore((state) => state.user);
   const [showRequestDialog, setShowRequestDialog] = useState(false);
 
-  const { data, isLoading } = useQuery({
+  const verificationQuery = useQuery<VerificationRequestResponse, unknown>({
     queryKey: ['verification', 'request'],
     queryFn: getMyVerificationRequest,
     enabled: !!currentUser,
-    staleTime: 1000 * 60 * 5
+    staleTime: 1000 * 60 * 5,
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        logger.error('Error obteniendo solicitud de verificación', error);
+      } else {
+        logger.error('Error obteniendo solicitud de verificación', { error });
+      }
+    }
   });
-
-  const request = data?.request;
+  const data: VerificationRequestResponse | undefined = verificationQuery.data;
+  const isLoading = verificationQuery.isLoading;
+  const request: VerificationRequest | null = data?.request ?? null;
 
   if (isLoading) {
     return (
@@ -46,7 +56,7 @@ export function VerificationShell(): ReactElement {
   }
 
   // Solicitud aprobada (pero aún no reflejada en el usuario)
-  if (request?.status === 'approved') {
+  if (request && request.status === 'approved') {
     return (
       <div className="rounded-xl border border-green-500/50 bg-green-500/10 p-8 text-center">
         <h2 className="mb-2 text-xl font-semibold text-white">Solicitud aprobada</h2>
@@ -64,7 +74,7 @@ export function VerificationShell(): ReactElement {
   }
 
   // Solicitud rechazada
-  if (request?.status === 'rejected') {
+  if (request && request.status === 'rejected') {
     return (
       <div className="space-y-6">
         <div className="rounded-xl border border-red-500/50 bg-red-500/10 p-8 text-center">
@@ -93,7 +103,7 @@ export function VerificationShell(): ReactElement {
   }
 
   // Solicitud pendiente
-  if (request?.status === 'pending') {
+  if (request && request.status === 'pending') {
     return (
       <div className="rounded-xl border border-yellow-500/50 bg-yellow-500/10 p-8 text-center">
         <h2 className="mb-2 text-xl font-semibold text-white">Solicitud en revisión</h2>

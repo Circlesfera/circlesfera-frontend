@@ -1,17 +1,17 @@
 'use client';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ReactElement } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
+
+import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
+import { formatRelativeTime } from '@/modules/feed/utils/formatters';
+import { markAllAsRead, markNotificationAsRead, type Notification } from '@/services/api/notifications';
 
 import { useNotifications } from '../hooks/use-notifications';
-import { markNotificationAsRead, markAllAsRead, type Notification } from '@/services/api/notifications';
-import { formatRelativeTime } from '@/modules/feed/utils/formatters';
-import { toast } from 'sonner';
-import { fadeUpVariants, staggerContainer, staggerItem } from '@/lib/motion-config';
 
 /**
  * Renderiza el listado de notificaciones con soporte para marcar como leído.
@@ -24,8 +24,8 @@ export function NotificationsShell(): ReactElement {
   const markAsReadMutation = useMutation({
     mutationFn: markNotificationAsRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+      void queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      void queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
     },
     onError: () => {
       toast.error('No se pudo marcar la notificación como leída');
@@ -35,8 +35,8 @@ export function NotificationsShell(): ReactElement {
   const markAllAsReadMutation = useMutation({
     mutationFn: markAllAsRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+      void queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      void queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
       toast.success('Todas las notificaciones marcadas como leídas');
     },
     onError: () => {
@@ -46,24 +46,35 @@ export function NotificationsShell(): ReactElement {
 
   const getNotificationMessage = (notification: Notification): string => {
     const actorName = notification.actor?.displayName ?? 'Alguien';
+    const targetLabel = notification.targetModel === 'Frame' ? 'frame' : 'publicación';
 
     switch (notification.type) {
       case 'like':
-        return `${actorName} le dio like a tu publicación`;
+        return `${actorName} le dio like a tu ${targetLabel}`;
       case 'comment':
-        return `${actorName} comentó en tu publicación`;
+        return `${actorName} comentó en tu ${targetLabel}`;
       case 'follow':
         return `${actorName} empezó a seguirte`;
       case 'mention':
         return `${actorName} te mencionó`;
       case 'reply':
         return `${actorName} respondió a tu comentario`;
+      case 'tagged':
+        return `${actorName} te etiquetó en una publicación`;
+      case 'share':
+        return `${actorName} compartió tu publicación`;
       default:
         return 'Nueva notificación';
     }
   };
 
   const getNotificationLink = (notification: Notification): string => {
+    if (notification.targetModel === 'Frame' && notification.targetId) {
+      return `/frames/${notification.targetId}`;
+    }
+    if (notification.targetModel === 'Post' && (notification.targetId ?? notification.postId)) {
+      return `/posts/${notification.targetId ?? notification.postId}`;
+    }
     if (notification.postId) {
       return `/posts/${notification.postId}`;
     }

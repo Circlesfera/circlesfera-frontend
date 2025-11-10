@@ -1,18 +1,19 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, type ReactElement } from 'react';
-import { motion } from 'framer-motion';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { searchUsers } from '@/services/api/users';
-import { followUser, unfollowUser } from '@/services/api/follows';
-import { useSessionStore } from '@/store/session';
-import { getAvatarUrl } from '@/lib/image-utils';
-import { VerifiedBadge } from '@/components/verified-badge';
-import { fadeUpVariants } from '@/lib/motion-config';
+import { type ReactElement,useState } from 'react';
 import { toast } from 'sonner';
+
+import { VerifiedBadge } from '@/components/verified-badge';
+import { getAvatarUrl } from '@/lib/image-utils';
+import { logger } from '@/lib/logger';
+import { fadeUpVariants } from '@/lib/motion-config';
+import { followUser, unfollowUser } from '@/services/api/follows';
+import { searchUsers } from '@/services/api/users';
+import { useSessionStore } from '@/store/session';
 
 interface SuggestedUser {
   id: string;
@@ -61,7 +62,7 @@ export function SuggestedUsers(): ReactElement {
           }));
         return filtered;
       } catch (error) {
-        console.error('Error fetching suggested users:', error);
+        logger.error('Error al obtener usuarios sugeridos', error);
         return [];
       }
     },
@@ -81,8 +82,7 @@ export function SuggestedUsers(): ReactElement {
       await followUser(handle);
       return { following: true };
     },
-    onMutate: async ({ userId }) => {
-      // Optimistic update
+    onMutate: ({ userId }) => {
       const wasFollowing = followedUsers.has(userId);
       setFollowedUsers((prev) => {
         const newSet = new Set(prev);
@@ -93,29 +93,31 @@ export function SuggestedUsers(): ReactElement {
         }
         return newSet;
       });
+      return { wasFollowing };
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       if (data.following) {
         toast.success('Ahora sigues a este usuario');
       } else {
         toast.success('Has dejado de seguir a este usuario');
       }
-      // Invalidar queries relacionadas
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      void queryClient.invalidateQueries({ queryKey: ['feed'] });
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
-    onError: (error, variables) => {
-      // Revertir cambio optimista
+    onError: (_error, variables, context) => {
       setFollowedUsers((prev) => {
         const newSet = new Set(prev);
-        if (followedUsers.has(variables.userId)) {
-          newSet.delete(variables.userId);
-        } else {
+        if (context?.wasFollowing) {
           newSet.add(variables.userId);
+        } else {
+          newSet.delete(variables.userId);
         }
         return newSet;
       });
       toast.error('Error al actualizar la relación');
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ['suggested-users', currentUser?.id] });
     }
   });
 
@@ -136,7 +138,7 @@ export function SuggestedUsers(): ReactElement {
           <div className="h-3 w-40 bg-slate-800/30 rounded animate-pulse" />
         </div>
         <div className="space-y-4">
-          {[...Array(3)].map((_, i) => (
+          {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3">
               <div className="size-12 rounded-full bg-slate-800/50 animate-pulse shrink-0" />
               <div className="flex-1 space-y-2">
@@ -200,85 +202,85 @@ export function SuggestedUsers(): ReactElement {
       ) : (
         <div className="space-y-2 pr-5">
           {suggestedUsers.map((user, index) => {
-          const isFollowing = followedUsers.has(user.id);
-          const isFollowingMutation = followMutation.isPending;
+            const isFollowing = followedUsers.has(user.id);
+            const isFollowingMutation = followMutation.isPending;
 
-          return (
-            <motion.div
-              key={user.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative"
-            >
-              <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 ease-out border border-transparent hover:border-slate-300 dark:hover:border-white/5 hover:shadow-md">
-                <Link
-                  href={`/${user.handle}`}
-                  className="relative size-14 shrink-0 rounded-full overflow-hidden ring-2 ring-slate-300/50 dark:ring-white/10 group-hover:ring-primary-400/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2"
-                >
-                  <Image
-                    src={getAvatarUrl(user.avatarUrl, user.handle)}
-                    alt={user.displayName}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    unoptimized
-                  />
-                </Link>
-
-                <div className="flex-1 min-w-0 pt-0.5">
+            return (
+              <motion.div
+                key={user.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                className="group relative"
+              >
+                <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 ease-out border border-transparent hover:border-slate-300 dark:hover:border-white/5 hover:shadow-md">
                   <Link
                     href={`/${user.handle}`}
-                    className="block group/link"
+                    className="relative size-14 shrink-0 rounded-full overflow-hidden ring-2 ring-slate-300/50 dark:ring-white/10 group-hover:ring-primary-400/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2"
                   >
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-sm font-semibold text-slate-900 dark:text-white group-hover/link:text-primary-400 transition-colors truncate">
-                        {user.displayName}
-                      </span>
-                      {user.isVerified && <VerifiedBadge size="sm" />}
-                    </div>
-                    <span className="text-xs text-slate-600 dark:text-slate-400/80 block truncate mb-1">
-                      @{user.handle}
-                    </span>
-                    {user.bio && (
-                      <p className="text-xs text-slate-600 dark:text-slate-400/60 line-clamp-2 mt-1">
-                        {user.bio}
-                      </p>
-                    )}
+                    <Image
+                      src={getAvatarUrl(user.avatarUrl, user.handle)}
+                      alt={user.displayName}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      unoptimized
+                    />
                   </Link>
-                </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -1 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                  type="button"
-                  onClick={() => {
-                    handleFollow(user);
-                  }}
-                  disabled={isFollowingMutation}
-                  className={`shrink-0 px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-300 ease-out ${
-                    isFollowing
-                      ? 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white/20 hover:shadow-lg hover:shadow-white/5'
-                      : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/50 hover:from-primary-500 hover:to-accent-400 hover:-translate-y-0.5'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-                >
-                  {isFollowingMutation ? (
-                    <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : isFollowing ? (
-                    <span className="flex items-center gap-1.5">
-                      <svg className="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Siguiendo
-                    </span>
-                  ) : (
-                    'Seguir'
-                  )}
-                </motion.button>
-              </div>
-            </motion.div>
-          );
-        })}
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <Link
+                      href={`/${user.handle}`}
+                      className="block group/link"
+                    >
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span className="text-sm font-semibold text-slate-900 dark:text-white group-hover/link:text-primary-400 transition-colors truncate">
+                          {user.displayName}
+                        </span>
+                        {user.isVerified && <VerifiedBadge size="sm" />}
+                      </div>
+                      <span className="text-xs text-slate-600 dark:text-slate-400/80 block truncate mb-1">
+                        @{user.handle}
+                      </span>
+                      {user.bio && (
+                        <p className="text-xs text-slate-600 dark:text-slate-400/60 line-clamp-2 mt-1">
+                          {user.bio}
+                        </p>
+                      )}
+                    </Link>
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -1 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    type="button"
+                    onClick={() => {
+                      handleFollow(user);
+                    }}
+                    disabled={isFollowingMutation}
+                    className={`shrink-0 px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-300 ease-out ${
+                      isFollowing
+                        ? 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white/20 hover:shadow-lg hover:shadow-white/5'
+                        : 'bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/50 hover:from-primary-500 hover:to-accent-400 hover:-translate-y-0.5'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {isFollowingMutation ? (
+                      <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    ) : isFollowing ? (
+                      <span className="flex items-center gap-1.5">
+                        <svg className="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Siguiendo
+                      </span>
+                    ) : (
+                      'Seguir'
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       )}
 
